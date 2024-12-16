@@ -1,0 +1,59 @@
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {NativeModules, Platform, StatusBar, View} from 'react-native';
+import {COLORS} from '../styles/MyStyles';
+
+const {StatusBarManager} = NativeModules;
+
+const StatusBarHeightContext = createContext(0);
+
+// # StatusBarHeightProvider: Centralized logic for status bar height
+export const StatusBarHeightProvider = ({children}) => {
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
+
+  useEffect(() => {
+    const fetchStatusBarHeight = () => {
+      if (Platform.OS === 'ios') {
+        StatusBarManager.getHeight(({height}) => setStatusBarHeight(height));
+      } else if (Platform.OS === 'android') {
+        setStatusBarHeight(StatusBar.currentHeight || 0);
+      }
+    };
+
+    fetchStatusBarHeight();
+  }, []);
+
+  return (
+    <StatusBarHeightContext.Provider value={statusBarHeight}>
+      {children}
+    </StatusBarHeightContext.Provider>
+  );
+};
+
+// # Custom hook for accessing the status bar height
+export const useStatusBarHeight = () => useContext(StatusBarHeightContext);
+
+// # StatusBarTransp: Component for rendering a transparent status bar
+export const StatusBarTransp = () => {
+  const statusBarHeight = useStatusBarHeight();
+
+  return (
+    <>
+      {Platform.OS === 'android' ? (
+        <StatusBar
+          backgroundColor={COLORS.transparent}
+          barStyle="light-content"
+          animated
+          translucent
+        />
+      ) : (
+        <View
+          style={{
+            backgroundColor: COLORS.black,
+            height: statusBarHeight,
+            zIndex: 999,
+          }}
+        />
+      )}
+    </>
+  );
+};
