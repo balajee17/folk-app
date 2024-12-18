@@ -41,9 +41,14 @@ export const SIZES = {
   s: scaleFontSize(12), // Helper text, labels, or input placeholders.
   m: scaleFontSize(14), // Body text for standard content.
   l: scaleFontSize(16), // Subheadings or slightly emphasized text.
-  xl: scaleFontSize(18), // Section headings or titles.
+  xl: scaleFontSize(20), // Section headings or titles.
+  subTitle: scaleFontSize(22), // SubTitles
   xxl: scaleFontSize(24), // Main titles or prominent headings.
   xxxl: scaleFontSize(32), // Hero headers or standout call-to-actions.
+};
+
+export const percentageToPixel = percentage => {
+  return (percentage / 100) * windowWidth;
 };
 
 // @ COLORS
@@ -55,6 +60,9 @@ export let COLORS = {
   dolphin: '#5C5D6C',
   mirage: '#1C1D26',
   osloGrey: '#898989',
+  paleYellow: '#F7F8E6',
+  gableGreen: '#1B2830',
+  golden: '#FFC300',
 };
 
 // @ FONTS
@@ -73,4 +81,21 @@ export let MyStyles = {
     color: COLORS.white,
     fontFamily: FONTS.urbanistBold,
   },
+  subTitleText: {
+    fontSize: SIZES.subTitle,
+    color: COLORS.gableGreen,
+    fontFamily: FONTS.urbanistSemiBold,
+  },
 };
+
+const {width, height} = Dimensions.get('window');
+
+const guidelineBaseWidth = 375;
+const guidelineBaseHeight = 812;
+
+const horizontalScale = size => (width / guidelineBaseWidth) * size;
+const verticalScale = size => (height / guidelineBaseHeight) * size;
+const moderateScale = (size, factor = 0.5) =>
+  size + (horizontalScale(size) - size) * factor;
+
+export {horizontalScale, verticalScale, moderateScale};
