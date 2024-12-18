@@ -35,16 +35,28 @@ export const scaleFontSize = size => {
   return (size * width) / standardScreenWidth;
 };
 
+const {width, height} = Dimensions.get('window');
+
+const guidelineBaseWidth = 375;
+const guidelineBaseHeight = 812;
+
+const horizontalScale = size => (width / guidelineBaseWidth) * size;
+const verticalScale = size => (height / guidelineBaseHeight) * size;
+const moderateScale = (size, factor = 0.5) =>
+  size + (horizontalScale(size) - size) * factor;
+
+export {horizontalScale, verticalScale, moderateScale};
+
 // @ SIZES
 export const SIZES = {
-  xs: scaleFontSize(8), // Captions, disclaimers, or secondary text.
-  s: scaleFontSize(12), // Helper text, labels, or input placeholders.
-  m: scaleFontSize(14), // Body text for standard content.
-  l: scaleFontSize(16), // Subheadings or slightly emphasized text.
-  xl: scaleFontSize(20), // Section headings or titles.
-  subTitle: scaleFontSize(22), // SubTitles
-  xxl: scaleFontSize(24), // Main titles or prominent headings.
-  xxxl: scaleFontSize(32), // Hero headers or standout call-to-actions.
+  xs: moderateScale(8), // Captions, disclaimers, or secondary text.
+  s: moderateScale(12), // Helper text, labels, or input placeholders.
+  m: moderateScale(14), // Body text for standard content.
+  l: moderateScale(16), // Subheadings or slightly emphasized text.
+  xl: moderateScale(20), // Section headings or titles.
+  subTitle: moderateScale(22), // SubTitles
+  xxl: moderateScale(24), // Main titles or prominent headings.
+  xxxl: moderateScale(32), // Hero headers or standout call-to-actions.
 };
 
 export const percentageToPixel = percentage => {
@@ -87,15 +99,3 @@ export let MyStyles = {
     fontFamily: FONTS.urbanistSemiBold,
   },
 };
-
-const {width, height} = Dimensions.get('window');
-
-const guidelineBaseWidth = 375;
-const guidelineBaseHeight = 812;
-
-const horizontalScale = size => (width / guidelineBaseWidth) * size;
-const verticalScale = size => (height / guidelineBaseHeight) * size;
-const moderateScale = (size, factor = 0.5) =>
-  size + (horizontalScale(size) - size) * factor;
-
-export {horizontalScale, verticalScale, moderateScale};

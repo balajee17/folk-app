@@ -2,10 +2,13 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
+  horizontalScale,
+  moderateScale,
   MyStyles,
   resHeight,
   resWidth,
   SIZES,
+  verticalScale,
   windowHeight,
 } from '../styles/MyStyles';
 import {
@@ -17,14 +20,12 @@ import {getImage} from '../utils/GetImage';
 import {screenNames} from '../constants/ScreenNames';
 import CustomCarousel from '../components/CustomCarousel';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 
 const Home = () => {
   const statusBarHeight = useStatusBarHeight();
 
   const imageSource = [
-    {
-      id: 1,
-    },
     {
       id: 1,
       image:
@@ -43,90 +44,91 @@ const Home = () => {
     {
       id: 4,
       image:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThQvTnYAk_S603ht3mi6Roo0scz4gAFTbbKQ&s',
-    },
-    {
-      id: 1,
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4mig9E0_kytqiyy-CXO9OAcxuXHMTpRuCLA&s',
     },
   ];
 
   return (
     <>
       <StatusBarTransp />
-      <View style={styles.mainContainer}>
-        {/* // @ Linear Gradient */}
-        <LinearGradient
-          colors={[COLORS.charcoal, COLORS.dolphin, COLORS.mirage]}
-          style={styles.gradient}>
-          {/* // # Header */}
-          <View style={styles.header(statusBarHeight)}>
-            <TouchableOpacity
-              activeOpacity={0.6} // Menu Drawer Icon
-              style={styles.menuIcon}>
-              <Image
-                style={styles.menuImage}
-                source={getImage.menu}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-            {/* Title */}
-            <Text style={MyStyles.titleText}>{screenNames.home}</Text>
-            <TouchableOpacity
-              activeOpacity={0.6} // Notification Icon
-              style={styles.menuIcon}>
-              <Image
-                style={styles.notifyImage}
-                source={getImage.notification}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-        </LinearGradient>
-        {/* // @ Daily Darshana - Carousel  */}
-        <View
-          style={{
-            position: 'absolute',
-            top: 90,
-          }}>
-          <View style={[styles.textHstryIcon, styles.paddingHor4]}>
-            <Text
+      <SafeAreaInsetsContext.Consumer>
+        {insets => (
+          <View style={styles.mainContainer}>
+            {/* // @ Linear Gradient */}
+            <LinearGradient
+              colors={[COLORS.charcoal, COLORS.dolphin, COLORS.mirage]}
+              style={styles.gradient}>
+              {/* // # Header */}
+              <View style={[styles.header, {marginTop: insets?.top || 0}]}>
+                <TouchableOpacity
+                  activeOpacity={0.6} // Menu Drawer Icon
+                  style={styles.menuIcon}>
+                  <Image
+                    style={styles.menuImage}
+                    source={getImage.menu}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+                {/* Title */}
+                <Text style={MyStyles.titleText}>{screenNames.home}</Text>
+                <TouchableOpacity
+                  activeOpacity={0.6} // Notification Icon
+                  style={styles.menuIcon}>
+                  <Image
+                    style={styles.notifyImage}
+                    source={getImage.notification}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+            </LinearGradient>
+            {/* // @ Daily Darshana - Carousel  */}
+            <View
+              style={{
+                position: 'absolute',
+                top: '13%',
+              }}>
+              <View style={[styles.textHstryIcon, styles.paddingHor4]}>
+                <Text
+                  style={[
+                    MyStyles.subTitleText,
+
+                    {
+                      color: COLORS.golden,
+                    },
+                  ]}>
+                  Daily Darshana
+                </Text>
+                <TouchableOpacity activeOpacity={0.6}>
+                  <MaterialCommunityIcons
+                    name="history"
+                    size={SIZES.xxl}
+                    color={COLORS.white}
+                  />
+                </TouchableOpacity>
+              </View>
+              <CustomCarousel carouselItems={imageSource} autoScroll={true} />
+            </View>
+
+            {/* // @ Daily Quotes - Carousel  */}
+            <View
               style={[
-                MyStyles.subTitleText,
-
-                {
-                  color: COLORS.golden,
-                },
+                styles.textHstryIcon,
+                styles.paddingHor4,
+                {marginTop: verticalScale(120)},
               ]}>
-              Daily Darshana
-            </Text>
-            <TouchableOpacity activeOpacity={0.6}>
-              <MaterialCommunityIcons
-                name="history"
-                size={SIZES.xxl}
-                color={COLORS.white}
-              />
-            </TouchableOpacity>
+              <Text style={[MyStyles.subTitleText]}>Daily Quotes</Text>
+              <TouchableOpacity activeOpacity={0.6}>
+                <MaterialCommunityIcons
+                  name="history"
+                  size={SIZES.xxl}
+                  color={COLORS.gableGreen}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-          <CustomCarousel carouselItems={imageSource} autoScroll={true} />
-        </View>
-
-        {/* // @ Daily Quotes - Carousel  */}
-        <View
-          style={[
-            styles.textHstryIcon,
-            styles.paddingHor4,
-            {marginTop: resHeight('20%')},
-          ]}>
-          <Text style={[MyStyles.subTitleText]}>Daily Quotes</Text>
-          <TouchableOpacity activeOpacity={0.6}>
-            <MaterialCommunityIcons
-              name="history"
-              size={SIZES.xxl}
-              color={COLORS.gableGreen}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+        )}
+      </SafeAreaInsetsContext.Consumer>
     </>
   );
 };
@@ -136,25 +138,25 @@ export default Home;
 const styles = StyleSheet.create({
   mainContainer: {flex: 1, backgroundColor: COLORS.paleYellow},
   gradient: {
-    height: resHeight('35%'),
-    borderBottomLeftRadius: resWidth('8%'),
-    borderBottomRightRadius: resWidth('8%'),
+    paddingBottom: verticalScale(190),
+    borderBottomLeftRadius: moderateScale(30),
+    borderBottomRightRadius: moderateScale(30),
   },
-  header: statusBarHeight => ({
+  header: {
     padding: '2.5%',
-    marginTop: statusBarHeight,
+    // marginVertical: verticalScale(45),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  }),
+  },
   menuIcon: {
     padding: '1.5%',
-    borderWidth: resWidth('0.2%'),
-    height: resWidth('10%'),
-    width: resWidth('10%'),
+    borderWidth: moderateScale(1),
+    height: horizontalScale(35),
+    width: horizontalScale(35),
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: resHeight('8%'),
+    borderRadius: moderateScale(30),
     borderColor: COLORS.osloGrey,
   },
   menuImage: {height: '80%', width: '80%'},
