@@ -28,6 +28,9 @@ const Home = () => {
   const imageSource = [
     {
       id: 1,
+    },
+    {
+      id: 1,
       image:
         'https://www.iskconbangalore.org/wp-content/uploads/2016/01/g01-night-view-of-iskcon-bangalore.jpg',
     },
@@ -46,6 +49,9 @@ const Home = () => {
       image:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4mig9E0_kytqiyy-CXO9OAcxuXHMTpRuCLA&s',
     },
+    {
+      id: 4,
+    },
   ];
 
   return (
@@ -56,7 +62,9 @@ const Home = () => {
           <View style={styles.mainContainer}>
             {/* // @ Linear Gradient */}
             <LinearGradient
-              colors={[COLORS.charcoal, COLORS.dolphin, COLORS.mirage]}
+              start={{x: 0.5, y: 0}}
+              end={{x: 0.5, y: 1}}
+              colors={[COLORS.mirage, COLORS.dolphin]}
               style={styles.gradient}>
               {/* // # Header */}
               <View style={[styles.header, {marginTop: insets?.top || 0}]}>
@@ -97,17 +105,21 @@ const Home = () => {
                       color: COLORS.golden,
                     },
                   ]}>
-                  Daily Darshana
+                  Daily Darshan
                 </Text>
                 <TouchableOpacity activeOpacity={0.6}>
                   <MaterialCommunityIcons
                     name="history"
-                    size={SIZES.xxl}
+                    size={moderateScale(25)}
                     color={COLORS.white}
                   />
                 </TouchableOpacity>
               </View>
-              <CustomCarousel carouselItems={imageSource} autoScroll={true} />
+              <CustomCarousel
+                carouselItems={imageSource}
+                autoScroll={true}
+                dots={true}
+              />
             </View>
 
             {/* // @ Daily Quotes - Carousel  */}
@@ -121,7 +133,7 @@ const Home = () => {
               <TouchableOpacity activeOpacity={0.6}>
                 <MaterialCommunityIcons
                   name="history"
-                  size={SIZES.xxl}
+                  size={moderateScale(25)}
                   color={COLORS.gableGreen}
                 />
               </TouchableOpacity>

@@ -49,14 +49,14 @@ export {horizontalScale, verticalScale, moderateScale};
 
 // @ SIZES
 export const SIZES = {
-  xs: moderateScale(8), // Captions, disclaimers, or secondary text.
-  s: moderateScale(12), // Helper text, labels, or input placeholders.
-  m: moderateScale(14), // Body text for standard content.
-  l: moderateScale(16), // Subheadings or slightly emphasized text.
+  xs: moderateScale(12), // Captions, disclaimers, or secondary text.
+  s: moderateScale(14), // Helper text, labels, or input placeholders.
+  m: moderateScale(16), // Body text for standard content.
+  l: moderateScale(18), // Subheadings or slightly emphasized text.
   xl: moderateScale(20), // Section headings or titles.
-  subTitle: moderateScale(22), // SubTitles
-  xxl: moderateScale(24), // Main titles or prominent headings.
-  xxxl: moderateScale(32), // Hero headers or standout call-to-actions.
+  xxl: moderateScale(22), // Main titles or prominent headings.
+  subTitle: moderateScale(24), // SubTitles
+  xxxl: moderateScale(26), // Hero headers or standout call-to-actions.
 };
 
 export const percentageToPixel = percentage => {
@@ -94,7 +94,7 @@ export let MyStyles = {
     fontFamily: FONTS.urbanistBold,
   },
   subTitleText: {
-    fontSize: SIZES.subTitle,
+    fontSize: SIZES.xl,
     color: COLORS.gableGreen,
     fontFamily: FONTS.urbanistSemiBold,
   },
