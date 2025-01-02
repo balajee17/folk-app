@@ -21,14 +21,12 @@ import {screenNames} from '../constants/ScreenNames';
 import CustomCarousel from '../components/CustomCarousel';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
+import ParallexCarousel from '../components/ParallexCarousel';
 
 const Home = () => {
   const statusBarHeight = useStatusBarHeight();
 
   const imageSource = [
-    {
-      id: 1,
-    },
     {
       id: 1,
       image:
@@ -48,9 +46,6 @@ const Home = () => {
       id: 4,
       image:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4mig9E0_kytqiyy-CXO9OAcxuXHMTpRuCLA&s',
-    },
-    {
-      id: 4,
     },
   ];
 
@@ -117,7 +112,7 @@ const Home = () => {
               </View>
               <CustomCarousel
                 carouselItems={imageSource}
-                autoScroll={true}
+                autoScroll={false}
                 dots={true}
               />
             </View>
@@ -137,6 +132,9 @@ const Home = () => {
                   color={COLORS.gableGreen}
                 />
               </TouchableOpacity>
+            </View>
+            <View>
+              <Image source={require('../assets/images')} />
             </View>
           </View>
         )}

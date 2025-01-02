@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
@@ -20,7 +20,11 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-const CustomCarousel = ({carouselItems, autoScroll, dots}) => {
+const OFF_SET = moderateScale(20);
+const ITEM_WIDTH = windowWidth - OFF_SET * 2;
+const ITEM_HEIGHT = verticalScale(220);
+
+const CustomCarousel = ({carouselItems, autoScroll = true, dots}) => {
   const [activeIndex, setActiveIndex] = useState(1);
 
   const WIDTH_SIZE = windowWidth * 0.8;
@@ -31,10 +35,8 @@ const CustomCarousel = ({carouselItems, autoScroll, dots}) => {
   const currentIndex = useRef(0);
   const isAutoScrolling = useRef(true);
   const autoScrollInterval = useRef(null);
-  const dotSize = windowWidth * 0.02; // Default dot size
-  const activeDotSize = windowWidth * 0.05; // Active dot size
-  const dotColor = COLORS.osloGrey; // Default dot color
-  const activeDotColor = COLORS.mirage;
+  const dotSize = windowWidth * 0.02;
+  const activeDotSize = windowWidth * 0.04;
 
   useEffect(() => {
     if (autoScroll) {
@@ -77,13 +79,11 @@ const CustomCarousel = ({carouselItems, autoScroll, dots}) => {
   const onScroll = useAnimatedScrollHandler({
     onScroll: event => {
       x.value = event.contentOffset.x;
-      const index = Math.round(event.contentOffset.x / WIDTH_SIZE);
-      runOnJS(setActiveIndex)(index + 1);
     },
   });
   return (
     <>
-      <Animated.ScrollView
+      <ScrollView
         ref={scrollRef}
         contentContainerStyle={{paddingVertical: '5%'}}
         horizontal
@@ -108,114 +108,63 @@ const CustomCarousel = ({carouselItems, autoScroll, dots}) => {
           }
         }}>
         {carouselItems.map((item, index) => {
+          const inputRange = [
+            (index - 1) * ITEM_WIDTH,
+            index * ITEM_WIDTH,
+            (index + 1) * ITEM_WIDTH,
+          ];
           const animationStyle = useAnimatedStyle(() => {
             const scale = interpolate(
               x.value,
-              [
-                (index - 2) * WIDTH_SIZE,
-                (index - 1) * WIDTH_SIZE,
-                index * WIDTH_SIZE,
-              ],
-              [0.82, 1.1, 0.82],
+              inputRange,
+              [0.97, 0, 0.97],
+              Extrapolation.CLAMP,
             );
+
             return {
               transform: [{scale}],
             };
           });
 
-          if (!item?.image) {
-            return (
-              <View
-                style={{
-                  width: SPACER,
-                  height: resHeight('15%'),
-                }}
-                key={index}
-              />
-            );
-          }
           return (
-            <View
+            // <View
+            //   key={index}
+            //   style={{
+            //     width: WIDTH_SIZE,
+            //     alignItems: 'center',
+            //   }}>
+            <Animated.View
               key={index}
-              style={{
-                width: WIDTH_SIZE,
-                alignItems: 'center',
-              }}>
-              <Animated.View
-                key={index}
-                style={[
-                  {
-                    borderRadius: moderateScale(15),
-                    backgroundColor: '#fff',
-                    shadowColor: 'white',
-                    shadowOffset: {width: 0, height: 4},
-                    shadowOpacity: 0.4,
-                    shadowRadius: 8,
-                    elevation: 10,
-                    height: verticalScale(180),
-                    width: '100%',
-                  },
-                  animationStyle,
-                ]}>
-                <Image
-                  style={{
-                    width: '100%',
-                    // aspectRatio: 16 / 9,
-                    height: '100%',
-
-                    borderRadius: moderateScale(15),
-                  }}
-                  source={{uri: item.image}}
-                />
-              </Animated.View>
-            </View>
+              style={[
+                {
+                  borderRadius: moderateScale(15),
+                  // backgroundColor: '#fff',
+                  // shadowColor: 'white',
+                  // shadowOffset: {width: 0, height: 4},
+                  // shadowOpacity: 0.4,
+                  // shadowRadius: 8,
+                  // elevation: 10,
+                  marginLeft: index === 0 ? OFF_SET : undefined,
+                  marginRight:
+                    index === carouselItems.length - 1 ? OFF_SET : undefined,
+                  width: ITEM_WIDTH,
+                  height: ITEM_HEIGHT,
+                },
+                animationStyle,
+              ]}>
+              <Image
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: moderateScale(15),
+                }}
+                source={{uri: item.image}}
+              />
+            </Animated.View>
+            // </View>
           );
         })}
-      </Animated.ScrollView>
-
-      {/* Dots */}
-      {dots && (
-        <View style={styles.dotsContainer}>
-          {carouselItems.map((item, index) => {
-            if (index === 0 || index === carouselItems.length - 1) {
-              return null;
-            }
-            let currentDotSize = dotSize;
-            let currentDotColor = dotColor;
-
-            // Set active dot size and color
-            if (index === activeIndex) {
-              currentDotSize = activeDotSize;
-              currentDotColor = activeDotColor;
-            }
-
-            // Animated dot style
-            const dotStyle = useAnimatedStyle(() => {
-              // Calculate opacity based on scroll position
-              const opacity = interpolate(
-                x.value,
-                [
-                  (index - 1) * WIDTH_SIZE, // Previous dot
-                  index * WIDTH_SIZE, // Current dot
-                  (index + 1) * WIDTH_SIZE, // Next dot
-                ],
-                [0.4, 1, 0.4], // Opacity transitions
-              );
-
-              const animatedOpacity = withTiming(opacity, {
-                duration: 500,
-                easing: Easing.linear,
-              });
-
-              return {
-                opacity: Math.max(animatedOpacity, 0.4), // Ensure opacity never goes below 0.4
-              };
-            });
-
-            return <Animated.View key={index} style={[styles.dot, dotStyle]} />;
-          })}
-        </View>
-      )}
+      </ScrollView>
     </>
   );
 };
