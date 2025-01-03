@@ -20,23 +20,20 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-const OFF_SET = moderateScale(20);
-const ITEM_WIDTH = windowWidth - OFF_SET * 2;
+const OFF_SET = 45;
+const ITEM_WIDTH = Math.round(windowWidth - OFF_SET * 2);
 const ITEM_HEIGHT = verticalScale(220);
 
-const CustomCarousel = ({carouselItems, autoScroll = true, dots}) => {
+const CustomCarousel = ({carouselItems, autoScroll, dots}) => {
   const [activeIndex, setActiveIndex] = useState(1);
 
-  const WIDTH_SIZE = windowWidth * 0.8;
-  const SPACER = (windowWidth - WIDTH_SIZE) / 2;
+  const WIDTH_SIZE = Math.round(windowWidth * 0.8);
 
   const x = useSharedValue(0);
   const scrollRef = useRef(null);
   const currentIndex = useRef(0);
   const isAutoScrolling = useRef(true);
   const autoScrollInterval = useRef(null);
-  const dotSize = windowWidth * 0.02;
-  const activeDotSize = windowWidth * 0.04;
 
   useEffect(() => {
     if (autoScroll) {
@@ -81,6 +78,7 @@ const CustomCarousel = ({carouselItems, autoScroll = true, dots}) => {
       x.value = event.contentOffset.x;
     },
   });
+
   return (
     <>
       <ScrollView
@@ -121,8 +119,18 @@ const CustomCarousel = ({carouselItems, autoScroll = true, dots}) => {
               Extrapolation.CLAMP,
             );
 
+            //   // const opacity = interpolate(
+            //   //   x.value,
+            //   //   (index - 2) * WIDTH_SIZE,
+            //   //   (index - 1) * WIDTH_SIZE,
+            //   //   index * WIDTH_SIZE,
+            //   //   [0.6, 1, 0.6],
+            //   //   Extrapolation.CLAMP,
+            //   // );
+
             return {
               transform: [{scale}],
+              // opacity,
             };
           });
 
@@ -133,17 +141,12 @@ const CustomCarousel = ({carouselItems, autoScroll = true, dots}) => {
             //     width: WIDTH_SIZE,
             //     alignItems: 'center',
             //   }}>
+
             <Animated.View
               key={index}
               style={[
                 {
                   borderRadius: moderateScale(15),
-                  // backgroundColor: '#fff',
-                  // shadowColor: 'white',
-                  // shadowOffset: {width: 0, height: 4},
-                  // shadowOpacity: 0.4,
-                  // shadowRadius: 8,
-                  // elevation: 10,
                   marginLeft: index === 0 ? OFF_SET : undefined,
                   marginRight:
                     index === carouselItems.length - 1 ? OFF_SET : undefined,
@@ -165,6 +168,42 @@ const CustomCarousel = ({carouselItems, autoScroll = true, dots}) => {
           );
         })}
       </ScrollView>
+
+      {/* Dots */}
+      {/* {dots && (
+        <View style={styles.dotsContainer}>
+          {carouselItems.map((item, index) => {
+            if (index === 0 || index === carouselItems.length - 1) {
+              return null;
+            }
+            console.log('(index - 1) * dotSize', (index - 1) * dotSize);
+            // Animated dot style
+            const dotStyle = useAnimatedStyle(() => {
+              // Calculate opacity based on scroll position
+              const opacity = interpolate(
+                x.value,
+                [
+                  (index - 1) * windowWidth,
+                  index * windowWidth,
+                  (index + 1) * windowWidth, // Current dot
+                ],
+                [0.4, 1, 0], // Opacity transitions
+              );
+
+              // const animatedOpacity = withTiming(opacity, {
+              //   duration: 500,
+              //   easing: Easing.circle,
+              // });
+
+              return {
+                opacity: Math.max(opacity, 0.4),
+              };
+            });
+
+            return <Animated.View key={index} style={[styles.dot, dotStyle]} />;
+          })}
+        </View>
+      )} */}
     </>
   );
 };
@@ -181,8 +220,8 @@ const styles = StyleSheet.create({
   dot: {
     borderRadius: moderateScale(6),
     marginHorizontal: horizontalScale(4),
-    width: windowWidth * 0.02,
+    width: Math.round(windowWidth * 0.02),
     backgroundColor: COLORS.charcoal,
-    height: windowWidth * 0.02,
+    height: Math.round(windowWidth * 0.02),
   },
 });
