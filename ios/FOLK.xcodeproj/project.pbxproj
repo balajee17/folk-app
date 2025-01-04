@@ -18,6 +18,7 @@
 		E3DBE7E9FFAC4D5688A9B4AC /* Urbanist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4CCE02590AC94C3D8451D748 /* Urbanist-Medium.ttf */; };
 		F9F46A4D533B4C4685ACA9CF /* Urbanist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B088827A3ACE447EA4FC509B /* Urbanist-SemiBold.ttf */; };
 		FF57239DEE2A6129FB371C34 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EB18D0CA8F185DE44AC3E117 /* PrivacyInfo.xcprivacy */; };
+		55D2E07B37324A57A6882695 /* Aladin-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FE3E84679E14CC5801143C1 /* Aladin-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		B088827A3ACE447EA4FC509B /* Urbanist-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-SemiBold.ttf"; path = "../src/assets/fonts/Urbanist-SemiBold.ttf"; sourceTree = "<group>"; };
 		EB18D0CA8F185DE44AC3E117 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = FOLK/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		2FE3E84679E14CC5801143C1 /* Aladin-Regular.ttf */ = {isa = PBXFileReference; name = "Aladin-Regular.ttf"; path = "../src/assets/fonts/Aladin-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				9144C68C9CA94E8FA5F61226 /* Urbanist-Bold.ttf */,
 				4CCE02590AC94C3D8451D748 /* Urbanist-Medium.ttf */,
 				B088827A3ACE447EA4FC509B /* Urbanist-SemiBold.ttf */,
+				2FE3E84679E14CC5801143C1 /* Aladin-Regular.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -270,6 +273,7 @@
 				E3DBE7E9FFAC4D5688A9B4AC /* Urbanist-Medium.ttf in Resources */,
 				F9F46A4D533B4C4685ACA9CF /* Urbanist-SemiBold.ttf in Resources */,
 				FF57239DEE2A6129FB371C34 /* PrivacyInfo.xcprivacy in Resources */,
+				55D2E07B37324A57A6882695 /* Aladin-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,7 @@
 import {Image, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  COLORS,
   horizontalScale,
   moderateScale,
   verticalScale,
@@ -19,9 +20,8 @@ const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
 const ITEM_HEIGHT = verticalScale(200);
 
-const ParallexCarousel = ({carouselItems, autoScroll = true}) => {
+const ParallexCarousel = ({carouselItems, autoScroll}) => {
   const scrollX = useSharedValue(0);
-  const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
   const currentIndex = useRef(0);
   const autoScrollInterval = useRef(null);
@@ -65,12 +65,12 @@ const ParallexCarousel = ({carouselItems, autoScroll = true}) => {
           step += 1;
           if (step >= totalSteps) {
             clearInterval(autoScrollInterval.smoothScroll); // Stop the incremental scroll
-            scrollRef.current.scrollTo({
+            scrollRef?.current?.scrollTo({
               x: nextOffset,
               animated: false, // Ensure alignment at the end
             });
           } else if (scrollRef.current) {
-            scrollRef.current.scrollTo({
+            scrollRef?.current?.scrollTo({
               x: currentOffset + increment * step,
               animated: false,
             });
@@ -196,6 +196,16 @@ const ParallexCarousel = ({carouselItems, autoScroll = true}) => {
                   width: ITEM_WIDTH,
                   height: ITEM_HEIGHT,
                   overflow: 'hidden',
+                  shadowColor: COLORS.white,
+                  // padding: 5,
+                  // shadowOffset: {
+                  //   width: 0,
+                  //   height: 2,
+                  // },
+                  // shadowOpacity: 0.25,
+                  // shadowRadius: 3.84,
+
+                  // elevation: 5,
                 },
                 translateStyle,
               ]}>
@@ -225,6 +235,6 @@ export default ParallexCarousel;
 
 const styles = StyleSheet.create({
   ParallexCarouselCont: {
-    paddingVertical: '2.5%',
+    paddingTop: verticalScale(10),
   },
 });

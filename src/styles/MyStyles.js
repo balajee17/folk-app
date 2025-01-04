@@ -83,6 +83,7 @@ export let FONTS = {
   urbanistBold: 'Urbanist-Bold',
   urbanistSemiBold: 'Urbanist-SemiBold',
   urbanistMedium: 'Urbanist-Medium',
+  aladinRegular: 'Aladin-Regular',
 };
 
 // @ MyStyles

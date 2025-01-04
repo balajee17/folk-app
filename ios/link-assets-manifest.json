@@ -2,6 +2,10 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/fonts/Aladin-Regular.ttf",
+      "sha1": "d69563b0933fa0b721b1e2726dec6c187891182b"
+    },
+    {
       "path": "src/assets/fonts/Urbanist-Bold.ttf",
       "sha1": "5393e451665e344701f6f250898895ca98dabdbc"
     },
