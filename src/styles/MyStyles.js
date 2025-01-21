@@ -75,6 +75,10 @@ export let COLORS = {
   paleYellow: '#F7F8E6',
   gableGreen: '#1B2830',
   golden: '#FFC300',
+  ceramic: '#ffffff66',
+  gunsmoke: '#888786',
+  windowsBlue: '#308AAF',
+  whiteSmoke: '#f1ebeb80',
 };
 
 // @ FONTS
@@ -84,6 +88,7 @@ export let FONTS = {
   urbanistSemiBold: 'Urbanist-SemiBold',
   urbanistMedium: 'Urbanist-Medium',
   aladinRegular: 'Aladin-Regular',
+  interMedium: 'Inter-Medium',
 };
 
 // @ MyStyles

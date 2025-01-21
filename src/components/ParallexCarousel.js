@@ -20,7 +20,7 @@ const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
 const ITEM_HEIGHT = verticalScale(200);
 
-const ParallexCarousel = ({carouselItems, autoScroll}) => {
+const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
   const scrollX = useSharedValue(0);
   const scrollRef = useRef(null);
   const currentIndex = useRef(0);
@@ -44,40 +44,34 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
     if (!isAutoScrolling.current) return; // Skip if manual scroll is active
 
     autoScrollInterval.current = setInterval(() => {
-      if (scrollRef.current) {
-        // Calculate the current and next offsets
-        const currentOffset = currentIndex.current * ITEM_WIDTH;
-        currentIndex.current =
-          (currentIndex.current + 1) % carouselItems.length; // Cycle through images
-        const nextOffset = currentIndex.current * ITEM_WIDTH;
+      if (!scrollRef.current) return;
 
-        // Ensure smooth scroll starts fresh
-        let step = 0;
-        const totalSteps = 50;
-        const increment = (nextOffset - currentOffset) / totalSteps;
+      const currentOffset = currentIndex.current * ITEM_WIDTH;
+      currentIndex.current = (currentIndex.current + 1) % carouselItems.length; // Cycle through images
+      const nextOffset = currentIndex.current * ITEM_WIDTH;
 
-        // Clear any ongoing smooth scroll before starting a new one
-        if (autoScrollInterval?.smoothScroll) {
-          clearInterval(autoScrollInterval?.smoothScroll);
-        }
+      let step = 0;
+      const totalSteps = 50;
+      const increment = (nextOffset - currentOffset) / totalSteps;
 
-        autoScrollInterval.smoothScroll = setInterval(() => {
-          step += 1;
-          if (step >= totalSteps) {
-            clearInterval(autoScrollInterval.smoothScroll); // Stop the incremental scroll
-            scrollRef?.current?.scrollTo({
-              x: nextOffset,
-              animated: false, // Ensure alignment at the end
-            });
-          } else if (scrollRef.current) {
-            scrollRef?.current?.scrollTo({
-              x: currentOffset + increment * step,
-              animated: false,
-            });
-          }
-        }, 10); // Adjust delay for smoother movement
+      // Clear any previous smooth scrolling
+      if (autoScrollInterval?.smoothScroll) {
+        clearInterval(autoScrollInterval.smoothScroll);
       }
-    }, 5000); // Delay between auto-scroll transitions
+
+      autoScrollInterval.smoothScroll = setInterval(() => {
+        step++;
+        if (step > totalSteps) {
+          clearInterval(autoScrollInterval.smoothScroll); // End the smooth scroll
+          scrollRef.current.scrollTo({x: nextOffset, animated: false});
+        } else {
+          scrollRef.current.scrollTo({
+            x: currentOffset + increment * step,
+            animated: false,
+          });
+        }
+      }, 1); // Smooth scroll interval
+    }, 5000); // Auto-scroll interval
   };
 
   // # Stop Auto Scroll
@@ -99,7 +93,9 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
     <View style={styles.ParallexCarouselCont}>
       <Animated.ScrollView
         ref={scrollRef}
+        overScrollMode={'never'}
         horizontal
+        pagingEnabled
         showsHorizontalScrollIndicator={false}
         decelerationRate={'fast'}
         snapToInterval={ITEM_WIDTH}
@@ -107,40 +103,55 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
         disableIntervalMomentum
         scrollEventThrottle={16}
         onScroll={onScroll}
+        onScrollBeginDrag={() => {
+          if (autoScroll) {
+            stopAutoScroll();
+            isAutoScrolling.current = false;
+          }
+        }}
+        onMomentumScrollEnd={event => {
+          const offsetX = event.nativeEvent.contentOffset.x;
+          currentIndex.current = Math.round(offsetX / ITEM_WIDTH); // Update index after manual scroll
+          if (autoScroll) {
+            isAutoScrolling.current = true;
+            startAutoScroll();
+          }
+        }}
         onTouchStart={() => {
           if (autoScroll) {
             stopAutoScroll();
           }
-
-          if (scrollRef.current) {
-            scrollRef.current.scrollTo({
-              x: currentIndex.current * ITEM_WIDTH,
-              animated: false,
-            });
-          }
         }}
+        //   if (scrollRef.current) {
+        //     scrollRef.current.scrollTo({
+        //       x: currentIndex.current * ITEM_WIDTH,
+        //       animated: false,
+        //     });
+        //   }
+        // }}
         onTouchEnd={() => {
           if (autoScroll) {
             startAutoScroll();
           }
         }}
-        onMomentumScrollEnd={event => {
-          const offsetX = event.nativeEvent.contentOffset.x;
-          const index = Math.round(offsetX / ITEM_WIDTH);
-          currentIndex.current = index;
+        // onMomentumScrollEnd={event => {
+        //   const offsetX = event.nativeEvent.contentOffset.x;
+        //   const index = Math.round(offsetX / ITEM_WIDTH);
+        //   currentIndex.current = index;
 
-          if (scrollRef.current) {
-            scrollRef.current.scrollTo({
-              x: currentIndex.current * ITEM_WIDTH,
-              animated: true,
-            });
-          }
+        //   if (scrollRef.current) {
+        //     scrollRef.current.scrollTo({
+        //       x: currentIndex.current * ITEM_WIDTH,
+        //       animated: true,
+        //     });
+        //   }
 
-          if (autoScroll) {
-            isAutoScrolling.current = true;
-            startAutoScroll();
-          }
-        }}>
+        //   if (autoScroll) {
+        //     isAutoScrolling.current = true;
+        //     startAutoScroll();
+        //   }
+        // }}
+      >
         {carouselItems.map((item, index) => {
           const inputRange = [
             (index - 1) * ITEM_WIDTH,
@@ -197,6 +208,7 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
                   height: ITEM_HEIGHT,
                   overflow: 'hidden',
                   shadowColor: COLORS.white,
+                  backgroundColor: 'red',
                   // padding: 5,
                   // shadowOffset: {
                   //   width: 0,

@@ -5,4 +5,5 @@ export let screenNames = {
   verifyOTP: 'VerifyOTP',
   register: 'Register',
   home: 'Home',
+  drawerNavigation: 'Drawer Navigation',
 };

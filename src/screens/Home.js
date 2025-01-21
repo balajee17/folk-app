@@ -29,7 +29,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ParallexCarousel from '../components/ParallexCarousel';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
-const Home = () => {
+const Home = props => {
+  const {navigation} = props;
   const imageSource = [
     {
       id: 1,
@@ -90,6 +91,9 @@ const Home = () => {
         {/* // # Header */}
         <View style={[styles.header]}>
           <TouchableOpacity
+            onPress={() => {
+              navigation.openDrawer();
+            }}
             activeOpacity={0.6} // Menu Drawer Icon
             style={styles.menuIcon}>
             <Image
