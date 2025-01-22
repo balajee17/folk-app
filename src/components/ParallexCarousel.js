@@ -208,7 +208,6 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
                   height: ITEM_HEIGHT,
                   overflow: 'hidden',
                   shadowColor: COLORS.white,
-                  backgroundColor: 'red',
                   // padding: 5,
                   // shadowOffset: {
                   //   width: 0,

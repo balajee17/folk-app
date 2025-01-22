@@ -104,4 +104,7 @@ export let MyStyles = {
     color: COLORS.gableGreen,
     fontFamily: FONTS.urbanistSemiBold,
   },
+  scrollView: {
+    paddingBottom: moderateScale(8),
+  },
 };

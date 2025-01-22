@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Home from '../screens/Home';
 import Animation from '../screens/Animation';
 import DrawerNavigation from './DrawerNavigation';
+import Quotes from '../screens/Quotes';
 
 const Stack = createStackNavigator();
 
@@ -12,7 +13,7 @@ const StackNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={'Animation'}
+        initialRouteName={screenNames.drawerNavigation}
         screenOptions={{headerShown: false}}>
         <Stack.Screen
           name={screenNames.drawerNavigation}
@@ -20,9 +21,9 @@ const StackNavigation = () => {
         />
 
         <Stack.Screen
-          name={'Animation'}
+          name={'Quotes'}
           options={{gestureEnabled: false}}
-          component={Animation}
+          component={Quotes}
         />
       </Stack.Navigator>
     </NavigationContainer>

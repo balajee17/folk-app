@@ -6,4 +6,5 @@ export let screenNames = {
   register: 'Register',
   home: 'Home',
   drawerNavigation: 'Drawer Navigation',
+  quotes: 'Quotes',
 };

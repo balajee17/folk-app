@@ -7,7 +7,7 @@ const App = () => {
   useEffect(() => {}, []);
 
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{flex: 1}}>
       <StatusBarHeightProvider>
         <StackNavigation />
       </StatusBarHeightProvider>

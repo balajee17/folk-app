@@ -22,12 +22,13 @@ import {
   windowWidth,
 } from '../styles/MyStyles';
 import LinearGradient from 'react-native-linear-gradient';
-import {getImage} from '../utils/GetImage';
 import {screenNames} from '../constants/ScreenNames';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ParallexCarousel from '../components/ParallexCarousel';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import Container from '../components/Container';
+import CustomHeader from '../components/CustomHeader';
 
 const Home = props => {
   const {navigation} = props;
@@ -80,47 +81,17 @@ const Home = props => {
   });
 
   return (
-    <View style={styles.mainContainer}>
-      <StatusBar
-        backgroundColor={COLORS.charcoal}
-        barStyle="light-content"
-        animated
-      />
-      {/* // @ Gradient BackGround */}
-      <SafeAreaView style={styles.contentContainer}>
+    <Container>
+      <SafeAreaView styles={MyStyles.flex1}>
         {/* // # Header */}
-        <View style={[styles.header]}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-            activeOpacity={0.6} // Menu Drawer Icon
-            style={styles.menuIcon}>
-            <Image
-              style={styles.menuImage}
-              source={getImage.menu}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          {/* Title */}
-          <Text style={MyStyles.titleText}>{screenNames.home}</Text>
-          <TouchableOpacity
-            activeOpacity={0.6} // Notification Icon
-            style={styles.menuIcon}>
-            <Image
-              style={styles.notifyImage}
-              source={getImage.notification}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-
+        <CustomHeader
+          toggleDrawer={() => navigation.openDrawer()}
+          titleName={screenNames.home}
+        />
+        {/* // # Contents */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: moderateScale(8),
-            backgroundColor: COLORS.paleYellow,
-          }}>
+          contentContainerStyle={MyStyles.scrollView}>
           {/* // @ Daily Darshana - Carousel  */}
           <View style={[styles.dailyDarshanCont, styles.padVert10]}>
             <View style={styles.halfBg} />
@@ -151,7 +122,10 @@ const Home = props => {
           <View style={{paddingBottom: verticalScale(10)}}>
             <View style={[styles.textHstryIcon, styles.paddingHor10]}>
               <Text style={[MyStyles.subTitleText]}>Quotes</Text>
-              <TouchableOpacity style={styles.historyIcon} activeOpacity={0.6}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate(screenNames.quotes)}
+                style={styles.historyIcon}
+                activeOpacity={0.6}>
                 <MaterialCommunityIcons
                   name="history"
                   size={moderateScale(25)}
@@ -247,9 +221,7 @@ const Home = props => {
                 width={screenWidth * 0.95}
                 height={screenHeight * 0.24}
                 webViewStyle={{
-                  // backgroundColor: 'red',
                   borderRadius: moderateScale(15),
-                  // paddingHorizontal: moderateScale(10),
                 }}
                 play={playVideo}
                 mute={youtubeAudio}
@@ -260,39 +232,17 @@ const Home = props => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
-  mainContainer: {flex: 1, backgroundColor: COLORS.charcoal},
   gradient: {
     borderRadius: moderateScale(15),
   },
-  contentContainer: {
-    flex: 1,
-  },
-  header: {
-    padding: moderateScale(10),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: COLORS.charcoal,
-  },
-  menuIcon: {
-    padding: moderateScale(6),
-    borderWidth: moderateScale(1),
-    height: horizontalScale(35),
-    width: horizontalScale(35),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: moderateScale(30),
-    borderColor: COLORS.osloGrey,
-  },
-  menuImage: {height: '80%', width: '80%'},
-  notifyImage: {height: '90%', width: '90%'},
+
   historyIcon: {
     height: horizontalScale(35),
     width: horizontalScale(35),
