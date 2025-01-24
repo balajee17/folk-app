@@ -25,12 +25,15 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import {StatusBarTransp} from '../components/StatusBarComponent';
+import {
+  CommonStatusBar,
+  StatusBarTransp,
+} from '../components/StatusBarComponent';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Animation = () => {
+const AlbumCarousel = ({closeAlbum}) => {
   const WIDTH = windowWidth * 0.75;
   const HEIGHT = WIDTH * 1.58;
   const imageAddress = [
@@ -49,7 +52,7 @@ const Animation = () => {
 
   return (
     <>
-      <StatusBarTransp />
+      <CommonStatusBar />
       <View style={{backgroundColor: '#000', flex: 1}}>
         <View style={StyleSheet.absoluteFillObject}>
           {imageAddress.map((item, index) => {
@@ -101,6 +104,7 @@ const Animation = () => {
                   paddingHorizontal: '1%',
                 }}>
                 <TouchableOpacity
+                  onPress={() => closeAlbum()}
                   style={{
                     backgroundColor: 'rgba(0,0,0,0.3)',
                     width: horizontalScale(30),
@@ -187,6 +191,6 @@ const Animation = () => {
   );
 };
 
-export default Animation;
+export default AlbumCarousel;
 
 const styles = StyleSheet.create({});

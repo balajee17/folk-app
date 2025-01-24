@@ -79,6 +79,7 @@ export let COLORS = {
   gunsmoke: '#888786',
   windowsBlue: '#308AAF',
   whiteSmoke: '#f1ebeb80',
+  davyGrey: 'rgba(69, 90, 100, 0.08)',
 };
 
 // @ FONTS
@@ -87,8 +88,10 @@ export let FONTS = {
   urbanistBold: 'Urbanist-Bold',
   urbanistSemiBold: 'Urbanist-SemiBold',
   urbanistMedium: 'Urbanist-Medium',
+  urbanistRegular: 'Urbanist-Regular',
   aladinRegular: 'Aladin-Regular',
   interMedium: 'Inter-Medium',
+  ysabeauInfantBold: 'YsabeauInfant-Bold',
 };
 
 // @ MyStyles
@@ -106,5 +109,48 @@ export let MyStyles = {
   },
   scrollView: {
     paddingBottom: moderateScale(8),
+    backgroundColor: COLORS.paleYellow,
+    flexGrow: 1,
+  },
+  marTop3Per: {marginTop: '3%'},
+  quotesImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: moderateScale(15),
+  },
+  updatesTextCont: {
+    width: '100%',
+    alignSelf: 'center',
+    borderRadius: moderateScale(15),
+  },
+  updatesBgImg: {
+    marginTop: verticalScale(10),
+    width: '100%',
+    borderRadius: moderateScale(15),
+  },
+  updateTxt: {
+    fontSize: SIZES.l,
+    color: COLORS.white,
+    fontFamily: FONTS.urbanistMedium,
+    marginTop: '2%',
+    lineHeight: 20,
+  },
+  paddingHor10: {paddingHorizontal: moderateScale(10)},
+  updateTitle: {
+    fontSize: SIZES.xxxl,
+    textAlign: 'center',
+    color: COLORS.golden,
+    fontFamily: FONTS.aladinRegular,
+  },
+  gradient: {
+    borderRadius: moderateScale(15),
+  },
+  marTop10: {marginTop: verticalScale(10)},
+  youtubeCont: {
+    borderRadius: moderateScale(15),
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 };

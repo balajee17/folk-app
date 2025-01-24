@@ -46,7 +46,14 @@ const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
           />
         ) : (
           <MaterialCommunityIcons
-            name={titleName === screenNames.quotes ? 'filter' : null}
+            name={
+              titleName === screenNames.quotes ||
+              titleName === screenNames.dailyDarshan ||
+              titleName === screenNames.updates ||
+              titleName === screenNames.folkVideos
+                ? 'filter'
+                : null
+            }
             size={moderateScale(25)}
             color={COLORS.white}
           />

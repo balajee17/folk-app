@@ -1,16 +1,14 @@
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {COLORS} from '../styles/MyStyles';
+import {CommonStatusBar} from './StatusBarComponent';
 
 const Container = ({children}) => {
   return (
     <View style={styles.mainContainer}>
-      <StatusBar
-        backgroundColor={COLORS.charcoal}
-        barStyle="light-content"
-        animated
-      />
-      <View style={styles.paleYellowBg}>{children}</View>
+      <CommonStatusBar />
+
+      {children}
     </View>
   );
 };
@@ -18,9 +16,8 @@ const Container = ({children}) => {
 export default Container;
 
 const styles = StyleSheet.create({
-  mainContainer: {flex: 1, backgroundColor: COLORS.charcoal},
-  paleYellowBg: {
+  mainContainer: {
     flex: 1,
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.charcoal,
   },
 });

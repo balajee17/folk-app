@@ -8,11 +8,13 @@ import {
   windowWidth,
 } from '../styles/MyStyles';
 import Animated, {
+  Easing,
   Extrapolation,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 import ParallexPaginationDots from './ParallexPaginationDots';
 
@@ -26,6 +28,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
   const currentIndex = useRef(0);
   const autoScrollInterval = useRef(null);
   const isAutoScrolling = useRef(true);
+  let scrollOffset = useSharedValue(0);
 
   useEffect(() => {
     if (autoScroll) {
@@ -41,37 +44,52 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
 
   // # Start Auto Scroll
   const startAutoScroll = () => {
-    if (!isAutoScrolling.current) return; // Skip if manual scroll is active
+    if (
+      !isAutoScrolling.current ||
+      !scrollRef.current ||
+      carouselItems.length === 0
+    )
+      return;
 
-    autoScrollInterval.current = setInterval(() => {
-      if (!scrollRef.current) return;
+    const totalSteps = 80; // Number of steps for smooth scrolling
+    const intervalDuration = 5000; // Time between auto-scrolls
 
-      const currentOffset = currentIndex.current * ITEM_WIDTH;
-      currentIndex.current = (currentIndex.current + 1) % carouselItems.length; // Cycle through images
-      const nextOffset = currentIndex.current * ITEM_WIDTH;
-
+    const smoothScroll = (startOffset, endOffset) => {
       let step = 0;
-      const totalSteps = 50;
-      const increment = (nextOffset - currentOffset) / totalSteps;
 
-      // Clear any previous smooth scrolling
-      if (autoScrollInterval?.smoothScroll) {
-        clearInterval(autoScrollInterval.smoothScroll);
-      }
-
-      autoScrollInterval.smoothScroll = setInterval(() => {
+      const scrollStep = () => {
         step++;
         if (step > totalSteps) {
-          clearInterval(autoScrollInterval.smoothScroll); // End the smooth scroll
-          scrollRef.current.scrollTo({x: nextOffset, animated: false});
-        } else {
-          scrollRef.current.scrollTo({
-            x: currentOffset + increment * step,
-            animated: false,
-          });
+          // Ensure final scroll position is precise
+          scrollRef.current.scrollTo({x: endOffset, animated: true});
+          return;
         }
-      }, 1); // Smooth scroll interval
-    }, 5000); // Auto-scroll interval
+
+        const increment = (endOffset - startOffset) / totalSteps;
+        const currentOffset = startOffset + increment * step;
+
+        scrollRef.current.scrollTo({x: currentOffset, animated: true});
+        requestAnimationFrame(scrollStep); // Recursive call
+      };
+
+      requestAnimationFrame(scrollStep);
+    };
+
+    autoScrollInterval.current = setInterval(() => {
+      const currentOffset = currentIndex.current * ITEM_WIDTH;
+      currentIndex.current = (currentIndex.current + 1) % carouselItems.length; // Cycle through items
+      const nextOffset = currentIndex.current * ITEM_WIDTH;
+
+      // Smooth scroll to the next item
+      smoothScroll(currentOffset, nextOffset);
+    }, intervalDuration);
+
+    // Clear interval on unmount or manual scrolling
+    return () => {
+      if (autoScrollInterval.current) {
+        clearInterval(autoScrollInterval.current);
+      }
+    };
   };
 
   // # Stop Auto Scroll

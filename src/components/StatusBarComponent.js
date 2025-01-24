@@ -57,3 +57,13 @@ export const StatusBarTransp = () => {
     </>
   );
 };
+
+export const CommonStatusBar = () => {
+  return (
+    <StatusBar
+      backgroundColor={COLORS.charcoal}
+      barStyle="light-content"
+      animated
+    />
+  );
+};

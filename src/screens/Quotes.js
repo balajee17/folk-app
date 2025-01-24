@@ -9,6 +9,7 @@ import {
 import React, {useEffect, useMemo, useState} from 'react';
 import Container from '../components/Container';
 import {
+  COLORS,
   moderateScale,
   MyStyles,
   verticalScale,
@@ -25,6 +26,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import SwipeCard from '../components/SwipeCard';
 
 const Quotes = ({navigation}) => {
   const imageSource = [
@@ -48,22 +50,9 @@ const Quotes = ({navigation}) => {
     },
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [newData, setNewData] = useState([...imageSource, ...imageSource]);
+  const [newData, setNewData] = useState(imageSource);
 
-  const swipeXArray = newData.map(() => useSharedValue(0));
-  const swipeDirection = useSharedValue(0);
   const animatedValue = useSharedValue(0);
-
-  const handleSwipe = direction => {
-    // Update the currentIndex to simulate infinite scrolling
-    if (direction === 'left') {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % imageSource.length);
-    } else if (direction === 'right') {
-      setCurrentIndex(prevIndex =>
-        prevIndex === 0 ? imageSource.length - 1 : prevIndex - 1,
-      );
-    }
-  };
 
   return (
     <Container>
@@ -73,12 +62,13 @@ const Quotes = ({navigation}) => {
           goBack={() => navigation.goBack()}
           titleName={screenNames.quotes}
         />
-
         {/* // # Contents */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={MyStyles.scrollView}>
-          <Text style={[MyStyles.subTitleText, styles.titleTxt]}>Today</Text>
+          contentContainerStyle={[MyStyles.scrollView, MyStyles.paddingHor10]}>
+          <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
+            Today
+          </Text>
           <View
             style={{
               alignSelf: 'center',
@@ -90,101 +80,17 @@ const Quotes = ({navigation}) => {
               paddingHorizontal: moderateScale(10),
             }}>
             {newData.map((item, index) => {
-              const swipeAnimation = useAnimatedStyle(() => {
-                const isCurrentItem = currentIndex === index;
-                const rotateZ = interpolate(
-                  swipeXArray[index]?.value || 0, // Ensure swipeXArray[index] exists
-                  [0, windowWidth],
-                  [0, 20],
-                );
-                const translateY = interpolate(
-                  animatedValue.value,
-                  [index - 1, index],
-                  [-30, 0],
-                );
-                const scale = interpolate(
-                  animatedValue.value,
-                  [index - 1, index],
-                  [0.9, 1],
-                );
-
-                return {
-                  transform: [
-                    {translateX: swipeXArray[index]?.value || 0}, // Safe access
-                    {scale: isCurrentItem ? 1 : scale},
-                    {translateY: isCurrentItem ? 0 : translateY},
-                    {rotateZ: `${isCurrentItem ? rotateZ : 0}deg`},
-                  ],
-                };
-              });
-              const pan = Gesture.Pan()
-                .onUpdate(e => {
-                  const isSwipeRight = e.translationX > 0;
-                  swipeDirection.value = isSwipeRight ? 1 : -1;
-
-                  if (currentIndex === index) {
-                    swipeXArray[index].value = e.translationX;
-                    animatedValue.value = interpolate(
-                      Math.abs(e.translationX),
-                      [0, windowWidth],
-                      [index, index + 1],
-                    );
-                  }
-                })
-                .onEnd(e => {
-                  if (currentIndex === index) {
-                    if (
-                      Math.abs(e.translationX) > 150 ||
-                      Math.abs(e.velocityX) > 1000
-                    ) {
-                      swipeXArray[index].value = withTiming(
-                        windowWidth * swipeDirection.value * 2,
-                        {},
-                        () => {
-                          runOnJS(setCurrentIndex)(currentIndex + 1);
-                          //   runOnJS(() =>
-                          //     setNewData(prevData => [
-                          //       ...prevData.slice(1),
-                          //       prevData[0],
-                          //     ]),
-                          //   );
-                          //   runOnJS(handleSwipe)(
-                          //     swipeDirection.value > 0 ? 'right' : 'left',
-                          //   );
-                        },
-                      );
-                      animatedValue.value = withTiming(currentIndex + 1);
-                    } else {
-                      swipeXArray[index].value = withTiming(0, {
-                        duration: 500,
-                      });
-                      animatedValue.value = withTiming(currentIndex);
-                    }
-                  }
-                });
               return (
-                <GestureDetector key={index + 1} gesture={pan}>
-                  <Animated.View
-                    style={[
-                      {
-                        position: 'absolute',
-                        zIndex: newData.length - index,
-                        width: '100%',
-                        height: verticalScale(350),
-                      },
-                      swipeAnimation,
-                    ]}>
-                    <ImageBackground
-                      source={{uri: item?.image}}
-                      resizeMode="stretch"
-                      imageStyle={{borderRadius: moderateScale(20)}}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                      }}
-                    />
-                  </Animated.View>
-                </GestureDetector>
+                <SwipeCard
+                  currentIndex={currentIndex}
+                  setCurrentIndex={setCurrentIndex}
+                  animatedValue={animatedValue}
+                  newData={newData}
+                  setNewData={setNewData}
+                  item={item}
+                  index={index}
+                  imageSource={imageSource}
+                />
               );
             })}
           </View>
@@ -196,6 +102,4 @@ const Quotes = ({navigation}) => {
 
 export default Quotes;
 
-const styles = StyleSheet.create({
-  titleTxt: {paddingHorizontal: moderateScale(10), marginTop: '4%'},
-});
+const styles = StyleSheet.create({});

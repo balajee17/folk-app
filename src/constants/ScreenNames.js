@@ -7,4 +7,7 @@ export let screenNames = {
   home: 'Home',
   drawerNavigation: 'Drawer Navigation',
   quotes: 'Quotes',
+  dailyDarshan: 'Daily Darshan',
+  updates: 'FOLK Updates',
+  folkVideos: 'FOLK Videos',
 };

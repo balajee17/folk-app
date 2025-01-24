@@ -18,8 +18,16 @@
       "sha1": "8fdacadcc8bf9a54e98e7894f54c0d8edab92b03"
     },
     {
+      "path": "src/assets/fonts/Urbanist-Regular.ttf",
+      "sha1": "ca6e793bc43b42306c06fedc353c68af20ee2c7b"
+    },
+    {
       "path": "src/assets/fonts/Urbanist-SemiBold.ttf",
       "sha1": "a0dd44015ece2092d0b480cd60c87ccbe932e3f4"
+    },
+    {
+      "path": "src/assets/fonts/YsabeauInfant-Bold.ttf",
+      "sha1": "fe3bdf0a91a4b829c9a5e8bb4d82c71b6b0a68d7"
     }
   ]
 }

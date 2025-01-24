@@ -19,6 +19,7 @@ import {
   screenWidth,
   SIZES,
   verticalScale,
+  windowHeight,
   windowWidth,
 } from '../styles/MyStyles';
 import LinearGradient from 'react-native-linear-gradient';
@@ -59,7 +60,6 @@ const Home = props => {
   const [quotesImg, setQuotesImg] = useState(
     'https://pbs.twimg.com/media/Ft_jtRaagAM_PJD.jpg:large',
   );
-  const updates = 'Text';
 
   useEffect(() => {
     // Fetch the dimensions of the image
@@ -80,6 +80,10 @@ const Home = props => {
     }
   });
 
+  const navigateScreen = screen => {
+    navigation.navigate(screen);
+  };
+
   return (
     <Container>
       <SafeAreaView styles={MyStyles.flex1}>
@@ -88,15 +92,19 @@ const Home = props => {
           toggleDrawer={() => navigation.openDrawer()}
           titleName={screenNames.home}
         />
+
         {/* // # Contents */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={MyStyles.scrollView}>
+          contentContainerStyle={[
+            MyStyles.scrollView,
+            {paddingBottom: verticalScale(80)},
+          ]}>
           {/* // @ Daily Darshana - Carousel  */}
           <View style={[styles.dailyDarshanCont, styles.padVert10]}>
             <View style={styles.halfBg} />
 
-            <View style={[styles.textHstryIcon, styles.paddingHor10]}>
+            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
               <Text
                 style={[
                   MyStyles.subTitleText,
@@ -106,7 +114,10 @@ const Home = props => {
                 ]}>
                 Daily Darshan
               </Text>
-              <TouchableOpacity style={styles.historyIcon} activeOpacity={0.6}>
+              <TouchableOpacity
+                onPress={() => navigateScreen(screenNames.dailyDarshan)}
+                style={styles.historyIcon}
+                activeOpacity={0.6}>
                 <MaterialCommunityIcons
                   name="history"
                   size={moderateScale(25)}
@@ -120,10 +131,10 @@ const Home = props => {
 
           {/* // @  Quotes  */}
           <View style={{paddingBottom: verticalScale(10)}}>
-            <View style={[styles.textHstryIcon, styles.paddingHor10]}>
+            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
               <Text style={[MyStyles.subTitleText]}>Quotes</Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate(screenNames.quotes)}
+                onPress={() => navigateScreen(screenNames.quotes)}
                 style={styles.historyIcon}
                 activeOpacity={0.6}>
                 <MaterialCommunityIcons
@@ -135,7 +146,7 @@ const Home = props => {
             </View>
             <View style={styles.quotesImgCont(imageDimensions)}>
               <Image
-                style={styles.quotesImg}
+                style={MyStyles.quotesImg}
                 source={{
                   uri: quotesImg,
                 }}
@@ -145,9 +156,12 @@ const Home = props => {
 
           {/* // @  Folk Updates  */}
           <View style={styles.padVert10}>
-            <View style={[styles.textHstryIcon, styles.paddingHor10]}>
+            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
               <Text style={[MyStyles.subTitleText]}>Folk Updates</Text>
-              <TouchableOpacity style={styles.historyIcon} activeOpacity={0.6}>
+              <TouchableOpacity
+                onPress={() => navigateScreen(screenNames.updates)}
+                style={styles.historyIcon}
+                activeOpacity={0.6}>
                 <MaterialCommunityIcons
                   name="history"
                   size={moderateScale(25)}
@@ -155,50 +169,51 @@ const Home = props => {
                 />
               </TouchableOpacity>
             </View>
-            {updates === 'image' ? (
-              <View style={styles.quotesImgCont(imageDimensions)}>
-                <Image
-                  style={styles.quotesImg}
-                  source={{
-                    uri: quotesImg,
-                  }}
-                />
-              </View>
-            ) : (
-              <View style={[styles.paddingHor10, styles.updatesTextCont]}>
-                <LinearGradient
-                  start={{x: 0.3, y: 0}}
-                  end={{x: 1, y: 1}}
-                  colors={['#353a5f', '#9ebaf3']}
-                  style={[styles.gradient, styles.marTop10]}>
-                  <View style={{padding: moderateScale(10)}}>
-                    <Text style={styles.updateTitle}>Welcome to Folk App</Text>
-                    <Text style={[styles.updateTxt, {fontSize: SIZES.xl}]}>
-                      Vaikunta Ekadasi,
-                    </Text>
-                    <Text style={styles.updateTxt}>
-                      Vaikuntha Ekadashi is an important festival celebrated
-                      every year. Ekadashi is the eleventh day of the fortnight
-                      of the waxing or waning moon and occurs twice a month. But
-                      the Ekadashi that occurs in the month of Margashirsha
-                      (December – January) during the fortnight of the waxing
-                      moon is of special significance and is glorified as
-                      Vaikuntha Ekadashi. On this day, the gates of Vaikuntha
-                      (the Lord’s abode) open to His ardent devotees. This is a
-                      major festival of South India celebrated in all the
-                      temples of Lord Vishnu.
-                    </Text>
-                  </View>
-                </LinearGradient>
-              </View>
-            )}
+
+            <View style={styles.quotesImgCont(imageDimensions)}>
+              <Image
+                style={MyStyles.quotesImg}
+                source={{
+                  uri: 'https://pbs.twimg.com/media/FtJ9xsCaMAAvEsM.jpg:large',
+                }}
+              />
+            </View>
+
+            <View style={[MyStyles.paddingHor10, MyStyles.updatesTextCont]}>
+              <LinearGradient
+                start={{x: 0.3, y: 0}}
+                end={{x: 1, y: 1}}
+                colors={['#353a5f', '#9ebaf3']}
+                style={[MyStyles.gradient, MyStyles.marTop10]}>
+                <View style={{padding: moderateScale(10)}}>
+                  <Text style={MyStyles.updateTitle}>Welcome to Folk App</Text>
+                  <Text style={[MyStyles.updateTxt, {fontSize: SIZES.xl}]}>
+                    Vaikunta Ekadasi,
+                  </Text>
+                  <Text style={MyStyles.updateTxt}>
+                    Vaikuntha Ekadashi is an important festival celebrated every
+                    year. Ekadashi is the eleventh day of the fortnight of the
+                    waxing or waning moon and occurs twice a month. But the
+                    Ekadashi that occurs in the month of Margashirsha (December
+                    – January) during the fortnight of the waxing moon is of
+                    special significance and is glorified as Vaikuntha Ekadashi.
+                    On this day, the gates of Vaikuntha (the Lord’s abode) open
+                    to His ardent devotees. This is a major festival of South
+                    India celebrated in all the temples of Lord Vishnu.
+                  </Text>
+                </View>
+              </LinearGradient>
+            </View>
           </View>
 
           {/* // @ Youtube Videos */}
           <View style={styles.padVert10}>
-            <View style={[styles.textHstryIcon, styles.paddingHor10]}>
+            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
               <Text style={[MyStyles.subTitleText]}>Folk Videos</Text>
-              <TouchableOpacity style={styles.historyIcon} activeOpacity={0.6}>
+              <TouchableOpacity
+                onPress={() => navigateScreen(screenNames.folkVideos)}
+                style={styles.historyIcon}
+                activeOpacity={0.6}>
                 <MaterialCommunityIcons
                   name="history"
                   size={moderateScale(25)}
@@ -206,22 +221,13 @@ const Home = props => {
                 />
               </TouchableOpacity>
             </View>
-            <View
-              style={[
-                styles.marTop10,
-                {
-                  borderRadius: moderateScale(15),
-                  overflow: 'hidden',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                },
-              ]}>
+            <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
               <YoutubePlayer
-                width={screenWidth * 0.95}
-                height={screenHeight * 0.24}
+                width={windowWidth * 0.95}
+                height={windowWidth * 0.95 * (9 / 16)}
                 webViewStyle={{
                   borderRadius: moderateScale(15),
+                  backgroundColor: 'red',
                 }}
                 play={playVideo}
                 mute={youtubeAudio}
@@ -239,10 +245,6 @@ const Home = props => {
 export default Home;
 
 const styles = StyleSheet.create({
-  gradient: {
-    borderRadius: moderateScale(15),
-  },
-
   historyIcon: {
     height: horizontalScale(35),
     width: horizontalScale(35),
@@ -271,45 +273,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  paddingHor10: {paddingHorizontal: moderateScale(10)},
   marTop15: {marginTop: verticalScale(15)},
   quotesImgCont: imageDimensions => ({
     width: windowWidth,
     alignSelf: 'center',
     marginTop: verticalScale(10),
-    paddingHorizontal: moderateScale(10),
     aspectRatio:
       (imageDimensions?.width || 135) / (imageDimensions?.height || 76),
     borderRadius: moderateScale(15),
+    ...MyStyles.paddingHor10,
   }),
-  quotesImg: {
-    width: '100%',
-    height: '100%',
-    borderRadius: moderateScale(15),
-  },
+
   padVert10: {paddingVertical: verticalScale(10)},
-  updateTitle: {
-    fontSize: SIZES.xxxl,
-    textAlign: 'center',
-    color: COLORS.golden,
-    fontFamily: FONTS.aladinRegular,
-  },
-  updateTxt: {
-    fontSize: SIZES.l,
-    color: COLORS.white,
-    fontFamily: FONTS.urbanistMedium,
-    marginTop: '2%',
-    lineHeight: 20,
-  },
-  updatesTextCont: {
-    width: '100%',
-    alignSelf: 'center',
-    borderRadius: moderateScale(15),
-  },
-  updatesBgImg: {
-    marginTop: verticalScale(10),
-    width: '100%',
-    borderRadius: moderateScale(15),
-  },
-  marTop10: {marginTop: verticalScale(10)},
 });
