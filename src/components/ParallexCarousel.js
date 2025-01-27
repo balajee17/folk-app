@@ -52,7 +52,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
       return;
 
     const totalSteps = 80; // Number of steps for smooth scrolling
-    const intervalDuration = 5000; // Time between auto-scrolls
+    const intervalDuration = 3000; // Time between auto-scrolls
 
     const smoothScroll = (startOffset, endOffset) => {
       let step = 0;

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
   horizontalScale,
@@ -33,29 +33,38 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AlbumCarousel = ({closeAlbum}) => {
+const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
   const WIDTH = windowWidth * 0.75;
   const HEIGHT = WIDTH * 1.58;
-  const imageAddress = [
-    'https://m.media-amazon.com/images/I/81cekv1b3fL._AC_UF1000,1000_QL80_.jpg',
-    'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-    'https://i.pinimg.com/474x/19/ee/4a/19ee4a3da8572531a7af9bd35900fef4.jpg',
-    'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-  ];
-  const scrollX = useSharedValue(0);
+  const imagesData = selectedItem?.images;
+
+  const scrollX = useSharedValue(activeIndex);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    scrollToIndex(activeIndex);
+  }, []);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
-      scrollX.value = event.contentOffset.x;
+      // Dynamically track the current index based on scroll position
+      scrollX.value = Math.round(event.contentOffset.x / windowWidth);
     },
   });
 
+  const scrollToIndex = index => {
+    const offset = index * windowWidth; // Calculate the x-offset for the selected index
+    scrollRef.current?.scrollTo({x: offset, animated: true}); // Scroll to the index
+    scrollX.value = index; // Update the active index
+  };
+  const download = link => {};
+  const shareLink = link => {};
   return (
     <>
       <CommonStatusBar />
       <View style={{backgroundColor: '#000', flex: 1}}>
         <View style={StyleSheet.absoluteFillObject}>
-          {imageAddress.map((item, index) => {
+          {imagesData.map((item, index) => {
             const inputRange = [
               (index - 1) * windowWidth,
               index * windowWidth,
@@ -78,7 +87,7 @@ const AlbumCarousel = ({closeAlbum}) => {
               <>
                 <Animated.Image
                   key={`background-image-${index}`}
-                  source={{uri: item}}
+                  source={{uri: item?.link}}
                   blurRadius={50}
                   style={[StyleSheet.absoluteFillObject, animatedStyle]}
                 />
@@ -87,13 +96,14 @@ const AlbumCarousel = ({closeAlbum}) => {
           })}
         </View>
         <Animated.ScrollView
+          ref={scrollRef}
           onScroll={scrollHandler}
-          data={imageAddress}
+          data={imagesData}
           pagingEnabled
           horizontal
           scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}>
-          {imageAddress.map((item, index) => {
+          {imagesData.map((item, index) => {
             return (
               <View
                 key={index + 1}
@@ -125,7 +135,7 @@ const AlbumCarousel = ({closeAlbum}) => {
                 </TouchableOpacity>
 
                 <Image
-                  source={{uri: item}}
+                  source={{uri: item?.link}}
                   style={{
                     height: HEIGHT,
                     width: WIDTH,
@@ -142,7 +152,7 @@ const AlbumCarousel = ({closeAlbum}) => {
                   }}>
                   <TouchableOpacity
                     onPress={() => {
-                      handlePress();
+                      download(item?.link);
                     }}
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.3)',
@@ -163,6 +173,7 @@ const AlbumCarousel = ({closeAlbum}) => {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
+                    onPress={() => shareImage(item?.link)}
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.3)',
                       width: horizontalScale(50),
