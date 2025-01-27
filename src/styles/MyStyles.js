@@ -80,6 +80,7 @@ export let COLORS = {
   windowsBlue: '#308AAF',
   whiteSmoke: '#f1ebeb80',
   davyGrey: 'rgba(69, 90, 100, 0.08)',
+  inputBg: 'rgba(234, 236, 220, 1)',
 };
 
 // @ FONTS

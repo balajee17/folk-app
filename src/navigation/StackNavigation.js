@@ -8,6 +8,7 @@ import Quotes from '../screens/Quotes';
 import DailyDarshan from '../screens/DailyDarshan';
 import FolkUpdates from '../screens/FolkUpdates';
 import FolkVideos from '../screens/FolkVideos';
+import YFHForm from '../screens/YFHForm';
 
 const Stack = createStackNavigator();
 
@@ -15,7 +16,7 @@ const StackNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={screenNames.drawerNavigation}
+        initialRouteName={screenNames.yfhForm}
         screenOptions={{headerShown: false}}>
         {/* // @ Drawer Component */}
         <Stack.Screen
@@ -43,6 +44,13 @@ const StackNavigation = () => {
           name={screenNames.folkVideos}
           options={{gestureEnabled: false}}
           component={FolkVideos}
+        />
+
+        {/* // @ Drawer Screens */}
+        <Stack.Screen
+          name={screenNames.yfhForm}
+          options={{gestureEnabled: false}}
+          component={YFHForm}
         />
       </Stack.Navigator>
     </NavigationContainer>

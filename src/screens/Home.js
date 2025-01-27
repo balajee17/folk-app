@@ -100,140 +100,145 @@ const Home = props => {
             MyStyles.scrollView,
             {paddingBottom: verticalScale(80)},
           ]}>
-          {/* // @ Daily Darshana - Carousel  */}
-          <View style={[styles.dailyDarshanCont, styles.padVert10]}>
+          <View style={styles.contentCont}>
             <View style={styles.halfBg} />
 
-            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-              <Text
-                style={[
-                  MyStyles.subTitleText,
-                  {
-                    color: COLORS.golden,
-                  },
-                ]}>
-                Daily Darshan
-              </Text>
-              <TouchableOpacity
-                onPress={() => navigateScreen(screenNames.dailyDarshan)}
-                style={styles.historyIcon}
-                activeOpacity={0.6}>
-                <MaterialCommunityIcons
-                  name="history"
-                  size={moderateScale(25)}
-                  color={COLORS.white}
+            {/* // @ Daily Darshana - Carousel  */}
+            <View style={[styles.dailyDarshanCont, styles.padVert10]}>
+              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                <Text
+                  style={[
+                    MyStyles.subTitleText,
+                    {
+                      color: COLORS.golden,
+                    },
+                  ]}>
+                  Daily Darshan
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigateScreen(screenNames.dailyDarshan)}
+                  style={styles.historyIcon}
+                  activeOpacity={0.6}>
+                  <MaterialCommunityIcons
+                    name="history"
+                    size={moderateScale(25)}
+                    color={COLORS.white}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <ParallexCarousel carouselItems={imageSource} autoScroll={true} />
+            </View>
+
+            {/* // @  Quotes  */}
+            <View style={{paddingBottom: verticalScale(10)}}>
+              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                <Text style={[MyStyles.subTitleText]}>Quotes</Text>
+                <TouchableOpacity
+                  onPress={() => navigateScreen(screenNames.quotes)}
+                  style={styles.historyIcon}
+                  activeOpacity={0.6}>
+                  <MaterialCommunityIcons
+                    name="history"
+                    size={moderateScale(25)}
+                    color={COLORS.gableGreen}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.quotesImgCont(imageDimensions)}>
+                <Image
+                  style={MyStyles.quotesImg}
+                  source={{
+                    uri: quotesImg,
+                  }}
                 />
-              </TouchableOpacity>
+              </View>
             </View>
 
-            <ParallexCarousel carouselItems={imageSource} autoScroll={true} />
-          </View>
+            {/* // @  Folk Updates  */}
+            <View style={styles.padVert10}>
+              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                <Text style={[MyStyles.subTitleText]}>Folk Updates</Text>
+                <TouchableOpacity
+                  onPress={() => navigateScreen(screenNames.updates)}
+                  style={styles.historyIcon}
+                  activeOpacity={0.6}>
+                  <MaterialCommunityIcons
+                    name="history"
+                    size={moderateScale(25)}
+                    color={COLORS.gableGreen}
+                  />
+                </TouchableOpacity>
+              </View>
 
-          {/* // @  Quotes  */}
-          <View style={{paddingBottom: verticalScale(10)}}>
-            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-              <Text style={[MyStyles.subTitleText]}>Quotes</Text>
-              <TouchableOpacity
-                onPress={() => navigateScreen(screenNames.quotes)}
-                style={styles.historyIcon}
-                activeOpacity={0.6}>
-                <MaterialCommunityIcons
-                  name="history"
-                  size={moderateScale(25)}
-                  color={COLORS.gableGreen}
+              <View style={styles.quotesImgCont(imageDimensions)}>
+                <Image
+                  style={MyStyles.quotesImg}
+                  source={{
+                    uri: 'https://pbs.twimg.com/media/FtJ9xsCaMAAvEsM.jpg:large',
+                  }}
                 />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.quotesImgCont(imageDimensions)}>
-              <Image
-                style={MyStyles.quotesImg}
-                source={{
-                  uri: quotesImg,
-                }}
-              />
-            </View>
-          </View>
+              </View>
 
-          {/* // @  Folk Updates  */}
-          <View style={styles.padVert10}>
-            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-              <Text style={[MyStyles.subTitleText]}>Folk Updates</Text>
-              <TouchableOpacity
-                onPress={() => navigateScreen(screenNames.updates)}
-                style={styles.historyIcon}
-                activeOpacity={0.6}>
-                <MaterialCommunityIcons
-                  name="history"
-                  size={moderateScale(25)}
-                  color={COLORS.gableGreen}
+              <View style={[MyStyles.paddingHor10, MyStyles.updatesTextCont]}>
+                <LinearGradient
+                  start={{x: 0.3, y: 0}}
+                  end={{x: 1, y: 1}}
+                  colors={['#353a5f', '#9ebaf3']}
+                  style={[MyStyles.gradient, MyStyles.marTop10]}>
+                  <View style={{padding: moderateScale(10)}}>
+                    <Text style={MyStyles.updateTitle}>
+                      Welcome to Folk App
+                    </Text>
+                    <Text style={[MyStyles.updateTxt, {fontSize: SIZES.xl}]}>
+                      Vaikunta Ekadasi,
+                    </Text>
+                    <Text style={MyStyles.updateTxt}>
+                      Vaikuntha Ekadashi is an important festival celebrated
+                      every year. Ekadashi is the eleventh day of the fortnight
+                      of the waxing or waning moon and occurs twice a month. But
+                      the Ekadashi that occurs in the month of Margashirsha
+                      (December – January) during the fortnight of the waxing
+                      moon is of special significance and is glorified as
+                      Vaikuntha Ekadashi. On this day, the gates of Vaikuntha
+                      (the Lord’s abode) open to His ardent devotees. This is a
+                      major festival of South India celebrated in all the
+                      temples of Lord Vishnu.
+                    </Text>
+                  </View>
+                </LinearGradient>
+              </View>
+            </View>
+
+            {/* // @ Youtube Videos */}
+            <View style={styles.padVert10}>
+              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                <Text style={[MyStyles.subTitleText]}>Folk Videos</Text>
+                <TouchableOpacity
+                  onPress={() => navigateScreen(screenNames.folkVideos)}
+                  style={styles.historyIcon}
+                  activeOpacity={0.6}>
+                  <MaterialCommunityIcons
+                    name="history"
+                    size={moderateScale(25)}
+                    color={COLORS.gableGreen}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
+                <YoutubePlayer
+                  width={windowWidth * 0.95}
+                  height={windowWidth * 0.95 * (9 / 16)}
+                  webViewStyle={{
+                    borderRadius: moderateScale(15),
+                    backgroundColor: 'red',
+                  }}
+                  play={playVideo}
+                  mute={youtubeAudio}
+                  videoId={'kaVrPCxg_us'}
+                  onChangeState={onStateChange}
                 />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.quotesImgCont(imageDimensions)}>
-              <Image
-                style={MyStyles.quotesImg}
-                source={{
-                  uri: 'https://pbs.twimg.com/media/FtJ9xsCaMAAvEsM.jpg:large',
-                }}
-              />
-            </View>
-
-            <View style={[MyStyles.paddingHor10, MyStyles.updatesTextCont]}>
-              <LinearGradient
-                start={{x: 0.3, y: 0}}
-                end={{x: 1, y: 1}}
-                colors={['#353a5f', '#9ebaf3']}
-                style={[MyStyles.gradient, MyStyles.marTop10]}>
-                <View style={{padding: moderateScale(10)}}>
-                  <Text style={MyStyles.updateTitle}>Welcome to Folk App</Text>
-                  <Text style={[MyStyles.updateTxt, {fontSize: SIZES.xl}]}>
-                    Vaikunta Ekadasi,
-                  </Text>
-                  <Text style={MyStyles.updateTxt}>
-                    Vaikuntha Ekadashi is an important festival celebrated every
-                    year. Ekadashi is the eleventh day of the fortnight of the
-                    waxing or waning moon and occurs twice a month. But the
-                    Ekadashi that occurs in the month of Margashirsha (December
-                    – January) during the fortnight of the waxing moon is of
-                    special significance and is glorified as Vaikuntha Ekadashi.
-                    On this day, the gates of Vaikuntha (the Lord’s abode) open
-                    to His ardent devotees. This is a major festival of South
-                    India celebrated in all the temples of Lord Vishnu.
-                  </Text>
-                </View>
-              </LinearGradient>
-            </View>
-          </View>
-
-          {/* // @ Youtube Videos */}
-          <View style={styles.padVert10}>
-            <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-              <Text style={[MyStyles.subTitleText]}>Folk Videos</Text>
-              <TouchableOpacity
-                onPress={() => navigateScreen(screenNames.folkVideos)}
-                style={styles.historyIcon}
-                activeOpacity={0.6}>
-                <MaterialCommunityIcons
-                  name="history"
-                  size={moderateScale(25)}
-                  color={COLORS.gableGreen}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
-              <YoutubePlayer
-                width={windowWidth * 0.95}
-                height={windowWidth * 0.95 * (9 / 16)}
-                webViewStyle={{
-                  borderRadius: moderateScale(15),
-                  backgroundColor: 'red',
-                }}
-                play={playVideo}
-                mute={youtubeAudio}
-                videoId={'kaVrPCxg_us'}
-                onChangeState={onStateChange}
-              />
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -252,16 +257,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  contentCont: {flex: 1, backgroundColor: COLORS.paleYellow},
   dailyDarshanCont: {
     width: '100%',
     position: 'relative',
   },
+
   halfBg: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '70%',
+    height: '8%',
     backgroundColor: COLORS.charcoal,
     borderBottomLeftRadius: moderateScale(30),
     borderBottomRightRadius: moderateScale(30),

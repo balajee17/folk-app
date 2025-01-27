@@ -10,4 +10,5 @@ export let screenNames = {
   dailyDarshan: 'Daily Darshan',
   updates: 'FOLK Updates',
   folkVideos: 'FOLK Videos',
+  yfhForm: 'YFH',
 };
