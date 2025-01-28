@@ -30,49 +30,92 @@ import ParallexCarousel from '../components/ParallexCarousel';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
+import {
+  HomeIconShimmer,
+  HomeTitleShimmer,
+  ImageShimmer,
+  YoutubeShimmer,
+} from '../components/Shimmer';
+import {API} from '../services/API';
 
 const Home = props => {
   const {navigation} = props;
-  const imageSource = [
-    {
-      id: 1,
-      image: 'https://i.ytimg.com/vi/lWp58c3NOHU/hqdefault.jpg',
-    },
-    {
-      id: 2,
-      image:
-        'https://i.ytimg.com/vi/WYPGdCz5ecI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCIekOyrKEWTgaOJosw_l5I_Prr1Q',
-    },
-    {
-      id: 3,
-      image: 'https://yometro.com/images/places/iskcon-temples.jpg',
-    },
-    {
-      id: 4,
-      image: 'https://i.ytimg.com/vi/LuE9riw-klA/maxresdefault.jpg',
-    },
-  ];
 
+  const [homeData, setHomeData] = useState({});
   const [imageDimensions, setImageDimensions] = useState({});
   const [playVideo, setPlayVideo] = useState(true);
   const [youtubeAudio, setYoutubeAudio] = useState(true);
-
-  const [quotesImg, setQuotesImg] = useState(
-    'https://pbs.twimg.com/media/Ft_jtRaagAM_PJD.jpg:large',
-  );
+  const [shimmer, setShimmer] = useState({
+    titleIcn: true,
+    parallex: true,
+    quotesImg: true,
+    updatesImg: false,
+    youtubeShimmer: true,
+  });
 
   useEffect(() => {
-    // Fetch the dimensions of the image
-    Image.getSize(
-      quotesImg,
-      (width, height) => {
-        setImageDimensions({width: width, height: height});
-      },
-      error => {
-        console.error('Error fetching image dimensions:', error);
-      },
-    );
-  }, [quotesImg]);
+    getHomeScreenData();
+  }, []);
+
+  useEffect(() => {
+    console.log('IMG-DIMEN', imageDimensions);
+  }, []);
+
+  const getHomeScreenData = async () => {
+    try {
+      const response = await API.getHomeScreenData();
+
+      console.log('response', response.data);
+      const {data} = response;
+      if (data.SuccessCode === 1) {
+        const checkQuotes = data.hasOwnProperty('section2');
+        const checkUpdates = data.hasOwnProperty('section3');
+
+        if (checkQuotes) {
+          getImgDimension(data?.section2?.images, 'quotesWid', 'quotesHgt');
+        }
+
+        if (checkUpdates) {
+          getImgDimension(data?.section3?.updates, 'updatesWid', 'updatesHgt');
+        }
+        setHomeData(data);
+      } else {
+      }
+      handleShimmer('titleIcn', false);
+    } catch (err) {
+      console.log('ERR-Home-screen', err);
+    }
+  };
+
+  const getImgDimension = (imageLinks, key_width, key_height) => {
+    imageLinks?.map((imageLink, index) => {
+      if (imageLink?.link) {
+        Image.getSize(
+          imageLink.link,
+          (width, height) => {
+            setImageDimensions(prev => {
+              // Ensure prev is an object before spreading
+              const updatedDimensions = {
+                ...prev, // If prev is undefined, this will initialize it as an empty object
+                [key_width]: [...(prev?.[key_width] || []), width],
+                [key_height]: [...(prev?.[key_height] || []), height],
+              };
+
+              console.log('IMG-DIMEN', updatedDimensions); // Logs the updated image dimensions
+
+              return updatedDimensions;
+            });
+          },
+          error => {
+            console.error(
+              `Error fetching dimensions for image at index ${index}:`,
+              error,
+            );
+          },
+        );
+      }
+    });
+  };
 
   const onStateChange = useCallback(state => {
     if (state === 'ended') {
@@ -80,9 +123,31 @@ const Home = props => {
     }
   });
 
+  const handleShimmer = (key, value) => {
+    setShimmer(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const navigateScreen = screen => {
     navigation.navigate(screen);
   };
+
+  const Section1 = homeData?.section1?.images;
+  const Section2 = homeData?.section2?.images;
+  const Section3 = homeData?.section3?.updates;
+  const Section4 = homeData?.section4?.images;
+
+  const Section1_Title = homeData?.section1?.title;
+  const Section2_Title = homeData?.section2?.title;
+  const Section3_Title = homeData?.section3?.title;
+  const Section4_Title = homeData?.section4?.title;
+
+  const checkSection1 = homeData?.hasOwnProperty('section1');
+  const checkSection2 = homeData?.hasOwnProperty('section2');
+  const checkSection3 = homeData?.hasOwnProperty('section3');
+  // const checkSection4 = homeData?.hasOwnProperty('section4');
 
   return (
     <Container>
@@ -98,148 +163,311 @@ const Home = props => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={[
             MyStyles.scrollView,
-            {paddingBottom: verticalScale(80)},
+            {
+              paddingBottom: verticalScale(80),
+            },
           ]}>
           <View style={styles.contentCont}>
             <View style={styles.halfBg} />
 
             {/* // @ Daily Darshana - Carousel  */}
-            <View style={[styles.dailyDarshanCont, styles.padVert10]}>
-              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                <Text
-                  style={[
-                    MyStyles.subTitleText,
-                    {
-                      color: COLORS.golden,
-                    },
-                  ]}>
-                  Daily Darshan
-                </Text>
-                <TouchableOpacity
-                  onPress={() => navigateScreen(screenNames.dailyDarshan)}
-                  style={styles.historyIcon}
-                  activeOpacity={0.6}>
-                  <MaterialCommunityIcons
-                    name="history"
-                    size={moderateScale(25)}
-                    color={COLORS.white}
-                  />
-                </TouchableOpacity>
+            {Section1?.length > 0 && (
+              <View style={[styles.dailyDarshanCont, styles.padVert10]}>
+                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                  {shimmer?.titleIcn ? (
+                    <HomeTitleShimmer />
+                  ) : (
+                    <Text
+                      style={[
+                        MyStyles.subTitleText,
+                        {
+                          color: COLORS.golden,
+                        },
+                      ]}>
+                      {Section1_Title}
+                    </Text>
+                  )}
+                  {shimmer?.titleIcn ? (
+                    <HomeIconShimmer />
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => navigateScreen(screenNames.dailyDarshan)}
+                      style={styles.historyIcon}
+                      activeOpacity={0.6}>
+                      <MaterialCommunityIcons
+                        name="history"
+                        size={moderateScale(25)}
+                        color={COLORS.white}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <ParallexCarousel
+                  shimmer={shimmer?.parallex}
+                  setShimmer={value => handleShimmer('parallex', value)}
+                  carouselItems={homeData?.section1?.images}
+                  autoScroll={true}
+                />
               </View>
-
-              <ParallexCarousel carouselItems={imageSource} autoScroll={true} />
-            </View>
+            )}
 
             {/* // @  Quotes  */}
-            <View style={{paddingBottom: verticalScale(10)}}>
-              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                <Text style={[MyStyles.subTitleText]}>Quotes</Text>
-                <TouchableOpacity
-                  onPress={() => navigateScreen(screenNames.quotes)}
-                  style={styles.historyIcon}
-                  activeOpacity={0.6}>
-                  <MaterialCommunityIcons
-                    name="history"
-                    size={moderateScale(25)}
-                    color={COLORS.gableGreen}
-                  />
-                </TouchableOpacity>
+            {Section2?.length > 0 && (
+              <View style={{paddingBottom: verticalScale(10)}}>
+                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                  {shimmer?.titleIcn ? (
+                    <HomeTitleShimmer />
+                  ) : (
+                    <Text
+                      style={[
+                        MyStyles.subTitleText,
+                        {
+                          color: !checkSection1
+                            ? COLORS.golden
+                            : COLORS.gableGreen,
+                        },
+                      ]}>
+                      {Section2_Title}
+                    </Text>
+                  )}
+                  {shimmer?.titleIcn ? (
+                    <HomeIconShimmer />
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => navigateScreen(screenNames.quotes)}
+                      style={styles.historyIcon}
+                      activeOpacity={0.6}>
+                      <MaterialCommunityIcons
+                        name="history"
+                        size={moderateScale(25)}
+                        color={checkSection1 ? COLORS.gableGreen : COLORS.white}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                <View
+                  style={styles.quotesImgCont(
+                    imageDimensions?.quotesWid[0] || 135,
+                    imageDimensions?.quotesHgt[0] || 76,
+                  )}>
+                  {shimmer?.quotesImg ? (
+                    <ImageShimmer
+                      width={'100%'}
+                      height={'100%'}
+                      borderRadius={moderateScale(15)}
+                    />
+                  ) : (
+                    <Image
+                      style={MyStyles.quotesImg}
+                      source={{
+                        uri: homeData?.section2?.images[0]?.link,
+                      }}
+                      onLoadStart={() => {
+                        console.log('Image loading started...');
+                        !shimmer?.quotesImg && handleShimmer('quotesImg', true);
+                      }}
+                      onLoadEnd={() => {
+                        console.log('Image ENDED...');
+                        handleShimmer('quotesImg', false);
+                      }}
+                      onError={() => {
+                        console.log('Image failed to load.');
+                        handleShimmer('quotesImg', false); // Hide shimmer on error
+                      }}
+                    />
+                  )}
+                </View>
               </View>
-              <View style={styles.quotesImgCont(imageDimensions)}>
-                <Image
-                  style={MyStyles.quotesImg}
-                  source={{
-                    uri: quotesImg,
-                  }}
-                />
-              </View>
-            </View>
+            )}
 
             {/* // @  Folk Updates  */}
-            <View style={styles.padVert10}>
-              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                <Text style={[MyStyles.subTitleText]}>Folk Updates</Text>
-                <TouchableOpacity
-                  onPress={() => navigateScreen(screenNames.updates)}
-                  style={styles.historyIcon}
-                  activeOpacity={0.6}>
-                  <MaterialCommunityIcons
-                    name="history"
-                    size={moderateScale(25)}
-                    color={COLORS.gableGreen}
-                  />
-                </TouchableOpacity>
-              </View>
+            {Section3?.length > 0 && (
+              <View style={styles.padVert10}>
+                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                  {shimmer?.titleIcn ? (
+                    <HomeTitleShimmer />
+                  ) : (
+                    <Text
+                      style={[
+                        MyStyles.subTitleText,
+                        {
+                          color:
+                            !checkSection1 && !checkSection2
+                              ? COLORS.golden
+                              : COLORS.gableGreen,
+                        },
+                      ]}>
+                      {Section3_Title}
+                    </Text>
+                  )}
+                  {shimmer?.titleIcn ? (
+                    <HomeIconShimmer />
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => navigateScreen(screenNames.updates)}
+                      style={styles.historyIcon}
+                      activeOpacity={0.6}>
+                      <MaterialCommunityIcons
+                        name="history"
+                        size={moderateScale(25)}
+                        color={
+                          checkSection1 && checkSection2
+                            ? COLORS.gableGreen
+                            : COLORS.white
+                        }
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
 
-              <View style={styles.quotesImgCont(imageDimensions)}>
-                <Image
-                  style={MyStyles.quotesImg}
-                  source={{
-                    uri: 'https://pbs.twimg.com/media/FtJ9xsCaMAAvEsM.jpg:large',
-                  }}
-                />
+                {shimmer?.updatesImg ? (
+                  <>
+                    <ImageShimmer
+                      width={'95%'}
+                      height={verticalScale(300)}
+                      borderRadius={moderateScale(15)}
+                      marginTop={verticalScale(10)}
+                      alignSelf={'center'}
+                    />
+                    <ImageShimmer
+                      width={'95%'}
+                      height={verticalScale(120)}
+                      borderRadius={moderateScale(15)}
+                      marginTop={verticalScale(10)}
+                      alignSelf={'center'}
+                    />
+                  </>
+                ) : (
+                  Section3.map((item, index) => {
+                    return (
+                      <View
+                        key={item?.id}
+                        style={styles.quotesImgCont(
+                          imageDimensions?.updatesWid[index] || 135,
+                          imageDimensions?.updatesHgt[index] || 76,
+                        )}>
+                        {!!item?.link && (
+                          <Image
+                            style={MyStyles.quotesImg}
+                            source={{
+                              uri: item?.link,
+                            }}
+                            onLoadStart={() => {
+                              console.log('Image loading started...');
+                              if (!shimmer?.updatesImg) {
+                                handleShimmer('updatesImg', true);
+                              }
+                            }}
+                            onLoadEnd={() => {
+                              console.log('Image loading ended...');
+                              handleShimmer('updatesImg', false);
+                            }}
+                            onError={() => {
+                              console.log('Image failed to load.');
+                              handleShimmer('updatesImg', false);
+                            }}
+                          />
+                        )}
+                        {!!item?.text && (
+                          <View
+                            style={[
+                              MyStyles.paddingHor10,
+                              MyStyles.updatesTextCont,
+                            ]}>
+                            <LinearGradient
+                              start={{x: 0.3, y: 0}}
+                              end={{x: 1, y: 1}}
+                              colors={['#353a5f', '#9ebaf3']}
+                              style={[MyStyles.gradient, MyStyles.marTop10]}>
+                              <View style={{padding: moderateScale(10)}}>
+                                <Text style={MyStyles.updateTitle}>
+                                  Welcome to Folk App
+                                </Text>
+                                <Text
+                                  style={[
+                                    MyStyles.updateTxt,
+                                    {fontSize: SIZES.xl},
+                                  ]}>
+                                  Vaikunta Ekadasi,
+                                </Text>
+                                <Text style={MyStyles.updateTxt}>
+                                  {item?.text}
+                                </Text>
+                              </View>
+                            </LinearGradient>
+                          </View>
+                        )}
+                      </View>
+                    );
+                  })
+                )}
               </View>
-
-              <View style={[MyStyles.paddingHor10, MyStyles.updatesTextCont]}>
-                <LinearGradient
-                  start={{x: 0.3, y: 0}}
-                  end={{x: 1, y: 1}}
-                  colors={['#353a5f', '#9ebaf3']}
-                  style={[MyStyles.gradient, MyStyles.marTop10]}>
-                  <View style={{padding: moderateScale(10)}}>
-                    <Text style={MyStyles.updateTitle}>
-                      Welcome to Folk App
-                    </Text>
-                    <Text style={[MyStyles.updateTxt, {fontSize: SIZES.xl}]}>
-                      Vaikunta Ekadasi,
-                    </Text>
-                    <Text style={MyStyles.updateTxt}>
-                      Vaikuntha Ekadashi is an important festival celebrated
-                      every year. Ekadashi is the eleventh day of the fortnight
-                      of the waxing or waning moon and occurs twice a month. But
-                      the Ekadashi that occurs in the month of Margashirsha
-                      (December – January) during the fortnight of the waxing
-                      moon is of special significance and is glorified as
-                      Vaikuntha Ekadashi. On this day, the gates of Vaikuntha
-                      (the Lord’s abode) open to His ardent devotees. This is a
-                      major festival of South India celebrated in all the
-                      temples of Lord Vishnu.
-                    </Text>
-                  </View>
-                </LinearGradient>
-              </View>
-            </View>
+            )}
 
             {/* // @ Youtube Videos */}
-            <View style={styles.padVert10}>
-              <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                <Text style={[MyStyles.subTitleText]}>Folk Videos</Text>
-                <TouchableOpacity
-                  onPress={() => navigateScreen(screenNames.folkVideos)}
-                  style={styles.historyIcon}
-                  activeOpacity={0.6}>
-                  <MaterialCommunityIcons
-                    name="history"
-                    size={moderateScale(25)}
-                    color={COLORS.gableGreen}
-                  />
-                </TouchableOpacity>
+            {Section4?.length > 0 && (
+              <View style={styles.padVert10}>
+                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+                  {shimmer?.titleIcn ? (
+                    <HomeTitleShimmer />
+                  ) : (
+                    <Text
+                      style={[
+                        MyStyles.subTitleText,
+                        {
+                          color:
+                            !checkSection1 && !checkSection2 && !checkSection3
+                              ? COLORS.golden
+                              : COLORS.gableGreen,
+                        },
+                      ]}>
+                      {Section4_Title}
+                    </Text>
+                  )}
+
+                  {shimmer?.titleIcn ? (
+                    <HomeIconShimmer />
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => navigateScreen(screenNames.folkVideos)}
+                      style={styles.historyIcon}
+                      activeOpacity={0.6}>
+                      <MaterialCommunityIcons
+                        name="history"
+                        size={moderateScale(25)}
+                        color={
+                          checkSection1 && checkSection2 && checkSection3
+                            ? COLORS.gableGreen
+                            : COLORS.white
+                        }
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
+                  {shimmer?.youtubeShimmer ? (
+                    <YoutubeShimmer
+                      width={windowWidth * 0.95}
+                      height={windowWidth * 0.95 * (9 / 16)}
+                      borderRadius={moderateScale(15)}
+                    />
+                  ) : (
+                    <YoutubePlayer
+                      width={windowWidth * 0.95}
+                      height={windowWidth * 0.95 * (9 / 16)}
+                      webViewStyle={{
+                        borderRadius: moderateScale(15),
+                      }}
+                      play={playVideo}
+                      mute={youtubeAudio}
+                      videoId={'kaVrPCxg_us'}
+                      onChangeState={onStateChange}
+                    />
+                  )}
+                </View>
               </View>
-              <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
-                <YoutubePlayer
-                  width={windowWidth * 0.95}
-                  height={windowWidth * 0.95 * (9 / 16)}
-                  webViewStyle={{
-                    borderRadius: moderateScale(15),
-                    backgroundColor: 'red',
-                  }}
-                  play={playVideo}
-                  mute={youtubeAudio}
-                  videoId={'kaVrPCxg_us'}
-                  onChangeState={onStateChange}
-                />
-              </View>
-            </View>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -257,7 +485,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  contentCont: {flex: 1, backgroundColor: COLORS.paleYellow},
+  contentCont: {height: screenHeight, backgroundColor: COLORS.paleYellow},
   dailyDarshanCont: {
     width: '100%',
     position: 'relative',
@@ -268,7 +496,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: '8%',
+    height: verticalScale(200),
     backgroundColor: COLORS.charcoal,
     borderBottomLeftRadius: moderateScale(30),
     borderBottomRightRadius: moderateScale(30),
@@ -281,15 +509,42 @@ const styles = StyleSheet.create({
   },
 
   marTop15: {marginTop: verticalScale(15)},
-  quotesImgCont: imageDimensions => ({
+  quotesImgCont: (width, height) => ({
     width: windowWidth,
     alignSelf: 'center',
     marginTop: verticalScale(10),
-    aspectRatio:
-      (imageDimensions?.width || 135) / (imageDimensions?.height || 76),
+    aspectRatio: width / height,
     borderRadius: moderateScale(15),
     ...MyStyles.paddingHor10,
   }),
 
   padVert10: {paddingVertical: verticalScale(10)},
+
+  //SKELETON
+  skeletonItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  skeletonAvatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#e1e9ee',
+  },
+  skeletonTextContainer: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  skeletonTitle: {
+    width: '80%',
+    height: 20,
+    backgroundColor: '#e1e9ee',
+    marginBottom: 8,
+  },
+  skeletonSubtitle: {
+    width: '60%',
+    height: 16,
+    backgroundColor: '#e1e9ee',
+  },
 });

@@ -17,12 +17,19 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import ParallexPaginationDots from './ParallexPaginationDots';
+import {ImageShimmer} from './Shimmer';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
 const ITEM_HEIGHT = verticalScale(200);
 
-const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
+const ParallexCarousel = ({
+  carouselItems,
+  autoScroll = false,
+  shimmer,
+  setShimmer,
+}) => {
   const scrollX = useSharedValue(0);
   const scrollRef = useRef(null);
   const currentIndex = useRef(0);
@@ -31,12 +38,12 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
   let scrollOffset = useSharedValue(0);
 
   useEffect(() => {
-    if (autoScroll) {
+    if (autoScroll && !shimmer) {
       startAutoScroll();
     }
 
     return () => {
-      if (autoScroll) {
+      if (autoScroll && !shimmer) {
         stopAutoScroll();
       }
     };
@@ -114,6 +121,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
         overScrollMode={'never'}
         horizontal
         pagingEnabled
+        scrollEnabled={!shimmer}
         showsHorizontalScrollIndicator={false}
         decelerationRate={'fast'}
         snapToInterval={ITEM_WIDTH}
@@ -122,7 +130,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
         scrollEventThrottle={16}
         onScroll={onScroll}
         onScrollBeginDrag={() => {
-          if (autoScroll) {
+          if (autoScroll && !shimmer) {
             stopAutoScroll();
             isAutoScrolling.current = false;
           }
@@ -130,13 +138,13 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
         onMomentumScrollEnd={event => {
           const offsetX = event.nativeEvent.contentOffset.x;
           currentIndex.current = Math.round(offsetX / ITEM_WIDTH); // Update index after manual scroll
-          if (autoScroll) {
+          if (autoScroll && !shimmer) {
             isAutoScrolling.current = true;
             startAutoScroll();
           }
         }}
         onTouchStart={() => {
-          if (autoScroll) {
+          if (autoScroll && !shimmer) {
             stopAutoScroll();
           }
         }}
@@ -148,7 +156,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
         //   }
         // }}
         onTouchEnd={() => {
-          if (autoScroll) {
+          if (autoScroll && !shimmer) {
             startAutoScroll();
           }
         }}
@@ -170,7 +178,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
         //   }
         // }}
       >
-        {carouselItems.map((item, index) => {
+        {carouselItems?.map((item, index) => {
           const inputRange = [
             (index - 1) * ITEM_WIDTH,
             index * ITEM_WIDTH,
@@ -226,29 +234,26 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
                   height: ITEM_HEIGHT,
                   overflow: 'hidden',
                   shadowColor: COLORS.white,
-                  // padding: 5,
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 2,
-                  // },
-                  // shadowOpacity: 0.25,
-                  // shadowRadius: 3.84,
-
-                  // elevation: 5,
                 },
                 translateStyle,
               ]}>
               <Animated.View style={[translateImgStyle]}>
-                <Image
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: moderateScale(15),
-                    overflow: 'hidden',
-                    resizeMode: 'cover',
-                  }}
-                  source={{uri: item.image}}
-                />
+                {shimmer ? (
+                  <ImageShimmer width={ITEM_WIDTH} height={ITEM_HEIGHT} />
+                ) : (
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: moderateScale(15),
+                      overflow: 'hidden',
+                      resizeMode: 'cover',
+                    }}
+                    onLoadStart={() => !shimmer && setShimmer(true)}
+                    onLoadEnd={() => setShimmer(false)}
+                    source={{uri: item.image}}
+                  />
+                )}
               </Animated.View>
             </Animated.View>
           );

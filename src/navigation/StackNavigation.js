@@ -16,7 +16,7 @@ const StackNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={screenNames.yfhForm}
+        initialRouteName={screenNames.drawerNavigation}
         screenOptions={{headerShown: false}}>
         {/* // @ Drawer Component */}
         <Stack.Screen
