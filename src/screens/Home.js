@@ -34,6 +34,7 @@ import {
   HomeIconShimmer,
   HomeTitleShimmer,
   ImageShimmer,
+  ParallexShimmer,
   YoutubeShimmer,
 } from '../components/Shimmer';
 import {API} from '../services/API';
@@ -49,16 +50,12 @@ const Home = props => {
     titleIcn: true,
     parallex: true,
     quotesImg: true,
-    updatesImg: false,
+    updatesImg: true,
     youtubeShimmer: true,
   });
 
   useEffect(() => {
     getHomeScreenData();
-  }, []);
-
-  useEffect(() => {
-    console.log('IMG-DIMEN', imageDimensions);
   }, []);
 
   const getHomeScreenData = async () => {
@@ -69,17 +66,25 @@ const Home = props => {
       const {data} = response;
       if (data.SuccessCode === 1) {
         const checkQuotes = data.hasOwnProperty('section2');
-        const checkUpdates = data.hasOwnProperty('section3');
 
         if (checkQuotes) {
-          getImgDimension(data?.section2?.images, 'quotesWid', 'quotesHgt');
+          console.log(
+            'data?.updates[0]?.link',
+            data?.section1?.updates[0]?.link,
+          );
+          const dimensions = await getImgDimension(
+            data?.section1?.updates[0]?.link,
+          );
+          console.log('getDimensions', dimensions);
+          setImageDimensions({
+            quotesHgt: dimensions?.imgHeight,
+            quotesWid: dimensions?.imgWidth,
+          });
         }
 
-        if (checkUpdates) {
-          getImgDimension(data?.section3?.updates, 'updatesWid', 'updatesHgt');
-        }
         setHomeData(data);
       } else {
+        setHomeData({});
       }
       handleShimmer('titleIcn', false);
     } catch (err) {
@@ -87,32 +92,23 @@ const Home = props => {
     }
   };
 
-  const getImgDimension = (imageLinks, key_width, key_height) => {
-    imageLinks?.map((imageLink, index) => {
-      if (imageLink?.link) {
+  const getImgDimension = link => {
+    return new Promise((resolve, reject) => {
+      console.log('link', link);
+      try {
         Image.getSize(
-          imageLink.link,
-          (width, height) => {
-            setImageDimensions(prev => {
-              // Ensure prev is an object before spreading
-              const updatedDimensions = {
-                ...prev, // If prev is undefined, this will initialize it as an empty object
-                [key_width]: [...(prev?.[key_width] || []), width],
-                [key_height]: [...(prev?.[key_height] || []), height],
-              };
-
-              console.log('IMG-DIMEN', updatedDimensions); // Logs the updated image dimensions
-
-              return updatedDimensions;
-            });
+          link,
+          (imgWidth, imgHeight) => {
+            resolve({imgWidth, imgHeight});
           },
           error => {
-            console.error(
-              `Error fetching dimensions for image at index ${index}:`,
-              error,
-            );
+            console.log('Err_Get_Dimen', error);
+            reject(error);
           },
         );
+      } catch (err) {
+        console.log('Err_Get_Dimen', err);
+        reject(err);
       }
     });
   };
@@ -134,10 +130,10 @@ const Home = props => {
     navigation.navigate(screen);
   };
 
-  const Section1 = homeData?.section1?.images;
-  const Section2 = homeData?.section2?.images;
+  const Section1 = homeData?.section1?.updates;
+  const Section2 = homeData?.section2?.updates;
   const Section3 = homeData?.section3?.updates;
-  const Section4 = homeData?.section4?.images;
+  const Section4 = homeData?.section4?.updates;
 
   const Section1_Title = homeData?.section1?.title;
   const Section2_Title = homeData?.section2?.title;
@@ -171,7 +167,7 @@ const Home = props => {
             <View style={styles.halfBg} />
 
             {/* // @ Daily Darshana - Carousel  */}
-            {Section1?.length > 0 && (
+            {(Section1?.length > 0 || shimmer?.titleIcn) && (
               <View style={[styles.dailyDarshanCont, styles.padVert10]}>
                 <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
                   {shimmer?.titleIcn ? (
@@ -202,17 +198,19 @@ const Home = props => {
                     </TouchableOpacity>
                   )}
                 </View>
-                <ParallexCarousel
-                  shimmer={shimmer?.parallex}
-                  setShimmer={value => handleShimmer('parallex', value)}
-                  carouselItems={homeData?.section1?.images}
-                  autoScroll={true}
-                />
+                {Section1 && (
+                  <ParallexCarousel
+                    carouselItems={Section1}
+                    autoScroll={true}
+                  />
+                )}
+
+                {shimmer?.parallex && !Section1 && <ParallexShimmer />}
               </View>
             )}
 
             {/* // @  Quotes  */}
-            {Section2?.length > 0 && (
+            {(Section2?.length > 0 || shimmer?.titleIcn) && (
               <View style={{paddingBottom: verticalScale(10)}}>
                 <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
                   {shimmer?.titleIcn ? (
@@ -248,20 +246,25 @@ const Home = props => {
 
                 <View
                   style={styles.quotesImgCont(
-                    imageDimensions?.quotesWid[0] || 135,
-                    imageDimensions?.quotesHgt[0] || 76,
+                    imageDimensions?.quotesWid?.length > 0
+                      ? imageDimensions?.quotesWid[0]
+                      : 135,
+                    imageDimensions?.quotesHgt?.length > 0
+                      ? imageDimensions?.quotesHgt[0]
+                      : 76,
                   )}>
-                  {shimmer?.quotesImg ? (
+                  {shimmer?.quotesImg && (
                     <ImageShimmer
                       width={'100%'}
                       height={'100%'}
                       borderRadius={moderateScale(15)}
                     />
-                  ) : (
+                  )}
+                  {Section2 && (
                     <Image
                       style={MyStyles.quotesImg}
                       source={{
-                        uri: homeData?.section2?.images[0]?.link,
+                        uri: Section2[0]?.link,
                       }}
                       onLoadStart={() => {
                         console.log('Image loading started...');
@@ -282,7 +285,7 @@ const Home = props => {
             )}
 
             {/* // @  Folk Updates  */}
-            {Section3?.length > 0 && (
+            {(Section3?.length > 0 || shimmer?.titleIcn) && (
               <View style={styles.padVert10}>
                 <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
                   {shimmer?.titleIcn ? (
@@ -321,7 +324,7 @@ const Home = props => {
                   )}
                 </View>
 
-                {shimmer?.updatesImg ? (
+                {shimmer?.updatesImg && !Section3 ? (
                   <>
                     <ImageShimmer
                       width={'95%'}
@@ -339,66 +342,80 @@ const Home = props => {
                     />
                   </>
                 ) : (
-                  Section3.map((item, index) => {
+                  Section3?.map((item, index) => {
                     return (
-                      <View
-                        key={item?.id}
-                        style={styles.quotesImgCont(
-                          imageDimensions?.updatesWid[index] || 135,
-                          imageDimensions?.updatesHgt[index] || 76,
-                        )}>
+                      <>
                         {!!item?.link && (
-                          <Image
-                            style={MyStyles.quotesImg}
-                            source={{
-                              uri: item?.link,
-                            }}
-                            onLoadStart={() => {
-                              console.log('Image loading started...');
-                              if (!shimmer?.updatesImg) {
-                                handleShimmer('updatesImg', true);
-                              }
-                            }}
-                            onLoadEnd={() => {
-                              console.log('Image loading ended...');
-                              handleShimmer('updatesImg', false);
-                            }}
-                            onError={() => {
-                              console.log('Image failed to load.');
-                              handleShimmer('updatesImg', false);
-                            }}
-                          />
-                        )}
-                        {!!item?.text && (
                           <View
+                            key={item?.id}
                             style={[
-                              MyStyles.paddingHor10,
+                              styles.quotesImgCont(135, 76),
+                              {
+                                marginTop:
+                                  index === 0
+                                    ? verticalScale(10)
+                                    : verticalScale(20),
+                              },
+                            ]}>
+                            <Image
+                              style={MyStyles.quotesImg}
+                              source={{
+                                uri: item?.link,
+                              }}
+                              onLoadStart={() => {
+                                if (!shimmer?.updatesImg) {
+                                  handleShimmer('updatesImg', true);
+                                }
+                              }}
+                              onLoadEnd={() => {
+                                index === 0 &&
+                                  handleShimmer('updatesImg', false);
+                              }}
+                              onError={() => {
+                                index === 0 &&
+                                  handleShimmer('updatesImg', false);
+                              }}
+                            />
+                          </View>
+                        )}
+                        {item?.text && (
+                          <View
+                            key={item?.id}
+                            style={[
                               MyStyles.updatesTextCont,
+                              MyStyles.paddingHor10,
+                              // MyStyles.marTop3Per,
+                              {
+                                marginTop: !!item?.link
+                                  ? verticalScale(5)
+                                  : verticalScale(20),
+                              },
                             ]}>
                             <LinearGradient
                               start={{x: 0.3, y: 0}}
                               end={{x: 1, y: 1}}
                               colors={['#353a5f', '#9ebaf3']}
-                              style={[MyStyles.gradient, MyStyles.marTop10]}>
+                              style={[MyStyles.gradient]}>
                               <View style={{padding: moderateScale(10)}}>
-                                <Text style={MyStyles.updateTitle}>
+                                {/* <Text style={MyStyles.updateTitle}>
                                   Welcome to Folk App
-                                </Text>
-                                <Text
+                                </Text> */}
+                                {/* <Text
                                   style={[
                                     MyStyles.updateTxt,
                                     {fontSize: SIZES.xl},
                                   ]}>
                                   Vaikunta Ekadasi,
-                                </Text>
-                                <Text style={MyStyles.updateTxt}>
+                                </Text> */}
+                                <Text
+                                  style={[MyStyles.updateTxt, {marginTop: 0}]}>
                                   {item?.text}
                                 </Text>
                               </View>
                             </LinearGradient>
                           </View>
                         )}
-                      </View>
+                      </>
                     );
                   })
                 )}
@@ -406,7 +423,7 @@ const Home = props => {
             )}
 
             {/* // @ Youtube Videos */}
-            {Section4?.length > 0 && (
+            {(Section4?.length > 0 || shimmer?.titleIcn) && (
               <View style={styles.padVert10}>
                 <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
                   {shimmer?.titleIcn ? (
@@ -446,13 +463,15 @@ const Home = props => {
                   )}
                 </View>
                 <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
-                  {shimmer?.youtubeShimmer ? (
+                  {shimmer?.youtubeShimmer && (
                     <YoutubeShimmer
                       width={windowWidth * 0.95}
                       height={windowWidth * 0.95 * (9 / 16)}
                       borderRadius={moderateScale(15)}
                     />
-                  ) : (
+                  )}
+
+                  {Section4 && (
                     <YoutubePlayer
                       width={windowWidth * 0.95}
                       height={windowWidth * 0.95 * (9 / 16)}
@@ -460,8 +479,9 @@ const Home = props => {
                         borderRadius: moderateScale(15),
                       }}
                       play={playVideo}
+                      onReady={() => handleShimmer('youtubeShimmer', false)}
                       mute={youtubeAudio}
-                      videoId={'kaVrPCxg_us'}
+                      videoId={Section4[0]?.code}
                       onChangeState={onStateChange}
                     />
                   )}
@@ -485,7 +505,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  contentCont: {height: screenHeight, backgroundColor: COLORS.paleYellow},
+  contentCont: {backgroundColor: COLORS.paleYellow},
   dailyDarshanCont: {
     width: '100%',
     position: 'relative',

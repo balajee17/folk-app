@@ -81,6 +81,8 @@ export let COLORS = {
   whiteSmoke: '#f1ebeb80',
   davyGrey: 'rgba(69, 90, 100, 0.08)',
   inputBg: 'rgba(234, 236, 220, 1)',
+  shimmerBg: '#888786',
+  highLightColor: '#A8A8A8',
 };
 
 // @ FONTS
@@ -153,5 +155,19 @@ export let MyStyles = {
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  imageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: '1%',
+    paddingVertical: '2%',
+    width: '100%',
+    paddingHorizontal: '3%',
+  },
+  leftImgCont: {
+    width: '43%',
+  },
+  rightImgCont: {
+    width: '54%',
   },
 };

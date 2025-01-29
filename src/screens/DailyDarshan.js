@@ -12,6 +12,7 @@ import React, {useState} from 'react';
 import {
   COLORS,
   FONTS,
+  horizontalScale,
   moderateScale,
   MyStyles,
   SIZES,
@@ -21,10 +22,13 @@ import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import Container from '../components/Container';
 import AlbumCarousel from '../components/AlbumCarousel';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {DarshanShimmer} from '../components/Shimmer';
 
 const DailyDarshan = ({navigation}) => {
   const [switchScreen, setSwitchSreen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
+  const [shimmer, setShimmer] = useState(true);
 
   const sampleData = [
     {
@@ -156,134 +160,141 @@ const DailyDarshan = ({navigation}) => {
             {/* // # Contents */}
             <ScrollView
               showsVerticalScrollIndicator={false}
+              scrollEnabled={!shimmer}
               contentContainerStyle={[
                 MyStyles.scrollView,
                 MyStyles.paddingHor10,
               ]}>
               {/* // # Title */}
-              {sampleData.map((item, index) => (
-                <>
-                  <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
-                    {item?.day}
-                  </Text>
-                  {/* // # Image Container */}
-                  <View style={styles.imageContainer}>
-                    {/* // # Left Container */}
-                    <View style={styles.leftImgCont}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSelectedItem({
-                            ...item,
-                            activeIndex: 0,
-                          });
-                          setSwitchSreen(true);
-                        }}
-                        activeOpacity={0.7}>
-                        <Image
-                          source={{
-                            uri: item?.images[0]?.link,
-                          }}
-                          style={styles.leftImg1}
-                        />
-                      </TouchableOpacity>
-                      {item?.images.length > 2 && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setSelectedItem({
-                              ...item,
-                              activeIndex: 1,
-                            });
-                            setSwitchSreen(true);
-                          }}
-                          activeOpacity={0.7}>
-                          <Image
-                            source={{
-                              uri: item?.images[1]?.link,
+              {!shimmer
+                ? sampleData.map((item, index) => (
+                    <>
+                      <Text
+                        style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
+                        {item?.day}
+                      </Text>
+                      {/* // # Image Container */}
+                      <View style={MyStyles.imageContainer}>
+                        {/* // # Left Container */}
+                        <View style={MyStyles.leftImgCont}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setSelectedItem({
+                                ...item,
+                                activeIndex: 0,
+                              });
+                              setSwitchSreen(true);
                             }}
-                            style={[styles.leftImg1, styles.leftImg2]}
-                          />
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                    {/* // # Right Container */}
-                    <View style={styles.rightImgCont}>
-                      {item?.images.length > 3 && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setSelectedItem({
-                              ...item,
-                              activeIndex: 2,
-                            });
-                            setSwitchSreen(true);
-                          }}
-                          activeOpacity={0.7}>
-                          <Image
-                            source={{
-                              uri: item?.images[2]?.link,
-                            }}
-                            style={styles.rightImg1}
-                          />
-                        </TouchableOpacity>
-                      )}
-                      {item?.images.length > 1 && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setSelectedItem({
-                              ...item,
-                              activeIndex:
-                                item?.images.length === 2
-                                  ? 1
-                                  : item?.images.length === 3
-                                  ? 2
-                                  : 3,
-                            });
-                            setSwitchSreen(true);
-                          }}
-                          activeOpacity={0.7}
-                          style={[
-                            styles.blurImgCont,
-                            {
-                              marginTop:
-                                item?.images.length >= 4 ? '5%' : undefined,
-                            },
-                          ]}>
-                          <ImageBackground
-                            source={{
-                              uri:
-                                item?.images.length === 2
-                                  ? item?.images[1]?.link
-                                  : item?.images.length === 3
-                                  ? item?.images[2]?.link
-                                  : item?.images[3]?.link,
-                            }}
-                            imageStyle={[
-                              item?.images.length > 4 && styles.blurImageStyle,
-                              {borderRadius: moderateScale(10)},
-                            ]}
-                            blurRadius={item?.images.length > 4 ? 4 : 0}
-                            style={[
-                              styles.rightImg1,
-                              {
-                                height:
-                                  item?.images.length === 2
-                                    ? verticalScale(200)
-                                    : verticalScale(190),
-                              },
-                            ]}>
-                            {item?.images.length > 4 && (
-                              <View style={styles.transBgCont}>
-                                <Text style={styles.countTxt}>
-                                  {`+${item?.images.length - 4}`}
-                                </Text>
-                              </View>
-                            )}
-                          </ImageBackground>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  </View>
-                </>
-              ))}
+                            activeOpacity={0.7}>
+                            <Image
+                              source={{
+                                uri: item?.images[0]?.link,
+                              }}
+                              style={styles.leftImg1}
+                            />
+                          </TouchableOpacity>
+                          {item?.images.length > 2 && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedItem({
+                                  ...item,
+                                  activeIndex: 1,
+                                });
+                                setSwitchSreen(true);
+                              }}
+                              activeOpacity={0.7}>
+                              <Image
+                                source={{
+                                  uri: item?.images[1]?.link,
+                                }}
+                                style={[styles.leftImg1, styles.leftImg2]}
+                              />
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                        {/* // # Right Container */}
+                        <View style={MyStyles.rightImgCont}>
+                          {item?.images.length > 3 && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedItem({
+                                  ...item,
+                                  activeIndex: 2,
+                                });
+                                setSwitchSreen(true);
+                              }}
+                              activeOpacity={0.7}>
+                              <Image
+                                source={{
+                                  uri: item?.images[2]?.link,
+                                }}
+                                style={styles.rightImg1}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {item?.images.length > 1 && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedItem({
+                                  ...item,
+                                  activeIndex:
+                                    item?.images.length === 2
+                                      ? 1
+                                      : item?.images.length === 3
+                                      ? 2
+                                      : 3,
+                                });
+                                setSwitchSreen(true);
+                              }}
+                              activeOpacity={0.7}
+                              style={[
+                                styles.blurImgCont,
+                                {
+                                  marginTop:
+                                    item?.images.length >= 4 ? '5%' : undefined,
+                                },
+                              ]}>
+                              <ImageBackground
+                                source={{
+                                  uri:
+                                    item?.images.length === 2
+                                      ? item?.images[1]?.link
+                                      : item?.images.length === 3
+                                      ? item?.images[2]?.link
+                                      : item?.images[3]?.link,
+                                }}
+                                imageStyle={[
+                                  item?.images.length > 4 &&
+                                    styles.blurImageStyle,
+                                  {borderRadius: moderateScale(10)},
+                                ]}
+                                blurRadius={item?.images.length > 4 ? 4 : 0}
+                                style={[
+                                  styles.rightImg1,
+                                  {
+                                    height:
+                                      item?.images.length === 2
+                                        ? verticalScale(200)
+                                        : verticalScale(190),
+                                  },
+                                ]}>
+                                {item?.images.length > 4 && (
+                                  <View style={styles.transBgCont}>
+                                    <Text style={styles.countTxt}>
+                                      {`+${item?.images.length - 4}`}
+                                    </Text>
+                                  </View>
+                                )}
+                              </ImageBackground>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      </View>
+                    </>
+                  ))
+                : Array(3)
+                    .fill(3)
+                    .map((_, index) => <DarshanShimmer key={index} />)}
             </ScrollView>
           </SafeAreaView>
         </Container>
@@ -304,21 +315,6 @@ const DailyDarshan = ({navigation}) => {
 export default DailyDarshan;
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: '1%',
-    paddingVertical: '2%',
-    width: '100%',
-    paddingHorizontal: '3%',
-  },
-  leftImgCont: {
-    width: '43%',
-  },
-  rightImgCont: {
-    width: '54%',
-  },
   leftImg1: {
     width: '100%',
     height: verticalScale(200),

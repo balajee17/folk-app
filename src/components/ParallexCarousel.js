@@ -1,5 +1,5 @@
 import {Image, StyleSheet, View} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   COLORS,
   horizontalScale,
@@ -8,44 +8,33 @@ import {
   windowWidth,
 } from '../styles/MyStyles';
 import Animated, {
-  Easing,
   Extrapolation,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
 import ParallexPaginationDots from './ParallexPaginationDots';
-import {ImageShimmer} from './Shimmer';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
 const ITEM_HEIGHT = verticalScale(200);
 
-const ParallexCarousel = ({
-  carouselItems,
-  autoScroll = false,
-  shimmer,
-  setShimmer,
-}) => {
+const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
   const scrollX = useSharedValue(0);
   const scrollRef = useRef(null);
   const currentIndex = useRef(0);
   const autoScrollInterval = useRef(null);
   const isAutoScrolling = useRef(true);
-  let scrollOffset = useSharedValue(0);
+  // let scrollOffset = useSharedValue(0);
 
   useEffect(() => {
-    if (autoScroll && !shimmer) {
+    if (autoScroll) {
       startAutoScroll();
     }
 
     return () => {
-      if (autoScroll && !shimmer) {
-        stopAutoScroll();
-      }
+      stopAutoScroll();
     };
   }, [carouselItems]);
 
@@ -54,7 +43,7 @@ const ParallexCarousel = ({
     if (
       !isAutoScrolling.current ||
       !scrollRef.current ||
-      carouselItems.length === 0
+      carouselItems?.length === 0
     )
       return;
 
@@ -84,7 +73,7 @@ const ParallexCarousel = ({
 
     autoScrollInterval.current = setInterval(() => {
       const currentOffset = currentIndex.current * ITEM_WIDTH;
-      currentIndex.current = (currentIndex.current + 1) % carouselItems.length; // Cycle through items
+      currentIndex.current = (currentIndex.current + 1) % carouselItems?.length; // Cycle through items
       const nextOffset = currentIndex.current * ITEM_WIDTH;
 
       // Smooth scroll to the next item
@@ -121,7 +110,6 @@ const ParallexCarousel = ({
         overScrollMode={'never'}
         horizontal
         pagingEnabled
-        scrollEnabled={!shimmer}
         showsHorizontalScrollIndicator={false}
         decelerationRate={'fast'}
         snapToInterval={ITEM_WIDTH}
@@ -130,7 +118,7 @@ const ParallexCarousel = ({
         scrollEventThrottle={16}
         onScroll={onScroll}
         onScrollBeginDrag={() => {
-          if (autoScroll && !shimmer) {
+          if (autoScroll) {
             stopAutoScroll();
             isAutoScrolling.current = false;
           }
@@ -138,13 +126,13 @@ const ParallexCarousel = ({
         onMomentumScrollEnd={event => {
           const offsetX = event.nativeEvent.contentOffset.x;
           currentIndex.current = Math.round(offsetX / ITEM_WIDTH); // Update index after manual scroll
-          if (autoScroll && !shimmer) {
+          if (autoScroll) {
             isAutoScrolling.current = true;
             startAutoScroll();
           }
         }}
         onTouchStart={() => {
-          if (autoScroll && !shimmer) {
+          if (autoScroll) {
             stopAutoScroll();
           }
         }}
@@ -156,7 +144,7 @@ const ParallexCarousel = ({
         //   }
         // }}
         onTouchEnd={() => {
-          if (autoScroll && !shimmer) {
+          if (autoScroll) {
             startAutoScroll();
           }
         }}
@@ -223,13 +211,13 @@ const ParallexCarousel = ({
 
           return (
             <Animated.View
-              key={index}
+              key={item?.id}
               style={[
                 {
                   borderRadius: moderateScale(15),
                   marginLeft: index === 0 ? OFF_SET : undefined,
                   marginRight:
-                    index === carouselItems.length - 1 ? OFF_SET : undefined,
+                    index === carouselItems?.length - 1 ? OFF_SET : undefined,
                   width: ITEM_WIDTH,
                   height: ITEM_HEIGHT,
                   overflow: 'hidden',
@@ -238,28 +226,23 @@ const ParallexCarousel = ({
                 translateStyle,
               ]}>
               <Animated.View style={[translateImgStyle]}>
-                {shimmer ? (
-                  <ImageShimmer width={ITEM_WIDTH} height={ITEM_HEIGHT} />
-                ) : (
-                  <Image
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: moderateScale(15),
-                      overflow: 'hidden',
-                      resizeMode: 'cover',
-                    }}
-                    onLoadStart={() => !shimmer && setShimmer(true)}
-                    onLoadEnd={() => setShimmer(false)}
-                    source={{uri: item.image}}
-                  />
-                )}
+                <Image
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: moderateScale(15),
+                    overflow: 'hidden',
+                    resizeMode: 'cover',
+                  }}
+                  source={{uri: item?.link}}
+                />
               </Animated.View>
             </Animated.View>
           );
         })}
       </Animated.ScrollView>
       {/* // # PAGINATION DOTS */}
+
       <ParallexPaginationDots carouselItems={carouselItems} scrollX={scrollX} />
     </View>
   );

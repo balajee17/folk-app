@@ -60,7 +60,7 @@ const PaginationDot = ({index, scrollX}) => {
 const ParallexPaginationDots = ({carouselItems, scrollX}) => {
   return (
     <View style={styles.paginationCont}>
-      {carouselItems.map((_, index) => {
+      {carouselItems?.map((_, index) => {
         return <PaginationDot scrollX={scrollX} index={index} />;
       })}
     </View>
