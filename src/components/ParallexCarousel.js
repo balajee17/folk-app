@@ -57,14 +57,14 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
         step++;
         if (step > totalSteps) {
           // Ensure final scroll position is precise
-          scrollRef.current.scrollTo({x: endOffset, animated: true});
+          scrollRef?.current?.scrollTo({x: endOffset, animated: true});
           return;
         }
 
         const increment = (endOffset - startOffset) / totalSteps;
         const currentOffset = startOffset + increment * step;
 
-        scrollRef.current.scrollTo({x: currentOffset, animated: true});
+        scrollRef?.current?.scrollTo({x: currentOffset, animated: true});
         requestAnimationFrame(scrollStep); // Recursive call
       };
 

@@ -113,8 +113,8 @@ export const YoutubeShimmer = props => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           width: '100%',
-          position: 'absolute',
-          bottom: 0,
+          // position: 'absolute',
+          // bottom: 0,
           padding: '3%',
           paddingHorizontal: '7%',
         }}>
@@ -182,19 +182,26 @@ export const YoutubeShimmer = props => {
   );
 };
 
+export const TitleShimmer = props => {
+  return (
+    <SkeletonPlaceholder
+      highlightColor={COLORS.highLightColor}
+      backgroundColor={COLORS.shimmerBg}>
+      <SkeletonPlaceholder.Item
+        marginTop={'3%'}
+        height={verticalScale(20)}
+        width={horizontalScale(130)}
+        borderRadius={20}
+        {...props}
+      />
+    </SkeletonPlaceholder>
+  );
+};
+
 export const DarshanShimmer = () => {
   return (
     <>
-      <SkeletonPlaceholder
-        highlightColor={COLORS.highLightColor}
-        backgroundColor={COLORS.shimmerBg}>
-        <SkeletonPlaceholder.Item
-          marginTop={'3%'}
-          height={verticalScale(20)}
-          width={horizontalScale(130)}
-          borderRadius={20}
-        />
-      </SkeletonPlaceholder>
+      <TitleShimmer />
 
       <View style={MyStyles.imageContainer}>
         {/* // # Left Container */}

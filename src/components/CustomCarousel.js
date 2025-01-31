@@ -56,7 +56,7 @@ const CustomCarousel = ({carouselItems, autoScroll, dots}) => {
         currentIndex.current =
           (currentIndex.current + 1) % carouselItems.length; // Cycle through images
         const nextOffset = currentIndex.current * WIDTH_SIZE;
-        scrollRef.current.scrollTo({
+        scrollRef?.current?.scrollTo({
           x: nextOffset,
           animated: true,
         });

@@ -113,7 +113,7 @@ export let MyStyles = {
   scrollView: {
     paddingBottom: moderateScale(8),
     backgroundColor: COLORS.paleYellow,
-    flexGrow: 1,
+    // flexGrow: 1,
   },
   marTop3Per: {marginTop: '3%'},
   quotesImg: {
@@ -169,5 +169,10 @@ export let MyStyles = {
   },
   rightImgCont: {
     width: '54%',
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: COLORS.paleYellow,
+    paddingHorizontal: moderateScale(10),
   },
 };

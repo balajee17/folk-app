@@ -126,8 +126,8 @@ const Home = props => {
     }));
   };
 
-  const navigateScreen = screen => {
-    navigation.navigate(screen);
+  const navigateScreen = (screen, params) => {
+    navigation.navigate(screen, params);
   };
 
   const Section1 = homeData?.section1?.updates;
@@ -161,6 +161,7 @@ const Home = props => {
             MyStyles.scrollView,
             {
               paddingBottom: verticalScale(80),
+              minHeight: '92%',
             },
           ]}>
           <View style={styles.contentCont}>
@@ -187,7 +188,11 @@ const Home = props => {
                     <HomeIconShimmer />
                   ) : (
                     <TouchableOpacity
-                      onPress={() => navigateScreen(screenNames.dailyDarshan)}
+                      onPress={() =>
+                        navigateScreen(screenNames.dailyDarshan, {
+                          title: Section1_Title,
+                        })
+                      }
                       style={styles.historyIcon}
                       activeOpacity={0.6}>
                       <MaterialCommunityIcons
@@ -232,13 +237,19 @@ const Home = props => {
                     <HomeIconShimmer />
                   ) : (
                     <TouchableOpacity
-                      onPress={() => navigateScreen(screenNames.quotes)}
+                      onPress={() =>
+                        navigateScreen(screenNames.quotes, {
+                          title: Section2_Title,
+                        })
+                      }
                       style={styles.historyIcon}
                       activeOpacity={0.6}>
                       <MaterialCommunityIcons
                         name="history"
                         size={moderateScale(25)}
-                        color={checkSection1 ? COLORS.gableGreen : COLORS.white}
+                        color={
+                          !checkSection1 ? COLORS.white : COLORS.gableGreen
+                        }
                       />
                     </TouchableOpacity>
                   )}
@@ -308,16 +319,20 @@ const Home = props => {
                     <HomeIconShimmer />
                   ) : (
                     <TouchableOpacity
-                      onPress={() => navigateScreen(screenNames.updates)}
+                      onPress={() =>
+                        navigateScreen(screenNames.updates, {
+                          title: Section3_Title,
+                        })
+                      }
                       style={styles.historyIcon}
                       activeOpacity={0.6}>
                       <MaterialCommunityIcons
                         name="history"
                         size={moderateScale(25)}
                         color={
-                          checkSection1 && checkSection2
-                            ? COLORS.gableGreen
-                            : COLORS.white
+                          !checkSection1 && !checkSection2
+                            ? COLORS.white
+                            : COLORS.gableGreen
                         }
                       />
                     </TouchableOpacity>
@@ -447,16 +462,20 @@ const Home = props => {
                     <HomeIconShimmer />
                   ) : (
                     <TouchableOpacity
-                      onPress={() => navigateScreen(screenNames.folkVideos)}
+                      onPress={() =>
+                        navigateScreen(screenNames.folkVideos, {
+                          title: Section4_Title,
+                        })
+                      }
                       style={styles.historyIcon}
                       activeOpacity={0.6}>
                       <MaterialCommunityIcons
                         name="history"
                         size={moderateScale(25)}
                         color={
-                          checkSection1 && checkSection2 && checkSection3
-                            ? COLORS.gableGreen
-                            : COLORS.white
+                          !checkSection1 && !checkSection2 && !checkSection3
+                            ? COLORS.white
+                            : COLORS.gableGreen
                         }
                       />
                     </TouchableOpacity>
@@ -508,7 +527,7 @@ const styles = StyleSheet.create({
   contentCont: {backgroundColor: COLORS.paleYellow},
   dailyDarshanCont: {
     width: '100%',
-    position: 'relative',
+    // position: 'relative',
   },
 
   halfBg: {

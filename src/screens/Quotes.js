@@ -10,6 +10,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
+  horizontalScale,
   moderateScale,
   MyStyles,
   verticalScale,
@@ -27,8 +28,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import SwipeCard from '../components/SwipeCard';
+import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-const Quotes = ({navigation}) => {
+const Quotes = ({navigation, route}) => {
   const imageSource = [
     {
       id: 1,
@@ -51,50 +54,73 @@ const Quotes = ({navigation}) => {
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [newData, setNewData] = useState(imageSource);
+  const [shimmer, setShimmer] = useState(true);
 
   const animatedValue = useSharedValue(0);
+
+  console.log('route', route);
+
+  const {title} = route?.params;
 
   return (
     <Container>
       <SafeAreaView style={MyStyles.flex1}>
         {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.quotes}
-        />
+        <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
         {/* // # Contents */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[MyStyles.scrollView, MyStyles.paddingHor10]}>
-          <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
-            Today
-          </Text>
-          <View
-            style={{
-              alignSelf: 'center',
-              width: windowWidth,
-              height: verticalScale(350),
-              marginTop: '8%',
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingHorizontal: moderateScale(10),
-            }}>
-            {newData.map((item, index) => {
-              return (
-                <SwipeCard
-                  currentIndex={currentIndex}
-                  setCurrentIndex={setCurrentIndex}
-                  animatedValue={animatedValue}
-                  newData={newData}
-                  setNewData={setNewData}
-                  item={item}
-                  index={index}
-                  imageSource={imageSource}
-                />
-              );
-            })}
-          </View>
-        </ScrollView>
+
+        <View style={MyStyles.contentContainer}>
+          {shimmer ? (
+            <View>
+              {Array(3)
+                .fill(3)
+                .map(_ => {
+                  return (
+                    <>
+                      <TitleShimmer />
+                      <ImageShimmer
+                        width={'90%'}
+                        height={verticalScale(300)}
+                        borderRadius={moderateScale(15)}
+                        marginTop={verticalScale(10)}
+                        alignSelf={'center'}
+                      />
+                    </>
+                  );
+                })}
+            </View>
+          ) : (
+            <FlatList
+              data={sampleData}
+              keyExtractor={item => item?.id}
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
+                      Today
+                    </Text>
+                    <View style={styles.cardCont}>
+                      {newData.map((item, index) => {
+                        return (
+                          <SwipeCard
+                            currentIndex={currentIndex}
+                            setCurrentIndex={setCurrentIndex}
+                            animatedValue={animatedValue}
+                            newData={newData}
+                            setNewData={setNewData}
+                            item={item}
+                            index={index}
+                            imageSource={imageSource}
+                          />
+                        );
+                      })}
+                    </View>
+                  </>
+                );
+              }}
+            />
+          )}
+        </View>
       </SafeAreaView>
     </Container>
   );
@@ -102,4 +128,14 @@ const Quotes = ({navigation}) => {
 
 export default Quotes;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  cardCont: {
+    alignSelf: 'center',
+    width: windowWidth,
+    height: verticalScale(350),
+    marginTop: '8%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: moderateScale(10),
+  },
+});
