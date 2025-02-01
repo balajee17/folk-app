@@ -118,8 +118,10 @@ export let MyStyles = {
   marTop3Per: {marginTop: '3%'},
   quotesImg: {
     width: '100%',
-    height: '100%',
+    aspectRatio: 1,
+    resizeMode: 'stretch',
     borderRadius: moderateScale(15),
+    paddingHorizontal: moderateScale(10),
   },
   updatesTextCont: {
     width: '100%',

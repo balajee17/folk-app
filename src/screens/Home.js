@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   SafeAreaView,
   ScrollView,
@@ -42,17 +43,15 @@ import {API} from '../services/API';
 const Home = props => {
   const {navigation} = props;
 
-  const [homeData, setHomeData] = useState({});
-  const [imageDimensions, setImageDimensions] = useState({});
+  const [homeData, setHomeData] = useState([
+    {section: '1', title: 'Daily ', updates: [{id: 1, link: ''}]},
+    {section: '2', title: 'Daily 2', updates: [{id: 1, link: ''}]},
+    {section: '3', title: 'Daily 3', updates: [{id: 1, link: ''}]},
+    {section: '4', title: 'Daily 4', updates: [{id: 1, link: ''}]},
+  ]);
   const [playVideo, setPlayVideo] = useState(true);
   const [youtubeAudio, setYoutubeAudio] = useState(true);
-  const [shimmer, setShimmer] = useState({
-    titleIcn: true,
-    parallex: true,
-    quotesImg: true,
-    updatesImg: true,
-    youtubeShimmer: true,
-  });
+  const [shimmer, setShimmer] = useState({content: true, video: true});
 
   useEffect(() => {
     getHomeScreenData();
@@ -65,52 +64,197 @@ const Home = props => {
       console.log('response', response.data);
       const {data} = response;
       if (data.SuccessCode === 1) {
-        const checkQuotes = data.hasOwnProperty('section2');
+        // setHomeData(data);
+        setHomeData([
+          {
+            section: 1,
+            title: 'Daily D1',
+            updates: [
+              {
+                id: 1,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 2,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 3,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 4,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 5,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 6,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 7,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 8,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 9,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 10,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+            ],
+          },
+          {
+            section: 2,
+            title: 'Daily D2',
+            updates: [
+              {
+                id: 1,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+            ],
+          },
+          {
+            section: 4,
+            title: 'Daily D2',
+            updates: [
+              {
+                id: 1,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+            ],
+          },
+          {
+            section: 3,
+            title: 'Daily D2',
+            updates: [
+              {
+                id: 1,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+                text: 'ISKCON Sri Radha Krishna temple was inaugurated in the year 1997. It is not just a temple, but a cultural complex housing the temples dedicated to the Deities of Sri Sri Radha Krishnachandra, Sri Sri Krishna Balarama, Sri Sri Nitai Gauranga, Sri Srinivasa Govinda, Sri Prahlada Narasimha, Bhakta Hanuman, Garudadeva and Srila Prabhupada, Founder Acharya of ISKCON. ISKCON Bangalore is a charitable society with the objective of propagating Krishna Consciousness all over the world, as explained by Srila Prabhupada, whose teachings are based on Bhagavad-gita and Srimad Bhagavatam.',
+              },
+              {
+                id: 112,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 141,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+                text: 'ISKCON Sri Radha Krishna temple was inaugurated in the year 1997. It is not just a temple, but a cultural complex housing the temples dedicated to the Deities of Sri Sri Radha Krishnachandra, Sri Sri Krishna Balarama, Sri Sri Nitai Gauranga, Sri Srinivasa Govinda, Sri Prahlada Narasimha, Bhakta Hanuman, Garudadeva and Srila Prabhupada, Founder Acharya of ISKCON. ISKCON Bangalore is a charitable society with the objective of propagating Krishna Consciousness all over the world, as explained by Srila Prabhupada, whose teachings are based on Bhagavad-gita and Srimad Bhagavatam.',
+              },
+              {
+                id: 242461,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 261,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
 
-        if (checkQuotes) {
-          console.log(
-            'data?.updates[0]?.link',
-            data?.section1?.updates[0]?.link,
-          );
-          const dimensions = await getImgDimension(
-            data?.section1?.updates[0]?.link,
-          );
-          console.log('getDimensions', dimensions);
-          setImageDimensions({
-            quotesHgt: dimensions?.imgHeight,
-            quotesWid: dimensions?.imgWidth,
-          });
-        }
-
-        setHomeData(data);
+              {
+                id: 12626,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+                text: 'ISKCON Sri Radha Krishna temple was inaugurated in the year 1997. It is not just a temple, but a cultural complex housing the temples dedicated to the Deities of Sri Sri Radha Krishnachandra, Sri Sri Krishna Balarama, Sri Sri Nitai Gauranga, Sri Srinivasa Govinda, Sri Prahlada Narasimha, Bhakta Hanuman, Garudadeva and Srila Prabhupada, Founder Acharya of ISKCON. ISKCON Bangalore is a charitable society with the objective of propagating Krishna Consciousness all over the world, as explained by Srila Prabhupada, whose teachings are based on Bhagavad-gita and Srimad Bhagavatam.',
+              },
+              {
+                id: 1135,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 11335,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 1315,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+                text: 'ISKCON Sri Radha Krishna temple was inaugurated in the year 1997. It is not just a temple, but a cultural complex housing the temples dedicated to the Deities of Sri Sri Radha Krishnachandra, Sri Sri Krishna Balarama, Sri Sri Nitai Gauranga, Sri Srinivasa Govinda, Sri Prahlada Narasimha, Bhakta Hanuman, Garudadeva and Srila Prabhupada, Founder Acharya of ISKCON. ISKCON Bangalore is a charitable society with the objective of propagating Krishna Consciousness all over the world, as explained by Srila Prabhupada, whose teachings are based on Bhagavad-gita and Srimad Bhagavatam.',
+              },
+              {
+                id: 17686,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 167,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 17,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+                text: 'ISKCON Sri Radha Krishna temple was inaugurated in the year 1997. It is not just a temple, but a cultural complex housing the temples dedicated to the Deities of Sri Sri Radha Krishnachandra, Sri Sri Krishna Balarama, Sri Sri Nitai Gauranga, Sri Srinivasa Govinda, Sri Prahlada Narasimha, Bhakta Hanuman, Garudadeva and Srila Prabhupada, Founder Acharya of ISKCON. ISKCON Bangalore is a charitable society with the objective of propagating Krishna Consciousness all over the world, as explained by Srila Prabhupada, whose teachings are based on Bhagavad-gita and Srimad Bhagavatam.',
+              },
+              {
+                id: 1676,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 16799,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+                text: 'ISKCON Sri Radha Krishna temple was inaugurated in the year 1997. It is not just a temple, but a cultural complex housing the temples dedicated to the Deities of Sri Sri Radha Krishnachandra, Sri Sri Krishna Balarama, Sri Sri Nitai Gauranga, Sri Srinivasa Govinda, Sri Prahlada Narasimha, Bhakta Hanuman, Garudadeva and Srila Prabhupada, Founder Acharya of ISKCON. ISKCON Bangalore is a charitable society with the objective of propagating Krishna Consciousness all over the world, as explained by Srila Prabhupada, whose teachings are based on Bhagavad-gita and Srimad Bhagavatam.',
+              },
+              {
+                id: 1969,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 1959,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 1939,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 177,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 1789,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+              {
+                id: 100,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+                text: 'ISKCON Sri Radha Krishna temple was inaugurated in the year 1997. It is not just a temple, but a cultural complex housing the temples dedicated to the Deities of Sri Sri Radha Krishnachandra, Sri Sri Krishna Balarama, Sri Sri Nitai Gauranga, Sri Srinivasa Govinda, Sri Prahlada Narasimha, Bhakta Hanuman, Garudadeva and Srila Prabhupada, Founder Acharya of ISKCON. ISKCON Bangalore is a charitable society with the objective of propagating Krishna Consciousness all over the world, as explained by Srila Prabhupada, whose teachings are based on Bhagavad-gita and Srimad Bhagavatam.',
+              },
+            ],
+          },
+        ]);
       } else {
-        setHomeData({});
+        setHomeData([
+          {
+            section: 2,
+            title: 'Daily D1',
+            updates: [
+              {
+                id: 1,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+            ],
+          },
+          {
+            section: 1,
+            title: 'Daily D2',
+            updates: [
+              {
+                id: 1,
+                link: 'https://pbs.twimg.com/media/GE_c0W2XoAAmyUQ.jpg:large',
+              },
+            ],
+          },
+        ]);
       }
-      handleShimmer('titleIcn', false);
+      setShimmer(prev => ({video: false, content: false}));
     } catch (err) {
       console.log('ERR-Home-screen', err);
     }
-  };
-
-  const getImgDimension = link => {
-    return new Promise((resolve, reject) => {
-      console.log('link', link);
-      try {
-        Image.getSize(
-          link,
-          (imgWidth, imgHeight) => {
-            resolve({imgWidth, imgHeight});
-          },
-          error => {
-            console.log('Err_Get_Dimen', error);
-            reject(error);
-          },
-        );
-      } catch (err) {
-        console.log('Err_Get_Dimen', err);
-        reject(err);
-      }
-    });
   };
 
   const onStateChange = useCallback(state => {
@@ -119,31 +263,332 @@ const Home = props => {
     }
   });
 
-  const handleShimmer = (key, value) => {
-    setShimmer(prevState => ({
-      ...prevState,
-      [key]: value,
-    }));
-  };
-
   const navigateScreen = (screen, params) => {
     navigation.navigate(screen, params);
   };
 
-  const Section1 = homeData?.section1?.updates;
-  const Section2 = homeData?.section2?.updates;
-  const Section3 = homeData?.section3?.updates;
-  const Section4 = homeData?.section4?.updates;
+  const RenderSecTitle = (title, color) => {
+    return (
+      <Text
+        style={[
+          MyStyles.subTitleText,
+          {
+            color: color,
+          },
+        ]}>
+        {title}
+      </Text>
+    );
+  };
 
-  const Section1_Title = homeData?.section1?.title;
-  const Section2_Title = homeData?.section2?.title;
-  const Section3_Title = homeData?.section3?.title;
-  const Section4_Title = homeData?.section4?.title;
+  const RenderHistoryIcon = (title, navigateTo, icnColor) => {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigateScreen(navigateTo, {
+            title: title,
+          })
+        }
+        style={styles.historyIcon}
+        activeOpacity={0.6}>
+        <MaterialCommunityIcons
+          name="history"
+          size={moderateScale(25)}
+          color={icnColor}
+        />
+      </TouchableOpacity>
+    );
+  };
 
-  const checkSection1 = homeData?.hasOwnProperty('section1');
-  const checkSection2 = homeData?.hasOwnProperty('section2');
-  const checkSection3 = homeData?.hasOwnProperty('section3');
-  // const checkSection4 = homeData?.hasOwnProperty('section4');
+  // @ Daily Darshana - Carousel
+  const DailyDarshan = ({data, index}) => {
+    const UPDATES = data?.updates;
+    const TITLE = data?.title;
+
+    return (
+      <View style={[styles.dailyDarshanCont, styles.padVert10]}>
+        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+          {shimmer?.content ? (
+            <>
+              <HomeTitleShimmer />
+              <HomeIconShimmer />
+            </>
+          ) : (
+            UPDATES?.length > 0 && (
+              <>
+                {RenderSecTitle(
+                  TITLE,
+                  index > 0 ? COLORS.gableGreen : COLORS.golden,
+                )}
+                {RenderHistoryIcon(
+                  TITLE,
+                  screenNames.dailyDarshan,
+                  index > 0 ? COLORS.gableGreen : COLORS.white,
+                )}
+              </>
+            )
+          )}
+        </View>
+        {shimmer?.content ? (
+          <ParallexShimmer />
+        ) : (
+          UPDATES?.length > 0 && (
+            <ParallexCarousel carouselItems={UPDATES} autoScroll />
+          )
+        )}
+      </View>
+    );
+  };
+
+  // @  Quotes
+  const Quotes = ({data, index}) => {
+    const UPDATES = data?.updates;
+    const TITLE = data?.title;
+    return (
+      <View style={{paddingBottom: verticalScale(10)}}>
+        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+          {shimmer?.content ? (
+            <>
+              <HomeTitleShimmer />
+              <HomeIconShimmer />
+            </>
+          ) : (
+            UPDATES?.length > 0 && (
+              <>
+                {RenderSecTitle(
+                  TITLE,
+                  index === 0 ? COLORS.golden : COLORS.gableGreen,
+                )}
+                {RenderHistoryIcon(
+                  TITLE,
+                  screenNames.quotes,
+                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                )}
+              </>
+            )
+          )}
+        </View>
+
+        {shimmer?.content ? (
+          <ImageShimmer
+            width={'95%'}
+            height={verticalScale(300)}
+            borderRadius={moderateScale(15)}
+            marginTop={verticalScale(10)}
+            alignSelf={'center'}
+          />
+        ) : (
+          UPDATES?.length > 0 && (
+            <View style={styles.quotesImgCont}>
+              <Image
+                style={[MyStyles.quotesImg, {marginTop: verticalScale(10)}]}
+                source={{
+                  uri: UPDATES[0]?.link,
+                }}
+              />
+            </View>
+          )
+        )}
+      </View>
+    );
+  };
+
+  // @  Folk Updates
+  const FolkUpdates = ({data, index}) => {
+    const UPDATES = data?.updates;
+    const TITLE = data?.title;
+    return (
+      <View style={styles.padVert10}>
+        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+          {shimmer?.content ? (
+            <>
+              <HomeTitleShimmer />
+              <HomeIconShimmer />
+            </>
+          ) : (
+            UPDATES?.length > 0 && (
+              <>
+                {RenderSecTitle(
+                  TITLE,
+                  index === 0 ? COLORS.golden : COLORS.gableGreen,
+                )}
+                {RenderHistoryIcon(
+                  TITLE,
+                  screenNames.updates,
+                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                )}
+              </>
+            )
+          )}
+        </View>
+
+        {shimmer?.content ? (
+          <>
+            <ImageShimmer
+              width={'95%'}
+              height={verticalScale(250)}
+              borderRadius={moderateScale(15)}
+              marginTop={verticalScale(10)}
+              alignSelf={'center'}
+            />
+            <ImageShimmer
+              width={'95%'}
+              height={verticalScale(120)}
+              borderRadius={moderateScale(15)}
+              marginTop={verticalScale(10)}
+              alignSelf={'center'}
+            />
+          </>
+        ) : (
+          UPDATES?.length > 0 &&
+          UPDATES?.map((updateItem, updateIndex) => {
+            return (
+              <>
+                {!!updateItem?.link && (
+                  <View
+                    key={updateItem?.id}
+                    style={[
+                      styles.quotesImgCont,
+                      {
+                        marginTop:
+                          updateIndex === 0
+                            ? verticalScale(10)
+                            : verticalScale(20),
+                      },
+                    ]}>
+                    <Image
+                      style={MyStyles.quotesImg}
+                      source={{
+                        uri: updateItem?.link,
+                      }}
+                    />
+                  </View>
+                )}
+                {updateItem?.text && (
+                  <View
+                    key={updateItem?.id}
+                    style={[
+                      MyStyles.updatesTextCont,
+                      MyStyles.paddingHor10,
+                      {
+                        marginTop: !!updateItem?.link
+                          ? verticalScale(5)
+                          : verticalScale(20),
+                      },
+                    ]}>
+                    <LinearGradient
+                      start={{x: 0.3, y: 0}}
+                      end={{x: 1, y: 1}}
+                      colors={['#353a5f', '#9ebaf3']}
+                      style={[MyStyles.gradient]}>
+                      <View style={{padding: moderateScale(10)}}>
+                        {/* <Text style={MyStyles.updateTitle}>
+                                  Welcome to Folk App
+                                </Text> */}
+                        {/* <Text
+                                  style={[
+                                    MyStyles.updateTxt,
+                                    {fontSize: SIZES.xl},
+                                  ]}>
+                                  Vaikunta Ekadasi,
+                                </Text> */}
+                        <Text style={[MyStyles.updateTxt, {marginTop: 0}]}>
+                          {updateItem?.text}
+                        </Text>
+                      </View>
+                    </LinearGradient>
+                  </View>
+                )}
+              </>
+            );
+          })
+        )}
+      </View>
+    );
+  };
+
+  // @ Youtube Videos
+  const YoutubeVideos = ({data, index}) => {
+    const UPDATES = data?.updates;
+    const TITLE = data?.title;
+    return (
+      <View style={styles.padVert10}>
+        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
+          {shimmer?.content ? (
+            <>
+              <HomeTitleShimmer />
+              <HomeIconShimmer />
+            </>
+          ) : (
+            UPDATES?.length > 0 && (
+              <>
+                {RenderSecTitle(
+                  TITLE,
+                  index === 0 ? COLORS.golden : COLORS.gableGreen,
+                )}
+                {RenderHistoryIcon(
+                  TITLE,
+                  screenNames.folkVideos,
+                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                )}
+              </>
+            )
+          )}
+        </View>
+        <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
+          {shimmer?.content ? (
+            <YoutubeShimmer
+              width={windowWidth * 0.95}
+              height={windowWidth * 0.95 * (9 / 16)}
+              borderRadius={moderateScale(15)}
+            />
+          ) : (
+            UPDATES?.length > 0 && (
+              <YoutubePlayer
+                width={windowWidth * 0.95}
+                height={windowWidth * 0.95 * (9 / 16)}
+                webViewStyle={{
+                  borderRadius: moderateScale(15),
+                }}
+                play={playVideo}
+                // onReady={() => {
+                //   setShimmer(prev => ({...prev, Video: false}));
+                //   console.log('FIERSTSYFY');
+                // }}
+                // onError={() => {
+                //   setShimmer(prev => ({...prev, Video: false}));
+                //   console.log('FIERSTSYFY');
+                // }}
+                mute={youtubeAudio}
+                videoId={UPDATES[0]?.code}
+                onChangeState={onStateChange}
+              />
+            )
+          )}
+        </View>
+      </View>
+    );
+  };
+
+  const renderItemsInOrder = (item, index) => {
+    switch (String(item?.section)) {
+      case '1':
+        return <DailyDarshan key={index} data={item} index={index} />;
+      case '2':
+        return <Quotes key={index} data={item} index={index} />;
+
+      case '3':
+        return <FolkUpdates key={index} data={item} index={index} />;
+
+      case '4':
+        return <YoutubeVideos key={index} data={item} index={index} />;
+
+      default:
+        return null;
+    }
+  };
+
+  console.log('HM_DATA', homeData);
 
   return (
     <Container>
@@ -155,360 +600,21 @@ const Home = props => {
         />
 
         {/* // # Contents */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[
-            MyStyles.scrollView,
-            {
-              paddingBottom: verticalScale(80),
-              minHeight: '92%',
-            },
-          ]}>
-          <View style={styles.contentCont}>
-            <View style={styles.halfBg} />
-
-            {/* // @ Daily Darshana - Carousel  */}
-            {(Section1?.length > 0 || shimmer?.titleIcn) && (
-              <View style={[styles.dailyDarshanCont, styles.padVert10]}>
-                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                  {shimmer?.titleIcn ? (
-                    <HomeTitleShimmer />
-                  ) : (
-                    <Text
-                      style={[
-                        MyStyles.subTitleText,
-                        {
-                          color: COLORS.golden,
-                        },
-                      ]}>
-                      {Section1_Title}
-                    </Text>
-                  )}
-                  {shimmer?.titleIcn ? (
-                    <HomeIconShimmer />
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigateScreen(screenNames.dailyDarshan, {
-                          title: Section1_Title,
-                        })
-                      }
-                      style={styles.historyIcon}
-                      activeOpacity={0.6}>
-                      <MaterialCommunityIcons
-                        name="history"
-                        size={moderateScale(25)}
-                        color={COLORS.white}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-                {Section1 && (
-                  <ParallexCarousel
-                    carouselItems={Section1}
-                    autoScroll={true}
-                  />
-                )}
-
-                {shimmer?.parallex && !Section1 && <ParallexShimmer />}
-              </View>
-            )}
-
-            {/* // @  Quotes  */}
-            {(Section2?.length > 0 || shimmer?.titleIcn) && (
-              <View style={{paddingBottom: verticalScale(10)}}>
-                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                  {shimmer?.titleIcn ? (
-                    <HomeTitleShimmer />
-                  ) : (
-                    <Text
-                      style={[
-                        MyStyles.subTitleText,
-                        {
-                          color: !checkSection1
-                            ? COLORS.golden
-                            : COLORS.gableGreen,
-                        },
-                      ]}>
-                      {Section2_Title}
-                    </Text>
-                  )}
-                  {shimmer?.titleIcn ? (
-                    <HomeIconShimmer />
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigateScreen(screenNames.quotes, {
-                          title: Section2_Title,
-                        })
-                      }
-                      style={styles.historyIcon}
-                      activeOpacity={0.6}>
-                      <MaterialCommunityIcons
-                        name="history"
-                        size={moderateScale(25)}
-                        color={
-                          !checkSection1 ? COLORS.white : COLORS.gableGreen
-                        }
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-
-                <View
-                  style={styles.quotesImgCont(
-                    imageDimensions?.quotesWid?.length > 0
-                      ? imageDimensions?.quotesWid[0]
-                      : 135,
-                    imageDimensions?.quotesHgt?.length > 0
-                      ? imageDimensions?.quotesHgt[0]
-                      : 76,
-                  )}>
-                  {shimmer?.quotesImg && (
-                    <ImageShimmer
-                      width={'100%'}
-                      height={'100%'}
-                      borderRadius={moderateScale(15)}
-                    />
-                  )}
-                  {Section2 && (
-                    <Image
-                      style={MyStyles.quotesImg}
-                      source={{
-                        uri: Section2[0]?.link,
-                      }}
-                      onLoadStart={() => {
-                        console.log('Image loading started...');
-                        !shimmer?.quotesImg && handleShimmer('quotesImg', true);
-                      }}
-                      onLoadEnd={() => {
-                        console.log('Image ENDED...');
-                        handleShimmer('quotesImg', false);
-                      }}
-                      onError={() => {
-                        console.log('Image failed to load.');
-                        handleShimmer('quotesImg', false); // Hide shimmer on error
-                      }}
-                    />
-                  )}
-                </View>
-              </View>
-            )}
-
-            {/* // @  Folk Updates  */}
-            {(Section3?.length > 0 || shimmer?.titleIcn) && (
-              <View style={styles.padVert10}>
-                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                  {shimmer?.titleIcn ? (
-                    <HomeTitleShimmer />
-                  ) : (
-                    <Text
-                      style={[
-                        MyStyles.subTitleText,
-                        {
-                          color:
-                            !checkSection1 && !checkSection2
-                              ? COLORS.golden
-                              : COLORS.gableGreen,
-                        },
-                      ]}>
-                      {Section3_Title}
-                    </Text>
-                  )}
-                  {shimmer?.titleIcn ? (
-                    <HomeIconShimmer />
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigateScreen(screenNames.updates, {
-                          title: Section3_Title,
-                        })
-                      }
-                      style={styles.historyIcon}
-                      activeOpacity={0.6}>
-                      <MaterialCommunityIcons
-                        name="history"
-                        size={moderateScale(25)}
-                        color={
-                          !checkSection1 && !checkSection2
-                            ? COLORS.white
-                            : COLORS.gableGreen
-                        }
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-
-                {shimmer?.updatesImg && !Section3 ? (
-                  <>
-                    <ImageShimmer
-                      width={'95%'}
-                      height={verticalScale(300)}
-                      borderRadius={moderateScale(15)}
-                      marginTop={verticalScale(10)}
-                      alignSelf={'center'}
-                    />
-                    <ImageShimmer
-                      width={'95%'}
-                      height={verticalScale(120)}
-                      borderRadius={moderateScale(15)}
-                      marginTop={verticalScale(10)}
-                      alignSelf={'center'}
-                    />
-                  </>
-                ) : (
-                  Section3?.map((item, index) => {
-                    return (
-                      <>
-                        {!!item?.link && (
-                          <View
-                            key={item?.id}
-                            style={[
-                              styles.quotesImgCont(135, 76),
-                              {
-                                marginTop:
-                                  index === 0
-                                    ? verticalScale(10)
-                                    : verticalScale(20),
-                              },
-                            ]}>
-                            <Image
-                              style={MyStyles.quotesImg}
-                              source={{
-                                uri: item?.link,
-                              }}
-                              onLoadStart={() => {
-                                if (!shimmer?.updatesImg) {
-                                  handleShimmer('updatesImg', true);
-                                }
-                              }}
-                              onLoadEnd={() => {
-                                index === 0 &&
-                                  handleShimmer('updatesImg', false);
-                              }}
-                              onError={() => {
-                                index === 0 &&
-                                  handleShimmer('updatesImg', false);
-                              }}
-                            />
-                          </View>
-                        )}
-                        {item?.text && (
-                          <View
-                            key={item?.id}
-                            style={[
-                              MyStyles.updatesTextCont,
-                              MyStyles.paddingHor10,
-                              // MyStyles.marTop3Per,
-                              {
-                                marginTop: !!item?.link
-                                  ? verticalScale(5)
-                                  : verticalScale(20),
-                              },
-                            ]}>
-                            <LinearGradient
-                              start={{x: 0.3, y: 0}}
-                              end={{x: 1, y: 1}}
-                              colors={['#353a5f', '#9ebaf3']}
-                              style={[MyStyles.gradient]}>
-                              <View style={{padding: moderateScale(10)}}>
-                                {/* <Text style={MyStyles.updateTitle}>
-                                  Welcome to Folk App
-                                </Text> */}
-                                {/* <Text
-                                  style={[
-                                    MyStyles.updateTxt,
-                                    {fontSize: SIZES.xl},
-                                  ]}>
-                                  Vaikunta Ekadasi,
-                                </Text> */}
-                                <Text
-                                  style={[MyStyles.updateTxt, {marginTop: 0}]}>
-                                  {item?.text}
-                                </Text>
-                              </View>
-                            </LinearGradient>
-                          </View>
-                        )}
-                      </>
-                    );
-                  })
-                )}
-              </View>
-            )}
-
-            {/* // @ Youtube Videos */}
-            {(Section4?.length > 0 || shimmer?.titleIcn) && (
-              <View style={styles.padVert10}>
-                <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-                  {shimmer?.titleIcn ? (
-                    <HomeTitleShimmer />
-                  ) : (
-                    <Text
-                      style={[
-                        MyStyles.subTitleText,
-                        {
-                          color:
-                            !checkSection1 && !checkSection2 && !checkSection3
-                              ? COLORS.golden
-                              : COLORS.gableGreen,
-                        },
-                      ]}>
-                      {Section4_Title}
-                    </Text>
-                  )}
-
-                  {shimmer?.titleIcn ? (
-                    <HomeIconShimmer />
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigateScreen(screenNames.folkVideos, {
-                          title: Section4_Title,
-                        })
-                      }
-                      style={styles.historyIcon}
-                      activeOpacity={0.6}>
-                      <MaterialCommunityIcons
-                        name="history"
-                        size={moderateScale(25)}
-                        color={
-                          !checkSection1 && !checkSection2 && !checkSection3
-                            ? COLORS.white
-                            : COLORS.gableGreen
-                        }
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-                <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
-                  {shimmer?.youtubeShimmer && (
-                    <YoutubeShimmer
-                      width={windowWidth * 0.95}
-                      height={windowWidth * 0.95 * (9 / 16)}
-                      borderRadius={moderateScale(15)}
-                    />
-                  )}
-
-                  {Section4 && (
-                    <YoutubePlayer
-                      width={windowWidth * 0.95}
-                      height={windowWidth * 0.95 * (9 / 16)}
-                      webViewStyle={{
-                        borderRadius: moderateScale(15),
-                      }}
-                      play={playVideo}
-                      onReady={() => handleShimmer('youtubeShimmer', false)}
-                      mute={youtubeAudio}
-                      videoId={Section4[0]?.code}
-                      onChangeState={onStateChange}
-                    />
-                  )}
-                </View>
-              </View>
-            )}
-          </View>
-        </ScrollView>
+        <View style={styles.contentCont}>
+          <View style={styles.halfBg} />
+          <FlatList
+            data={homeData}
+            keyExtractor={item => item?.section}
+            contentContainerStyle={{minHeight: screenHeight}}
+            renderItem={({item, index}) => {
+              if (shimmer?.content || homeData?.length > 0) {
+                return renderItemsInOrder(item, index);
+              } else {
+                return null;
+              }
+            }}
+          />
+        </View>
       </SafeAreaView>
     </Container>
   );
@@ -548,14 +654,12 @@ const styles = StyleSheet.create({
   },
 
   marTop15: {marginTop: verticalScale(15)},
-  quotesImgCont: (width, height) => ({
+  quotesImgCont: {
     width: windowWidth,
-    alignSelf: 'center',
-    marginTop: verticalScale(10),
-    aspectRatio: width / height,
-    borderRadius: moderateScale(15),
+    justifyContent: 'center',
+    alignItems: 'center',
     ...MyStyles.paddingHor10,
-  }),
+  },
 
   padVert10: {paddingVertical: verticalScale(10)},
 
