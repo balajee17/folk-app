@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   ImageBackground,
   SafeAreaView,
@@ -8,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -24,129 +25,38 @@ import Container from '../components/Container';
 import AlbumCarousel from '../components/AlbumCarousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {DarshanShimmer} from '../components/Shimmer';
+import {API} from '../services/API';
 
 const DailyDarshan = ({navigation, route}) => {
   const [switchScreen, setSwitchSreen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [shimmer, setShimmer] = useState(true);
 
-  const sampleData = [
-    {
-      day: 'Today',
-      images: [
-        {
-          id: 1,
-          link: 'https://m.media-amazon.com/images/I/81cekv1b3fL._AC_UF1000,1000_QL80_.jpg',
-        },
-      ],
-    },
-    {
-      day: '1 Day Ago',
-      images: [
-        {
-          id: 2,
-          link: 'https://m.media-amazon.com/images/I/81cekv1b3fL._AC_UF1000,1000_QL80_.jpg',
-        },
-        {
-          id: 3,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-      ],
-    },
-    {
-      day: '2 Day Ago',
-      images: [
-        {
-          id: 4,
-          link: 'https://m.media-amazon.com/images/I/81cekv1b3fL._AC_UF1000,1000_QL80_.jpg',
-        },
-        {
-          id: 5,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-        {
-          id: 6,
-          link: 'https://i.pinimg.com/474x/19/ee/4a/19ee4a3da8572531a7af9bd35900fef4.jpg',
-        },
-      ],
-    },
-    {
-      day: '3 Day Ago',
-      images: [
-        {
-          id: 7,
-          link: 'https://m.media-amazon.com/images/I/81cekv1b3fL._AC_UF1000,1000_QL80_.jpg',
-        },
-        {
-          id: 8,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-        {
-          id: 9,
-          link: 'https://i.pinimg.com/474x/19/ee/4a/19ee4a3da8572531a7af9bd35900fef4.jpg',
-        },
-        {
-          id: 10,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-      ],
-    },
-    {
-      day: '4 Day Ago',
-      images: [
-        {
-          id: 11,
-          link: 'https://m.media-amazon.com/images/I/81cekv1b3fL._AC_UF1000,1000_QL80_.jpg',
-        },
-        {
-          id: 12,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-        {
-          id: 13,
-          link: 'https://i.pinimg.com/474x/19/ee/4a/19ee4a3da8572531a7af9bd35900fef4.jpg',
-        },
-        {
-          id: 14,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-        {
-          id: 15,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-      ],
-    },
-    {
-      day: '5 Day Ago',
-      images: [
-        {
-          id: 11,
-          link: 'https://m.media-amazon.com/images/I/81cekv1b3fL._AC_UF1000,1000_QL80_.jpg',
-        },
-        {
-          id: 12,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-        {
-          id: 13,
-          link: 'https://i.pinimg.com/474x/19/ee/4a/19ee4a3da8572531a7af9bd35900fef4.jpg',
-        },
-        {
-          id: 14,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-        {
-          id: 15,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-        {
-          id: 16,
-          link: 'https://play-lh.googleusercontent.com/_W08xjfRDYn--aJ70Rn150uhcyoymvsUW-IosMRDAz83RR-Ojw7SkggNHzDdUGxLPOgw',
-        },
-      ],
-    },
-  ];
+  const [darshanData, setDarshanData] = useState([]);
   const {title} = route?.params;
+
+  useEffect(() => {
+    getDarshanHistory();
+  }, []);
+
+  // # API Call to get Darshan History
+  const getDarshanHistory = async () => {
+    try {
+      const response = await API.getDarshanHistroy();
+
+      console.log('response', response?.data);
+      const {history, SuccessCode} = response?.data;
+      if (SuccessCode === 1) {
+        setDarshanData(history);
+      } else {
+        setDarshanData([]);
+      }
+      setShimmer(false);
+    } catch (err) {
+      // setDarshanData([]);
+      console.log('ERR-Darshan-screen', err);
+    }
+  };
 
   return (
     <>
@@ -166,7 +76,8 @@ const DailyDarshan = ({navigation, route}) => {
                   .map((_, index) => <DarshanShimmer key={index} />)
               ) : (
                 <FlatList
-                  data={sampleData}
+                  data={darshanData}
+                  showsVerticalScrollIndicator={false}
                   keyExtractor={item => item?.id}
                   renderItem={({item, index}) => {
                     return (
@@ -195,7 +106,7 @@ const DailyDarshan = ({navigation, route}) => {
                                 style={styles.leftImg1}
                               />
                             </TouchableOpacity>
-                            {item?.images.length > 2 && (
+                            {item?.images?.length > 2 && (
                               <TouchableOpacity
                                 onPress={() => {
                                   setSelectedItem({
@@ -216,7 +127,7 @@ const DailyDarshan = ({navigation, route}) => {
                           </View>
                           {/* // # Right Container */}
                           <View style={MyStyles.rightImgCont}>
-                            {item?.images.length > 3 && (
+                            {item?.images?.length > 3 && (
                               <TouchableOpacity
                                 onPress={() => {
                                   setSelectedItem({
@@ -234,15 +145,15 @@ const DailyDarshan = ({navigation, route}) => {
                                 />
                               </TouchableOpacity>
                             )}
-                            {item?.images.length > 1 && (
+                            {item?.images?.length > 1 && (
                               <TouchableOpacity
                                 onPress={() => {
                                   setSelectedItem({
                                     ...item,
                                     activeIndex:
-                                      item?.images.length === 2
+                                      item?.images?.length === 2
                                         ? 1
-                                        : item?.images.length === 3
+                                        : item?.images?.length === 3
                                         ? 2
                                         : 3,
                                   });
@@ -253,7 +164,7 @@ const DailyDarshan = ({navigation, route}) => {
                                   styles.blurImgCont,
                                   {
                                     marginTop:
-                                      item?.images.length >= 4
+                                      item?.images?.length >= 4
                                         ? '5%'
                                         : undefined,
                                   },
@@ -261,31 +172,31 @@ const DailyDarshan = ({navigation, route}) => {
                                 <ImageBackground
                                   source={{
                                     uri:
-                                      item?.images.length === 2
+                                      item?.images?.length === 2
                                         ? item?.images[1]?.link
-                                        : item?.images.length === 3
+                                        : item?.images?.length === 3
                                         ? item?.images[2]?.link
                                         : item?.images[3]?.link,
                                   }}
                                   imageStyle={[
-                                    item?.images.length > 4 &&
+                                    item?.images?.length > 4 &&
                                       styles.blurImageStyle,
                                     {borderRadius: moderateScale(10)},
                                   ]}
-                                  blurRadius={item?.images.length > 4 ? 4 : 0}
+                                  blurRadius={item?.images?.length > 4 ? 4 : 0}
                                   style={[
                                     styles.rightImg1,
                                     {
                                       height:
-                                        item?.images.length === 2
+                                        item?.images?.length === 2
                                           ? verticalScale(200)
                                           : verticalScale(190),
                                     },
                                   ]}>
-                                  {item?.images.length > 4 && (
+                                  {item?.images?.length > 4 && (
                                     <View style={styles.transBgCont}>
                                       <Text style={styles.countTxt}>
-                                        {`+${item?.images.length - 4}`}
+                                        {`+${item?.images?.length - 4}`}
                                       </Text>
                                     </View>
                                   )}

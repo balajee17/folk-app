@@ -32,7 +32,7 @@ const SwipeCard = ({
   animatedValue,
   item,
   index,
-  imageSource,
+  quotesData,
 }) => {
   const swipeXArray = useSharedValue(0);
   const swipeDirection = useSharedValue(0);
@@ -98,8 +98,11 @@ const SwipeCard = ({
         }
       }
     });
+
+  console.log('item', item);
+
   return (
-    <GestureDetector key={index + 1} gesture={pan}>
+    <GestureDetector key={item?.id} gesture={pan}>
       <Animated.View
         style={[
           {
@@ -111,7 +114,7 @@ const SwipeCard = ({
           swipeAnimation,
         ]}>
         <ImageBackground
-          source={{uri: item?.image}}
+          source={{uri: item?.link}}
           resizeMode="stretch"
           imageStyle={{borderRadius: moderateScale(20)}}
           style={{

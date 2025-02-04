@@ -216,6 +216,7 @@ const FolkVideos = ({navigation, route}) => {
               ) : (
                 <FlatList
                   // data={}
+                  showsVerticalScrollIndicator={false}
                   keyExtractor={item => item?.id}
                   renderItem={({item, index}) => {
                     return (

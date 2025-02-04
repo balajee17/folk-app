@@ -21,29 +21,35 @@ import {screenNames} from '../constants/ScreenNames';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomHeader from '../components/CustomHeader';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
+import {API} from '../services/API';
 
 const FolkUpdates = ({navigation, route}) => {
-  const [imageDimensions, setImageDimensions] = useState({});
   const [shimmer, setShimmer] = useState(true);
-
-  const [quotesImg, setQuotesImg] = useState(
-    'https://pbs.twimg.com/media/Ft_jtRaagAM_PJD.jpg:large',
-  );
-
-  useEffect(() => {
-    // Fetch the dimensions of the image
-    Image.getSize(
-      quotesImg,
-      (width, height) => {
-        setImageDimensions({width: width, height: height});
-      },
-      error => {
-        console.error('Error fetching image dimensions:', error);
-      },
-    );
-  }, [quotesImg]);
+  const [folkUpdates, setFolkUpdates] = useState([]);
 
   const {title} = route?.params;
+
+  useEffect(() => {
+    getUpdatesHistory();
+  }, []);
+
+  // # API Call to get Updates History
+  const getUpdatesHistory = async () => {
+    try {
+      const response = await API.getUpdatesHistroy();
+
+      console.log('response', response?.data);
+      const {history, SuccessCode} = response?.data;
+      if (SuccessCode === 1) {
+        setFolkUpdates(history);
+      } else {
+        setFolkUpdates([]);
+      }
+      setShimmer(false);
+    } catch (err) {
+      console.log('ERR-Updates-screen', err);
+    }
+  };
 
   return (
     <Container>
@@ -82,54 +88,64 @@ const FolkUpdates = ({navigation, route}) => {
             </>
           ) : (
             <FlatList
-              // data={}
-              // keyExtractor={item=>item?.id}
+              data={folkUpdates}
+              keyExtractor={(_, index) => index}
+              showsVerticalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return (
                   <>
-                    <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
-                      Today
+                    <Text
+                      style={[MyStyles.subTitleText, {marginVertical: '5%'}]}>
+                      {item?.day}
                     </Text>
 
-                    <View style={styles.quotesImgCont(imageDimensions)}>
-                      <Image
-                        style={MyStyles.quotesImg}
-                        source={{
-                          uri: 'https://pbs.twimg.com/media/FtJ9xsCaMAAvEsM.jpg:large',
-                        }}
-                      />
-                    </View>
+                    {item?.updates?.map((image, index) => {
+                      return (
+                        <>
+                          {!!image?.link && (
+                            <View
+                              style={[
+                                styles.imageContainer,
+                                {marginTop: index !== 0 ? '5%' : 0},
+                              ]}
+                              key={image?.id}>
+                              <Image
+                                style={MyStyles.quotesImg}
+                                source={{
+                                  uri: image?.link,
+                                }}
+                              />
+                            </View>
+                          )}
 
-                    <View style={[MyStyles.updatesTextCont]}>
-                      <LinearGradient
-                        start={{x: 0.3, y: 0}}
-                        end={{x: 1, y: 1}}
-                        colors={['#353a5f', '#9ebaf3']}
-                        style={[MyStyles.gradient, MyStyles.marTop10]}>
-                        <View style={{padding: moderateScale(10)}}>
-                          <Text style={MyStyles.updateTitle}>
-                            Welcome to Folk App
-                          </Text>
-                          <Text
-                            style={[MyStyles.updateTxt, {fontSize: SIZES.xl}]}>
-                            Vaikunta Ekadasi,
-                          </Text>
-                          <Text style={MyStyles.updateTxt}>
-                            Vaikuntha Ekadashi is an important festival
-                            celebrated every year. Ekadashi is the eleventh day
-                            of the fortnight of the waxing or waning moon and
-                            occurs twice a month. But the Ekadashi that occurs
-                            in the month of Margashirsha (December – January)
-                            during the fortnight of the waxing moon is of
-                            special significance and is glorified as Vaikuntha
-                            Ekadashi. On this day, the gates of Vaikuntha (the
-                            Lord’s abode) open to His ardent devotees. This is a
-                            major festival of South India celebrated in all the
-                            temples of Lord Vishnu.
-                          </Text>
-                        </View>
-                      </LinearGradient>
-                    </View>
+                          {!!image?.text && (
+                            <View
+                              style={[
+                                MyStyles.updatesTextCont,
+                                {
+                                  marginTop: !!image?.link
+                                    ? '2%'
+                                    : index !== 0
+                                    ? '5%'
+                                    : 0,
+                                },
+                              ]}>
+                              <LinearGradient
+                                start={{x: 0.3, y: 0}}
+                                end={{x: 1, y: 1}}
+                                colors={['#353a5f', '#9ebaf3']}
+                                style={[MyStyles.gradient]}>
+                                <View style={{padding: moderateScale(10)}}>
+                                  <Text style={MyStyles.updateTxt}>
+                                    {image?.text}
+                                  </Text>
+                                </View>
+                              </LinearGradient>
+                            </View>
+                          )}
+                        </>
+                      );
+                    })}
                   </>
                 );
               }}
@@ -144,13 +160,12 @@ const FolkUpdates = ({navigation, route}) => {
 export default FolkUpdates;
 
 const styles = StyleSheet.create({
-  quotesImgCont: imageDimensions => ({
+  imageContainer: {
     width: windowWidth,
-    alignSelf: 'center',
-    marginTop: verticalScale(10),
-    aspectRatio:
-      (imageDimensions?.width || 135) / (imageDimensions?.height || 76),
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: moderateScale(15),
+    alignSelf: 'center',
     ...MyStyles.paddingHor10,
-  }),
+  },
 });

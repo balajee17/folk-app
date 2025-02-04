@@ -54,7 +54,7 @@ const PaginationDot = ({index, scrollX}) => {
     };
   });
 
-  return <Animated.View style={[styles.dots, animatedDotStyle]} />;
+  return <Animated.View key={index} style={[styles.dots, animatedDotStyle]} />;
 };
 
 const ParallexPaginationDots = ({carouselItems, scrollX}) => {

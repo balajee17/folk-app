@@ -38,6 +38,8 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
   const HEIGHT = WIDTH * 1.58;
   const imagesData = selectedItem?.images;
 
+  console.log('selectedItem', selectedItem);
+
   const scrollX = useSharedValue(activeIndex);
   const scrollRef = useRef(null);
 
@@ -47,24 +49,25 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
-      // Dynamically track the current index based on scroll position
-      scrollX.value = Math.round(event.contentOffset.x / windowWidth);
+      scrollX.value = event.contentOffset.x;
     },
   });
 
   const scrollToIndex = index => {
     const offset = index * windowWidth; // Calculate the x-offset for the selected index
-    scrollRef.current?.scrollTo({x: offset, animated: true}); // Scroll to the index
+    scrollRef?.current?.scrollToOffset({offset, animated: true}); // Scroll to the index
     scrollX.value = index; // Update the active index
   };
-  const download = link => {};
+  const download = link => {
+    console.log('DWNLD_LINK', link);
+  };
   const shareLink = link => {};
   return (
     <>
       <CommonStatusBar />
       <View style={{backgroundColor: '#000', flex: 1}}>
         <View style={StyleSheet.absoluteFillObject}>
-          {imagesData.map((item, index) => {
+          {imagesData?.map((item, index) => {
             const inputRange = [
               (index - 1) * windowWidth,
               index * windowWidth,
@@ -84,29 +87,27 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
             });
 
             return (
-              <>
-                <Animated.Image
-                  key={`background-image-${index}`}
-                  source={{uri: item?.link}}
-                  blurRadius={50}
-                  style={[StyleSheet.absoluteFillObject, animatedStyle]}
-                />
-              </>
+              <Animated.Image
+                key={`background-image-${index}`}
+                source={{uri: item?.link}}
+                blurRadius={50}
+                style={[StyleSheet.absoluteFillObject, animatedStyle]}
+              />
             );
           })}
         </View>
-        <Animated.ScrollView
+
+        <Animated.FlatList
           ref={scrollRef}
-          onScroll={scrollHandler}
           data={imagesData}
+          onScroll={scrollHandler}
           pagingEnabled
           horizontal
-          scrollEventThrottle={16}
-          showsHorizontalScrollIndicator={false}>
-          {imagesData.map((item, index) => {
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item?.id}
+          renderItem={({item, index}) => {
             return (
               <View
-                key={index + 1}
                 style={{
                   width: windowWidth,
                   justifyContent: 'space-evenly',
@@ -195,8 +196,8 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                 </View>
               </View>
             );
-          })}
-        </Animated.ScrollView>
+          }}
+        />
       </View>
     </>
   );

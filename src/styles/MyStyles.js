@@ -164,13 +164,14 @@ export let MyStyles = {
     marginTop: '1%',
     paddingVertical: '2%',
     width: '100%',
-    paddingHorizontal: '3%',
   },
   leftImgCont: {
     width: '43%',
   },
   rightImgCont: {
     width: '54%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentContainer: {
     flex: 1,

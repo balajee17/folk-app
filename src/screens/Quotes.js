@@ -1,4 +1,5 @@
 import {
+  FlatList,
   ImageBackground,
   SafeAreaView,
   ScrollView,
@@ -30,37 +31,44 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import SwipeCard from '../components/SwipeCard';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {API} from '../services/API';
 
 const Quotes = ({navigation, route}) => {
-  const imageSource = [
-    {
-      id: 1,
-      image:
-        'https://www.iskconbangalore.org/wp-content/uploads/2015/11/theme-park-731x800.jpeg',
-    },
-    {
-      id: 2,
-      image: 'https://i.ytimg.com/vi/LuE9riw-klA/maxresdefault.jpg',
-    },
-    {
-      id: 3,
-      image:
-        'https://www.iskconbangalore.org/wp-content/uploads/2016/01/g01-iskcon-temple-night-view.jpg',
-    },
-    {
-      id: 4,
-      image: 'https://i.ytimg.com/vi/LuE9riw-klA/maxresdefault.jpg',
-    },
-  ];
+  const [quotesData, setQuotesData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [newData, setNewData] = useState(imageSource);
+  const [newData, setNewData] = useState([]);
   const [shimmer, setShimmer] = useState(true);
 
   const animatedValue = useSharedValue(0);
 
-  console.log('route', route);
-
   const {title} = route?.params;
+
+  useEffect(() => {
+    getQuotesHistory();
+  }, []);
+
+  // # API Call to get Quotes History
+  const getQuotesHistory = async () => {
+    try {
+      const response = await API.getQuotesHistroy();
+
+      console.log('response', response?.data);
+      const {history, SuccessCode} = response?.data;
+      if (SuccessCode === 1) {
+        setQuotesData(history);
+        // const filterImages = history?.map(item => {
+        //   return item?.images;
+        // });
+        // console.log('filterImages', filterImages);
+        // setNewData(filterImages);
+      } else {
+        setQuotesData([]);
+      }
+      setShimmer(false);
+    } catch (err) {
+      console.log('ERR-Updates-screen', err);
+    }
+  };
 
   return (
     <Container>
@@ -91,16 +99,17 @@ const Quotes = ({navigation, route}) => {
             </View>
           ) : (
             <FlatList
-              data={sampleData}
-              keyExtractor={item => item?.id}
+              data={quotesData}
+              keyExtractor={(_, index) => index}
+              showsVerticalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return (
                   <>
                     <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
-                      Today
+                      {item?.day}
                     </Text>
                     <View style={styles.cardCont}>
-                      {newData.map((item, index) => {
+                      {item?.images?.map((quotesImg, QuotesIndex) => {
                         return (
                           <SwipeCard
                             currentIndex={currentIndex}
@@ -108,9 +117,9 @@ const Quotes = ({navigation, route}) => {
                             animatedValue={animatedValue}
                             newData={newData}
                             setNewData={setNewData}
-                            item={item}
-                            index={index}
-                            imageSource={imageSource}
+                            item={quotesImg}
+                            index={QuotesIndex}
+                            imageSource={quotesData}
                           />
                         );
                       })}
