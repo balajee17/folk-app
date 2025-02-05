@@ -99,8 +99,6 @@ const SwipeCard = ({
       }
     });
 
-  console.log('item', item);
-
   return (
     <GestureDetector key={item?.id} gesture={pan}>
       <Animated.View

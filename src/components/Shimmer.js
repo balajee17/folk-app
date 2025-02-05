@@ -202,7 +202,6 @@ export const DarshanShimmer = () => {
   return (
     <>
       <TitleShimmer />
-
       <View style={MyStyles.imageContainer}>
         {/* // # Left Container */}
         <View style={MyStyles.leftImgCont}>

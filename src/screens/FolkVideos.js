@@ -5,9 +5,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
@@ -26,19 +27,48 @@ import {screenNames} from '../constants/ScreenNames';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {TitleShimmer, YoutubeShimmer} from '../components/Shimmer';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {API} from '../services/API';
 
 const FolkVideos = ({navigation, route}) => {
-  const [playVideo, setPlayVideo] = useState(true);
-  const [youtubeAudio, setYoutubeAudio] = useState(true);
-  const [shimmer, setShimmer] = useState({video: true, text: false});
+  const [videoControl, setVideoControl] = useState({
+    playVideo: true,
+    muteAudio: true,
+  });
+  const [playingVideo, setPlayingVideo] = useState({});
+  const [shimmer, setShimmer] = useState({video: true, text: true});
+  const [videosData, setVideosData] = useState([]);
 
   const onStateChange = useCallback(state => {
     if (state === 'ended') {
-      setPlayVideo(false);
+      setVideoControl(prev => ({...prev, playVideo: false}));
     }
   });
 
   const {title} = route?.params;
+
+  useEffect(() => {
+    getVideosHistory();
+  }, []);
+
+  // # API Call to get Videos History
+  const getVideosHistory = async () => {
+    try {
+      const response = await API.getVideosHistroy();
+
+      console.log('response', response?.data);
+      const {history, SuccessCode} = response?.data;
+      if (SuccessCode === 1) {
+        setVideosData(history);
+        setPlayingVideo(history[0]);
+      } else {
+        setVideosData([]);
+      }
+      setShimmer({video: false, text: false});
+    } catch (err) {
+      // setVideosData([]);
+      console.log('ERR-Videos-screen', err);
+    }
+  };
 
   return (
     <Container>
@@ -47,7 +77,7 @@ const FolkVideos = ({navigation, route}) => {
         <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
         {/* // # Contents */}
         <View style={[styles.contentContainer, MyStyles.paddingHor10]}>
-          <View style={{flex: 0.6}}>
+          <View style={{flex: 0.5}}>
             <ScrollView showsVerticalScrollIndicator={false}>
               {/* // # Youtube Video */}
               <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
@@ -55,18 +85,23 @@ const FolkVideos = ({navigation, route}) => {
                   <YoutubeShimmer />
                 ) : (
                   <YoutubePlayer
+                    videoId={playingVideo?.videos?.[0]?.vediocode}
                     width={windowWidth * 0.95}
                     height={windowWidth * 0.95 * (9 / 16)}
                     webViewStyle={{
                       borderRadius: moderateScale(15),
                     }}
                     onReady={() => {
-                      setShimmer(prev => ({...prev, video: false}));
+                      console.log('Ready_VIDEO');
+                      // setShimmer(prev => ({...prev, video: false}));
+                      // setVideoControl(prev => ({...prev, playVideo: true}));
                     }}
-                    play={playVideo}
-                    mute={youtubeAudio}
-                    videoId={'kaVrPCxg_us'}
+                    play={videoControl?.playVideo}
+                    mute={videoControl?.muteAudio}
                     onChangeState={onStateChange}
+                    onError={e => {
+                      console.log('ERR_VIDEO', e);
+                    }}
                   />
                 )}
               </View>
@@ -140,12 +175,12 @@ const FolkVideos = ({navigation, route}) => {
             </ScrollView>
           </View>
 
-          <View style={{flex: 0.4}}>
+          <View style={{flex: 0.5}}>
             {/* // # Youtube Videos List */}
             <View style={styles.historyCont}>
               {shimmer?.text ? (
-                Array(5)
-                  .fill(5)
+                Array(3)
+                  .fill(3)
                   .map(_ => {
                     return (
                       <>
@@ -215,32 +250,36 @@ const FolkVideos = ({navigation, route}) => {
                   })
               ) : (
                 <FlatList
-                  // data={}
+                  data={videosData}
                   showsVerticalScrollIndicator={false}
                   keyExtractor={item => item?.id}
                   renderItem={({item, index}) => {
                     return (
                       <>
-                        <Text style={[styles.histDateTxt]}>12-Dec-2024</Text>
-                        <View style={styles.historyVideoCont}>
+                        <Text style={[styles.histDateTxt]}>{item?.day}</Text>
+                        <TouchableOpacity
+                          onPress={() => {
+                            playingVideo?.videos?.[0]?.id !==
+                              item?.videos?.[0]?.id && setPlayingVideo(item);
+                          }}
+                          activeOpacity={0.7}
+                          style={styles.historyVideoCont}>
                           <Image
                             source={{
-                              uri: 'https://live.staticflickr.com/6035/6242435909_d179bb7025_z.jpg',
+                              uri: item?.videos[0]?.thumbnail_url,
                             }}
                             style={styles.histImgStyle}
                           />
                           <View style={styles.histVideoTitleCont}>
                             <Text
                               style={[styles.videoTitle, styles.width100Per]}>
-                              Sri Radha Krishna Temple
+                              {item?.videos[0]?.title}
                             </Text>
                             <Text numberOfLines={2} style={styles.descrpTxt}>
-                              ISKCON stands for International Society for
-                              Krishna Consciousness. Srila Prabhupada who went
-                              to the United
+                              {item?.videos[0]?.text}
                             </Text>
                           </View>
-                        </View>
+                        </TouchableOpacity>
                       </>
                     );
                   }}

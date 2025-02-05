@@ -162,16 +162,16 @@ export let MyStyles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: '1%',
-    paddingVertical: '2%',
+    paddingTop: '2%',
     width: '100%',
   },
   leftImgCont: {
     width: '43%',
+    justifyContent: 'space-around',
   },
   rightImgCont: {
     width: '54%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   contentContainer: {
     flex: 1,

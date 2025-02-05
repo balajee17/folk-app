@@ -58,9 +58,7 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
     scrollRef?.current?.scrollToOffset({offset, animated: true}); // Scroll to the index
     scrollX.value = index; // Update the active index
   };
-  const download = link => {
-    console.log('DWNLD_LINK', link);
-  };
+  const download = link => {};
   const shareLink = link => {};
   return (
     <>
@@ -126,6 +124,7 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                     justifyContent: 'center',
                     borderRadius: moderateScale(20),
                     alignSelf: 'flex-end',
+                    marginRight: '3%',
                   }}
                   activeOpacity={0.6}>
                   <AntDesign

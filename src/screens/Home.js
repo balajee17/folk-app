@@ -272,7 +272,7 @@ const Home = props => {
                     key={updateItem?.id}
                     style={[
                       styles.quotesImgCont,
-                      {marginTop: updateIndex !== 0 ? '5%' : 0},
+                      {marginTop: updateIndex !== 0 ? '5%' : verticalScale(10)},
                     ]}>
                     <Image
                       style={MyStyles.quotesImg}
@@ -293,7 +293,7 @@ const Home = props => {
                           ? '2%'
                           : index !== 0
                           ? '5%'
-                          : 0,
+                          : '1%',
                       },
                     ]}>
                     <LinearGradient

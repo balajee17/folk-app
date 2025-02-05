@@ -34,17 +34,39 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
 
 const Quotes = ({navigation, route}) => {
-  const [quotesData, setQuotesData] = useState([]);
+  const [quotesData, setQuotesData] = useState([
+    {
+      id: 1,
+      link: 'http://192.168.1.11/FOLKDashboard/public/inspiring-quotes/20_.jpg',
+    },
+    {
+      id: 2,
+      link: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6ym84uF34s_5vPN7GDhVj_c5Z9qnBmS6Egw&s',
+    },
+    {
+      id: 3,
+      link: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsy5J-mW2R2DLkJjBdqVNVABMJXzadf39KMQ&s',
+    },
+    {
+      id: 4,
+      link: 'https://i.pinimg.com/1200x/d8/f5/db/d8f5dbe5e4030e6c5fc9a611c849ec88.jpg',
+    },
+    {
+      id: 5,
+      link: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiiyvozGlueHLXLfZucK03IitAENUvoKsyOu9kXG-XrW9m7ieYokQSQFw5pRawNc8NI8J45CP1fq8MxYUiqp0wChhf-_aqQfykWv0THTD4v1zbaYez9d0HLAm7cQbGUQbnf5kGK6BVQJCA/s1600/srila+prabhupada+quotes+on+life-best+life+changing+words+by+srila+prabhupada-jnanakadlai.jpg',
+    },
+  ]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [newData, setNewData] = useState([]);
-  const [shimmer, setShimmer] = useState(true);
+  const [newData, setNewData] = useState(quotesData);
+  const [shimmer, setShimmer] = useState(false);
 
   const animatedValue = useSharedValue(0);
 
-  const {title} = route?.params;
+  // const {title} = route?.params;
 
   useEffect(() => {
-    getQuotesHistory();
+    // getQuotesHistory();
   }, []);
 
   // # API Call to get Quotes History
@@ -74,7 +96,10 @@ const Quotes = ({navigation, route}) => {
     <Container>
       <SafeAreaView style={MyStyles.flex1}>
         {/* // # Header */}
-        <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
+        <CustomHeader
+          goBack={() => navigation.goBack()}
+          titleName={screenNames.quotes}
+        />
         {/* // # Contents */}
 
         <View style={MyStyles.contentContainer}>
@@ -98,36 +123,36 @@ const Quotes = ({navigation, route}) => {
                 })}
             </View>
           ) : (
-            <FlatList
-              data={quotesData}
-              keyExtractor={(_, index) => index}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return (
-                  <>
-                    <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
-                      {item?.day}
-                    </Text>
-                    <View style={styles.cardCont}>
-                      {item?.images?.map((quotesImg, QuotesIndex) => {
-                        return (
-                          <SwipeCard
-                            currentIndex={currentIndex}
-                            setCurrentIndex={setCurrentIndex}
-                            animatedValue={animatedValue}
-                            newData={newData}
-                            setNewData={setNewData}
-                            item={quotesImg}
-                            index={QuotesIndex}
-                            imageSource={quotesData}
-                          />
-                        );
-                      })}
-                    </View>
-                  </>
-                );
-              }}
-            />
+            // <FlatList
+            //   data={quotesData}
+            //   keyExtractor={(_, index) => index}
+            //   showsVerticalScrollIndicator={false}
+            //   renderItem={({item, index}) => {
+            //     return (
+            <>
+              <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
+                Today
+              </Text>
+              <View style={styles.cardCont}>
+                {newData?.map((quotesImg, QuotesIndex) => {
+                  return (
+                    <SwipeCard
+                      currentIndex={currentIndex}
+                      setCurrentIndex={setCurrentIndex}
+                      animatedValue={animatedValue}
+                      newData={newData}
+                      setNewData={setNewData}
+                      item={quotesImg}
+                      index={QuotesIndex}
+                      imageSource={quotesData}
+                    />
+                  );
+                })}
+              </View>
+            </>
+            // );
+            //   }}
+            // />
           )}
         </View>
       </SafeAreaView>

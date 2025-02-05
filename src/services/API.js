@@ -8,12 +8,14 @@ const baseURL =
   deploymentURL == 1 ? 'http://192.168.1.11/FOLKDashboard/api' : '';
 
 export const API = {
+  // # Home Screen API's
   getHomeScreenData() {
     const getHomeDataURL = baseURL + '/home-page-feeder';
     const requestData = {accessKey: Access_Key};
     console.log('URL Home Screen Data ', getHomeDataURL, ' data ', requestData);
     return axios.post(getHomeDataURL, requestData);
   },
+  // # History Screen API's
   getDarshanHistroy() {
     const getDarshanDataURL = baseURL + '/daily-darshan/history';
     const requestData = {accessKey: Access_Key};
@@ -46,5 +48,16 @@ export const API = {
       requestData,
     );
     return axios.post(getQuotesDataURL, requestData);
+  },
+  getVideosHistroy() {
+    const getVideosDataURL = baseURL + '/inspiring-videos/history';
+    const requestData = {accessKey: Access_Key};
+    console.log(
+      'URL Videos Screen Data ',
+      getVideosDataURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(getVideosDataURL, requestData);
   },
 };

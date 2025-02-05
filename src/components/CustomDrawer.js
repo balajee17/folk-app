@@ -38,7 +38,7 @@ const CustomDrawer = () => {
         <View style={styles.profImgCont}>
           <Image
             source={{
-              uri: 'https://imgs.search.brave.com/zP78w6gWAMPgyB1j0q5B7fkEuE6SpQdof95EDY7Up7s/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9mdW50/aWtrYS5jb20vd3At/Y29udGVudC91cGxv/YWRzLzIwMjQvMDIv/bG9yZC1rcmlzaG5h/LWltYWdlczIuanBn',
+              uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
             }}
             style={styles.profImg}
           />
