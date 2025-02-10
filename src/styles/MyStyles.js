@@ -83,6 +83,7 @@ export let COLORS = {
   inputBg: 'rgba(234, 236, 220, 1)',
   shimmerBg: '#888786',
   highLightColor: '#A8A8A8',
+  atlantis: '#B1C63C',
 };
 
 // @ FONTS
@@ -95,6 +96,7 @@ export let FONTS = {
   aladinRegular: 'Aladin-Regular',
   interMedium: 'Inter-Medium',
   ysabeauInfantBold: 'YsabeauInfant-Bold',
+  interBold: 'InterBold',
 };
 
 // @ MyStyles
@@ -178,4 +180,5 @@ export let MyStyles = {
     backgroundColor: COLORS.paleYellow,
     paddingHorizontal: moderateScale(10),
   },
+  contentCont: {backgroundColor: COLORS.paleYellow, minHeight: screenHeight},
 };

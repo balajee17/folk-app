@@ -3,7 +3,6 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,20 +11,15 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   COLORS,
-  FONTS,
   horizontalScale,
   moderateScale,
   MyStyles,
   screenHeight,
-  screenWidth,
-  SIZES,
   verticalScale,
-  windowHeight,
   windowWidth,
 } from '../styles/MyStyles';
 import LinearGradient from 'react-native-linear-gradient';
 import {screenNames} from '../constants/ScreenNames';
-
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ParallexCarousel from '../components/ParallexCarousel';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -39,6 +33,7 @@ import {
   YoutubeShimmer,
 } from '../components/Shimmer';
 import {API} from '../services/API';
+import CustomBottomTab from '../components/CustomBottomTab';
 
 const Home = props => {
   const {navigation} = props;
@@ -47,7 +42,7 @@ const Home = props => {
     {section: 1, title: '', updates: [{id: 1, link: ''}]},
     {section: 2, title: '', updates: [{id: 1, link: ''}]},
     {section: 3, title: '', updates: [{id: 1, link: ''}]},
-    {section: 4, title: '', updates: [{id: 1, link: ''}]},
+    {section: 4, title: '', updates: [{id: 1, link: '', code: ''}]},
   ]);
   const [playVideo, setPlayVideo] = useState(true);
   const [youtubeAudio, setYoutubeAudio] = useState(true);
@@ -69,9 +64,9 @@ const Home = props => {
       } else {
         setHomeData([]);
       }
-      setShimmer(prev => ({video: false, content: false}));
+      setShimmer(prev => ({...prev, content: false}));
     } catch (err) {
-      // setHomeData([]);
+      setHomeData([]);
       console.log('ERR-Home-screen', err);
     }
   };
@@ -331,6 +326,8 @@ const Home = props => {
   const YoutubeVideos = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
+
+    console.log('UPDATES', UPDATES);
     return (
       <View style={styles.padVert10}>
         <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
@@ -356,7 +353,7 @@ const Home = props => {
           )}
         </View>
         <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
-          {shimmer?.content ? (
+          {shimmer?.video ? (
             <YoutubeShimmer
               width={windowWidth * 0.95}
               height={windowWidth * 0.95 * (9 / 16)}
@@ -371,14 +368,12 @@ const Home = props => {
                   borderRadius: moderateScale(15),
                 }}
                 play={playVideo}
-                // onReady={() => {
-                //   setShimmer(prev => ({...prev, Video: false}));
-                //   console.log('FIERSTSYFY');
-                // }}
-                // onError={() => {
-                //   setShimmer(prev => ({...prev, Video: false}));
-                //   console.log('FIERSTSYFY');
-                // }}
+                onReady={() => {
+                  setShimmer(prev => ({...prev, video: false}));
+                }}
+                onError={() => {
+                  setShimmer(prev => ({...prev, video: false}));
+                }}
                 mute={youtubeAudio}
                 videoId={UPDATES[0]?.code}
                 onChangeState={onStateChange}
@@ -410,33 +405,38 @@ const Home = props => {
   };
 
   return (
-    <Container>
-      <SafeAreaView styles={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader
-          toggleDrawer={() => navigation.openDrawer()}
-          titleName={screenNames.home}
-        />
-
-        {/* // # Contents */}
-        <View style={styles.contentCont}>
+    <>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        overScrollMode="never"
+        contentContainerStyle={styles.scrollViewCont}>
+        <View style={MyStyles.contentCont}>
           <View style={styles.halfBg} />
-          <FlatList
-            data={homeData}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => item?.section}
-            contentContainerStyle={styles.flatListCont}
-            renderItem={({item, index}) => {
-              if (shimmer?.content || homeData?.length > 0) {
-                return renderItemsInOrder(item, index);
-              } else {
-                return null;
-              }
-            }}
-          />
+
+          {/* <FlatList
+          data={homeData}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={item => item?.section}
+          contentContainerStyle={styles.flatListCont}
+          renderItem={({item, index}) => {
+            if (shimmer?.content || homeData?.length > 0) {
+              return renderItemsInOrder(item, index);
+            } else {
+              return null;
+            }
+          }}
+        /> */}
+
+          {homeData?.map((item, index) => {
+            if (shimmer?.content || homeData?.length > 0) {
+              return renderItemsInOrder(item, index);
+            } else {
+              return null;
+            }
+          })}
         </View>
-      </SafeAreaView>
-    </Container>
+      </ScrollView>
+    </>
   );
 };
 
@@ -450,11 +450,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  contentCont: {backgroundColor: COLORS.paleYellow},
   dailyDarshanCont: {
     width: '100%',
   },
-
   halfBg: {
     position: 'absolute',
     top: 0,
@@ -481,8 +479,8 @@ const styles = StyleSheet.create({
   },
 
   padVert10: {paddingVertical: verticalScale(10)},
-  flatListCont: {
-    minHeight: screenHeight,
-    paddingBottom: '30%',
+  scrollViewCont: {
+    paddingBottom: verticalScale(160),
+    backgroundColor: COLORS.paleYellow,
   },
 });

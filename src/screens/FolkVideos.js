@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
@@ -32,7 +32,7 @@ import {API} from '../services/API';
 const FolkVideos = ({navigation, route}) => {
   const [videoControl, setVideoControl] = useState({
     playVideo: true,
-    muteAudio: true,
+    muteAudio: false,
   });
   const [playingVideo, setPlayingVideo] = useState({});
   const [shimmer, setShimmer] = useState({video: true, text: true});
@@ -93,14 +93,24 @@ const FolkVideos = ({navigation, route}) => {
                     }}
                     onReady={() => {
                       console.log('Ready_VIDEO');
-                      // setShimmer(prev => ({...prev, video: false}));
+                      setShimmer(prev => ({...prev, video: false}));
                       // setVideoControl(prev => ({...prev, playVideo: true}));
                     }}
+                    // initialPlayerParams={{
+                    //   modestbranding: 1, // Hides YouTube logo
+                    //   controls: 1, // Enables player controls
+                    //   showinfo: 0, // Hides video title
+                    //   rel: 0, // Prevents related videos from showing after video ends
+                    //   fs: 0, // Hides fullscreen button
+                    //   iv_load_policy: 3, // Hides annotations
+                    //   disablekb: 1,
+                    // }}
+
                     play={videoControl?.playVideo}
                     mute={videoControl?.muteAudio}
                     onChangeState={onStateChange}
                     onError={e => {
-                      console.log('ERR_VIDEO', e);
+                      setShimmer(prev => ({...prev, video: false}));
                     }}
                   />
                 )}
@@ -158,17 +168,14 @@ const FolkVideos = ({navigation, route}) => {
                 <>
                   <View style={[styles.videoContainer]}>
                     <Text style={styles.videoTitle}>
-                      Sri Radha Krishna Temple
+                      {playingVideo?.videos?.[0]?.title}
                     </Text>
-                    <Text style={styles.dateTxt}>13-Dec-2024</Text>
+                    <Text style={styles.dateTxt}>
+                      {playingVideo?.videos?.[0]?.date}
+                    </Text>
                   </View>
                   <Text style={styles.descrpTxt}>
-                    ISKCON stands for International Society for Krishna
-                    Consciousness. Srila Prabhupada who went to the United
-                    States of America in the year 1966 to spread the message of
-                    Krishna and engage people in the practice of the yuga-dharma
-                    (chanting of the holy names of Krishna) established this
-                    society in 1966.
+                    {playingVideo?.videos?.[0]?.text}
                   </Text>
                 </>
               )}

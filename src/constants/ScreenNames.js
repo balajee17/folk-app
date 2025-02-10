@@ -11,4 +11,7 @@ export let screenNames = {
   updates: 'FOLK Updates',
   folkVideos: 'FOLK Videos',
   yfhForm: 'YFH',
+  events: 'Events',
+  mainScreen: 'MainScreen',
+  switcherScreen: 'SwitcherScreen',
 };

@@ -1,10 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import CustomDrawer from '../components/CustomDrawer';
 import {screenNames} from '../constants/ScreenNames';
-import Home from '../screens/Home';
 import {moderateScale} from '../styles/MyStyles';
+import SwitcherScreen from '../screens/SwitcherScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -20,7 +20,10 @@ const DrawerNavigation = () => {
         },
       }}
       drawerContent={props => <CustomDrawer {...props} />}>
-      <Drawer.Screen name={screenNames.home} component={Home} />
+      <Drawer.Screen
+        name={screenNames.switcherScreen}
+        component={SwitcherScreen}
+      />
     </Drawer.Navigator>
   );
 };

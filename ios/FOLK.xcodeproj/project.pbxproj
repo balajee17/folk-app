@@ -22,6 +22,7 @@
 		E3DBE7E9FFAC4D5688A9B4AC /* Urbanist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4CCE02590AC94C3D8451D748 /* Urbanist-Medium.ttf */; };
 		F9F46A4D533B4C4685ACA9CF /* Urbanist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B088827A3ACE447EA4FC509B /* Urbanist-SemiBold.ttf */; };
 		FF57239DEE2A6129FB371C34 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EB18D0CA8F185DE44AC3E117 /* PrivacyInfo.xcprivacy */; };
+		DFE180EEF7B644E58F06A731 /* InterBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9155C97E7F5A4B35BFD4B47D /* InterBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		CD503B5F3220444DA248BB8B /* Urbanist-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-Regular.ttf"; path = "../src/assets/fonts/Urbanist-Regular.ttf"; sourceTree = "<group>"; };
 		EB18D0CA8F185DE44AC3E117 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = FOLK/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		9155C97E7F5A4B35BFD4B47D /* InterBold.ttf */ = {isa = PBXFileReference; name = "InterBold.ttf"; path = "../src/assets/fonts/InterBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				AD94632555BB4CBD8D6CD9CD /* Inter-Medium.ttf */,
 				8CF56D0DDFE047A0B40D03F9 /* YsabeauInfant-Bold.ttf */,
 				CD503B5F3220444DA248BB8B /* Urbanist-Regular.ttf */,
+				9155C97E7F5A4B35BFD4B47D /* InterBold.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -286,6 +289,7 @@
 				61719C27A1FD4BD18C4715B3 /* Inter-Medium.ttf in Resources */,
 				D4F9EC43D32D43FDB0E269C6 /* YsabeauInfant-Bold.ttf in Resources */,
 				3DB7394E31FB45519D79368B /* Urbanist-Regular.ttf in Resources */,
+				DFE180EEF7B644E58F06A731 /* InterBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

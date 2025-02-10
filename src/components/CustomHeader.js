@@ -11,6 +11,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {screenNames} from '../constants/ScreenNames';
 
 const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
+  const filterIcnScreens =
+    titleName === screenNames.quotes ||
+    titleName === screenNames.dailyDarshan ||
+    titleName === screenNames.updates ||
+    titleName === screenNames.folkVideos ||
+    titleName === screenNames.events;
   return (
     <View style={[styles.header]}>
       <TouchableOpacity
@@ -46,14 +52,7 @@ const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
           />
         ) : (
           <MaterialCommunityIcons
-            name={
-              titleName === screenNames.quotes ||
-              titleName === screenNames.dailyDarshan ||
-              titleName === screenNames.updates ||
-              titleName === screenNames.folkVideos
-                ? 'filter'
-                : null
-            }
+            name={filterIcnScreens ? 'filter' : null}
             size={moderateScale(25)}
             color={COLORS.white}
           />
