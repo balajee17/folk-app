@@ -17,15 +17,18 @@ const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
     titleName === screenNames.updates ||
     titleName === screenNames.folkVideos ||
     titleName === screenNames.events;
+
+  const drawerScreens =
+    titleName === screenNames.home || titleName === screenNames.events;
   return (
     <View style={[styles.header]}>
       <TouchableOpacity
         onPress={() => {
-          titleName === screenNames.home ? toggleDrawer() : goBack();
+          drawerScreens ? toggleDrawer() : goBack();
         }}
         activeOpacity={0.6} // Menu Drawer Icon
-        style={styles.menuIcon(titleName)}>
-        {titleName === screenNames.home ? (
+        style={styles.menuIcon(drawerScreens)}>
+        {drawerScreens ? (
           <Image
             style={styles.menuImage}
             source={getImage.menu}
@@ -73,9 +76,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: COLORS.charcoal,
   },
-  menuIcon: titleName => ({
-    padding: titleName === screenNames.home ? moderateScale(6) : undefined,
-    borderWidth: titleName === screenNames.home ? moderateScale(1) : undefined,
+  menuIcon: screens => ({
+    padding: screens ? moderateScale(6) : undefined,
+    borderWidth: screens ? moderateScale(1) : undefined,
     height: horizontalScale(35),
     width: horizontalScale(35),
     justifyContent: 'center',

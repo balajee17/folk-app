@@ -14,6 +14,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
   const ICONS = [
     {id: 1, name: screenNames.home},
     {id: 2, name: screenNames.events},
+    // {id: 3, name: screenNames.connectUs},
   ];
 
   return (
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
   },
   tabButton: {
+    marginTop: '3%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',

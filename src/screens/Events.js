@@ -1,11 +1,4 @@
-import {
-  Animated,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
@@ -16,93 +9,123 @@ import {
   screenWidth,
   SIZES,
 } from '../styles/MyStyles';
-import {
+import Animated, {
   Easing,
+  runOnJS,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated';
+import UpcomingEvents from './UpcomingEvents';
+import AttendedEvents from './AttendedEvents';
 
 const Events = () => {
-  //   const [activeTab, setActiveTab] = useState(0);
   const activeTab = useSharedValue(0);
   const scrollRef = useRef(null);
-  const indicatorPosition = useRef(new Animated.Value(0)).current;
+  const indicatorPosition = useSharedValue(0);
+  const indicatorWidth = horizontalScale(112);
 
   const handleTabPress = item => {
-    activeTab.current = item;
-
-    // Indicator animation
-    Animated.timing(indicatorPosition, {
-      toValue: item * horizontalScale(112),
-      duration: 300, // Faster animation duration
-      easing: Easing.linear(),
-      useNativeDriver: true,
-    }).start();
-
-    // Use requestAnimationFrame to delay scroll for smooth synchronization
-    // requestAnimationFrame(() => {
-    scrollRef.current?.scrollTo({
-      x: item * screenWidth,
-      animated: true,
+    // Animate active tab value first
+    activeTab.value = withTiming(item, {duration: 100}, () => {
+      // Once animation completes, smoothly scroll
+      runOnJS(scrollToTab)(item);
     });
-    // });
+
+    // Animate indicator position in sync
+    indicatorPosition.value = withTiming(item * indicatorWidth, {
+      duration: 100,
+      easing: Easing.linear,
+    });
   };
 
-  const handleScroll = Animated.event(
-    [{nativeEvent: {contentOffset: {x: indicatorPosition}}}],
-    {
-      useNativeDriver: false, // For smooth scroll handling
-      listener: event => {
-        const contentOffsetX = event.nativeEvent.contentOffset.x;
-        const progress = contentOffsetX / screenWidth;
-        indicatorPosition.setValue(progress * horizontalScale(112));
-      },
+  // Separate function to ensure smooth scrolling
+  const scrollToTab = index => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        x: index * screenWidth,
+        animated: true,
+      });
+    }
+  };
+
+  const handleScroll = useAnimatedScrollHandler({
+    onScroll: event => {
+      const scrollX = event.contentOffset.x;
+      const newIndex = scrollX / screenWidth;
+
+      // Update indicator smoothly
+      indicatorPosition.value = withTiming(newIndex * indicatorWidth, {
+        duration: 100,
+        easing: Easing.linear,
+      });
     },
-  );
+  });
 
   const handleScrollEnd = event => {
-    if (!scrollRef.current) return;
-    scrollRef.current = false;
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.round(contentOffsetX / screenWidth);
+    const scrollX = event.nativeEvent.contentOffset.x;
+    const exactIndex = scrollX / screenWidth;
+    const newIndex =
+      exactIndex - activeTab.value > 0.2
+        ? Math.ceil(exactIndex)
+        : exactIndex - activeTab.value < -0.2
+        ? Math.floor(exactIndex)
+        : activeTab.value;
 
-    // setActiveTab(index);
-    Animated.timing(indicatorPosition, {
-      toValue: index * horizontalScale(112),
-      duration: 200, // Faster animation (lower duration)
-      easing: Easing.linear(),
-      useNativeDriver: true,
-    }).start();
-    // scrollRef.current?.scrollTo({x: index * screenWidth, animated: true});
+    // Animate tab change smoothly
+    activeTab.value = withTiming(newIndex, {duration: 100}, () => {
+      runOnJS(scrollToTab)(newIndex);
+    });
+
+    // Animate indicator in sync
+    indicatorPosition.value = withTiming(newIndex * indicatorWidth, {
+      duration: 100,
+      easing: Easing.linear,
+    });
   };
+
+  // Interpolating colors smoothly
+  const upcomingStyle = useAnimatedStyle(() => {
+    const color = withTiming(
+      activeTab.value === 0 ? COLORS.white : COLORS.atlantis,
+      {duration: 150},
+    );
+    return {
+      color: color,
+    };
+  });
+
+  const attendedStyle = useAnimatedStyle(() => {
+    const color = withTiming(
+      activeTab.value === 1 ? COLORS.white : COLORS.atlantis,
+      {duration: 150},
+    );
+    return {
+      color: color,
+    };
+  });
 
   return (
     <View style={MyStyles.contentCont}>
+      {/* // @ TabBar Buttons - Upcoming, Attended */}
       <View style={styles.tabBarBox}>
         <View style={styles.tabCont}>
           <Pressable
             onPress={() => handleTabPress(0)}
             style={styles.leftTabBtn}>
-            <Text
-              style={[
-                styles.tabBtnTxt,
-                {color: activeTab === 0 ? COLORS.white : COLORS.atlantis},
-              ]}>
+            <Animated.Text style={[styles.tabBtnTxt, upcomingStyle]}>
               Upcoming
-            </Text>
+            </Animated.Text>
           </Pressable>
           <Pressable
             onPress={() => handleTabPress(1)}
             style={styles.rightTabBtn}>
-            <Text
-              style={[
-                styles.tabBtnTxt,
-                {color: activeTab === 1 ? COLORS.white : COLORS.atlantis},
-              ]}>
+            <Animated.Text style={[styles.tabBtnTxt, attendedStyle]}>
               Attended
-            </Text>
+            </Animated.Text>
           </Pressable>
           <Animated.View
             style={[
@@ -114,23 +137,19 @@ const Events = () => {
           />
         </View>
       </View>
-
-      <ScrollView
+      {/* // @ Tab View Contents */}
+      <Animated.ScrollView
         ref={scrollRef}
         overScrollMode="never"
         horizontal
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
-        scrollEventThrottle={8} // Reduced for smoother scrolling
-      >
-        <View
-          style={{backgroundColor: 'red', width: screenWidth, height: 400}}
-        />
-        <View
-          style={{backgroundColor: 'pink', width: screenWidth, height: 400}}
-        />
-      </ScrollView>
+        scrollEventThrottle={8}>
+        <UpcomingEvents />
+
+        <AttendedEvents />
+      </Animated.ScrollView>
     </View>
   );
 };

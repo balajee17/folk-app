@@ -84,6 +84,8 @@ export let COLORS = {
   shimmerBg: '#888786',
   highLightColor: '#A8A8A8',
   atlantis: '#B1C63C',
+  citrine: '#E4D721',
+  diesel: '#C8C8C8',
 };
 
 // @ FONTS
