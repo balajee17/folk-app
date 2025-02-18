@@ -1,4 +1,4 @@
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {COLORS} from '../styles/MyStyles';
 import {CommonStatusBar} from './StatusBarComponent';

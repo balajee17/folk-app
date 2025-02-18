@@ -14,7 +14,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
   const ICONS = [
     {id: 1, name: screenNames.home},
     {id: 2, name: screenNames.events},
-    // {id: 3, name: screenNames.connectUs},
+    {id: 3, name: screenNames.connectUs},
   ];
 
   return (
@@ -39,8 +39,12 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
                     : 'home-variant-outline'
                   : item?.id === 2
                   ? selIcon === 2
-                    ? 'account-group'
-                    : 'account-group-outline'
+                    ? 'calendar-star'
+                    : 'calendar-blank'
+                  : item?.id === 3
+                  ? selIcon === 3
+                    ? 'account'
+                    : 'account-outline'
                   : null
               }
               size={moderateScale(25)}

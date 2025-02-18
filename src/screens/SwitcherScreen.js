@@ -13,20 +13,38 @@ import {
   screenHeight,
   verticalScale,
 } from '../styles/MyStyles';
+import ConnectUs from './ConnectUs';
 
 const SwitcherScreen = ({navigation}) => {
   const [selIcon, setSelIcon] = useState(1);
+  const [opnFltr, setOpnFltr] = useState(false);
+
+  // # TitleName - 1 Home, 2 Events, 3 Connectus
+  const titleName =
+    selIcon === 1
+      ? screenNames.home
+      : selIcon === 2
+      ? screenNames.events
+      : screenNames.connectUs;
 
   return (
     <Container>
       {/* // # Header */}
       <CustomHeader
         toggleDrawer={() => navigation.openDrawer()}
-        titleName={selIcon === 1 ? screenNames.home : screenNames.events}
+        titleName={titleName}
+        rightIcnAction={value => setOpnFltr(value)}
+        goBack={() => navigation.goBack()}
       />
       <SafeAreaView styles={MyStyles.flex1}>
         {/* // # Contents */}
-        {selIcon === 1 ? <Home /> : <Events />}
+        {selIcon === 1 ? (
+          <Home />
+        ) : selIcon === 2 ? (
+          <Events openFilter={opnFltr} closeFilter={() => setOpnFltr(false)} />
+        ) : (
+          <ConnectUs />
+        )}
       </SafeAreaView>
       {/* // @ Bottom Tab */}
       <CustomBottomTab

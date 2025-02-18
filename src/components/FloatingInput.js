@@ -29,7 +29,9 @@ const FloatingInput = React.forwardRef((props, ref) => {
     moveLblInX,
     rightIconStyle,
     data,
+    drpdwnContStyle,
     type = 'txtInput',
+    drpDwnStyle,
   } = props;
   const [focused, setFocused] = useState(false);
 
@@ -132,10 +134,10 @@ const FloatingInput = React.forwardRef((props, ref) => {
       ) : (
         <Dropdown
           ref={ref}
-          style={styles.dropdownStyle}
+          style={[styles.dropdownStyle, drpDwnStyle]}
           selectedTextStyle={styles.drpdwnSelTxt(props?.disabled)}
           itemTextStyle={styles.drpdwnItemTxt}
-          containerStyle={styles.drpdwnCont}
+          containerStyle={[styles.drpdwnCont, drpdwnContStyle]}
           activeColor={COLORS.windowsBlue}
           placeholder=""
           data={data}
@@ -180,8 +182,8 @@ const styles = StyleSheet.create({
 
   floatingText: (focused, value) => ({
     paddingStart: '2%',
-    color: focused ? COLORS.windowsBlue : value ? '#000' + 8 : COLORS.black,
-    fontFamily: FONTS.urbanistMedium,
+    color: focused ? COLORS.silkBlue : value ? '#000' + 8 : COLORS.black,
+    fontFamily: FONTS.urbanistSemiBold,
   }),
   txtInptStyle: disabled => ({
     marginStart: '3%',
@@ -192,7 +194,6 @@ const styles = StyleSheet.create({
   rightIconCont: {
     width: '10%',
     alignSelf: 'center',
-    marginEnd: '4%',
   },
   dropdownStyle: {
     width: '100%',

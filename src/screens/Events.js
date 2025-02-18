@@ -1,4 +1,12 @@
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
@@ -8,6 +16,7 @@ import {
   MyStyles,
   screenWidth,
   SIZES,
+  verticalScale,
 } from '../styles/MyStyles';
 import Animated, {
   Easing,
@@ -21,12 +30,41 @@ import Animated, {
 } from 'react-native-reanimated';
 import UpcomingEvents from './UpcomingEvents';
 import AttendedEvents from './AttendedEvents';
+import {useNavigation} from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FloatingInput from '../components/FloatingInput';
 
-const Events = () => {
+const Events = ({openFilter, closeFilter}) => {
   const activeTab = useSharedValue(0);
   const scrollRef = useRef(null);
   const indicatorPosition = useSharedValue(0);
   const indicatorWidth = horizontalScale(112);
+  const [filterValues, setFilterValues] = useState({});
+  const [filterDrpDwnLst, setFilterDrpDwnLst] = useState({
+    eventNames: [
+      {label: 'ajkfa', value: 'dkjhklh'},
+      {label: 'ajkfa', value: 'dkjhklh'},
+      {label: 'ajkfa', value: 'dkjhklh'},
+      {label: 'ajkfa', value: 'dkjhklh'},
+    ],
+    eventTypes: [
+      {label: 'ajkfa', value: 'dkjhklh'},
+      {label: 'ajkfa', value: 'dkjhklh'},
+      {label: 'ajkfa', value: 'dkjhklh'},
+      {label: 'ajkfa', value: 'dkjhklh'},
+    ],
+  });
+
+  const navigation = useNavigation();
+
+  useEffect(() => {}, []);
+
+  const handleChange = (key, value) => {
+    setFilterValues(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
   const handleTabPress = item => {
     // Animate active tab value first
@@ -110,6 +148,108 @@ const Events = () => {
 
   return (
     <View style={MyStyles.contentCont}>
+      {/* // @ Filter Modal */}
+      <Modal animationType="slide" visible={openFilter} transparent>
+        <View style={styles.fltrModal}>
+          {/* // @ Filter Card */}
+          <View style={styles.filterCard}>
+            {/* // # Title, Close Container */}
+            <View style={styles.titleCloseCont}>
+              <Text numberOfLines={1} style={styles.titleTxt}>
+                Filter
+              </Text>
+              <TouchableOpacity
+                onPress={() => closeFilter()}
+                style={styles.closeBtn}
+                activeOpacity={0.6}>
+                <MaterialCommunityIcons
+                  name="close"
+                  size={moderateScale(25)}
+                  color={COLORS.charcoal}
+                />
+              </TouchableOpacity>
+            </View>
+            {/* // # Event Name */}
+            <FloatingInput
+              type="dropdown"
+              data={filterDrpDwnLst?.eventNames}
+              label={'Event Name'}
+              drpdwnContStyle={{
+                backgroundColor: COLORS.dropDownBg,
+                alignSelf: 'left',
+              }}
+              value={filterValues?.eventName}
+              onChange={item => {
+                handleChange('eventName', item);
+              }}
+              cntnrStyle={styles.dropdownCont}
+              renderRightIcon={() => (
+                <MaterialCommunityIcons
+                  name={'chevron-down'}
+                  color={COLORS.black}
+                  size={25}
+                />
+              )}
+            />
+            {/* // # Event Type */}
+            <FloatingInput
+              type="dropdown"
+              data={filterDrpDwnLst?.eventTypes}
+              label={'Event Type'}
+              value={filterValues?.eventType}
+              onChange={item => {
+                handleChange('eventType', item);
+              }}
+              drpdwnContStyle={{backgroundColor: COLORS.dropDownBg}}
+              cntnrStyle={styles.dropdownCont}
+              renderRightIcon={() => (
+                <MaterialCommunityIcons
+                  name={'chevron-down'}
+                  color={COLORS.black}
+                  size={25}
+                />
+              )}
+            />
+            {/* // # Date  */}
+            <FloatingInput
+              editable={false}
+              data={filterDrpDwnLst?.eventTypes}
+              label={'Date'}
+              value={filterValues?.eventType}
+              onChange={item => {
+                handleChange('eventType', item);
+              }}
+              cntnrStyle={styles.dropdownCont}
+              rightIcon={
+                <MaterialCommunityIcons
+                  name={'calendar'}
+                  color={COLORS.black}
+                  size={25}
+                />
+              }
+              rightIconStyle={{marginRight: '4%'}}
+            />
+            {/* // # Clear & Filter Btn */}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginVertical: '8%',
+              }}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={[styles.filterBtn, {backgroundColor: COLORS.cloud}]}>
+                <Text style={styles.filterBtnTxt}>Clear</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity activeOpacity={0.6} style={styles.filterBtn}>
+                <Text style={styles.filterBtnTxt}>Filter</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* // @ TabBar Buttons - Upcoming, Attended */}
       <View style={styles.tabBarBox}>
         <View style={styles.tabCont}>
@@ -124,7 +264,7 @@ const Events = () => {
             onPress={() => handleTabPress(1)}
             style={styles.rightTabBtn}>
             <Animated.Text style={[styles.tabBtnTxt, attendedStyle]}>
-              Attended
+              Registered
             </Animated.Text>
           </Pressable>
           <Animated.View
@@ -146,9 +286,9 @@ const Events = () => {
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
         scrollEventThrottle={8}>
-        <UpcomingEvents />
+        <UpcomingEvents navigation={navigation} />
 
-        <AttendedEvents />
+        <AttendedEvents navigation={navigation} />
       </Animated.ScrollView>
     </View>
   );
@@ -203,6 +343,58 @@ const styles = StyleSheet.create({
   tabBtnTxt: {
     fontFamily: FONTS.urbanistBold,
     fontSize: SIZES.xl,
+    textAlign: 'center',
+  },
+  fltrModal: {
+    backgroundColor: COLORS.modalBg,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterCard: {
+    backgroundColor: COLORS.white,
+    width: '90%',
+    borderRadius: moderateScale(20),
+    padding: '4%',
+  },
+  titleCloseCont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  titleTxt: {
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.xxxl,
+    color: COLORS.black,
+    width: '70%',
+  },
+  closeBtn: {
+    width: horizontalScale(25),
+    height: horizontalScale(25),
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+  },
+  dropdownCont: {
+    width: '100%',
+    paddingHorizontal: '4%',
+    paddingRight: 0,
+    height: verticalScale(48),
+    marginTop: '5%',
+    borderRadius: moderateScale(10),
+    backgroundColor: COLORS.dropDownBg,
+  },
+  filterBtn: {
+    justifyContent: 'center',
+    borderRadius: moderateScale(8),
+    width: '35%',
+    height: horizontalScale(45),
+    backgroundColor: COLORS.silkBlue,
+  },
+  filterBtnTxt: {
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.xl,
+    color: COLORS.white,
     textAlign: 'center',
   },
 });

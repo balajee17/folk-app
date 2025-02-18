@@ -9,8 +9,9 @@ import {
 import {getImage} from '../utils/ImagePath';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screenNames} from '../constants/ScreenNames';
+import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 
-const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
+const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
   const filterIcnScreens =
     titleName === screenNames.quotes ||
     titleName === screenNames.dailyDarshan ||
@@ -18,15 +19,19 @@ const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
     titleName === screenNames.folkVideos ||
     titleName === screenNames.events;
 
+  const plusIcnscreens = titleName === screenNames.coupons;
+
   const drawerScreens =
-    titleName === screenNames.home || titleName === screenNames.events;
+    titleName === screenNames.home ||
+    titleName === screenNames.events ||
+    titleName === screenNames.connectUs;
   return (
     <View style={[styles.header]}>
-      <TouchableOpacity
+      <TouchableOpacity // Left Icon
         onPress={() => {
           drawerScreens ? toggleDrawer() : goBack();
         }}
-        activeOpacity={0.6} // Menu Drawer Icon
+        activeOpacity={0.6}
         style={styles.menuIcon(drawerScreens)}>
         {drawerScreens ? (
           <Image
@@ -35,8 +40,8 @@ const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
             resizeMode="contain"
           />
         ) : (
-          <MaterialCommunityIcons
-            name="arrow-left"
+          <FontAwesome
+            name="arrow-left-long"
             size={moderateScale(25)}
             color={COLORS.white}
           />
@@ -44,9 +49,12 @@ const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
       </TouchableOpacity>
       {/* Title */}
       <Text style={MyStyles.titleText}>{titleName}</Text>
-      <TouchableOpacity
-        activeOpacity={0.6} // Notification Icon
-        style={styles.menuIcon(titleName)}>
+      <TouchableOpacity // Right Icon
+        onPress={() => {
+          filterIcnScreens ? rightIcnAction(true) : null;
+        }}
+        activeOpacity={0.6}
+        style={styles.menuIcon(titleName === screenNames.home)}>
         {titleName === screenNames.home ? (
           <Image
             style={styles.notifyImage}
@@ -55,7 +63,7 @@ const CustomHeader = ({toggleDrawer, titleName, goBack}) => {
           />
         ) : (
           <MaterialCommunityIcons
-            name={filterIcnScreens ? 'filter' : null}
+            name={filterIcnScreens ? 'filter' : plusIcnscreens ? 'plus' : null}
             size={moderateScale(25)}
             color={COLORS.white}
           />
@@ -76,9 +84,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: COLORS.charcoal,
   },
-  menuIcon: screens => ({
-    padding: screens ? moderateScale(6) : undefined,
-    borderWidth: screens ? moderateScale(1) : undefined,
+  menuIcon: screen => ({
+    padding: screen ? moderateScale(6) : undefined,
+    borderWidth: screen ? moderateScale(1) : undefined,
     height: horizontalScale(35),
     width: horizontalScale(35),
     justifyContent: 'center',

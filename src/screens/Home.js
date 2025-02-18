@@ -3,6 +3,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -34,9 +35,10 @@ import {
 } from '../components/Shimmer';
 import {API} from '../services/API';
 import CustomBottomTab from '../components/CustomBottomTab';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
-const Home = props => {
-  const {navigation} = props;
+const Home = () => {
+  const navigation = useNavigation();
 
   const [homeData, setHomeData] = useState([
     {section: 1, title: '', updates: [{id: 1, link: ''}]},
@@ -57,14 +59,14 @@ const Home = props => {
     try {
       const response = await API.getHomeScreenData();
 
-      console.log('response', response?.data);
+      // console.log('response', response?.data);
       const {data, SuccessCode} = response?.data;
       if (SuccessCode === 1) {
         setHomeData(data);
       } else {
         setHomeData([]);
       }
-      setShimmer(prev => ({...prev, content: false}));
+      setShimmer(prev => ({video: false, content: false}));
     } catch (err) {
       setHomeData([]);
       console.log('ERR-Home-screen', err);
@@ -177,11 +179,11 @@ const Home = props => {
                   TITLE,
                   index === 0 ? COLORS.golden : COLORS.gableGreen,
                 )}
-                {RenderHistoryIcon(
+                {/* {RenderHistoryIcon(
                   TITLE,
                   screenNames.quotes,
                   index === 0 ? COLORS.white : COLORS.gableGreen,
-                )}
+                )} */}
               </>
             )
           )}
@@ -327,7 +329,6 @@ const Home = props => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
 
-    console.log('UPDATES', UPDATES);
     return (
       <View style={styles.padVert10}>
         <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
@@ -369,10 +370,10 @@ const Home = props => {
                 }}
                 play={playVideo}
                 onReady={() => {
-                  setShimmer(prev => ({...prev, video: false}));
+                  // setShimmer(prev => ({...prev, video: false}));
                 }}
                 onError={() => {
-                  setShimmer(prev => ({...prev, video: false}));
+                  // setShimmer(prev => ({...prev, video: false}));
                 }}
                 mute={youtubeAudio}
                 videoId={UPDATES[0]?.code}
@@ -412,20 +413,6 @@ const Home = props => {
         contentContainerStyle={styles.scrollViewCont}>
         <View style={MyStyles.contentCont}>
           <View style={styles.halfBg} />
-
-          {/* <FlatList
-          data={homeData}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => item?.section}
-          contentContainerStyle={styles.flatListCont}
-          renderItem={({item, index}) => {
-            if (shimmer?.content || homeData?.length > 0) {
-              return renderItemsInOrder(item, index);
-            } else {
-              return null;
-            }
-          }}
-        /> */}
 
           {homeData?.map((item, index) => {
             if (shimmer?.content || homeData?.length > 0) {

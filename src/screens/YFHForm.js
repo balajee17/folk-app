@@ -67,7 +67,7 @@ const YFHForm = ({navigation}) => {
           </Text>
           {/* // # Highest Qualification */}
           <FloatingInput
-            type="dorpdown"
+            type="dropdown"
             label={'Highest Qualification'}
             value={formValues?.qualification}
             onChange={item => {

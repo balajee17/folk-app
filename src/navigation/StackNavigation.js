@@ -9,6 +9,9 @@ import DailyDarshan from '../screens/DailyDarshan';
 import FolkUpdates from '../screens/FolkUpdates';
 import FolkVideos from '../screens/FolkVideos';
 import YFHForm from '../screens/YFHForm';
+import EventDetails from '../screens/EventDetails';
+import Events from '../screens/Events';
+import Coupons from '../screens/Coupons';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +26,8 @@ const StackNavigation = () => {
           name={screenNames.drawerNavigation}
           component={DrawerNavigation}
         />
+
+        <Stack.Screen name={screenNames.home} component={Home} />
 
         {/*  // @ History Component's */}
         <Stack.Screen
@@ -52,6 +57,15 @@ const StackNavigation = () => {
           options={{gestureEnabled: false}}
           component={YFHForm}
         />
+
+        {/* // @ Event Details */}
+        <Stack.Screen
+          name={screenNames.eventDetails}
+          component={EventDetails}
+        />
+
+        {/* // @ Coupon */}
+        <Stack.Screen name={screenNames.coupons} component={Coupons} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -14,5 +14,7 @@ export let screenNames = {
   events: 'Events',
   mainScreen: 'MainScreen',
   switcherScreen: 'SwitcherScreen',
-  connectUs: 'Connect Us',
+  connectUs: 'Connect',
+  eventDetails: 'Event Details',
+  coupons: 'Coupons',
 };
