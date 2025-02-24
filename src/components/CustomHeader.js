@@ -51,7 +51,7 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
       <Text style={MyStyles.titleText}>{titleName}</Text>
       <TouchableOpacity // Right Icon
         onPress={() => {
-          filterIcnScreens ? rightIcnAction(true) : null;
+          rightIcnAction(true);
         }}
         activeOpacity={0.6}
         style={styles.menuIcon(titleName === screenNames.home)}>

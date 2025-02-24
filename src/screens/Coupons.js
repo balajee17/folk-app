@@ -1,11 +1,13 @@
 import {
   ImageBackground,
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
@@ -18,9 +20,16 @@ import {
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Coupons = ({navigation}) => {
   const dateTime = ['Date', 'Time'];
+
+  const [opnAddCoupon, setOpnAddCoupon] = useState(false);
+
+  const closeAddCpnModal = () => {
+    setOpnAddCoupon(false);
+  };
 
   return (
     <Container>
@@ -28,6 +37,9 @@ const Coupons = ({navigation}) => {
       <CustomHeader
         titleName={screenNames.coupons}
         goBack={() => navigation.goBack()}
+        rightIcnAction={value => {
+          setOpnAddCoupon(value);
+        }}
       />
       <SafeAreaView styles={[MyStyles.flex1]}>
         <View style={MyStyles.contentCont}>
@@ -84,6 +96,98 @@ const Coupons = ({navigation}) => {
           </View>
         </View>
       </SafeAreaView>
+
+      {/* // @ Add Coupon Modal */}
+      <Modal animationType="slide" visible={opnAddCoupon} transparent>
+        <View style={styles.fltrModal}>
+          {/* // @  box */}
+          <View style={styles.filterCard}>
+            {/* // # Close btn */}
+            <TouchableOpacity
+              onPress={closeAddCpnModal}
+              activeOpacity={0.8}
+              style={styles.closeBtn}>
+              <MaterialCommunityIcons
+                name="close"
+                size={moderateScale(22)}
+                color={COLORS.black}
+              />
+            </TouchableOpacity>
+            {/* // # card title */}
+            <Text numberOfLines={1} style={styles.titleTxt}>
+              Buy Coupon
+            </Text>
+            {/* // # sub text  */}
+            <Text numberOfLines={1} style={styles.subTxt}>
+              Select how many Coupon you need.
+            </Text>
+            {/* // # horizontal line */}
+            <View style={styles.horizontalLine} />
+            {/* // # Incre-count-decre btn */}
+            <View style={styles.flexContainer}>
+              <TouchableOpacity activeOpacity={0.8} style={styles.countBtn}>
+                <MaterialCommunityIcons
+                  name="minus"
+                  size={moderateScale(25)}
+                  color={COLORS.charcoal}
+                />
+              </TouchableOpacity>
+              <Text style={styles.AddCpnCountTxt}>100</Text>
+              <TouchableOpacity activeOpacity={0.8} style={styles.countBtn}>
+                <MaterialCommunityIcons
+                  name="plus"
+                  size={moderateScale(25)}
+                  color={COLORS.charcoal}
+                />
+              </TouchableOpacity>
+            </View>
+            {/* // # horizontal line */}
+            <View style={styles.horizontalLine} />
+            {/* // # Amt section */}
+            <View
+              style={[styles.flexContainer, {justifyContent: 'space-between'}]}>
+              <Text numberOfLines={1} style={styles.amtLblTxt}>
+                Prasadam Amount
+              </Text>
+              <Text numberOfLines={1} style={styles.amtValTxt}>
+                ₹ 80
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.flexContainer,
+                {justifyContent: 'space-between', marginTop: '2%'},
+              ]}>
+              <Text numberOfLines={1} style={styles.amtLblTxt}>
+                Total Amount
+              </Text>
+              <Text numberOfLines={1} style={styles.amtValTxt}>
+                ₹ 380
+              </Text>
+            </View>
+            {/* // # horizontal line */}
+            <View style={styles.horizontalLine} />
+            {/* // # Buttons */}
+            <TouchableOpacity activeOpacity={0.8} style={styles.paymentBtn}>
+              <Text
+                style={[
+                  styles.AddCpnCountTxt,
+                  {color: COLORS.white, fontSize: SIZES.xl},
+                ]}>
+                Payment
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={closeAddCpnModal}
+              activeOpacity={0.8}
+              style={[styles.paymentBtn, styles.cancelBtn]}>
+              <Text style={[styles.AddCpnCountTxt, {fontSize: SIZES.xl}]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </Container>
   );
 };
@@ -196,5 +300,104 @@ const styles = StyleSheet.create({
     width: '85%',
     fontSize: SIZES.subTitle,
     textAlign: 'center',
+  },
+  fltrModal: {
+    backgroundColor: COLORS.modalBg,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterCard: {
+    backgroundColor: COLORS.white,
+    width: '90%',
+    borderRadius: moderateScale(20),
+    padding: '4%',
+  },
+  closeBtn: {
+    backgroundColor: COLORS.white,
+    borderRadius: moderateScale(20),
+    height: horizontalScale(30),
+    width: horizontalScale(30),
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: '-3%',
+    right: '-3%',
+    alignSelf: 'flex-end',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+
+    elevation: 8,
+  },
+  titleTxt: {
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.xxl,
+    color: COLORS.charcoal,
+  },
+  subTxt: {
+    fontFamily: FONTS.urbanistMedium,
+    fontSize: SIZES.l,
+    color: COLORS.midGrey,
+    marginTop: '2%',
+  },
+  horizontalLine: {
+    width: '100%',
+    alignSelf: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.dropDownBg,
+    marginVertical: moderateScale(10),
+  },
+  flexContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  countBtn: {
+    width: horizontalScale(30),
+    height: horizontalScale(30),
+    borderRadius: moderateScale(6),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.midGrey,
+  },
+  AddCpnCountTxt: {
+    fontFamily: FONTS.interMedium,
+    fontSize: SIZES.xxl + SIZES.xxl,
+    color: COLORS.black,
+    marginHorizontal: '4%',
+  },
+  amtLblTxt: {
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.xl,
+    color: COLORS.black,
+    width: '60%',
+  },
+  amtValTxt: {
+    fontFamily: FONTS.urbanistSemiBold,
+    fontSize: SIZES.subTitle,
+    color: COLORS.charcoal,
+    width: '30%',
+    textAlign: 'right',
+  },
+  paymentBtn: {
+    backgroundColor: COLORS.windowsBlue,
+    borderRadius: moderateScale(8),
+    height: horizontalScale(40),
+    width: '100%',
+    alignItems: 'center',
+    marginTop: '2%',
+    justifyContent: 'center',
+  },
+  cancelBtn: {
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.midGrey,
+    marginTop: '4%',
   },
 });

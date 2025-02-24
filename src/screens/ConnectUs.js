@@ -42,7 +42,7 @@ const ConnectUs = () => {
 
       {/* // @ Social Media Link Box  */}
       <LinearGradient
-        colors={[COLORS.dolphin, COLORS.dolphin]}
+        colors={['#606c88', '#3f4c6b']}
         style={styles.socialMediaBox}>
         {/* // # Visit website Link */}
         <Text style={styles.visitWebTxt}>Visit our website</Text>
@@ -166,7 +166,8 @@ const styles = StyleSheet.create({
   webLink: {
     fontFamily: FONTS.urbanistSemiBold,
     fontSize: SIZES.xxxl,
-    color: COLORS.white,
+    color: COLORS.link,
+    textDecorationLine: 'underline',
     width: '100%',
     marginTop: '2%',
   },

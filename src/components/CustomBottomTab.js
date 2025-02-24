@@ -14,6 +14,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
   const ICONS = [
     {id: 1, name: screenNames.home},
     {id: 2, name: screenNames.events},
+    {id: 4, name: screenNames.courses},
     {id: 3, name: screenNames.connectUs},
   ];
 
@@ -41,13 +42,17 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
                   ? selIcon === 2
                     ? 'calendar-star'
                     : 'calendar-blank'
+                  : item?.id === 4
+                  ? selIcon === 4
+                    ? 'book-education'
+                    : 'book-education-outline'
                   : item?.id === 3
                   ? selIcon === 3
                     ? 'account'
                     : 'account-outline'
                   : null
               }
-              size={moderateScale(25)}
+              size={moderateScale(22)}
               color={item?.id === selIcon ? COLORS.charcoal : COLORS.white}
             />
             {item?.id === selIcon && (
@@ -66,7 +71,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     backgroundColor: COLORS.charcoal,
     width: '100%',
-    height: verticalScale(80),
+    height: verticalScale(60),
     borderTopLeftRadius: moderateScale(25),
     borderTopRightRadius: moderateScale(25),
     position: 'absolute',
@@ -81,13 +86,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    width: '30%',
+    width: '25%',
     padding: '2%',
     borderRadius: moderateScale(25),
   },
   iconTxt: {
     fontFamily: FONTS.interBold,
-    fontSize: SIZES.l,
+    fontSize: SIZES.m,
     color: COLORS.charcoal,
   },
 });

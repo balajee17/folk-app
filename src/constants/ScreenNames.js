@@ -17,4 +17,5 @@ export let screenNames = {
   connectUs: 'Connect',
   eventDetails: 'Event Details',
   coupons: 'Coupons',
+  courses: 'Courses',
 };

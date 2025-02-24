@@ -96,6 +96,7 @@ export let COLORS = {
   silkBlue: '#4A83B5',
   whatsapp: '#19D06C',
   dodger: '#358AE0',
+  link: '#00d2ff',
 };
 
 // @ FONTS
