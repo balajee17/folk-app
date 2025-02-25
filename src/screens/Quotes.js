@@ -129,30 +129,32 @@ const Quotes = ({navigation, route}) => {
             //   showsVerticalScrollIndicator={false}
             //   renderItem={({item, index}) => {
             //     return (
-            <>
+            <View style={styles.cardCont}>
+              {/* {quotesData.map((item, index) => {
+                return ( */}
+              {/* <> */}
               <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
                 Today
               </Text>
-              <View style={styles.cardCont}>
-                {newData?.map((quotesImg, QuotesIndex) => {
-                  return (
-                    <SwipeCard
-                      currentIndex={currentIndex}
-                      setCurrentIndex={setCurrentIndex}
-                      animatedValue={animatedValue}
-                      newData={newData}
-                      setNewData={setNewData}
-                      item={quotesImg}
-                      index={QuotesIndex}
-                      imageSource={quotesData}
-                    />
-                  );
-                })}
-              </View>
-            </>
-            // );
+              {newData?.map((quotesImg, QuotesIndex) => {
+                return (
+                  <SwipeCard
+                    currentIndex={currentIndex}
+                    setCurrentIndex={setCurrentIndex}
+                    animatedValue={animatedValue}
+                    newData={newData}
+                    setNewData={setNewData}
+                    item={quotesImg}
+                    index={QuotesIndex}
+                    imageSource={quotesData}
+                  />
+                );
+              })}
+
+              {/* // );
             //   }}
-            // />
+            // /> */}
+            </View>
           )}
         </View>
       </SafeAreaView>

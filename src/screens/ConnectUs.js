@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {
   COLORS,
@@ -20,6 +27,14 @@ const ConnectUs = () => {
     require('../assets/images/twitter.png'),
     require('../assets/images/facebook.png'),
   ];
+
+  const openLink = url => {
+    try {
+      Linking.openURL(url);
+    } catch (err) {
+      console.log('ERR_Redirect', err);
+    }
+  };
 
   return (
     // @ Container
@@ -48,7 +63,7 @@ const ConnectUs = () => {
         <Text style={styles.visitWebTxt}>Visit our website</Text>
         <Text
           onPress={() => {
-            console.log('first');
+            openLink('https://folknet.in');
           }}
           style={styles.webLink}>
           https://folknet.in

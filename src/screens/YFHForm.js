@@ -1,7 +1,14 @@
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import Container from '../components/Container';
-import {COLORS, MyStyles} from '../styles/MyStyles';
+import {COLORS, MyStyles, screenHeight} from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import FloatingInput from '../components/FloatingInput';
@@ -21,15 +28,19 @@ const YFHForm = ({navigation}) => {
       <SafeAreaView style={MyStyles.flex1}>
         {/* // # Header */}
         <CustomHeader
-          goBack={() => navigation.goBack()}
+          toggleDrawer={() => navigation.openDrawer()}
           titleName={screenNames.yfhForm}
         />
         {/* // # Contents */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={[MyStyles.scrollView, MyStyles.paddingHor10]}>
+          contentContainerStyle={[
+            MyStyles.scrollView,
+            MyStyles.paddingHor10,
+            {minHeight: screenHeight},
+          ]}>
           {/* // @ Personal Details */}
-          <Text
+          {/* <Text
             style={[
               MyStyles.subTitleText,
               MyStyles.marTop3Per,
@@ -38,7 +49,7 @@ const YFHForm = ({navigation}) => {
             Personal Details
           </Text>
           {/* // # Whatsapp */}
-          <FloatingInput
+          {/* <FloatingInput
             label={'WhatsApp Number'}
             value={formValues?.whatsapp}
             onChangeText={value => handleChange('whatsapp', value)}
@@ -55,18 +66,18 @@ const YFHForm = ({navigation}) => {
             }}
           />
           {/* // # Communication Address */}
-          <FloatingInput
+          {/* <FloatingInput
             label={'Communication Address'}
             value={formValues?.address}
             onChangeText={value => handleChange('address', value)}
           />
 
           {/* // @ Educational Details */}
-          <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
+          {/* <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
             Educational Details
           </Text>
           {/* // # Highest Qualification */}
-          <FloatingInput
+          {/* <FloatingInput
             type="dropdown"
             label={'Highest Qualification'}
             value={formValues?.qualification}
@@ -92,6 +103,10 @@ const YFHForm = ({navigation}) => {
               alignItems: 'center',
               justifyCenter: 'center',
             }}
+          /> */}
+          <Image
+            source={require('../assets/images/comingSoon.png')}
+            style={MyStyles.comingSoonImg}
           />
         </ScrollView>
       </SafeAreaView>

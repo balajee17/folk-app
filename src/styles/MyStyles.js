@@ -305,4 +305,11 @@ export let MyStyles = {
     fontSize: SIZES.xl,
     top: -1,
   },
+  comingSoonImg: {
+    width: windowWidth * 0.9,
+    height: screenHeight * 0.5,
+    alignSelf: 'center',
+    marginTop: '25%',
+    resizeMode: 'contain',
+  },
 };

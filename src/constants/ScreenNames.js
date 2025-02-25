@@ -18,4 +18,7 @@ export let screenNames = {
   eventDetails: 'Event Details',
   coupons: 'Coupons',
   courses: 'Courses',
+  accommodation: 'Accommodation',
+  contribution: 'Contribution',
+  notifications: 'Notifications',
 };

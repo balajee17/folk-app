@@ -1,6 +1,6 @@
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import StackNavigation from './src/navigation/StackNavigation';
-import {useEffect} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {StatusBarHeightProvider} from './src/components/StatusBarComponent';
 import {Platform, Text, View} from 'react-native';
 import {appVersion} from './AppVersion.json';
@@ -10,8 +10,13 @@ import SpInAppUpdates, {
   StartUpdateOptions,
   IAUInstallStatus,
 } from 'sp-react-native-in-app-updates';
+import {ToastProvider} from 'react-native-toast-notifications';
+import ToastMessage from './src/components/ToastMessage';
 
-const App = () => {
+const AppContext = createContext();
+export const useAppContext = () => useContext(AppContext);
+
+const App = ({children}) => {
   // useEffect(() => {
   //   checkAppUpdates();
   // }, []);
@@ -61,10 +66,24 @@ const App = () => {
   //   }
   // };
 
+  const [selScreen, setSelScreen] = useState({current: 'DB1', previous: ''});
+
+  console.log('selScreen', selScreen);
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <StatusBarHeightProvider>
-        <StackNavigation />
+        <ToastProvider
+          placement="bottom"
+          duration={4000}
+          animationType="custom"
+          animationDuration={500}
+          renderToast={toast => <ToastMessage toast={toast} />}
+          swipeEnabled={true}>
+          <AppContext.Provider value={{selScreen, setSelScreen}}>
+            <StackNavigation />
+          </AppContext.Provider>
+        </ToastProvider>
       </StatusBarHeightProvider>
     </GestureHandlerRootView>
   );

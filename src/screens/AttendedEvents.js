@@ -6,12 +6,17 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {screenNames} from '../constants/ScreenNames';
 
 const AttendedEvents = ({navigation}) => {
+  // # Navigate Sreen
+  const navigateTo = (screen, params) => {
+    navigation.navigate(screen, params);
+  };
+
   return (
     <View style={[MyStyles.flex1, {width: screenWidth}]}>
       {/*  // @ Events Card */}
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate(screenNames.eventDetails, {
+          navigateTo(screenNames.eventDetails, {
             screen: 'Registered',
           });
         }}
@@ -66,7 +71,7 @@ const AttendedEvents = ({navigation}) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate(screenNames.coupons)}
+              onPress={() => navigateTo(screenNames.coupons)}
               style={MyStyles.iconStyle}
               activeOpacity={0.6}>
               <MaterialCommunityIcons

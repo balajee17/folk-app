@@ -35,7 +35,11 @@ import {
 } from '../components/Shimmer';
 import {API} from '../services/API';
 import CustomBottomTab from '../components/CustomBottomTab';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -66,7 +70,7 @@ const Home = () => {
       } else {
         setHomeData([]);
       }
-      setShimmer(prev => ({video: false, content: false}));
+      setShimmer({video: false, content: false});
     } catch (err) {
       setHomeData([]);
       console.log('ERR-Home-screen', err);
@@ -179,11 +183,11 @@ const Home = () => {
                   TITLE,
                   index === 0 ? COLORS.golden : COLORS.gableGreen,
                 )}
-                {/* {RenderHistoryIcon(
+                {RenderHistoryIcon(
                   TITLE,
                   screenNames.quotes,
                   index === 0 ? COLORS.white : COLORS.gableGreen,
-                )} */}
+                )}
               </>
             )
           )}

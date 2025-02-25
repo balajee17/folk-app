@@ -12,6 +12,7 @@ import YFHForm from '../screens/YFHForm';
 import EventDetails from '../screens/EventDetails';
 import Events from '../screens/Events';
 import Coupons from '../screens/Coupons';
+import Notifications from '../screens/Notifications';
 
 const Stack = createStackNavigator();
 
@@ -66,6 +67,12 @@ const StackNavigation = () => {
 
         {/* // @ Coupon */}
         <Stack.Screen name={screenNames.coupons} component={Coupons} />
+
+        {/* // @ Notifications */}
+        <Stack.Screen
+          name={screenNames.notifications}
+          component={Notifications}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

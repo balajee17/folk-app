@@ -9,13 +9,14 @@ import {
 } from '../styles/MyStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screenNames} from '../constants/ScreenNames';
+import {useAppContext} from '../../App';
 
 const CustomBottomTab = ({selIcon, setSelIcon}) => {
   const ICONS = [
-    {id: 1, name: screenNames.home},
-    {id: 2, name: screenNames.events},
-    {id: 4, name: screenNames.courses},
-    {id: 3, name: screenNames.connectUs},
+    {id: 'DB1', name: screenNames.home},
+    {id: 'B2', name: screenNames.events},
+    {id: 'B4', name: screenNames.courses},
+    {id: 'B3', name: screenNames.connectUs},
   ];
 
   return (
@@ -34,20 +35,20 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
             ]}>
             <MaterialCommunityIcons
               name={
-                item?.id === 1
-                  ? selIcon === 1
+                item?.id === 'DB1'
+                  ? selIcon === 'DB1'
                     ? 'home-variant'
                     : 'home-variant-outline'
-                  : item?.id === 2
-                  ? selIcon === 2
+                  : item?.id === 'B2'
+                  ? selIcon === 'B2'
                     ? 'calendar-star'
                     : 'calendar-blank'
-                  : item?.id === 4
-                  ? selIcon === 4
+                  : item?.id === 'B4'
+                  ? selIcon === 'B4'
                     ? 'book-education'
                     : 'book-education-outline'
-                  : item?.id === 3
-                  ? selIcon === 3
+                  : item?.id === 'B3'
+                  ? selIcon === 'B3'
                     ? 'account'
                     : 'account-outline'
                   : null
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: '5%',
+    paddingHorizontal: '2%',
   },
   tabButton: {
     marginTop: '3%',

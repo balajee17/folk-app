@@ -24,7 +24,11 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
   const drawerScreens =
     titleName === screenNames.home ||
     titleName === screenNames.events ||
-    titleName === screenNames.connectUs;
+    titleName === screenNames.connectUs ||
+    titleName === screenNames.courses ||
+    titleName === screenNames.yfhForm ||
+    titleName === screenNames.accommodation ||
+    titleName === screenNames.contribution;
   return (
     <View style={[styles.header]}>
       <TouchableOpacity // Left Icon
@@ -51,7 +55,9 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
       <Text style={MyStyles.titleText}>{titleName}</Text>
       <TouchableOpacity // Right Icon
         onPress={() => {
-          rightIcnAction(true);
+          titleName === screenNames.home
+            ? rightIcnAction(0)
+            : rightIcnAction(1);
         }}
         activeOpacity={0.6}
         style={styles.menuIcon(titleName === screenNames.home)}>

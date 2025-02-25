@@ -22,6 +22,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {screenNames} from '../constants/ScreenNames';
 
 const UpcomingEvents = ({navigation}) => {
+  // # Navigate Sreen
+  const navigateTo = (screen, params) => {
+    navigation.navigate(screen, params);
+  };
   return (
     <View style={[MyStyles.flex1, {width: screenWidth}]}>
       {/*  // @ Events Card */}
@@ -104,7 +108,7 @@ const UpcomingEvents = ({navigation}) => {
           <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => {
-              navigation.navigate(screenNames.eventDetails, {
+              navigateTo(screenNames.eventDetails, {
                 screen: 'Upcoming',
               });
             }}

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -17,19 +17,57 @@ import {
 } from '../styles/MyStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {appVersion} from '../../AppVersion.json';
-const CustomDrawer = () => {
+import {screenNames} from '../constants/ScreenNames';
+import {useAppContext} from '../../App';
+const CustomDrawer = ({navigation}) => {
   const menuItems = [
-    {screenName: 'Home', imagePath: require('../assets/images/homeIcn.png')},
-    {screenName: 'YFH', imagePath: require('../assets/images/formIcn.png')},
     {
-      screenName: 'Accommodation',
-      imagePath: require('../assets/images/accommodationIcn.png'),
+      id: 'DB1',
+      screenName: screenNames.home,
+      whiteIcon: require('../assets/images/homeWhite.png'),
+      blackIcon: require('../assets/images/homeBlack.png'),
     },
     {
+      id: 'D2',
+      screenName: screenNames.yfhForm,
+      whiteIcon: require('../assets/images/formWhite.png'),
+      blackIcon: require('../assets/images/formBlack.png'),
+    },
+    {
+      id: 'D3',
+      screenName: screenNames.accommodation,
+      whiteIcon: require('../assets/images/accommodationWhite.png'),
+      blackIcon: require('../assets/images/accommodationBlack.png'),
+    },
+    {
+      id: 'D4',
       screenName: 'Contribution',
-      imagePath: require('../assets/images/donateIcn.png'),
+      whiteIcon: require('../assets/images/donateWhite.png'),
+      blackIcon: require('../assets/images/donateBlack.png'),
     },
   ];
+
+  const {selScreen, setSelScreen} = useAppContext();
+  const {current} = selScreen;
+  const {closeDrawer} = navigation;
+
+  // # Navigate Sreen
+  const navigateTo = screen => {
+    navigation.navigate(screen);
+  };
+
+  const navigateScreen = (id, screenName) => {
+    setSelScreen(id);
+    closeDrawer();
+    if (id === 'DB1') {
+      current !== 'DB1'
+        ? (setSelScreen({current: id, previous: ''}),
+          navigateTo(screenNames.switcherScreen))
+        : null;
+    } else {
+      setSelScreen({previous: current, current: id}), navigateTo(screenName);
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -59,19 +97,24 @@ const CustomDrawer = () => {
             styles.menuItemBtn,
             {
               backgroundColor:
-                item.screenName === 'YFH' ? COLORS.windowsBlue : COLORS.white,
+                current === item?.id ? COLORS.windowsBlue : COLORS.white,
             },
           ]}
+          onPress={() => {
+            navigateScreen(item?.id, item?.screenName);
+          }}
           activeOpacity={0.6}>
           <View style={styles.iconCont}>
-            <Image style={styles.menuImg} source={item.imagePath} />
+            <Image
+              style={styles.menuImg}
+              source={current === item?.id ? item?.whiteIcon : item?.blackIcon}
+            />
           </View>
           <Text
             style={[
               styles.itemTxt,
               {
-                color:
-                  item.screenName === 'YFH' ? COLORS.white : COLORS.gunsmoke,
+                color: current === item?.id ? COLORS.white : COLORS.gunsmoke,
               },
             ]}>
             {item?.screenName}

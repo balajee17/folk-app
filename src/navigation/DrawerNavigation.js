@@ -5,6 +5,9 @@ import CustomDrawer from '../components/CustomDrawer';
 import {screenNames} from '../constants/ScreenNames';
 import {moderateScale} from '../styles/MyStyles';
 import SwitcherScreen from '../screens/SwitcherScreen';
+import YFHForm from '../screens/YFHForm';
+import Accommodation from '../screens/Accommodation';
+import Contribution from '../screens/Contribution';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +27,12 @@ const DrawerNavigation = () => {
         name={screenNames.switcherScreen}
         component={SwitcherScreen}
       />
+      <Drawer.Screen name={screenNames.yfhForm} component={YFHForm} />
+      <Drawer.Screen
+        name={screenNames.accommodation}
+        component={Accommodation}
+      />
+      <Drawer.Screen name={screenNames.contribution} component={Contribution} />
     </Drawer.Navigator>
   );
 };

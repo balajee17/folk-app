@@ -1,6 +1,8 @@
 import {
+  Image,
   ImageBackground,
   Modal,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -19,6 +21,7 @@ import {
   MyStyles,
   SIZES,
   verticalScale,
+  windowWidth,
 } from '../styles/MyStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -26,6 +29,7 @@ const Coupons = ({navigation}) => {
   const dateTime = ['Date', 'Time'];
 
   const [opnAddCoupon, setOpnAddCoupon] = useState(false);
+  const [showQrCode, setShowQrCode] = useState(false);
 
   const closeAddCpnModal = () => {
     setOpnAddCoupon(false);
@@ -37,14 +41,17 @@ const Coupons = ({navigation}) => {
       <CustomHeader
         titleName={screenNames.coupons}
         goBack={() => navigation.goBack()}
-        rightIcnAction={value => {
-          setOpnAddCoupon(value);
+        rightIcnAction={() => {
+          setOpnAddCoupon(true);
         }}
       />
       <SafeAreaView styles={[MyStyles.flex1]}>
         <View style={MyStyles.contentCont}>
           {/* // @ Coupon card */}
-          <View style={styles.couponCard}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => setShowQrCode(true)}
+            style={styles.couponCard}>
             {/* // # Left Cutout */}
             <View style={[styles.cutout, styles.leftCutout]} />
             {/*  //# Vertical Line */}
@@ -93,7 +100,7 @@ const Coupons = ({navigation}) => {
                 ₹ 120
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
 
@@ -187,6 +194,33 @@ const Coupons = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
+      </Modal>
+
+      {/*  // @ Show QrCode */}
+      <Modal
+        animationType="slide"
+        onRequestClose={() => setShowQrCode(false)}
+        visible={showQrCode}
+        transparent>
+        <Pressable
+          onPress={() => setShowQrCode(false)}
+          style={styles.fltrModal}>
+          {/* // #  Qr Code Image */}
+          <Pressable
+            style={{
+              width: windowWidth * 0.85,
+              height: windowWidth * 0.85,
+              backgroundColor: '#fff',
+              borderRadius: moderateScale(20),
+            }}>
+            <Image
+              source={{
+                uri: 'https://pngimg.com/uploads/qr_code/small/qr_code_PNG33.png',
+              }}
+              style={{height: '100%', width: '100%'}}
+            />
+          </Pressable>
+        </Pressable>
       </Modal>
     </Container>
   );
