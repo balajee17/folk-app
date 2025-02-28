@@ -21,4 +21,7 @@ export let screenNames = {
   accommodation: 'Accommodation',
   contribution: 'Contribution',
   notifications: 'Notifications',
+  profile: 'Profile',
+  paymentDetails: 'Payment Details',
+  paymentHistory: 'Payment History',
 };

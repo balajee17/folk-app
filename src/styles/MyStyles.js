@@ -97,6 +97,9 @@ export let COLORS = {
   whatsapp: '#19D06C',
   dodger: '#358AE0',
   link: '#00d2ff',
+  backBg: 'rgba(234, 236, 220, 0.14)',
+  silver: '#CECECE',
+  moss: '#729F4D',
 };
 
 // @ FONTS

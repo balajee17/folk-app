@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     backgroundColor: COLORS.charcoal,
     width: '100%',
-    height: verticalScale(60),
+    height: verticalScale(80),
     borderTopLeftRadius: moderateScale(25),
     borderTopRightRadius: moderateScale(25),
     position: 'absolute',

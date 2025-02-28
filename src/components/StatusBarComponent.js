@@ -48,7 +48,7 @@ export const StatusBarTransp = () => {
       ) : (
         <View
           style={{
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.transparent,
             height: statusBarHeight,
             zIndex: 999,
           }}
@@ -58,12 +58,26 @@ export const StatusBarTransp = () => {
   );
 };
 
-export const CommonStatusBar = () => {
+export const CommonStatusBar = ({bgColor}) => {
+  const statusBarHeight = useStatusBarHeight();
+
   return (
-    <StatusBar
-      backgroundColor={COLORS.charcoal}
-      barStyle="light-content"
-      animated
-    />
+    <>
+      {Platform.OS === 'android' ? (
+        <StatusBar
+          backgroundColor={bgColor || COLORS.charcoal}
+          barStyle={bgColor ? 'dark-content' : 'light-content'}
+          animated
+        />
+      ) : (
+        <View
+          style={{
+            backgroundColor: COLORS.transparent,
+            height: statusBarHeight,
+            zIndex: 999,
+          }}
+        />
+      )}
+    </>
   );
 };

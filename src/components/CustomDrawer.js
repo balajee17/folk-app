@@ -73,14 +73,19 @@ const CustomDrawer = ({navigation}) => {
     <SafeAreaView style={{flex: 1}}>
       {/* // @ Profile Info */}
       <View style={styles.header}>
-        <View style={styles.profImgCont}>
+        <TouchableOpacity
+          onPress={() => {
+            navigateTo(screenNames.profile);
+          }}
+          activeOpacity={0.6}
+          style={styles.profImgCont}>
           <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
             }}
             style={styles.profImg}
           />
-        </View>
+        </TouchableOpacity>
         <View style={styles.profileTextCont}>
           <Text style={styles.profName}>Naveen Alagarsamy</Text>
           <Text style={[styles.profName, styles.mailTxt]}>

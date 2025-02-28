@@ -1242,6 +1242,14 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-camera (4.2.1):
+    - React-Core
+    - react-native-camera/RCT (= 4.2.1)
+    - react-native-camera/RN (= 4.2.1)
+  - react-native-camera/RCT (4.2.1):
+    - React-Core
+  - react-native-camera/RN (4.2.1):
+    - React-Core
   - react-native-safe-area-context (5.0.0):
     - React-Core
   - react-native-webview (13.12.5):
@@ -1548,6 +1556,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNDeviceInfo (14.0.4):
+    - React-Core
   - RNGestureHandler (2.21.2):
     - DoubleConversion
     - glog
@@ -1569,6 +1579,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNPermissions (5.2.5):
+    - React-Core
   - RNReanimated (3.16.7):
     - DoubleConversion
     - glog
@@ -1743,6 +1755,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1773,7 +1786,9 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -1860,6 +1875,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-camera:
+    :path: "../node_modules/react-native-camera"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -1920,8 +1937,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1969,6 +1990,7 @@ SPEC CHECKSUMS:
   React-logger: d79b704bf215af194f5213a6b7deec50ba8e6a9b
   React-Mapbuffer: b982d5bba94a8bc073bda48f0d27c9b28417fae3
   React-microtasksnativemodule: 2b73e68f0462f3175f98782db08896f8501afd20
+  react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-safe-area-context: ab7beb734b0f9f79f55ae144a6c946a6422f55d6
   react-native-webview: b034adbe6dc6cc783c3270b6e47298bc1dfdb632
   React-nativeconfig: 8c83d992b9cc7d75b5abe262069eaeea4349f794
@@ -1999,7 +2021,9 @@ SPEC CHECKSUMS:
   ReactCommon: 6a952e50c2a4b694731d7682aaa6c79bc156e4ad
   RNCAsyncStorage: cc6479c4acd84cc7004946946c8afe30b018184d
   RNCMaskedView: e07a0b5e9e8d6962826def06e6ff2ecdb815433f
+  RNDeviceInfo: feea80a690d2bde1fe51461cf548039258bd03f2
   RNGestureHandler: aa9690789023c9be8f06aa90e10ce637ea788f4d
+  RNPermissions: 8d61e68441a2825547da1e0dae393e0fc5b7ac53
   RNReanimated: d1e1069c64b84cc1dc91c73d59a2106c139ed7a1
   RNScreens: b03d696c70cc5235ce4587fcc27ae1a93a48f98c
   RNVectorIcons: 6382277afab3c54658e9d555ee0faa7a37827136
@@ -2007,6 +2031,6 @@ SPEC CHECKSUMS:
   Yoga: 055f92ad73f8c8600a93f0e25ac0b2344c3b07e6
   YoutubePlayer-in-WKWebView: 2c3aa1d5ad8dded9f95ef12033af5dd8e55864b7
 
-PODFILE CHECKSUM: eee6618e68443c72fa6bfc93410fc2c4f41c78f4
+PODFILE CHECKSUM: 6a2a99e4342f40e242f8c4344dfea309270c073b
 
 COCOAPODS: 1.15.2

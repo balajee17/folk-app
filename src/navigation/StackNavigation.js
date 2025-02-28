@@ -13,6 +13,10 @@ import EventDetails from '../screens/EventDetails';
 import Events from '../screens/Events';
 import Coupons from '../screens/Coupons';
 import Notifications from '../screens/Notifications';
+import Profile from '../screens/Profile';
+import PaymentDetails from '../screens/PaymentDetails';
+import PaymentHistory from '../screens/PaymentHistory';
+import QrScanner from '../components/QrScanner';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +24,8 @@ const StackNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={screenNames.drawerNavigation}
+        // initialRouteName={screenNames.drawerNavigation}
+        initialRouteName="QRScanner"
         screenOptions={{headerShown: false}}>
         {/* // @ Drawer Component */}
         <Stack.Screen
@@ -73,6 +78,17 @@ const StackNavigation = () => {
           name={screenNames.notifications}
           component={Notifications}
         />
+
+        {/* // @ Profile */}
+        <Stack.Screen name={screenNames.profile} component={Profile} />
+
+        {/* // @ Payment Details */}
+        <Stack.Screen
+          name={screenNames.paymentDetails}
+          component={PaymentDetails}
+        />
+
+        <Stack.Screen name={'QRScanner'} component={QrScanner} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -85,8 +85,8 @@ const EventDetails = ({route, navigation}) => {
                 activeOpacity={0.6}
                 style={styles.menuIcon}>
                 <FontAwesome
-                  name="arrow-left-long"
-                  size={moderateScale(18)}
+                  name="chevron-left"
+                  size={moderateScale(15)}
                   color={COLORS.charcoal}
                 />
               </TouchableOpacity>

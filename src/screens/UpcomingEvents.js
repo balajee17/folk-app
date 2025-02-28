@@ -1,24 +1,6 @@
-import {
-  Image,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {
-  COLORS,
-  FONTS,
-  horizontalScale,
-  moderateScale,
-  MyStyles,
-  screenWidth,
-  SIZES,
-  verticalScale,
-} from '../styles/MyStyles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Entypo from 'react-native-vector-icons/Entypo';
+import {MyStyles, screenWidth} from '../styles/MyStyles';
 import {screenNames} from '../constants/ScreenNames';
 
 const UpcomingEvents = ({navigation}) => {
