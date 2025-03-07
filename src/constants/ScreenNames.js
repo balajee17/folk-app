@@ -24,4 +24,5 @@ export let screenNames = {
   profile: 'Profile',
   paymentDetails: 'Payment Details',
   paymentHistory: 'Payment History',
+  scanner: 'Scanner',
 };

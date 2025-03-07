@@ -16,15 +16,16 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 const SwitcherScreen = ({navigation}) => {
   const {selScreen, setSelScreen} = useAppContext();
 
-  const {current, previous} = selScreen;
+  const {current, btTab} = selScreen;
 
   const [opnFltr, setOpnFltr] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      !!previous && setSelScreen({current: previous, previous: ''});
-    }, [previous]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log('SS---', selScreen);
+  //     !!previous && setSelScreen({current: previous});
+  //   }, [previous]),
+  // );
 
   // # TitleName - DB1 Home, B2 Events, B3 Connectus,B4 Courses
   const titleName =
@@ -33,12 +34,12 @@ const SwitcherScreen = ({navigation}) => {
       : current === 'B2'
       ? screenNames.events
       : current === 'B3'
-      ? screenNames.connectUs
+      ? screenNames.courses
       : // : useToast().show('Transaction Successful!', {
         //     type: 'success',
         //     duration: 4000,
         //   });
-        screenNames.courses;
+        screenNames.connectUs;
 
   return (
     <Container>
@@ -60,15 +61,18 @@ const SwitcherScreen = ({navigation}) => {
         ) : current === 'B2' ? (
           <Events openFilter={opnFltr} closeFilter={() => setOpnFltr(false)} />
         ) : current === 'B3' ? (
-          <ConnectUs />
-        ) : (
           <Courses />
+        ) : (
+          <ConnectUs />
         )}
       </SafeAreaView>
       {/* // @ Bottom Tab */}
       <CustomBottomTab
-        selIcon={current}
-        setSelIcon={value => setSelScreen({current: value, previous: ''})}
+        selIcon={btTab}
+        setSelIcon={value => {
+          setSelScreen({btTab: value, current: value});
+          console.log('TRIGGERED');
+        }}
       />
     </Container>
   );

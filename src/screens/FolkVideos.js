@@ -122,7 +122,7 @@ const FolkVideos = ({navigation, route}) => {
                     <View style={{width: '72%'}}>
                       <SkeletonPlaceholder
                         highlightColor={COLORS.highLightColor}
-                        backgroundColor={COLORS.shimmerBg}>
+                        backgroundColor={COLORS.gunsmoke}>
                         <SkeletonPlaceholder.Item
                           height={verticalScale(15)}
                           width={'100%'}
@@ -133,7 +133,7 @@ const FolkVideos = ({navigation, route}) => {
                     <View style={{width: '27%'}}>
                       <SkeletonPlaceholder
                         highlightColor={COLORS.highLightColor}
-                        backgroundColor={COLORS.shimmerBg}>
+                        backgroundColor={COLORS.gunsmoke}>
                         <SkeletonPlaceholder.Item
                           height={verticalScale(15)}
                           width={'100%'}
@@ -145,7 +145,7 @@ const FolkVideos = ({navigation, route}) => {
 
                   <SkeletonPlaceholder
                     highlightColor={COLORS.highLightColor}
-                    backgroundColor={COLORS.shimmerBg}>
+                    backgroundColor={COLORS.gunsmoke}>
                     <SkeletonPlaceholder.Item
                       height={verticalScale(10)}
                       width={'80%'}
@@ -155,7 +155,7 @@ const FolkVideos = ({navigation, route}) => {
                   </SkeletonPlaceholder>
                   <SkeletonPlaceholder
                     highlightColor={COLORS.highLightColor}
-                    backgroundColor={COLORS.shimmerBg}>
+                    backgroundColor={COLORS.gunsmoke}>
                     <SkeletonPlaceholder.Item
                       height={verticalScale(10)}
                       width={'70%'}
@@ -201,7 +201,7 @@ const FolkVideos = ({navigation, route}) => {
                           <View>
                             <SkeletonPlaceholder
                               highlightColor={COLORS.highLightColor}
-                              backgroundColor={COLORS.shimmerBg}>
+                              backgroundColor={COLORS.gunsmoke}>
                               <SkeletonPlaceholder.Item
                                 width={horizontalScale(88)}
                                 height={horizontalScale(80)}
@@ -215,7 +215,7 @@ const FolkVideos = ({navigation, route}) => {
                             <View>
                               <SkeletonPlaceholder
                                 highlightColor={COLORS.highLightColor}
-                                backgroundColor={COLORS.shimmerBg}>
+                                backgroundColor={COLORS.gunsmoke}>
                                 <SkeletonPlaceholder.Item
                                   width={'100%'}
                                   height={horizontalScale(12)}
@@ -227,7 +227,7 @@ const FolkVideos = ({navigation, route}) => {
                             <View>
                               <SkeletonPlaceholder
                                 highlightColor={COLORS.highLightColor}
-                                backgroundColor={COLORS.shimmerBg}>
+                                backgroundColor={COLORS.gunsmoke}>
                                 <SkeletonPlaceholder.Item
                                   width={'80%'}
                                   height={horizontalScale(8)}
@@ -240,7 +240,7 @@ const FolkVideos = ({navigation, route}) => {
                             <View>
                               <SkeletonPlaceholder
                                 highlightColor={COLORS.highLightColor}
-                                backgroundColor={COLORS.shimmerBg}>
+                                backgroundColor={COLORS.gunsmoke}>
                                 <SkeletonPlaceholder.Item
                                   width={'70%'}
                                   height={horizontalScale(8)}

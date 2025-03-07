@@ -18,6 +18,6 @@ export default Container;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.white,
   },
 });

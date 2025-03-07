@@ -48,7 +48,7 @@ const CustomDrawer = ({navigation}) => {
   ];
 
   const {selScreen, setSelScreen} = useAppContext();
-  const {current} = selScreen;
+  const {current, btTab} = selScreen;
   const {closeDrawer} = navigation;
 
   // # Navigate Sreen
@@ -57,15 +57,17 @@ const CustomDrawer = ({navigation}) => {
   };
 
   const navigateScreen = (id, screenName) => {
-    setSelScreen(id);
     closeDrawer();
     if (id === 'DB1') {
       current !== 'DB1'
-        ? (setSelScreen({current: id, previous: ''}),
+        ? (setSelScreen({current: id, btTab: id}),
           navigateTo(screenNames.switcherScreen))
         : null;
+      console.log('first');
     } else {
-      setSelScreen({previous: current, current: id}), navigateTo(screenName);
+      console.log('Second');
+
+      setSelScreen(prev => ({...prev, current: id})), navigateTo(screenName);
     }
   };
 

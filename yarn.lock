@@ -6012,6 +6012,11 @@ react-native-linear-gradient@2.8.3:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"
   integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
+react-native-pager-view@^6.7.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.7.0.tgz#88f2520e85f07ce55f3f56c57d6637249a215160"
+  integrity sha512-sutxKiMqBuQrEyt4mLaLNzy8taIC7IuYpxfcwQBXfSYBSSpAa0qE9G1FXlP/iXqTSlFgBXyK7BESsl9umOjECQ==
+
 react-native-permissions@^2.0.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
@@ -6078,6 +6083,13 @@ react-native-skeleton-placeholder@^5.2.4:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/react-native-skeleton-placeholder/-/react-native-skeleton-placeholder-5.2.4.tgz#a654fa083ff274a39c763e086f8a850c556d4c95"
   integrity sha512-OZntVq1hU1UX33FltxK2ezT2v9vHIhV8YnEbnMWUCvxT0N9OsgD1qxiHm6qb9YRJVgq2o5z3S7dNPsPnDF/jNg==
+
+react-native-tab-view@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-4.0.5.tgz#d12ec7dfd260c6acb247a401b3fc4abe6a3d466c"
+  integrity sha512-Xn3TpYo4yvKRC/f4+cOcvsXlitdnSaYkacshckrEI3JiDmFKNFIRVNxtZFggm4MwbJafq2RzuzR6xrgKoxgkTw==
+  dependencies:
+    use-latest-callback "^0.2.1"
 
 react-native-toast-notifications@^3.4.0:
   version "3.4.0"

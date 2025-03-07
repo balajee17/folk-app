@@ -1,67 +1,162 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
+  horizontalScale,
   moderateScale,
+  screenHeight,
   SIZES,
   verticalScale,
+  windowWidth,
 } from '../styles/MyStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
+import {getImage} from '../utils/ImagePath';
+import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+
+const ICONS = [
+  {
+    id: 'DB1',
+    name: 'Home',
+    image: require('../assets/images/home.png'),
+    activeImage: require('../assets/images/homeActive.png'),
+  },
+  {
+    id: 'B2',
+    name: 'Events',
+    image: require('../assets/images/calendar.png'),
+    activeImage: require('../assets/images/calendarActive.png'),
+  },
+  {
+    id: 'B3',
+    name: 'Courses',
+    image: require('../assets/images/book.png'),
+    activeImage: require('../assets/images/bookActive.png'),
+  },
+  {
+    id: 'B4',
+    name: 'Connect',
+    image: require('../assets/images/account.png'),
+    activeImage: require('../assets/images/accountActive.png'),
+  },
+];
+
+const TAB_WIDTH = windowWidth / ICONS.length;
+const ACTIVE_CIRCLE_SIZE = horizontalScale(50);
 
 const CustomBottomTab = ({selIcon, setSelIcon}) => {
-  const ICONS = [
-    {id: 'DB1', name: screenNames.home},
-    {id: 'B2', name: screenNames.events},
-    {id: 'B4', name: screenNames.courses},
-    {id: 'B3', name: screenNames.connectUs},
-  ];
+  const translateX = useSharedValue(0);
+
+  const handlePress = (id, index) => {
+    setSelIcon(id);
+    translateX.value = withSpring(index * TAB_WIDTH, {
+      damping: 10,
+      stiffness: 100,
+    });
+  };
+
+  // # Animated Style for Moving Circle
+  const circleStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: translateX.value}],
+  }));
+
+  useEffect(() => {
+    const index =
+      selIcon === 'DB1'
+        ? 0
+        : selIcon === 'B2'
+        ? 1
+        : selIcon === 'B3'
+        ? 2
+        : selIcon === 'B4'
+        ? 3
+        : 0;
+    handlePress(selIcon, index);
+  }, [selIcon]);
+
+  {
+  }
 
   return (
-    <View style={styles.tabContainer}>
-      {ICONS?.map((item, index) => {
-        return (
-          <TouchableOpacity
-            onPress={() => setSelIcon(item?.id)}
-            activeOpacity={0.6}
-            style={[
-              styles.tabButton,
-              {
-                backgroundColor:
-                  item?.id === selIcon ? COLORS.white : COLORS.charcoal,
-              },
-            ]}>
-            <MaterialCommunityIcons
-              name={
-                item?.id === 'DB1'
-                  ? selIcon === 'DB1'
-                    ? 'home-variant'
-                    : 'home-variant-outline'
-                  : item?.id === 'B2'
-                  ? selIcon === 'B2'
-                    ? 'calendar-star'
-                    : 'calendar-blank'
-                  : item?.id === 'B4'
-                  ? selIcon === 'B4'
-                    ? 'book-education'
-                    : 'book-education-outline'
-                  : item?.id === 'B3'
-                  ? selIcon === 'B3'
-                    ? 'account'
-                    : 'account-outline'
-                  : null
-              }
-              size={moderateScale(22)}
-              color={item?.id === selIcon ? COLORS.charcoal : COLORS.white}
-            />
-            {item?.id === selIcon && (
-              <Text style={styles.iconTxt}>{item?.name}</Text>
-            )}
-          </TouchableOpacity>
-        );
-      })}
+    <View style={styles.btTabContainer}>
+      {/* // @ Active Circle */}
+      <Animated.View style={[styles.activeCircle, circleStyle]}>
+        <Animated.Image
+          source={
+            selIcon === 'DB1'
+              ? getImage.homeActive
+              : selIcon === 'B2'
+              ? getImage.calendarActive
+              : selIcon === 'B3'
+              ? getImage.bookActive
+              : selIcon === 'B4'
+              ? getImage.accountActive
+              : null
+          }
+          style={[styles.icon]}
+        />
+      </Animated.View>
+      <View style={styles.tabContainer}>
+        {/* // @ Tab Buttons */}
+        {ICONS?.map((item, index) => {
+          const isActive = item?.id === selIcon;
+
+          const opacityAnim = useAnimatedStyle(() => ({
+            opacity: isActive ? withSpring(0) : withSpring(1),
+          }));
+
+          const textAnimation = useAnimatedStyle(() => ({
+            fontSize: isActive ? SIZES.l : SIZES.m,
+            color: interpolateColor(
+              isActive ? 1 : 0,
+              [0, 1],
+              [COLORS.charcoal, COLORS.golden],
+            ),
+          }));
+
+          return (
+            <TouchableOpacity
+              onPress={() => handlePress(item?.id, index)}
+              activeOpacity={0.6}
+              style={[styles.tabButton]}>
+              <Animated.Image
+                source={isActive ? item?.activeImage : item?.image}
+                style={[styles.icon, opacityAnim]}
+              />
+              <Animated.Text
+                style={[
+                  styles.iconTxt,
+                  textAnimation,
+                  {
+                    fontFamily:
+                      item?.id === selIcon
+                        ? FONTS.poppinsSemiBold
+                        : FONTS.poppinsRegular,
+                  },
+                ]}>
+                {item?.name}
+              </Animated.Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
+      {/* // @ Shadow Effect */}
+      <LinearGradient
+        colors={['rgba(0,0,0,0.2)', 'transparent']}
+        style={styles.shadow}
+        start={{x: 0, y: 1.8}} // Gradient direction
+        end={{x: 0, y: 0}}
+      />
     </View>
   );
 };
@@ -69,31 +164,62 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
 export default CustomBottomTab;
 
 const styles = StyleSheet.create({
-  tabContainer: {
-    backgroundColor: COLORS.charcoal,
-    width: '100%',
-    height: verticalScale(80),
-    borderTopLeftRadius: moderateScale(25),
-    borderTopRightRadius: moderateScale(25),
+  btTabContainer: {
     position: 'absolute',
     bottom: 0,
+    width: '100%',
+    justifyContent: 'center',
+    backgroundColor: COLORS.white,
+  },
+  tabContainer: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: '2%',
   },
   tabButton: {
-    marginTop: '3%',
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    width: '25%',
-    padding: '2%',
-    borderRadius: moderateScale(25),
+    width: TAB_WIDTH,
+    padding: '1%',
   },
   iconTxt: {
-    fontFamily: FONTS.interBold,
     fontSize: SIZES.m,
     color: COLORS.charcoal,
+    fontFamily: FONTS.poppinsRegular,
+    marginTop: '5%',
+  },
+  shadow: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: verticalScale(25),
+    top: verticalScale(-25),
+  },
+  activeCircle: {
+    backgroundColor: COLORS.golden,
+    width: ACTIVE_CIRCLE_SIZE,
+    height: ACTIVE_CIRCLE_SIZE,
+    borderRadius: ACTIVE_CIRCLE_SIZE / 2,
+    position: 'absolute',
+    top: verticalScale(-25),
+    zIndex: 99,
+    borderWidth: 3,
+    borderColor: COLORS.white,
+    left: TAB_WIDTH / 4.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1,
+  },
+  icon: {
+    width: horizontalScale(25),
+    height: horizontalScale(25),
   },
 });

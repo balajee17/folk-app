@@ -40,27 +40,30 @@ import {
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
+import {getImage} from '../utils/ImagePath';
+import {useAppContext} from '../../App';
 
 const Home = () => {
+  const {selScreen} = useAppContext();
+
   const navigation = useNavigation();
 
   const [homeData, setHomeData] = useState([
     {section: 1, title: '', updates: [{id: 1, link: ''}]},
     {section: 2, title: '', updates: [{id: 1, link: ''}]},
-    {section: 3, title: '', updates: [{id: 1, link: ''}]},
-    {section: 4, title: '', updates: [{id: 1, link: '', code: ''}]},
   ]);
   const [playVideo, setPlayVideo] = useState(true);
   const [youtubeAudio, setYoutubeAudio] = useState(true);
-  const [shimmer, setShimmer] = useState({content: true, video: true});
+  const [shimmer, setShimmer] = useState(false);
 
   useEffect(() => {
-    getHomeScreenData();
+    selScreen?.previous === '' && getHomeScreenData();
   }, []);
 
   // # API Call to get Darshan History
   const getHomeScreenData = async () => {
     try {
+      setShimmer(true);
       const response = await API.getHomeScreenData();
 
       // console.log('response', response?.data);
@@ -70,7 +73,7 @@ const Home = () => {
       } else {
         setHomeData([]);
       }
-      setShimmer({video: false, content: false});
+      setShimmer(false);
     } catch (err) {
       setHomeData([]);
       console.log('ERR-Home-screen', err);
@@ -90,17 +93,21 @@ const Home = () => {
   };
 
   // # Section Title
-  const RenderSecTitle = (title, color) => {
+  const RenderSecTitle = (title, color, icnLink) => {
     return (
-      <Text
-        style={[
-          MyStyles.subTitleText,
-          {
-            color: color,
-          },
-        ]}>
-        {title}
-      </Text>
+      <View style={[{flexDirection: 'row'}]}>
+        <Image
+          style={styles.titleImg}
+          source={{uri: icnLink}}
+          resizeMode="contain"
+        />
+
+        <Text
+          numberOfLines={1}
+          style={[MyStyles.subTitleText, styles.secTitle, {color: color}]}>
+          {title}
+        </Text>
+      </View>
     );
   };
 
@@ -128,39 +135,58 @@ const Home = () => {
   const DailyDarshan = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
+    const icnLink = data?.icon;
 
     return (
-      <View style={[styles.dailyDarshanCont, styles.padVert10]}>
-        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-          {shimmer?.content ? (
-            <>
-              <HomeTitleShimmer />
-              <HomeIconShimmer />
-            </>
+      <>
+        <View
+          style={[
+            styles.dailyDarshanCont,
+            {marginTop: index === 0 ? verticalScale(15) : 0},
+          ]}>
+          <View
+            style={[
+              styles.textHstryIcon,
+              styles.marVert,
+              MyStyles.paddingHor10,
+            ]}>
+            {shimmer ? (
+              <>
+                <View style={[styles.textHstryIcon, styles.shimmerCont]}>
+                  <HomeIconShimmer />
+                  <HomeTitleShimmer />
+                </View>
+                <HomeIconShimmer marginTop={verticalScale(15)} />
+              </>
+            ) : (
+              UPDATES?.length > 0 && (
+                <>
+                  {RenderSecTitle(
+                    TITLE,
+                    index > 0 ? COLORS.gableGreen : COLORS.white,
+                    icnLink,
+                  )}
+                  {RenderHistoryIcon(
+                    TITLE,
+                    screenNames.dailyDarshan,
+                    index > 0 ? COLORS.gableGreen : COLORS.white,
+                  )}
+                </>
+              )
+            )}
+          </View>
+          {shimmer ? (
+            <ParallexShimmer />
           ) : (
             UPDATES?.length > 0 && (
-              <>
-                {RenderSecTitle(
-                  TITLE,
-                  index > 0 ? COLORS.gableGreen : COLORS.golden,
-                )}
-                {RenderHistoryIcon(
-                  TITLE,
-                  screenNames.dailyDarshan,
-                  index > 0 ? COLORS.gableGreen : COLORS.white,
-                )}
-              </>
+              <ParallexCarousel carouselItems={UPDATES} autoScroll />
             )
           )}
         </View>
-        {shimmer?.content ? (
-          <ParallexShimmer />
-        ) : (
-          UPDATES?.length > 0 && (
-            <ParallexCarousel carouselItems={UPDATES} autoScroll />
-          )
+        {!shimmer && homeData?.length - 1 > index && (
+          <View style={styles.horizontalLine} />
         )}
-      </View>
+      </>
     );
   };
 
@@ -168,20 +194,36 @@ const Home = () => {
   const Quotes = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
+    const icnLink = data?.icon;
     return (
-      <View style={{paddingBottom: verticalScale(10)}}>
-        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-          {shimmer?.content ? (
+      <>
+        <View
+          style={[
+            styles.textHstryIcon,
+            MyStyles.paddingHor10,
+            styles.marVert,
+            {marginTop: index === 0 ? verticalScale(15) : 0},
+          ]}>
+          {shimmer ? (
             <>
-              <HomeTitleShimmer />
-              <HomeIconShimmer />
+              <View
+                style={[
+                  styles.textHstryIcon,
+                  styles.shimmerCont,
+                  {marginTop: verticalScale(25)},
+                ]}>
+                <HomeIconShimmer />
+                <HomeTitleShimmer />
+              </View>
+              <HomeIconShimmer marginTop={verticalScale(25)} />
             </>
           ) : (
             UPDATES?.length > 0 && (
               <>
                 {RenderSecTitle(
                   TITLE,
-                  index === 0 ? COLORS.golden : COLORS.gableGreen,
+                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                  icnLink,
                 )}
                 {RenderHistoryIcon(
                   TITLE,
@@ -193,19 +235,19 @@ const Home = () => {
           )}
         </View>
 
-        {shimmer?.content ? (
+        {shimmer ? (
           <ImageShimmer
             width={'95%'}
             height={verticalScale(300)}
             borderRadius={moderateScale(15)}
-            marginTop={verticalScale(10)}
+            marginTop={verticalScale(12)}
             alignSelf={'center'}
           />
         ) : (
           UPDATES?.length > 0 && (
             <View style={styles.quotesImgCont}>
               <Image
-                style={[MyStyles.quotesImg, {marginTop: verticalScale(10)}]}
+                style={[MyStyles.quotesImg]}
                 source={{
                   uri: UPDATES[0]?.link,
                 }}
@@ -213,7 +255,11 @@ const Home = () => {
             </View>
           )
         )}
-      </View>
+
+        {!shimmer && homeData?.length - 1 > index && (
+          <View style={styles.horizontalLine} />
+        )}
+      </>
     );
   };
 
@@ -221,60 +267,58 @@ const Home = () => {
   const FolkUpdates = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
+    const icnLink = data?.icon;
     return (
-      <View style={styles.padVert10}>
-        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-          {shimmer?.content ? (
+      <>
+        <View
+          style={[
+            styles.textHstryIcon,
+            MyStyles.paddingHor10,
+            styles.marVert,
+            {marginTop: index === 0 ? verticalScale(15) : 0},
+          ]}>
+          {!shimmer && UPDATES?.length > 0 && (
             <>
-              <HomeTitleShimmer />
-              <HomeIconShimmer />
+              {RenderSecTitle(
+                TITLE,
+                index === 0 ? COLORS.white : COLORS.gableGreen,
+                icnLink,
+              )}
+              {RenderHistoryIcon(
+                TITLE,
+                screenNames.updates,
+                index === 0 ? COLORS.white : COLORS.gableGreen,
+              )}
             </>
-          ) : (
-            UPDATES?.length > 0 && (
-              <>
-                {RenderSecTitle(
-                  TITLE,
-                  index === 0 ? COLORS.golden : COLORS.gableGreen,
-                )}
-                {RenderHistoryIcon(
-                  TITLE,
-                  screenNames.updates,
-                  index === 0 ? COLORS.white : COLORS.gableGreen,
-                )}
-              </>
-            )
           )}
         </View>
 
-        {shimmer?.content ? (
-          <>
-            <ImageShimmer
-              width={'95%'}
-              height={verticalScale(250)}
-              borderRadius={moderateScale(15)}
-              marginTop={verticalScale(10)}
-              alignSelf={'center'}
-            />
-            <ImageShimmer
-              width={'95%'}
-              height={verticalScale(120)}
-              borderRadius={moderateScale(15)}
-              marginTop={verticalScale(10)}
-              alignSelf={'center'}
-            />
-          </>
-        ) : (
+        {!shimmer &&
+          // (
+          //   <>
+          //     <ImageShimmer
+          //       width={'95%'}
+          //       height={verticalScale(250)}
+          //       borderRadius={moderateScale(15)}
+          //       marginTop={verticalScale(10)}
+          //       alignSelf={'center'}
+          //     />
+          //     <ImageShimmer
+          //       width={'95%'}
+          //       height={verticalScale(120)}
+          //       borderRadius={moderateScale(15)}
+          //       marginTop={verticalScale(10)}
+          //       alignSelf={'center'}
+          //     />
+          //   </>
+          // ) :
+
           UPDATES?.length > 0 &&
           UPDATES?.map((updateItem, updateIndex) => {
             return (
               <>
                 {!!updateItem?.link && (
-                  <View
-                    key={updateItem?.id}
-                    style={[
-                      styles.quotesImgCont,
-                      {marginTop: updateIndex !== 0 ? '5%' : verticalScale(10)},
-                    ]}>
+                  <View key={updateItem?.id} style={[styles.quotesImgCont]}>
                     <Image
                       style={MyStyles.quotesImg}
                       source={{
@@ -322,9 +366,12 @@ const Home = () => {
                 )}
               </>
             );
-          })
+          })}
+
+        {!shimmer && homeData?.length - 1 > index && (
+          <View style={styles.horizontalLine} />
         )}
-      </View>
+      </>
     );
   };
 
@@ -332,39 +379,40 @@ const Home = () => {
   const YoutubeVideos = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
-
+    const icnLink = data?.icon;
     return (
-      <View style={styles.padVert10}>
-        <View style={[styles.textHstryIcon, MyStyles.paddingHor10]}>
-          {shimmer?.content ? (
+      <>
+        <View
+          style={[
+            styles.textHstryIcon,
+            MyStyles.paddingHor10,
+            {marginTop: index === 0 ? verticalScale(15) : 0},
+          ]}>
+          {!shimmer && UPDATES?.length > 0 && (
             <>
-              <HomeTitleShimmer />
-              <HomeIconShimmer />
+              {RenderSecTitle(
+                TITLE,
+                index === 0 ? COLORS.white : COLORS.gableGreen,
+                icnLink,
+              )}
+              {RenderHistoryIcon(
+                TITLE,
+                screenNames.folkVideos,
+                index === 0 ? COLORS.white : COLORS.gableGreen,
+              )}
             </>
-          ) : (
-            UPDATES?.length > 0 && (
-              <>
-                {RenderSecTitle(
-                  TITLE,
-                  index === 0 ? COLORS.golden : COLORS.gableGreen,
-                )}
-                {RenderHistoryIcon(
-                  TITLE,
-                  screenNames.folkVideos,
-                  index === 0 ? COLORS.white : COLORS.gableGreen,
-                )}
-              </>
-            )
           )}
         </View>
-        <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
-          {shimmer?.video ? (
-            <YoutubeShimmer
-              width={windowWidth * 0.95}
-              height={windowWidth * 0.95 * (9 / 16)}
-              borderRadius={moderateScale(15)}
-            />
-          ) : (
+
+        <View style={[MyStyles.youtubeCont]}>
+          {!shimmer &&
+            //  (
+            //   <YoutubeShimmer
+            //     width={windowWidth * 0.95}
+            //     height={windowWidth * 0.95 * (9 / 16)}
+            //     borderRadius={moderateScale(15)}
+            //   />
+            // ) :
             UPDATES?.length > 0 && (
               <YoutubePlayer
                 width={windowWidth * 0.95}
@@ -383,10 +431,12 @@ const Home = () => {
                 videoId={UPDATES[0]?.code}
                 onChangeState={onStateChange}
               />
-            )
-          )}
+            )}
         </View>
-      </View>
+        {!shimmer && homeData?.length - 1 > index && (
+          <View style={styles.horizontalLine} />
+        )}
+      </>
     );
   };
 
@@ -414,12 +464,25 @@ const Home = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         overScrollMode="never"
-        contentContainerStyle={styles.scrollViewCont}>
+        contentContainerStyle={{
+          paddingBottom: shimmer ? 0 : verticalScale(180),
+        }}>
         <View style={MyStyles.contentCont}>
-          <View style={styles.halfBg} />
+          <LinearGradient
+            colors={[
+              'rgba(65, 110, 189, 1)',
+              'rgba(65, 110, 189, 0.9)',
+              'rgba(65, 110, 189, 0.6)',
+              'rgba(65, 110, 189, 0.1)',
+              COLORS.white,
+            ]}
+            start={{x: 0, y: 0}}
+            end={{x: 0, y: 1}}
+            style={styles.halfBg}
+          />
 
           {homeData?.map((item, index) => {
-            if (shimmer?.content || homeData?.length > 0) {
+            if (shimmer || homeData?.length > 0) {
               return renderItemsInOrder(item, index);
             } else {
               return null;
@@ -449,10 +512,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: verticalScale(200),
-    backgroundColor: COLORS.charcoal,
-    borderBottomLeftRadius: moderateScale(30),
-    borderBottomRightRadius: moderateScale(30),
+    height: verticalScale(300),
   },
   textHstryIcon: {
     width: '100%',
@@ -460,18 +520,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-
-  marTop15: {marginTop: verticalScale(15)},
   quotesImgCont: {
     width: windowWidth,
     justifyContent: 'center',
     alignItems: 'center',
     ...MyStyles.paddingHor10,
+    marginTop: verticalScale(15),
   },
 
-  padVert10: {paddingVertical: verticalScale(10)},
   scrollViewCont: {
     paddingBottom: verticalScale(160),
     backgroundColor: COLORS.paleYellow,
   },
+  titleImg: {
+    width: horizontalScale(35),
+    height: horizontalScale(35),
+  },
+  secTitle: {
+    color: COLORS.black,
+    textAlign: 'left',
+    marginLeft: '4%',
+    width: '70%',
+    textAlignVertical: 'center',
+  },
+  horizontalLine: {
+    height: verticalScale(0.5),
+    width: '100%',
+    backgroundColor: COLORS.highLightColor,
+    marginVertical: verticalScale(30),
+  },
+  shimmerCont: {width: '70%', marginTop: verticalScale(15)},
 });

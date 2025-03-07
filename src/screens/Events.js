@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   Modal,
   Pressable,
   ScrollView,
@@ -7,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -17,6 +18,7 @@ import {
   screenWidth,
   SIZES,
   verticalScale,
+  windowWidth,
 } from '../styles/MyStyles';
 import Animated, {
   Easing,
@@ -33,12 +35,9 @@ import AttendedEvents from './AttendedEvents';
 import {useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FloatingInput from '../components/FloatingInput';
+import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
-const Events = ({openFilter, closeFilter}) => {
-  const activeTab = useSharedValue(0);
-  const scrollRef = useRef(null);
-  const indicatorPosition = useSharedValue(0);
-  const indicatorWidth = horizontalScale(112);
+const Events = ({openFilter, closeFilter, navigation}) => {
   const [filterValues, setFilterValues] = useState({});
   const [filterDrpDwnLst, setFilterDrpDwnLst] = useState({
     eventNames: [
@@ -54,10 +53,11 @@ const Events = ({openFilter, closeFilter}) => {
       {label: 'ajkfa', value: 'dkjhklh'},
     ],
   });
-
-  const navigation = useNavigation();
-
-  useEffect(() => {}, []);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {key: 'upcoming', title: 'Upcoming'},
+    {key: 'registered', title: 'Registered'},
+  ]);
 
   const handleChange = (key, value) => {
     setFilterValues(prevState => ({
@@ -66,86 +66,25 @@ const Events = ({openFilter, closeFilter}) => {
     }));
   };
 
-  const handleTabPress = item => {
-    // Animate active tab value first
-    activeTab.value = withTiming(item, {duration: 100}, () => {
-      // Once animation completes, smoothly scroll
-      runOnJS(scrollToTab)(item);
-    });
-
-    // Animate indicator position in sync
-    indicatorPosition.value = withTiming(item * indicatorWidth, {
-      duration: 100,
-      easing: Easing.linear,
-    });
-  };
-
-  // Separate function to ensure smooth scrolling
-  const scrollToTab = index => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        x: index * screenWidth,
-        animated: true,
-      });
-    }
-  };
-
-  const handleScroll = useAnimatedScrollHandler({
-    onScroll: event => {
-      const scrollX = event.contentOffset.x;
-      const newIndex = scrollX / screenWidth;
-
-      // Update indicator smoothly
-      indicatorPosition.value = withTiming(newIndex * indicatorWidth, {
-        duration: 100,
-        easing: Easing.linear,
-      });
-    },
-  });
-
-  const handleScrollEnd = event => {
-    const scrollX = event.nativeEvent.contentOffset.x;
-    const exactIndex = scrollX / screenWidth;
-    const newIndex =
-      exactIndex - activeTab.value > 0.2
-        ? Math.ceil(exactIndex)
-        : exactIndex - activeTab.value < -0.2
-        ? Math.floor(exactIndex)
-        : activeTab.value;
-
-    // Animate tab change smoothly
-    activeTab.value = withTiming(newIndex, {duration: 100}, () => {
-      runOnJS(scrollToTab)(newIndex);
-    });
-
-    // Animate indicator in sync
-    indicatorPosition.value = withTiming(newIndex * indicatorWidth, {
-      duration: 100,
-      easing: Easing.linear,
-    });
-  };
-
-  // Interpolating colors smoothly
-  const upcomingStyle = useAnimatedStyle(() => {
-    const color = withTiming(
-      activeTab.value === 0 ? COLORS.white : COLORS.atlantis,
-      {duration: 150},
+  // @ Custom Style Tab Bar
+  const renderTabBar = props => {
+    return (
+      <View style={styles.tabBarContainer}>
+        {props.navigationState.routes.map((route, i) => (
+          <TouchableOpacity
+            key={i}
+            onPress={() => setIndex(i)}
+            style={[styles.tabItem, index === i && styles.activeTabItem]}>
+            <Text style={[styles.tabText, index === i && styles.activeTabText]}>
+              {route.title}
+            </Text>
+            {index === i && <View style={styles.tabIndicator} />}
+          </TouchableOpacity>
+        ))}
+      </View>
     );
-    return {
-      color: color,
-    };
-  });
-
-  const attendedStyle = useAnimatedStyle(() => {
-    const color = withTiming(
-      activeTab.value === 1 ? COLORS.white : COLORS.atlantis,
-      {duration: 150},
-    );
-    return {
-      color: color,
-    };
-  });
-
+  };
+  console.log('navigation', navigation);
   return (
     <View style={MyStyles.contentCont}>
       {/* // @ Filter Modal */}
@@ -250,46 +189,28 @@ const Events = ({openFilter, closeFilter}) => {
         </View>
       </Modal>
 
-      {/* // @ TabBar Buttons - Upcoming, Attended */}
-      <View style={styles.tabBarBox}>
-        <View style={styles.tabCont}>
-          <Pressable
-            onPress={() => handleTabPress(0)}
-            style={styles.leftTabBtn}>
-            <Animated.Text style={[styles.tabBtnTxt, upcomingStyle]}>
-              Upcoming
-            </Animated.Text>
-          </Pressable>
-          <Pressable
-            onPress={() => handleTabPress(1)}
-            style={styles.rightTabBtn}>
-            <Animated.Text style={[styles.tabBtnTxt, attendedStyle]}>
-              Registered
-            </Animated.Text>
-          </Pressable>
-          <Animated.View
-            style={[
-              styles.indicator,
-              {
-                transform: [{translateX: indicatorPosition}],
-              },
-            ]}
-          />
-        </View>
-      </View>
-      {/* // @ Tab View Contents */}
-      <Animated.ScrollView
-        ref={scrollRef}
-        overScrollMode="never"
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        onMomentumScrollEnd={handleScrollEnd}
-        scrollEventThrottle={8}>
-        <UpcomingEvents navigation={navigation} />
-
-        <AttendedEvents navigation={navigation} />
-      </Animated.ScrollView>
+      {/* // @ Tab View */}
+      <TabView
+        navigationState={{index, routes}}
+        lazy={true}
+        lazyPreloadDistance={0}
+        renderScene={({route}) => {
+          if (route.key === 'upcoming' && index === 0) {
+            return (
+              <UpcomingEvents isFocused={index === 0} navigation={navigation} />
+            );
+          }
+          if (route.key === 'registered' && index === 1) {
+            return (
+              <AttendedEvents isFocused={index === 1} navigation={navigation} />
+            );
+          }
+          return null; // 👈 This prevents inactive screens from rendering
+        }}
+        onIndexChange={setIndex}
+        initialLayout={{width: Dimensions.get('window').width}}
+        renderTabBar={renderTabBar}
+      />
     </View>
   );
 };
@@ -297,14 +218,20 @@ const Events = ({openFilter, closeFilter}) => {
 export default Events;
 
 const styles = StyleSheet.create({
-  indicator: {
-    position: 'absolute',
-    height: '100%',
-    backgroundColor: COLORS.atlantis,
-    width: horizontalScale(100),
-    borderRadius: moderateScale(20),
+  scene: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  tabBarBox: {
+  tabBarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: horizontalScale(240),
+    backgroundColor: COLORS.white,
+    borderRadius: moderateScale(30),
+    marginVertical: '3%',
+    alignSelf: 'center',
+    padding: '2%',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -313,88 +240,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    backgroundColor: COLORS.white,
-    margin: moderateScale(10),
-    borderRadius: moderateScale(50),
-    width: horizontalScale(230),
-    alignSelf: 'center',
   },
-  tabCont: {
-    margin: '4%',
-    flexDirection: 'row',
+  tabItem: {
+    padding: '2.5%',
     justifyContent: 'space-between',
-  },
-  leftTabBtn: {
-    width: horizontalScale(100),
-    padding: '4%',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: moderateScale(50),
-    zIndex: 999,
+    width: '48%',
   },
-  rightTabBtn: {
-    padding: '4%',
-    borderRadius: moderateScale(50),
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: horizontalScale(100),
-    zIndex: 999,
-  },
-  tabBtnTxt: {
-    fontFamily: FONTS.urbanistBold,
+  tabText: {
     fontSize: SIZES.xl,
-    textAlign: 'center',
-  },
-  fltrModal: {
-    backgroundColor: COLORS.modalBg,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  filterCard: {
-    backgroundColor: COLORS.white,
-    width: '90%',
-    borderRadius: moderateScale(20),
-    padding: '4%',
-  },
-  titleCloseCont: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  titleTxt: {
     fontFamily: FONTS.urbanistBold,
-    fontSize: SIZES.xxxl,
-    color: COLORS.black,
-    width: '70%',
+    color: COLORS.atlantis,
   },
-  closeBtn: {
-    width: horizontalScale(25),
-    height: horizontalScale(25),
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-end',
-  },
-  dropdownCont: {
-    width: '100%',
-    paddingHorizontal: '4%',
-    paddingRight: 0,
-    height: verticalScale(48),
-    marginTop: '5%',
-    borderRadius: moderateScale(10),
-    backgroundColor: COLORS.dropDownBg,
-  },
-  filterBtn: {
-    justifyContent: 'center',
-    borderRadius: moderateScale(8),
-    width: '35%',
-    height: horizontalScale(45),
-    backgroundColor: COLORS.silkBlue,
-  },
-  filterBtnTxt: {
-    fontFamily: FONTS.urbanistBold,
-    fontSize: SIZES.xl,
+  activeTabText: {
     color: COLORS.white,
-    textAlign: 'center',
+    zIndex: 99,
+  },
+  tabIndicator: {
+    position: 'absolute',
+    width: horizontalScale(110),
+    padding: '18%',
+    borderRadius: moderateScale(20),
+    backgroundColor: COLORS.atlantis,
+    bottom: verticalScale(-1),
   },
 });

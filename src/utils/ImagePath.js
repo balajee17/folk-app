@@ -1,4 +1,15 @@
 export const getImage = {
   menu: require('../assets/images/menu.png'),
   notification: require('../assets/images/notification.png'),
+  folk: require('../assets/images/folk.png'),
+  announce: require('../assets/images/announce.png'),
+  folkIcn: require('../assets/images/folkIcn.png'),
+  home: require('../assets/images/home.png'),
+  homeActive: require('../assets/images/homeActive.png'),
+  calendar: require('../assets/images/calendar.png'),
+  calendarActive: require('../assets/images/calendarActive.png'),
+  book: require('../assets/images/book.png'),
+  bookActive: require('../assets/images/bookActive.png'),
+  account: require('../assets/images/account.png'),
+  accountActive: require('../assets/images/accountActive.png'),
 };

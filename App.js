@@ -66,9 +66,7 @@ const App = ({children}) => {
   //   }
   // };
 
-  const [selScreen, setSelScreen] = useState({current: 'DB1', previous: ''});
-
-  console.log('selScreen', selScreen);
+  const [selScreen, setSelScreen] = useState({current: 'DB1', btTab: 'DB1'});
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>

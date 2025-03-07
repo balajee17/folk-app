@@ -17,9 +17,9 @@ export const HomeTitleShimmer = () => {
   return (
     <SkeletonPlaceholder
       highlightColor={COLORS.highLightColor}
-      backgroundColor={COLORS.shimmerBg}>
+      backgroundColor={COLORS.gunsmoke}>
       <SkeletonPlaceholder.Item
-        width={horizontalScale(300)}
+        width={horizontalScale(200)}
         height={verticalScale(30)}
         borderRadius={moderateScale(20)}
       />
@@ -27,15 +27,16 @@ export const HomeTitleShimmer = () => {
   );
 };
 
-export const HomeIconShimmer = () => {
+export const HomeIconShimmer = ({marginTop}) => {
   return (
     <SkeletonPlaceholder
       highlightColor={COLORS.highLightColor}
-      backgroundColor={COLORS.shimmerBg}>
+      backgroundColor={COLORS.gunsmoke}>
       <SkeletonPlaceholder.Item
         height={horizontalScale(30)}
         width={horizontalScale(30)}
         borderRadius={moderateScale(30)}
+        marginTop={marginTop}
       />
     </SkeletonPlaceholder>
   );
@@ -45,7 +46,7 @@ export const ImageShimmer = props => {
   return (
     <SkeletonPlaceholder
       highlightColor={COLORS.highLightColor}
-      backgroundColor={COLORS.shimmerBg}>
+      backgroundColor={COLORS.gunsmoke}>
       <SkeletonPlaceholder.Item {...props} />
     </SkeletonPlaceholder>
   );
@@ -54,7 +55,7 @@ export const ImageShimmer = props => {
 export const YoutubeShimmer = props => {
   const shimmerBgColor = '#b0b0b0';
   return (
-    <View style={{backgroundColor: COLORS.shimmerBg, ...props}}>
+    <View style={{backgroundColor: COLORS.gunsmoke, ...props}}>
       <View
         style={{
           alignItems: 'center',
@@ -186,7 +187,7 @@ export const TitleShimmer = props => {
   return (
     <SkeletonPlaceholder
       highlightColor={COLORS.highLightColor}
-      backgroundColor={COLORS.shimmerBg}>
+      backgroundColor={COLORS.gunsmoke}>
       <SkeletonPlaceholder.Item
         marginTop={'3%'}
         height={verticalScale(20)}
@@ -208,7 +209,7 @@ export const DarshanShimmer = () => {
           <View>
             <SkeletonPlaceholder
               highlightColor={COLORS.highLightColor}
-              backgroundColor={COLORS.shimmerBg}>
+              backgroundColor={COLORS.gunsmoke}>
               <SkeletonPlaceholder.Item
                 width={'100%'}
                 height={verticalScale(200)}
@@ -220,7 +221,7 @@ export const DarshanShimmer = () => {
           <View>
             <SkeletonPlaceholder
               highlightColor={COLORS.highLightColor}
-              backgroundColor={COLORS.shimmerBg}>
+              backgroundColor={COLORS.gunsmoke}>
               <SkeletonPlaceholder.Item
                 width={'100%'}
                 height={verticalScale(112)}
@@ -235,7 +236,7 @@ export const DarshanShimmer = () => {
           <View>
             <SkeletonPlaceholder
               highlightColor={COLORS.highLightColor}
-              backgroundColor={COLORS.shimmerBg}>
+              backgroundColor={COLORS.gunsmoke}>
               <SkeletonPlaceholder.Item
                 width={'100%'}
                 height={verticalScale(122)}
@@ -247,7 +248,7 @@ export const DarshanShimmer = () => {
           <View>
             <SkeletonPlaceholder
               highlightColor={COLORS.highLightColor}
-              backgroundColor={COLORS.shimmerBg}>
+              backgroundColor={COLORS.gunsmoke}>
               <SkeletonPlaceholder.Item
                 width={'100%'}
                 height={verticalScale(190)}
@@ -269,7 +270,7 @@ export const ParallexShimmer = () => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        marginTop: verticalScale(10),
+        marginTop: verticalScale(12),
       }}>
       <View
         style={{
@@ -278,7 +279,7 @@ export const ParallexShimmer = () => {
         {/* First item loader */}
         <SkeletonPlaceholder
           highlightColor={COLORS.highLightColor}
-          backgroundColor={COLORS.shimmerBg}>
+          backgroundColor={COLORS.gunsmoke}>
           <View
             style={{
               borderRadius: moderateScale(15),
@@ -296,7 +297,7 @@ export const ParallexShimmer = () => {
         }}>
         <SkeletonPlaceholder
           highlightColor={COLORS.highLightColor}
-          backgroundColor={COLORS.shimmerBg}>
+          backgroundColor={COLORS.gunsmoke}>
           <View
             style={{
               borderRadius: moderateScale(15),

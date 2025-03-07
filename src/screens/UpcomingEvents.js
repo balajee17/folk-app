@@ -1,13 +1,19 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {MyStyles, screenWidth} from '../styles/MyStyles';
 import {screenNames} from '../constants/ScreenNames';
+import {useNavigation} from '@react-navigation/native';
 
 const UpcomingEvents = ({navigation}) => {
+  useEffect(() => {
+    console.log('UPC');
+  }, []);
+
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
     navigation.navigate(screen, params);
   };
+
   return (
     <View style={[MyStyles.flex1, {width: screenWidth}]}>
       {/*  // @ Events Card */}

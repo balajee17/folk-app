@@ -68,13 +68,13 @@ export let COLORS = {
   white: '#FFF',
   black: '#000',
   transparent: '#0000',
-  charcoal: '#3F404E',
+  charcoal: '#484C52',
   dolphin: '#5C5D6C',
   mirage: '#1C1D26',
   osloGrey: '#898989',
   paleYellow: '#F7F8E6',
   gableGreen: '#1B2830',
-  golden: '#FFC300',
+  golden: '#DAC056',
   ceramic: '#ffffff66',
   midGrey: '#626262',
   gunsmoke: '#888786',
@@ -82,7 +82,6 @@ export let COLORS = {
   whiteSmoke: '#f1ebeb80',
   davyGrey: 'rgba(69, 90, 100, 0.08)',
   inputBg: 'rgba(234, 236, 220, 1)',
-  shimmerBg: '#888786',
   highLightColor: '#A8A8A8',
   atlantis: '#B1C63C',
   citrine: '#E4D721',
@@ -100,6 +99,10 @@ export let COLORS = {
   backBg: 'rgba(234, 236, 220, 0.14)',
   silver: '#CECECE',
   moss: '#729F4D',
+  scannerBg: '#111',
+
+  // New COLORS
+  header: '#416EBD',
 };
 
 // @ FONTS
@@ -113,6 +116,8 @@ export let FONTS = {
   interMedium: 'Inter-Medium',
   ysabeauInfantBold: 'YsabeauInfant-Bold',
   interBold: 'InterBold',
+  poppinsSemiBold: 'Poppins-SemiBold',
+  poppinsRegular: 'Poppins-Regular',
 };
 
 // @ MyStyles
@@ -126,12 +131,11 @@ export let MyStyles = {
   subTitleText: {
     fontSize: SIZES.subTitle,
     color: COLORS.gableGreen,
-    fontFamily: FONTS.urbanistSemiBold,
+    fontFamily: FONTS.poppinsSemiBold,
   },
   scrollView: {
     paddingBottom: moderateScale(8),
     backgroundColor: COLORS.paleYellow,
-    // flexGrow: 1,
   },
   marTop3Per: {marginTop: '3%'},
   quotesImg: {
@@ -175,6 +179,7 @@ export let MyStyles = {
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    marginTop: verticalScale(15),
   },
   imageContainer: {
     flexDirection: 'row',
@@ -196,7 +201,7 @@ export let MyStyles = {
     backgroundColor: COLORS.paleYellow,
     paddingHorizontal: moderateScale(10),
   },
-  contentCont: {backgroundColor: COLORS.paleYellow, minHeight: screenHeight},
+  contentCont: {backgroundColor: COLORS.white, flex: 1},
   card: {
     backgroundColor: COLORS.charcoal,
     width: '93%',

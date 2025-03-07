@@ -26,7 +26,6 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
   const currentIndex = useRef(0);
   const autoScrollInterval = useRef(null);
   const isAutoScrolling = useRef(true);
-  // let scrollOffset = useSharedValue(0);
 
   useEffect(() => {
     if (autoScroll) {
@@ -252,6 +251,6 @@ export default ParallexCarousel;
 
 const styles = StyleSheet.create({
   ParallexCarouselCont: {
-    paddingTop: verticalScale(10),
+    marginTop: verticalScale(15),
   },
 });

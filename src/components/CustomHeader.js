@@ -5,6 +5,7 @@ import {
   horizontalScale,
   moderateScale,
   MyStyles,
+  verticalScale,
 } from '../styles/MyStyles';
 import {getImage} from '../utils/ImagePath';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -52,7 +53,16 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
         )}
       </TouchableOpacity>
       {/* Title */}
-      <Text style={MyStyles.titleText}>{titleName}</Text>
+
+      {titleName === screenNames.home ? (
+        <Image
+          style={styles.folkImg}
+          source={getImage.folk}
+          resizeMode="contain"
+        />
+      ) : (
+        <Text style={MyStyles.titleText}>{titleName}</Text>
+      )}
       <TouchableOpacity // Right Icon
         onPress={() => {
           titleName === screenNames.home
@@ -83,12 +93,11 @@ export default CustomHeader;
 
 const styles = StyleSheet.create({
   header: {
-    padding: moderateScale(10),
-    paddingVertical: moderateScale(15),
+    padding: moderateScale(15),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.header,
   },
   menuIcon: screen => ({
     padding: screen ? moderateScale(6) : undefined,
@@ -98,8 +107,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: moderateScale(30),
-    borderColor: COLORS.osloGrey,
+    borderColor: COLORS.white,
   }),
   menuImage: {height: '80%', width: '80%'},
   notifyImage: {height: '90%', width: '90%'},
+  folkImg: {height: '100%', width: '50%'},
 });

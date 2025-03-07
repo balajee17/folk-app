@@ -65,14 +65,14 @@ export const CommonStatusBar = ({bgColor}) => {
     <>
       {Platform.OS === 'android' ? (
         <StatusBar
-          backgroundColor={bgColor || COLORS.charcoal}
+          backgroundColor={bgColor || COLORS.header}
           barStyle={bgColor ? 'dark-content' : 'light-content'}
           animated
         />
       ) : (
         <View
           style={{
-            backgroundColor: COLORS.transparent,
+            backgroundColor: COLORS.header,
             height: statusBarHeight,
             zIndex: 999,
           }}

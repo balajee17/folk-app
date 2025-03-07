@@ -25,9 +25,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSApplicationQueriesSchemes</key>
-        <array>
-            <string>itms-apps</string>
-        </array>
+	<array>
+		<string>itms-apps</string>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -45,13 +45,15 @@
 		<string>YsabeauInfant-Bold.ttf</string>
 		<string>Urbanist-Regular.ttf</string>
 		<string>InterBold.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
+		<string>Poppins-Regular.ttf</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>NSCameraUsageDescription</key>
-    <string>FOLK app needs camera permission</string>
-    <key>NSCalendarsFullAccessUsageDescription</key>
-    <string>FOLK app needs calendar permission</string>
+	<string>FOLK app needs camera permission</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>FOLK app needs calendar permission</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
