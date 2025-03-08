@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     width: horizontalScale(150),
     height: horizontalScale(150),
     borderRadius: moderateScale(80),
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.white,
     position: 'absolute',
     alignSelf: 'center',
     top: '-8%',

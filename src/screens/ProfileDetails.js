@@ -33,7 +33,7 @@ const ProfileDetails = () => {
           <FontAwesome6
             name="edit"
             size={moderateScale(15)}
-            color={COLORS.paleYellow}
+            color={COLORS.white}
           />
         </TouchableOpacity>
       </View>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   editTxt: {
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistBold,
-    color: COLORS.paleYellow,
+    color: COLORS.white,
     width: '50%',
   },
   labelTxt: {

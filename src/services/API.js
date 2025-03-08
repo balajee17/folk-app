@@ -60,4 +60,33 @@ export const API = {
     );
     return axios.post(getVideosDataURL, requestData);
   },
+  // # Event Screen API's
+  getEventList(data) {
+    const getEventListURL = baseURL + '/folk-event-list';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL Event List Data ', getEventListURL, ' data ', requestData);
+    return axios.post(getEventListURL, requestData);
+  },
+  getEventDetails(data) {
+    const getEventDetailsURL = baseURL + '/event-details';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Event Details Data ',
+      getEventDetailsURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(getEventDetailsURL, requestData);
+  },
+  sendEventAttendance(data) {
+    const getEventAttendanceURL = baseURL + '';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Event Attendance Data ',
+      getEventAttendanceURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(getEventAttendanceURL, requestData);
+  },
 };

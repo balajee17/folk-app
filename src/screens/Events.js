@@ -1,43 +1,32 @@
-import {
-  Dimensions,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
 import {
   COLORS,
   FONTS,
   horizontalScale,
   moderateScale,
   MyStyles,
-  screenWidth,
+  screenHeight,
   SIZES,
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
-import Animated, {
-  Easing,
-  runOnJS,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from 'react-native-reanimated';
+
 import UpcomingEvents from './UpcomingEvents';
 import AttendedEvents from './AttendedEvents';
-import {useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FloatingInput from '../components/FloatingInput';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView} from 'react-native-tab-view';
 
-const Events = ({openFilter, closeFilter, navigation}) => {
+const Events = ({
+  openFilter,
+  closeFilter,
+  navigation,
+  eventTabChange,
+  index,
+  shimmer,
+  eventList,
+}) => {
   const [filterValues, setFilterValues] = useState({});
   const [filterDrpDwnLst, setFilterDrpDwnLst] = useState({
     eventNames: [
@@ -53,7 +42,6 @@ const Events = ({openFilter, closeFilter, navigation}) => {
       {label: 'ajkfa', value: 'dkjhklh'},
     ],
   });
-  const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'upcoming', title: 'Upcoming'},
     {key: 'registered', title: 'Registered'},
@@ -72,9 +60,10 @@ const Events = ({openFilter, closeFilter, navigation}) => {
       <View style={styles.tabBarContainer}>
         {props.navigationState.routes.map((route, i) => (
           <TouchableOpacity
+            activeOpacity={0.8}
             key={i}
-            onPress={() => setIndex(i)}
-            style={[styles.tabItem, index === i && styles.activeTabItem]}>
+            onPress={() => eventTabChange(i)}
+            style={[styles.tabItem]}>
             <Text style={[styles.tabText, index === i && styles.activeTabText]}>
               {route.title}
             </Text>
@@ -84,9 +73,9 @@ const Events = ({openFilter, closeFilter, navigation}) => {
       </View>
     );
   };
-  console.log('navigation', navigation);
+
   return (
-    <View style={MyStyles.contentCont}>
+    <View style={[MyStyles.contentCont, {minHeight: screenHeight}]}>
       {/* // @ Filter Modal */}
       <Modal animationType="slide" visible={openFilter} transparent>
         <View style={styles.fltrModal}>
@@ -193,22 +182,30 @@ const Events = ({openFilter, closeFilter, navigation}) => {
       <TabView
         navigationState={{index, routes}}
         lazy={true}
-        lazyPreloadDistance={0}
+        lazyPreloadDistance={1}
         renderScene={({route}) => {
           if (route.key === 'upcoming' && index === 0) {
             return (
-              <UpcomingEvents isFocused={index === 0} navigation={navigation} />
+              <UpcomingEvents
+                navigation={navigation}
+                shimmer={shimmer?.upcoming}
+                upcomingList={eventList?.upcoming}
+              />
             );
           }
           if (route.key === 'registered' && index === 1) {
             return (
-              <AttendedEvents isFocused={index === 1} navigation={navigation} />
+              <AttendedEvents
+                navigation={navigation}
+                shimmer={shimmer?.registered}
+                registeredList={eventList?.registered}
+              />
             );
           }
-          return null; // 👈 This prevents inactive screens from rendering
+          return null;
         }}
-        onIndexChange={setIndex}
-        initialLayout={{width: Dimensions.get('window').width}}
+        onIndexChange={index => eventTabChange(index)}
+        initialLayout={{width: windowWidth}}
         renderTabBar={renderTabBar}
       />
     </View>
@@ -218,11 +215,6 @@ const Events = ({openFilter, closeFilter, navigation}) => {
 export default Events;
 
 const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   tabBarContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
@@ -263,5 +255,58 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(20),
     backgroundColor: COLORS.atlantis,
     bottom: verticalScale(-1),
+  },
+
+  fltrModal: {
+    backgroundColor: COLORS.modalBg,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterCard: {
+    backgroundColor: COLORS.white,
+    width: '90%',
+    borderRadius: moderateScale(20),
+    padding: '4%',
+  },
+  titleCloseCont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  titleTxt: {
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.xxxl,
+    color: COLORS.black,
+    width: '70%',
+  },
+  closeBtn: {
+    width: horizontalScale(25),
+    height: horizontalScale(25),
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+  },
+  dropdownCont: {
+    width: '100%',
+    paddingHorizontal: '4%',
+    paddingRight: 0,
+    height: verticalScale(48),
+    marginTop: '5%',
+    borderRadius: moderateScale(10),
+    backgroundColor: COLORS.dropDownBg,
+  },
+  filterBtn: {
+    justifyContent: 'center',
+    borderRadius: moderateScale(8),
+    width: '35%',
+    height: horizontalScale(45),
+    backgroundColor: COLORS.silkBlue,
+  },
+  filterBtnTxt: {
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.xl,
+    color: COLORS.white,
+    textAlign: 'center',
   },
 });

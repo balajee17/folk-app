@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,14 +14,49 @@ import {
   windowHeight,
   windowWidth,
 } from '../styles/MyStyles';
+import {API} from '../services/API';
+import {screenNames} from '../constants/ScreenNames';
 
-const QrScanner = ({navigation}) => {
+const QrScanner = ({navigation, route}) => {
   const [flash, setFlash] = useState(false);
+  const [shimmer, setShimmer] = useState(false);
 
   const onSuccess = e => {
     console.log('QR Code Scanned:', e.data);
-    // Handle scanned data
+    sendEventAttendance(e.data);
   };
+  const {eventId} = route?.params;
+
+  // # API to mark attendance
+  const sendEventAttendance = async code => {
+    try {
+      const params = {profile_id: 1, event_id: eventId, code: code};
+      const response = await API.sendEventAttendance(params);
+
+      console.log('Event_Attendance_response', response?.data);
+      const {Data, successCode} = response?.data;
+      if (successCode === 1) {
+        navigation.navigate(screenNames.switcherScreen, {
+          loadScreen: 'B2',
+          activeTab: 1,
+        });
+      } else {
+      }
+      setShimmer(false);
+    } catch (err) {
+      console.log('ERR-Event-Attendance-screen', err);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log('NAVIGATION_STARTS');
+      navigation.navigate(screenNames.drawerNavigation, {
+        loadScreen: 'B2',
+        activeTab: 1,
+      });
+    }, 2000);
+  }, []);
 
   return (
     <View style={styles.container}>

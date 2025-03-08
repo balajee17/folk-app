@@ -305,7 +305,7 @@ export default FolkVideos;
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.white,
   },
   videoContainer: {
     width: '100%',

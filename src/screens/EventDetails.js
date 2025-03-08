@@ -29,35 +29,26 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useFocusEffect} from '@react-navigation/native';
+import {API} from '../services/API';
 
 const EventDetails = ({route, navigation}) => {
   const statusBarHeight = useStatusBarHeight();
 
   const [expanded, setExpanded] = useState(false);
-  const [eventDetails, setEventDetails] = useState({
-    details: [
-      {label: 'FOLK Guide', value: 'Anandamaya Dasa'},
-      {label: 'Category', value: 'FOLK'},
-      {label: 'Event Type', value: 'Offline'},
-      {label: 'FOLK Level', value: 'FOLK General'},
-      {label: 'Date', value: '10-01-2025'},
-      {label: 'Time', value: '6:30 PM'},
-    ],
-    amountDetails: [
-      {label: 'Total Amount', value: '₹ 5000'},
-      {label: 'Total Amount', value: '₹ 4500'},
-      {label: 'Amount to pay', value: '₹ 500'},
-    ],
-    description:
-      'Detect Line Count: Uses onTextLayout to check if the text exceeds maxLines. Control Text Display: Shows full text when expanded and trims it when collapsed.Show "Read More" Conditionally: If the text is within 2.5 lines, the button won’t appear.',
-  });
+  const [eventDetails, setEventDetails] = useState({});
   const [showReadMore, setShowReadMore] = useState(false);
+  const [shimmer, setShimmer] = useState(true);
 
   const {screen} = route?.params;
 
+  useEffect(() => {
+    getEventDetails();
+  }, []);
+
   const handleTextLayout = e => {
     const {lines} = e.nativeEvent;
-    if (lines.length > 2) {
+
+    if (Object.keys(eventDetails).length > 0 && lines.length > 2) {
       setShowReadMore(true);
     }
   };
@@ -66,9 +57,29 @@ const EventDetails = ({route, navigation}) => {
     return <Text style={styles.subTitle(text)}>{text}</Text>;
   };
 
+  // # API Event Details
+  const getEventDetails = async () => {
+    try {
+      const params = {profile_id: 1, event_id: 2};
+      const response = await API.getEventDetails(params);
+
+      console.log('Event_Details_response', response?.data);
+      const {Data, successCode} = response?.data;
+      if (successCode === 1) {
+        setEventDetails(Data);
+      } else {
+        setEventDetails({});
+      }
+      setShimmer(false);
+    } catch (err) {
+      setEventDetails({});
+      console.log('ERR-Event-Details-screen', err);
+    }
+  };
+
   return (
     <>
-      <SafeAreaView style={MyStyles.flex1}>
+      <SafeAreaView style={MyStyles.contentCont}>
         <StatusBarTransp />
         <ScrollView showsVerticalScrollIndicator={false}>
           <ImageBackground
@@ -98,25 +109,26 @@ const EventDetails = ({route, navigation}) => {
               </Text>
             </View>
 
-            {/* // @ Title Section */}
-            <View style={styles.titleSec}>
-              <Text style={styles.title}>The Journey of Self Discovery</Text>
-
-              <Text style={styles.amtTxt}>₹ 500</Text>
-            </View>
-
-            <LinearGradient
+            {/* <LinearGradient
               colors={[
                 COLORS.transparent,
                 COLORS.transparent,
                 'rgba(0,0,0,0.8)',
               ]}
               style={styles.imageOverlay}
-            />
+            /> */}
           </ImageBackground>
 
           {/* // @ Contents */}
           <View style={styles.contentCont}>
+            {/* // @ Title Section */}
+            <View style={styles.titleSec}>
+              <Text style={styles.title}>{eventDetails?.session_name}</Text>
+
+              <Text style={styles.amtTxt}>
+                ₹ {eventDetails?.prasadam_amount}
+              </Text>
+            </View>
             {/* // # Description */}
             {renderSubTitle('Description')}
 
@@ -128,6 +140,7 @@ const EventDetails = ({route, navigation}) => {
             </Text>
             {showReadMore && (
               <TouchableOpacity
+                activeOpacity={0.6}
                 style={{width: '23%'}}
                 onPress={() => setExpanded(!expanded)}>
                 <Text
@@ -167,7 +180,7 @@ const EventDetails = ({route, navigation}) => {
                 color={COLORS.watermelon}
               />
               <Text style={[styles.descripTxt, styles.locationTxt]}>
-                Hare Krishna Hill, Chord Rd
+                {eventDetails?.location}
               </Text>
             </View>
 
@@ -212,7 +225,7 @@ const EventDetails = ({route, navigation}) => {
 
             {/* // # Pay Now Btn */}
             <TouchableOpacity
-              disabled={screen === 'Registered'}
+              disabled={eventDetails?.amtPaid === 'Y'}
               activeOpacity={0.6}
               style={[
                 styles.payBtn,
@@ -224,7 +237,11 @@ const EventDetails = ({route, navigation}) => {
                 },
               ]}>
               <Text style={styles.payBtnTxt}>
-                {screen === 'Upcoming' ? 'Pay now' : 'Registered'}
+                {eventDetails?.amtPaid === 'Y'
+                  ? 'Registered'
+                  : eventDetails?.paid_event === 'Y'
+                  ? 'Pay now'
+                  : 'Register'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -266,16 +283,14 @@ const styles = StyleSheet.create({
   },
   titleSec: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: '4%',
-    marginTop: verticalScale(80),
-    zIndex: 99,
+    marginBottom: '4%',
   },
   title: {
     fontFamily: FONTS.urbanistBold,
     fontSize: SIZES.xxl,
-    color: COLORS.white,
+    color: COLORS.header,
     width: '70%',
   },
   amtTxt: {
@@ -289,7 +304,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.atlantis,
   },
   contentCont: {
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.white,
     width: '100%',
     flex: 1,
     borderTopLeftRadius: moderateScale(30),

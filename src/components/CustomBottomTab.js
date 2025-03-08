@@ -100,7 +100,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
               ? getImage.bookActive
               : selIcon === 'B4'
               ? getImage.accountActive
-              : null
+              : getImage.homeActive
           }
           style={[styles.icon]}
         />

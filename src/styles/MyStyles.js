@@ -135,7 +135,7 @@ export let MyStyles = {
   },
   scrollView: {
     paddingBottom: moderateScale(8),
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.white,
   },
   marTop3Per: {marginTop: '3%'},
   quotesImg: {
@@ -198,7 +198,7 @@ export let MyStyles = {
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.white,
     paddingHorizontal: moderateScale(10),
   },
   contentCont: {backgroundColor: COLORS.white, flex: 1},
@@ -245,7 +245,7 @@ export let MyStyles = {
     color: COLORS.black,
   },
   modeCont: {
-    backgroundColor: 'white',
+    backgroundColor: COLORS.white,
     width: '20%',
 
     alignItems: 'center',

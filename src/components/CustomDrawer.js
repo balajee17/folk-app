@@ -19,7 +19,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {appVersion} from '../../AppVersion.json';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
-const CustomDrawer = ({navigation}) => {
+const CustomDrawer = ({navigation, route}) => {
   const menuItems = [
     {
       id: 'DB1',
@@ -52,21 +52,18 @@ const CustomDrawer = ({navigation}) => {
   const {closeDrawer} = navigation;
 
   // # Navigate Sreen
-  const navigateTo = screen => {
-    navigation.navigate(screen);
+  const navigateTo = (screen, params) => {
+    navigation.navigate(screen, params);
   };
 
   const navigateScreen = (id, screenName) => {
     closeDrawer();
     if (id === 'DB1') {
       current !== 'DB1'
-        ? (setSelScreen({current: id, btTab: id}),
-          navigateTo(screenNames.switcherScreen))
+        ? (setSelScreen({btTab: id, current: id}),
+          navigateTo(screenNames.switcherScreen, route?.params))
         : null;
-      console.log('first');
     } else {
-      console.log('Second');
-
       setSelScreen(prev => ({...prev, current: id})), navigateTo(screenName);
     }
   };

@@ -312,3 +312,93 @@ export const ParallexShimmer = () => {
     </View>
   );
 };
+
+export const EventShimmer = props => {
+  const shimmerBgColor = '#b0b0b0';
+  return (
+    <View
+      style={{
+        backgroundColor: COLORS.charcoal,
+        alignSelf: 'center',
+        borderRadius: moderateScale(26),
+        width: '93%',
+        padding: '2%',
+        ...props,
+      }}>
+      <View
+        style={[
+          {
+            backgroundColor: COLORS.gunsmoke,
+            width: '100%',
+            height: verticalScale(150),
+            alignSelf: 'center',
+            borderRadius: moderateScale(20),
+            padding: '2%',
+          },
+        ]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <SkeletonPlaceholder
+            highlightColor={COLORS.white}
+            backgroundColor={COLORS.diesel}>
+            <SkeletonPlaceholder.Item
+              margin={'0.7%'}
+              width={horizontalScale(45)}
+              height={horizontalScale(45)}
+              borderRadius={moderateScale(25)}
+            />
+          </SkeletonPlaceholder>
+
+          <SkeletonPlaceholder
+            highlightColor={COLORS.white}
+            backgroundColor={COLORS.diesel}>
+            <SkeletonPlaceholder.Item
+              padding={'2%'}
+              width={horizontalScale(60)}
+              height={horizontalScale(20)}
+              borderRadius={moderateScale(13)}
+            />
+          </SkeletonPlaceholder>
+        </View>
+      </View>
+
+      <SkeletonPlaceholder
+        highlightColor={COLORS.white}
+        backgroundColor={COLORS.gunsmoke}>
+        <SkeletonPlaceholder.Item
+          marginTop={verticalScale(10)}
+          width={horizontalScale(250)}
+          height={horizontalScale(15)}
+          borderRadius={moderateScale(25)}
+        />
+      </SkeletonPlaceholder>
+
+      <SkeletonPlaceholder
+        highlightColor={COLORS.white}
+        backgroundColor={COLORS.gunsmoke}>
+        <SkeletonPlaceholder.Item
+          marginTop={verticalScale(10)}
+          width={horizontalScale(200)}
+          height={horizontalScale(15)}
+          borderRadius={moderateScale(25)}
+        />
+      </SkeletonPlaceholder>
+
+      <SkeletonPlaceholder
+        highlightColor={COLORS.white}
+        backgroundColor={COLORS.gunsmoke}>
+        <SkeletonPlaceholder.Item
+          marginTop={verticalScale(10)}
+          width={horizontalScale(100)}
+          height={horizontalScale(30)}
+          borderRadius={moderateScale(25)}
+          alignSelf="flex-end"
+        />
+      </SkeletonPlaceholder>
+    </View>
+  );
+};

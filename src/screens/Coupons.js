@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   cutout: {
     position: 'absolute',
-    backgroundColor: COLORS.paleYellow, // Same as the background to create the cutout effect
+    backgroundColor: COLORS.white, // Same as the background to create the cutout effect
     width: horizontalScale(25),
     height: horizontalScale(25),
     borderRadius: moderateScale(20),
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   verticalLine: {
     position: 'absolute',
     borderWidth: 0.7,
-    borderColor: COLORS.paleYellow,
+    borderColor: COLORS.white,
     borderStyle: 'dashed',
     height: '90%',
     right: horizontalScale(92),

@@ -1,9 +1,6 @@
 import {
-  FlatList,
   Image,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,7 +12,6 @@ import {
   horizontalScale,
   moderateScale,
   MyStyles,
-  screenHeight,
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
@@ -24,61 +20,31 @@ import {screenNames} from '../constants/ScreenNames';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ParallexCarousel from '../components/ParallexCarousel';
 import YoutubePlayer from 'react-native-youtube-iframe';
-import Container from '../components/Container';
-import CustomHeader from '../components/CustomHeader';
 import {
   HomeIconShimmer,
   HomeTitleShimmer,
   ImageShimmer,
   ParallexShimmer,
-  YoutubeShimmer,
 } from '../components/Shimmer';
-import {API} from '../services/API';
-import CustomBottomTab from '../components/CustomBottomTab';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
-import {getImage} from '../utils/ImagePath';
+
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useAppContext} from '../../App';
 
-const Home = () => {
-  const {selScreen} = useAppContext();
+const Home = ({apiData, shimmer}) => {
+  const {setSelScreen} = useAppContext();
 
   const navigation = useNavigation();
 
-  const [homeData, setHomeData] = useState([
-    {section: 1, title: '', updates: [{id: 1, link: ''}]},
-    {section: 2, title: '', updates: [{id: 1, link: ''}]},
-  ]);
   const [playVideo, setPlayVideo] = useState(true);
-  const [youtubeAudio, setYoutubeAudio] = useState(true);
-  const [shimmer, setShimmer] = useState(false);
+  const [youtubeAudio] = useState(true);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    selScreen?.previous === '' && getHomeScreenData();
-  }, []);
-
-  // # API Call to get Darshan History
-  const getHomeScreenData = async () => {
-    try {
-      setShimmer(true);
-      const response = await API.getHomeScreenData();
-
-      // console.log('response', response?.data);
-      const {data, SuccessCode} = response?.data;
-      if (SuccessCode === 1) {
-        setHomeData(data);
-      } else {
-        setHomeData([]);
-      }
-      setShimmer(false);
-    } catch (err) {
-      setHomeData([]);
-      console.log('ERR-Home-screen', err);
+    if (isFocused) {
+      setSelScreen(prev => ({...prev, current: 'DB1'}));
     }
-  };
+  }, [isFocused]);
 
   // # Youtube Video onStateChange
   const onStateChange = useCallback(state => {
@@ -183,7 +149,7 @@ const Home = () => {
             )
           )}
         </View>
-        {!shimmer && homeData?.length - 1 > index && (
+        {!shimmer && apiData?.length - 1 > index && (
           <View style={styles.horizontalLine} />
         )}
       </>
@@ -256,7 +222,7 @@ const Home = () => {
           )
         )}
 
-        {!shimmer && homeData?.length - 1 > index && (
+        {!shimmer && apiData?.length - 1 > index && (
           <View style={styles.horizontalLine} />
         )}
       </>
@@ -368,7 +334,7 @@ const Home = () => {
             );
           })}
 
-        {!shimmer && homeData?.length - 1 > index && (
+        {!shimmer && apiData?.length - 1 > index && (
           <View style={styles.horizontalLine} />
         )}
       </>
@@ -433,7 +399,7 @@ const Home = () => {
               />
             )}
         </View>
-        {!shimmer && homeData?.length - 1 > index && (
+        {!shimmer && apiData?.length - 1 > index && (
           <View style={styles.horizontalLine} />
         )}
       </>
@@ -481,8 +447,8 @@ const Home = () => {
             style={styles.halfBg}
           />
 
-          {homeData?.map((item, index) => {
-            if (shimmer || homeData?.length > 0) {
+          {apiData?.map((item, index) => {
+            if (shimmer || apiData?.length > 0) {
               return renderItemsInOrder(item, index);
             } else {
               return null;
@@ -530,7 +496,7 @@ const styles = StyleSheet.create({
 
   scrollViewCont: {
     paddingBottom: verticalScale(160),
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.white,
   },
   titleImg: {
     width: horizontalScale(35),

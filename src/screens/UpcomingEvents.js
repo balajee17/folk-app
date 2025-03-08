@@ -1,111 +1,113 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
-import {MyStyles, screenWidth} from '../styles/MyStyles';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React from 'react';
+import {MyStyles, verticalScale} from '../styles/MyStyles';
 import {screenNames} from '../constants/ScreenNames';
-import {useNavigation} from '@react-navigation/native';
+import {EventShimmer} from '../components/Shimmer';
+import moment from 'moment';
 
-const UpcomingEvents = ({navigation}) => {
-  useEffect(() => {
-    console.log('UPC');
-  }, []);
-
+const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
     navigation.navigate(screen, params);
   };
-
   return (
-    <View style={[MyStyles.flex1, {width: screenWidth}]}>
-      {/*  // @ Events Card */}
-      <View style={MyStyles.card}>
-        {/* // # Card image */}
-        <Image
-          style={MyStyles.cdImage}
-          resizeMode="stretch"
-          source={{
-            uri: 'https://images.pexels.com/photos/1563355/pexels-photo-1563355.jpeg?auto=compress&cs=tinysrgb&w=600',
+    <>
+      {!shimmer ? (
+        <FlatList
+          contentContainerStyle={{paddingBottom: verticalScale(250)}}
+          data={upcomingList}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item, index}) => {
+            return (
+              <>
+                {/*  // @ Events Card */}
+                <View
+                  style={[MyStyles.card, {marginTop: index == 0 ? '2%' : '5%'}]}
+                  key={item?.id}>
+                  {/* // # Card image */}
+                  <Image
+                    style={MyStyles.cdImage}
+                    resizeMode="stretch"
+                    source={{
+                      uri: item?.image,
+                    }}
+                  />
+
+                  {/* // # Date Mode Container */}
+                  <View style={MyStyles.dateModeCont}>
+                    <View style={MyStyles.dateCont}>
+                      <Text style={MyStyles.dateTxt}>
+                        {moment(item?.start_datetime).format('DD')}
+                      </Text>
+                      <Text style={MyStyles.monthTxt}>
+                        {moment(item?.start_datetime).format('MMM')}
+                      </Text>
+                    </View>
+
+                    <View style={MyStyles.modeCont}>
+                      <Text style={MyStyles.modeTxt}>
+                        {item?.event_type === 'F' ? 'Offline' : 'Online'}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* // # Content Container */}
+                  <View style={MyStyles.boxContentContainer}>
+                    <View style={{width: '80%'}}>
+                      <Text numberOfLines={1} style={MyStyles.titleTxt}>
+                        {item?.session_name}
+                      </Text>
+                      <Text numberOfLines={1} style={MyStyles.descripTxt}>
+                        {item?.description}
+                      </Text>
+                    </View>
+
+                    <View style={{width: '18%'}}>
+                      <Text style={MyStyles.amtTxt}>
+                        {item?.is_attended === 'N' ? 'Free' : 'Paid'}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* // # Icon & Register Btn Container */}
+                  <View
+                    style={[
+                      MyStyles.boxContentContainer,
+                      {marginBottom: '1%', justifyContent: 'flex-end'},
+                    ]}>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      disabled={item?.is_registered !== 'N'}
+                      onPress={() => {
+                        navigateTo(screenNames.eventDetails, {
+                          screen: 'Upcoming',
+                          eventId: item?.id,
+                        });
+                      }}
+                      style={MyStyles.registerBtn}>
+                      <Text style={MyStyles.registerTxt}>
+                        {item?.is_registered === 'N' && 'Register'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </>
+            );
           }}
         />
-        {/* // # Date Mode Container */}
-        <View style={MyStyles.dateModeCont}>
-          <View style={MyStyles.dateCont}>
-            <Text style={MyStyles.dateTxt}>15</Text>
-            <Text style={MyStyles.monthTxt}>Jan</Text>
-          </View>
-
-          <View style={MyStyles.modeCont}>
-            <Text style={MyStyles.modeTxt}>Offline</Text>
-          </View>
-        </View>
-
-        {/* // # Content Container */}
-        <View style={MyStyles.boxContentContainer}>
-          <View style={{width: '80%'}}>
-            <Text style={MyStyles.titleTxt}>The Journey of self Discovery</Text>
-            <Text style={MyStyles.descripTxt}>
-              The Journey of self Discovery
-            </Text>
-          </View>
-
-          <View style={{width: '18%'}}>
-            <Text style={MyStyles.amtTxt}>Free</Text>
-          </View>
-        </View>
-
-        {/* // # Icon & Register Btn Container */}
-        <View
-          style={[
-            MyStyles.boxContentContainer,
-            {marginBottom: '1%', justifyContent: 'flex-end'},
-          ]}>
-          {/* <View style={MyStyles.iconsContainer}>
-            <TouchableOpacity
-              // onPress={{}}
-              style={MyStyles.iconStyle}
-              activeOpacity={0.6}>
-              <MaterialCommunityIcons
-                name="qrcode-scan"
-                size={moderateScale(19)}
-                color={COLORS.charcoal}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate(screenNames.coupons)}
-              style={MyStyles.iconStyle}
-              activeOpacity={0.6}>
-              <MaterialCommunityIcons
-                name="ticket-percent-outline"
-                size={moderateScale(22)}
-                color={COLORS.charcoal}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              // onPress={{}}
-              style={MyStyles.iconStyle}
-              activeOpacity={0.6}>
-              <Entypo
-                name="location-pin"
-                size={moderateScale(25)}
-                color={COLORS.charcoal}
-              />
-            </TouchableOpacity>
-          </View> */}
-
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => {
-              navigateTo(screenNames.eventDetails, {
-                screen: 'Upcoming',
-              });
-            }}
-            style={MyStyles.registerBtn}>
-            <Text style={MyStyles.registerTxt}>Register</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+      ) : (
+        Array(2)
+          .fill(2)
+          .map((_, i) => <EventShimmer marginTop={i === 0 ? '2%' : '5%'} />)
+      )}
+    </>
   );
 };
 

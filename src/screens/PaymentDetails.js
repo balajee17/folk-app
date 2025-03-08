@@ -23,7 +23,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const PaymentDetails = ({navigation}) => {
   return (
     <>
-      <CommonStatusBar bgColor={COLORS.paleYellow} />
+      <CommonStatusBar bgColor={COLORS.header} />
       <SafeAreaView style={[MyStyles.flex1, styles.mainContainer]}>
         {/* // @ Left Arrow Icon */}
         <TouchableOpacity
@@ -119,7 +119,7 @@ export default PaymentDetails;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: COLORS.paleYellow,
+    backgroundColor: COLORS.white,
   },
   menuIcon: {
     padding: moderateScale(6),
