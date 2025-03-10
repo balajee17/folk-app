@@ -82,7 +82,7 @@ export let COLORS = {
   whiteSmoke: '#f1ebeb80',
   davyGrey: 'rgba(69, 90, 100, 0.08)',
   inputBg: 'rgba(234, 236, 220, 1)',
-  highLightColor: '#A8A8A8',
+  highLightColor: '#D1D1D1',
   atlantis: '#B1C63C',
   citrine: '#E4D721',
   diesel: '#C8C8C8',
@@ -103,6 +103,7 @@ export let COLORS = {
 
   // New COLORS
   header: '#416EBD',
+  shimmerBg: '#B0B0B0',
 };
 
 // @ FONTS

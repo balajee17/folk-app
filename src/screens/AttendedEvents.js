@@ -192,7 +192,13 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
       ) : (
         Array(2)
           .fill(2)
-          .map((_, i) => <EventShimmer marginTop={i === 0 ? '2%' : '5%'} />)
+          .map((_, i) => {
+            return (
+              <TouchableOpacity onPress={() => checkCameraPermission(5)}>
+                <EventShimmer marginTop={i === 0 ? '2%' : '5%'} />
+              </TouchableOpacity>
+            );
+          })
       )}
     </>
   );

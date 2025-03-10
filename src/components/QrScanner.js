@@ -36,7 +36,7 @@ const QrScanner = ({navigation, route}) => {
       console.log('Event_Attendance_response', response?.data);
       const {Data, successCode} = response?.data;
       if (successCode === 1) {
-        navigation.navigate(screenNames.switcherScreen, {
+        navigation.navigate(screenNames.drawerNavigation, {
           loadScreen: 'B2',
           activeTab: 1,
         });

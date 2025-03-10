@@ -50,7 +50,7 @@ const SwitcherScreen = ({navigation, route}) => {
       : screenNames.home;
 
   useEffect(() => {
-    if (loadScreen === 'B2' && eventList?.registered.length === 0) {
+    if (loadScreen === 'B2' && eventList?.registered?.length === 0) {
       setEventTabIndex(activeTab);
       setSelScreen({btTab: loadScreen, current: loadScreen});
       getRegisteredList();
@@ -58,18 +58,18 @@ const SwitcherScreen = ({navigation, route}) => {
     }
     if (btTab === 'DB1') {
       const checkLoaderData = tab1Data?.filter(item => item?.section == 1);
-      (checkLoaderData?.[0]?.forLoader === 'Y' || tab1Data.length === 0) &&
+      (checkLoaderData?.[0]?.forLoader === 'Y' || tab1Data?.length === 0) &&
         getHomeScreenData();
     }
 
     btTab === 'B2' &&
       eventTabIndex === 0 &&
-      eventList?.upcoming.length === 0 &&
+      eventList?.upcoming?.length === 0 &&
       getUpcomingList();
 
     btTab === 'B2' &&
       eventTabIndex === 1 &&
-      eventList?.registered.length === 0 &&
+      eventList?.registered?.length === 0 &&
       getRegisteredList();
   }, [btTab, eventTabIndex]);
 
@@ -127,6 +127,8 @@ const SwitcherScreen = ({navigation, route}) => {
       console.log('ERR-Registered', err);
     }
   };
+
+  console.log('LDS', loadScreen, 'ATV', activeTab);
 
   return (
     <Container>
