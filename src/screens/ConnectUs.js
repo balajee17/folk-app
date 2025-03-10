@@ -19,6 +19,7 @@ import {
 } from '../styles/MyStyles';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ToastMessage from '../components/ToastMessage';
 
 const ConnectUs = () => {
   const socialMediaIcons = [

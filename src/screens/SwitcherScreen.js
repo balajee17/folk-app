@@ -17,8 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 const SwitcherScreen = ({navigation, route}) => {
   const {selScreen, setSelScreen} = useAppContext();
 
-  const {btTab} = selScreen;
-  const {loadScreen = '', activeTab = ''} = route?.params || {};
+  const {btTab, profileId, activeEventTab} = selScreen;
 
   const [opnFltr, setOpnFltr] = useState(false);
   const [tab1Data, setTab1Data] = useState([
@@ -30,9 +29,14 @@ const SwitcherScreen = ({navigation, route}) => {
     upcoming: true,
     registered: true,
   });
-  const [eventTabIndex, setEventTabIndex] = useState(0);
+  const [eventTabIndex, setEventTabIndex] = useState(activeEventTab);
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
-
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
   // # TitleName - DB1 Home, B2 Events, B3 Connectus,B4 Courses
   const titleName =
     btTab === 'DB1'
@@ -41,36 +45,41 @@ const SwitcherScreen = ({navigation, route}) => {
       ? screenNames.events
       : btTab === 'B3'
       ? screenNames.courses
-      : // : useToast().show('Transaction Successful!', {
-      //     type: 'success',
-      //     duration: 4000,
-      //   });
-      btTab === 'B4'
+      : btTab === 'B4'
       ? screenNames.connectUs
       : screenNames.home;
 
   useEffect(() => {
-    if (loadScreen === 'B2' && eventList?.registered?.length === 0) {
-      setEventTabIndex(activeTab);
-      setSelScreen({btTab: loadScreen, current: loadScreen});
-      getRegisteredList();
-      return true;
-    }
     if (btTab === 'DB1') {
       const checkLoaderData = tab1Data?.filter(item => item?.section == 1);
       (checkLoaderData?.[0]?.forLoader === 'Y' || tab1Data?.length === 0) &&
         getHomeScreenData();
     }
 
-    btTab === 'B2' &&
+    if (
+      btTab === 'B2' &&
       eventTabIndex === 0 &&
-      eventList?.upcoming?.length === 0 &&
+      activeEventTab !== 1 &&
+      eventList?.upcoming?.length === 0
+    ) {
       getUpcomingList();
+    }
 
-    btTab === 'B2' &&
-      eventTabIndex === 1 &&
+    if (
+      btTab === 'B2' &&
       eventList?.registered?.length === 0 &&
+      (activeEventTab === 1 || eventTabIndex === 1)
+    ) {
+      console.log(
+        'AT',
+        activeEventTab,
+        'btTab',
+        btTab,
+        'current',
+        selScreen?.current,
+      );
       getRegisteredList();
+    }
   }, [btTab, eventTabIndex]);
 
   // # API Home Data
@@ -79,15 +88,18 @@ const SwitcherScreen = ({navigation, route}) => {
       const response = await API.getHomeScreenData();
 
       console.log('Home_response', response?.data);
-      const {data, SuccessCode} = response?.data;
+      const {data, SuccessCode, message} = response?.data;
       if (SuccessCode === 1) {
         setTab1Data(data);
       } else {
         setTab1Data([]);
+        toastMsg(message, 'info');
       }
       setShimmer(prev => ({...prev, home: false}));
     } catch (err) {
       setTab1Data([]);
+      toastMsg('', 'error');
+      setShimmer(prev => ({...prev, home: false}));
       console.log('ERR-Home-screen', err);
     }
   };
@@ -95,17 +107,21 @@ const SwitcherScreen = ({navigation, route}) => {
   // # API Upcoming List
   const getUpcomingList = async () => {
     try {
-      const params = {profile_id: 1, tab: 'upcoming'};
+      const params = {profile_id: profileId, tab: 'upcoming'};
       const response = await API.getEventList(params);
-      const {data, successCode} = response?.data;
+      const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         setEventList(prev => ({...prev, upcoming: data?.Upcoming}));
       } else {
         setEventList(prev => ({...prev, upcoming: []}));
+        toastMsg(message, 'info');
       }
       setShimmer(prev => ({...prev, upcoming: false}));
     } catch (err) {
       setEventList([]);
+      setShimmer(prev => ({...prev, upcoming: false}));
+
+      toastMsg('', 'error');
       console.log('ERR-Upcoming', err);
     }
   };
@@ -113,22 +129,23 @@ const SwitcherScreen = ({navigation, route}) => {
   // # API Registered List
   const getRegisteredList = async () => {
     try {
-      const params = {profile_id: 1, tab: 'registered'};
+      const params = {profile_id: profileId, tab: 'registered'};
       const response = await API.getEventList(params);
-      const {data, successCode} = response?.data;
+      const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         setEventList(prev => ({...prev, registered: data?.Registered}));
       } else {
         setEventList(prev => ({...prev, registered: []}));
+        toastMsg(message, 'info');
       }
       setShimmer(prev => ({...prev, registered: false}));
     } catch (err) {
       setEventList([]);
+      toastMsg('', 'error');
+      setShimmer(prev => ({...prev, registered: false}));
       console.log('ERR-Registered', err);
     }
   };
-
-  console.log('LDS', loadScreen, 'ATV', activeTab);
 
   return (
     <Container>
@@ -169,7 +186,7 @@ const SwitcherScreen = ({navigation, route}) => {
       <CustomBottomTab
         selIcon={btTab}
         setSelIcon={value => {
-          setSelScreen({btTab: value, current: value});
+          setSelScreen(prev => ({...prev, btTab: value, current: value}));
         }}
       />
     </Container>

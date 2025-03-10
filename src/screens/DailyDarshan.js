@@ -26,6 +26,7 @@ import AlbumCarousel from '../components/AlbumCarousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {DarshanShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
 
 const DailyDarshan = ({navigation, route}) => {
   const [switchScreen, setSwitchSreen] = useState(false);
@@ -34,6 +35,13 @@ const DailyDarshan = ({navigation, route}) => {
 
   const [darshanData, setDarshanData] = useState([]);
   const {title} = route?.params;
+
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
 
   useEffect(() => {
     getDarshanHistory();
@@ -45,15 +53,18 @@ const DailyDarshan = ({navigation, route}) => {
       const response = await API.getDarshanHistroy();
 
       console.log('response', response?.data);
-      const {history, SuccessCode} = response?.data;
+      const {history, SuccessCode, message} = response?.data;
       if (SuccessCode === 1) {
         setDarshanData(history);
       } else {
         setDarshanData([]);
+        toastMsg(message, 'info');
       }
       setShimmer(false);
     } catch (err) {
-      // setDarshanData([]);
+      setDarshanData([]);
+      toastMsg('', 'error');
+      setLoader(false);
       console.log('ERR-Darshan-screen', err);
     }
   };

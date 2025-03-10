@@ -22,13 +22,19 @@ import LinearGradient from 'react-native-linear-gradient';
 import CustomHeader from '../components/CustomHeader';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
 
 const FolkUpdates = ({navigation, route}) => {
   const [shimmer, setShimmer] = useState(true);
   const [folkUpdates, setFolkUpdates] = useState([]);
 
   const {title} = route?.params;
-
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
   useEffect(() => {
     getUpdatesHistory();
   }, []);
@@ -39,15 +45,18 @@ const FolkUpdates = ({navigation, route}) => {
       const response = await API.getUpdatesHistroy();
 
       console.log('response', response?.data);
-      const {history, SuccessCode} = response?.data;
+      const {history, SuccessCode, message} = response?.data;
       if (SuccessCode === 1) {
         setFolkUpdates(history);
       } else {
         setFolkUpdates([]);
+        toastMsg(message, 'info');
       }
       setShimmer(false);
     } catch (err) {
+      toastMsg('', 'error');
       console.log('ERR-Updates-screen', err);
+      setShimmer(false);
     }
   };
 

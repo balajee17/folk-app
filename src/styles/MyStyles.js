@@ -104,6 +104,15 @@ export let COLORS = {
   // New COLORS
   header: '#416EBD',
   shimmerBg: '#B0B0B0',
+  // # Toast COLORS
+  successBg: '#E2FEE5',
+  successPB: '#2DD640',
+  warningBg: '#FFEFDF',
+  warningPB: '#F19106',
+  errorBg: '#FFEAEB',
+  errorPB: '#E63434',
+  infoBg: '#DBEAFE',
+  infoPB: '#3B82F6',
 };
 
 // @ FONTS

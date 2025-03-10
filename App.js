@@ -10,7 +10,7 @@ import SpInAppUpdates, {
   StartUpdateOptions,
   IAUInstallStatus,
 } from 'sp-react-native-in-app-updates';
-import {ToastProvider} from 'react-native-toast-notifications';
+import {ToastProvider, useToast} from 'react-native-toast-notifications';
 import ToastMessage from './src/components/ToastMessage';
 
 const AppContext = createContext();
@@ -69,6 +69,8 @@ const App = ({children}) => {
   const [selScreen, setSelScreen] = useState({
     current: 'DB1',
     btTab: 'DB1',
+    profileId: 1,
+    activeEventTab: 0,
   });
 
   return (
@@ -76,7 +78,7 @@ const App = ({children}) => {
       <StatusBarHeightProvider>
         <ToastProvider
           placement="bottom"
-          duration={4000}
+          duration={3500}
           animationType="custom"
           animationDuration={500}
           renderToast={toast => <ToastMessage toast={toast} />}

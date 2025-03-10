@@ -48,7 +48,7 @@ const CustomDrawer = ({navigation, route}) => {
   ];
 
   const {selScreen, setSelScreen} = useAppContext();
-  const {current, btTab} = selScreen;
+  const {current} = selScreen;
   const {closeDrawer} = navigation;
 
   // # Navigate Sreen
@@ -60,7 +60,7 @@ const CustomDrawer = ({navigation, route}) => {
     closeDrawer();
     if (id === 'DB1') {
       current !== 'DB1'
-        ? (setSelScreen({btTab: id, current: id}),
+        ? (setSelScreen(prev => ({...prev, btTab: id, current: id})),
           navigateTo(screenNames.switcherScreen, route?.params))
         : null;
     } else {
@@ -88,7 +88,7 @@ const CustomDrawer = ({navigation, route}) => {
         <View style={styles.profileTextCont}>
           <Text style={styles.profName}>Naveen Alagarsamy</Text>
           <Text style={[styles.profName, styles.mailTxt]}>
-            naveenalagarsamy33@gmail.com
+            FOLK ID : 233q11241
           </Text>
         </View>
       </View>
@@ -147,7 +147,7 @@ export default CustomDrawer;
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.header,
     padding: '5%',
     borderTopRightRadius: moderateScale(20),
     paddingTop: '20%',

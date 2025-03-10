@@ -30,25 +30,38 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useFocusEffect} from '@react-navigation/native';
 import {API} from '../services/API';
+import {useAppContext} from '../../App';
+import {useToast} from 'react-native-toast-notifications';
+import Spinner from '../components/Spinner';
+import {TitleShimmer} from '../components/Shimmer';
 
 const EventDetails = ({route, navigation}) => {
   const statusBarHeight = useStatusBarHeight();
+  const {selScreen, setSelScreen} = useAppContext();
+  const {profileId} = selScreen;
 
   const [expanded, setExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState({});
   const [showReadMore, setShowReadMore] = useState(false);
   const [shimmer, setShimmer] = useState(true);
 
-  const {screen} = route?.params;
-
+  const {screen, eventId} = route?.params;
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
   useEffect(() => {
     getEventDetails();
   }, []);
 
+  const checkDataExist = Object.keys(eventDetails)?.length > 0;
+
   const handleTextLayout = e => {
     const {lines} = e.nativeEvent;
 
-    if (Object.keys(eventDetails).length > 0 && lines.length > 2) {
+    if (checkDataExist && lines?.length > 2) {
       setShowReadMore(true);
     }
   };
@@ -56,23 +69,25 @@ const EventDetails = ({route, navigation}) => {
   const renderSubTitle = text => {
     return <Text style={styles.subTitle(text)}>{text}</Text>;
   };
-
   // # API Event Details
   const getEventDetails = async () => {
     try {
-      const params = {profile_id: 1, event_id: 2};
+      const params = {profile_id: profileId, event_id: eventId};
       const response = await API.getEventDetails(params);
 
       console.log('Event_Details_response', response?.data);
-      const {Data, successCode} = response?.data;
+      const {Data, successCode, message} = response?.data;
       if (successCode === 1) {
         setEventDetails(Data);
       } else {
         setEventDetails({});
+        toastMsg(message, 'info');
       }
       setShimmer(false);
     } catch (err) {
       setEventDetails({});
+      toastMsg('', 'error');
+      setShimmer(false);
       console.log('ERR-Event-Details-screen', err);
     }
   };
@@ -82,34 +97,35 @@ const EventDetails = ({route, navigation}) => {
       <SafeAreaView style={MyStyles.contentCont}>
         <StatusBarTransp />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <ImageBackground
-            source={{
-              uri: 'https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=600',
-            }}
-            style={styles.bgImg}>
-            {/* // @ header */}
-            <View style={styles.header(statusBarHeight)}>
-              <TouchableOpacity // Left Icon
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                activeOpacity={0.6}
-                style={styles.menuIcon}>
-                <FontAwesome
-                  name="chevron-left"
-                  size={moderateScale(15)}
-                  color={COLORS.charcoal}
-                />
-              </TouchableOpacity>
-              {/* Screen Name */}
-              <Text
-                numberOfLines={1}
-                style={[MyStyles.titleText, styles.screenName]}>
-                Events Details
-              </Text>
-            </View>
+          {!shimmer ? (
+            <ImageBackground
+              source={{
+                uri: eventDetails?.image,
+              }}
+              style={styles.bgImg}>
+              {/* // @ header */}
+              <View style={styles.header(statusBarHeight)}>
+                <TouchableOpacity // Left Icon
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                  activeOpacity={0.6}
+                  style={styles.menuIcon}>
+                  <FontAwesome
+                    name="chevron-left"
+                    size={moderateScale(15)}
+                    color={COLORS.charcoal}
+                  />
+                </TouchableOpacity>
+                {/* Screen Name */}
+                <Text
+                  numberOfLines={1}
+                  style={[MyStyles.titleText, styles.screenName]}>
+                  Events Details
+                </Text>
+              </View>
 
-            {/* <LinearGradient
+              {/* <LinearGradient
               colors={[
                 COLORS.transparent,
                 COLORS.transparent,
@@ -117,27 +133,62 @@ const EventDetails = ({route, navigation}) => {
               ]}
               style={styles.imageOverlay}
             /> */}
-          </ImageBackground>
+            </ImageBackground>
+          ) : (
+            <View style={[styles.bgImg, {backgroundColor: COLORS.diesel}]} />
+          )}
 
           {/* // @ Contents */}
           <View style={styles.contentCont}>
             {/* // @ Title Section */}
             <View style={styles.titleSec}>
-              <Text style={styles.title}>{eventDetails?.session_name}</Text>
+              {!shimmer ? (
+                <Text style={styles.title}>{eventDetails?.session_name}</Text>
+              ) : (
+                <TitleShimmer
+                  height={verticalScale(70)}
+                  width={horizontalScale(250)}
+                />
+              )}
 
-              <Text style={styles.amtTxt}>
-                ₹ {eventDetails?.prasadam_amount}
-              </Text>
+              {!shimmer ? (
+                <Text style={styles.amtTxt}>
+                  ₹ {eventDetails?.prasadam_amount}
+                </Text>
+              ) : (
+                <TitleShimmer
+                  height={verticalScale(30)}
+                  width={horizontalScale(60)}
+                />
+              )}
             </View>
             {/* // # Description */}
-            {renderSubTitle('Description')}
+            {!shimmer ? (
+              renderSubTitle('Description')
+            ) : (
+              <TitleShimmer
+                height={verticalScale(25)}
+                width={horizontalScale(150)}
+              />
+            )}
 
-            <Text
-              numberOfLines={expanded ? undefined : 2}
-              onTextLayout={handleTextLayout}
-              style={styles.descripTxt}>
-              {eventDetails?.description}
-            </Text>
+            {eventDetails?.description && !shimmer ? (
+              <Text
+                numberOfLines={expanded ? undefined : 2}
+                onTextLayout={handleTextLayout}
+                style={styles.descripTxt}>
+                {eventDetails?.description}
+              </Text>
+            ) : (
+              <>
+                <TitleShimmer height={verticalScale(14)} width={'100%'} />
+                <TitleShimmer
+                  height={verticalScale(14)}
+                  width={horizontalScale(200)}
+                  marginBottom={verticalScale(30)}
+                />
+              </>
+            )}
             {showReadMore && (
               <TouchableOpacity
                 activeOpacity={0.6}
@@ -158,34 +209,45 @@ const EventDetails = ({route, navigation}) => {
             )}
 
             {/* // # Guide, Category, Type etc... */}
-            {eventDetails?.details?.map((item, index) => {
-              return (
-                <View style={styles.lablValCont} key={index + 1}>
-                  <Text style={styles.labelTxt}> {item?.label}</Text>
-                  <Text style={[styles.labelTxt, styles.colon]}>:</Text>
-                  <Text style={[styles.labelTxt, styles.valTxt]}>
-                    {item?.value}
-                  </Text>
-                </View>
-              );
-            })}
+            {!shimmer
+              ? eventDetails?.details?.map((item, index) => {
+                  return (
+                    <View style={styles.lablValCont} key={index + 1}>
+                      <Text style={styles.labelTxt}> {item?.label}</Text>
+                      <Text style={[styles.labelTxt, styles.colon]}>:</Text>
+                      <Text style={[styles.labelTxt, styles.valTxt]}>
+                        {item?.value}
+                      </Text>
+                    </View>
+                  );
+                })
+              : Array(3)
+                  .fill(3)
+                  .map((_, index) => (
+                    <View style={styles.lablValCont} key={index + 1}>
+                      <TitleShimmer />
+                      <TitleShimmer />
+                    </View>
+                  ))}
 
             {/* // # Location */}
-            {renderSubTitle('Location')}
-            <View style={styles.locationCont}>
-              <Ionicons
-                style={styles.locationIcn}
-                name="location-sharp"
-                size={moderateScale(25)}
-                color={COLORS.watermelon}
-              />
-              <Text style={[styles.descripTxt, styles.locationTxt]}>
-                {eventDetails?.location}
-              </Text>
-            </View>
+            {!shimmer && renderSubTitle('Location')}
+            {eventDetails?.location && (
+              <View style={styles.locationCont}>
+                <Ionicons
+                  style={styles.locationIcn}
+                  name="location-sharp"
+                  size={moderateScale(25)}
+                  color={COLORS.watermelon}
+                />
+                <Text style={[styles.descripTxt, styles.locationTxt]}>
+                  {eventDetails?.location}
+                </Text>
+              </View>
+            )}
 
             {/* // # Discount Code */}
-            {screen === 'Upcoming' && (
+            {screen === 'Upcoming' && !shimmer && (
               <View style={styles.discountCont}>
                 <TextInput
                   placeholder="Enter Discount Code"
@@ -201,6 +263,7 @@ const EventDetails = ({route, navigation}) => {
 
             {/* // # Amount Section */}
             {screen === 'Upcoming' &&
+              eventDetails?.amountDetails?.length > 0 &&
               eventDetails?.amountDetails?.map((item, index) => {
                 return (
                   <View
@@ -224,26 +287,34 @@ const EventDetails = ({route, navigation}) => {
               })}
 
             {/* // # Pay Now Btn */}
-            <TouchableOpacity
-              disabled={eventDetails?.amtPaid === 'Y'}
-              activeOpacity={0.6}
-              style={[
-                styles.payBtn,
-                {
-                  backgroundColor:
-                    screen === 'Upcoming'
-                      ? COLORS.windowsBlue
-                      : COLORS.atlantis,
-                },
-              ]}>
-              <Text style={styles.payBtnTxt}>
-                {eventDetails?.amtPaid === 'Y'
-                  ? 'Registered'
-                  : eventDetails?.paid_event === 'Y'
-                  ? 'Pay now'
-                  : 'Register'}
-              </Text>
-            </TouchableOpacity>
+            {checkDataExist && !shimmer ? (
+              <TouchableOpacity
+                disabled={eventDetails?.amtPaid === 'Y'}
+                activeOpacity={0.6}
+                style={[
+                  styles.payBtn,
+                  {
+                    backgroundColor:
+                      screen === 'Upcoming'
+                        ? COLORS.windowsBlue
+                        : COLORS.atlantis,
+                  },
+                ]}>
+                <Text style={styles.payBtnTxt}>
+                  {eventDetails?.amtPaid === 'Y'
+                    ? 'Registered'
+                    : eventDetails?.paid_event === 'Y'
+                    ? 'Pay now'
+                    : 'Register'}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TitleShimmer
+                height={verticalScale(45)}
+                width={'100%'}
+                marginTop={verticalScale(80)}
+              />
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -259,8 +330,8 @@ const styles = StyleSheet.create({
     height: verticalScale(320),
   },
   header: statusHeight => ({
-    padding: moderateScale(10),
-    paddingVertical: moderateScale(15),
+    padding: moderateScale(15),
+    paddingVertical: moderateScale(10),
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: statusHeight,

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
@@ -24,15 +24,56 @@ import {
   windowWidth,
 } from '../styles/MyStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useAppContext} from '../../App';
+import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
 
-const Coupons = ({navigation}) => {
+const Coupons = ({navigation, route}) => {
+  const {selScreen} = useAppContext();
+
+  const {profileId} = selScreen;
   const dateTime = ['Date', 'Time'];
+  const {eventId} = route?.params;
 
   const [opnAddCoupon, setOpnAddCoupon] = useState(false);
   const [showQrCode, setShowQrCode] = useState(false);
+  const [loader, setLoader] = useState(false);
+
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
 
   const closeAddCpnModal = () => {
     setOpnAddCoupon(false);
+  };
+
+  useEffect(() => {
+    getCouponsList();
+  }, []);
+
+  const getCouponsList = async () => {
+    try {
+      const params = {profile_id: profileId, eventId: eventId};
+      const response = await API.getCouponList(params);
+
+      console.log('Coupon_List_response', response?.data);
+      const {data, SuccessCode, message} = response?.data;
+      if (SuccessCode === 1) {
+        setCouponData(data);
+      } else {
+        setCouponData([]);
+        toastMsg(message, 'info');
+      }
+      setLoader(false);
+    } catch (err) {
+      setCouponData([]);
+      toastMsg('', 'error');
+      setLoader(false);
+      console.log('ERR-Coupon_List-screen', err);
+    }
   };
 
   return (

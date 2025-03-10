@@ -16,10 +16,15 @@ import {
 } from '../styles/MyStyles';
 import {API} from '../services/API';
 import {screenNames} from '../constants/ScreenNames';
+import {useAppContext} from '../../App';
+import {useToast} from 'react-native-toast-notifications';
 
 const QrScanner = ({navigation, route}) => {
+  const {selScreen, setSelScreen} = useAppContext();
+  const {profileId} = selScreen;
+
   const [flash, setFlash] = useState(false);
-  const [shimmer, setShimmer] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const onSuccess = e => {
     console.log('QR Code Scanned:', e.data);
@@ -27,36 +32,41 @@ const QrScanner = ({navigation, route}) => {
   };
   const {eventId} = route?.params;
 
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
+
   // # API to mark attendance
   const sendEventAttendance = async code => {
     try {
-      const params = {profile_id: 1, event_id: eventId, code: code};
+      setLoader(true);
+      const params = {profile_id: profileId, event_id: eventId, code: code};
       const response = await API.sendEventAttendance(params);
 
       console.log('Event_Attendance_response', response?.data);
-      const {Data, successCode} = response?.data;
+      const {Data, successCode, message} = response?.data;
       if (successCode === 1) {
-        navigation.navigate(screenNames.drawerNavigation, {
-          loadScreen: 'B2',
-          activeTab: 1,
-        });
+        await setSelScreen(prev => ({
+          ...prev,
+          current: 'B2',
+          btTab: 'B2',
+          activeEventTab: 1,
+        }));
+        toastMsg(message, 'success');
+        navigation.navigate(screenNames.drawerNavigation);
       } else {
+        toastMsg(message, 'info');
       }
-      setShimmer(false);
+      setLoader(false);
     } catch (err) {
       console.log('ERR-Event-Attendance-screen', err);
+      setShimmer(false);
+      toastMsg('', 'error');
     }
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.log('NAVIGATION_STARTS');
-      navigation.navigate(screenNames.drawerNavigation, {
-        loadScreen: 'B2',
-        activeTab: 1,
-      });
-    }, 2000);
-  }, []);
 
   return (
     <View style={styles.container}>

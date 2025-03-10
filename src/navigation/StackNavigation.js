@@ -15,6 +15,7 @@ import Notifications from '../screens/Notifications';
 import Profile from '../screens/Profile';
 import PaymentDetails from '../screens/PaymentDetails';
 import QrScanner from '../components/QrScanner';
+import Courses from '../screens/Courses';
 
 const Stack = createStackNavigator();
 
@@ -84,8 +85,10 @@ const StackNavigation = () => {
           name={screenNames.paymentDetails}
           component={PaymentDetails}
         />
-
+        {/* // @ Scanner */}
         <Stack.Screen name={screenNames.scanner} component={QrScanner} />
+        {/* // @ Courses */}
+        <Stack.Screen name={screenNames.courses} component={Courses} />
       </Stack.Navigator>
     </NavigationContainer>
   );

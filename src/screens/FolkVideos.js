@@ -28,6 +28,7 @@ import YoutubePlayer from 'react-native-youtube-iframe';
 import {TitleShimmer, YoutubeShimmer} from '../components/Shimmer';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
 
 const FolkVideos = ({navigation, route}) => {
   const [videoControl, setVideoControl] = useState({
@@ -45,7 +46,12 @@ const FolkVideos = ({navigation, route}) => {
   });
 
   const {title} = route?.params;
-
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
   useEffect(() => {
     getVideosHistory();
   }, []);
@@ -56,16 +62,19 @@ const FolkVideos = ({navigation, route}) => {
       const response = await API.getVideosHistroy();
 
       console.log('response', response?.data);
-      const {history, SuccessCode} = response?.data;
+      const {history, SuccessCode, message} = response?.data;
       if (SuccessCode === 1) {
         setVideosData(history);
         setPlayingVideo(history[0]);
       } else {
         setVideosData([]);
+        toastMsg(message, 'info');
       }
       setShimmer({video: false, text: false});
     } catch (err) {
-      // setVideosData([]);
+      setVideosData([]);
+      toastMsg('', 'error');
+      setShimmer({video: false, text: false});
       console.log('ERR-Videos-screen', err);
     }
   };

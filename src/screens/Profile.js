@@ -48,6 +48,7 @@ const Profile = ({navigation}) => {
             style={[MyStyles.titleText, styles.screenName]}>
             Profile
           </Text>
+          <View style={styles.rightIcn} />
         </View>
         {/* // # User Image */}
         <View style={styles.usrImgCont}>
@@ -113,16 +114,14 @@ export default Profile;
 
 const styles = StyleSheet.create({
   header: {
-    padding: moderateScale(10),
-    paddingVertical: moderateScale(15),
+    padding: moderateScale(15),
+    paddingVertical: moderateScale(10),
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   screenName: {
     width: '50%',
-    position: 'absolute',
-    left: '50%',
-    transform: [{translateX: -70}],
     textAlign: 'center',
   },
   menuIcon: {
@@ -134,6 +133,10 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(30),
     backgroundColor: COLORS.backBg,
     zIndex: 99,
+  },
+  rightIcn: {
+    height: horizontalScale(35),
+    width: horizontalScale(35),
   },
   usrImgCont: {
     borderWidth: moderateScale(5),

@@ -79,7 +79,7 @@ export const API = {
     return axios.post(getEventDetailsURL, requestData);
   },
   sendEventAttendance(data) {
-    const getEventAttendanceURL = baseURL + '';
+    const getEventAttendanceURL = baseURL + '/insert-attendance';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL Event Attendance Data ',
@@ -88,5 +88,16 @@ export const API = {
       requestData,
     );
     return axios.post(getEventAttendanceURL, requestData);
+  },
+  getCouponList(data) {
+    const getCouponListURL = baseURL + '/prasadam-coupon-list';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Coupon List Data ',
+      getCouponListURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(getCouponListURL, requestData);
   },
 };

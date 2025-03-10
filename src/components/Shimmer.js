@@ -192,7 +192,7 @@ export const TitleShimmer = props => {
         marginTop={'3%'}
         height={verticalScale(20)}
         width={horizontalScale(130)}
-        borderRadius={20}
+        borderRadius={moderateScale(20)}
         {...props}
       />
     </SkeletonPlaceholder>

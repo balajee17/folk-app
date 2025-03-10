@@ -32,6 +32,7 @@ import SwipeCard from '../components/SwipeCard';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
 
 const Quotes = ({navigation, route}) => {
   const [quotesData, setQuotesData] = useState([
@@ -64,7 +65,12 @@ const Quotes = ({navigation, route}) => {
   const animatedValue = useSharedValue(0);
 
   // const {title} = route?.params;
-
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
   useEffect(() => {
     // getQuotesHistory();
   }, []);
@@ -75,7 +81,7 @@ const Quotes = ({navigation, route}) => {
       const response = await API.getQuotesHistroy();
 
       console.log('response', response?.data);
-      const {history, SuccessCode} = response?.data;
+      const {history, SuccessCode, message} = response?.data;
       if (SuccessCode === 1) {
         setQuotesData(history);
         // const filterImages = history?.map(item => {
@@ -85,9 +91,13 @@ const Quotes = ({navigation, route}) => {
         // setNewData(filterImages);
       } else {
         setQuotesData([]);
+        toastMsg(message, 'info');
       }
       setShimmer(false);
     } catch (err) {
+      toastMsg('', 'error');
+      setShimmer(false);
+
       console.log('ERR-Updates-screen', err);
     }
   };

@@ -106,6 +106,7 @@ const Home = ({apiData, shimmer}) => {
     return (
       <>
         <View
+          key={index}
           style={[
             styles.dailyDarshanCont,
             {marginTop: index === 0 ? verticalScale(15) : 0},
@@ -164,6 +165,7 @@ const Home = ({apiData, shimmer}) => {
     return (
       <>
         <View
+          key={index}
           style={[
             styles.textHstryIcon,
             MyStyles.paddingHor10,
@@ -237,6 +239,7 @@ const Home = ({apiData, shimmer}) => {
     return (
       <>
         <View
+          key={index}
           style={[
             styles.textHstryIcon,
             MyStyles.paddingHor10,
@@ -349,6 +352,7 @@ const Home = ({apiData, shimmer}) => {
     return (
       <>
         <View
+          key={index}
           style={[
             styles.textHstryIcon,
             MyStyles.paddingHor10,
@@ -410,15 +414,15 @@ const Home = ({apiData, shimmer}) => {
   const renderItemsInOrder = (item, index) => {
     switch (item?.section) {
       case 1:
-        return <DailyDarshan key={index} data={item} index={index} />;
+        return <DailyDarshan data={item} index={index} />;
       case 2:
-        return <Quotes key={index} data={item} index={index} />;
+        return <Quotes data={item} index={index} />;
 
       case 3:
-        return <FolkUpdates key={index} data={item} index={index} />;
+        return <FolkUpdates data={item} index={index} />;
 
       case 4:
-        return <YoutubeVideos key={index} data={item} index={index} />;
+        return <YoutubeVideos data={item} index={index} />;
 
       default:
         return null;
@@ -442,8 +446,8 @@ const Home = ({apiData, shimmer}) => {
               'rgba(65, 110, 189, 0.1)',
               COLORS.white,
             ]}
-            start={{x: 0, y: 0}}
-            end={{x: 0, y: 1}}
+            // start={{x: 0, y: 0}}
+            // end={{x: 0, y: 1}}
             style={styles.halfBg}
           />
 

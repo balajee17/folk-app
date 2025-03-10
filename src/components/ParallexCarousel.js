@@ -210,7 +210,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
 
           return (
             <Animated.View
-              key={item?.id}
+              key={index}
               style={[
                 {
                   borderRadius: moderateScale(15),
