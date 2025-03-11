@@ -33,7 +33,7 @@ const PaymentDetails = ({navigation}) => {
           activeOpacity={0.6}
           style={styles.menuIcon}>
           <FontAwesome6
-            name="arrow-left-long"
+            name="chevron-left"
             size={moderateScale(23)}
             color={COLORS.black}
           />

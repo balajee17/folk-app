@@ -113,6 +113,8 @@ export let COLORS = {
   errorPB: '#E63434',
   infoBg: '#DBEAFE',
   infoPB: '#3B82F6',
+  purple: '#7F85E6',
+  halfTransparent: 'rgba(0, 0, 0, 0.5)',
 };
 
 // @ FONTS
@@ -137,6 +139,8 @@ export let MyStyles = {
     fontSize: SIZES.xxxl,
     color: COLORS.white,
     fontFamily: FONTS.urbanistBold,
+    width: '75%',
+    textAlign: 'center',
   },
   subTitleText: {
     fontSize: SIZES.subTitle,
@@ -171,6 +175,7 @@ export let MyStyles = {
     fontFamily: FONTS.urbanistMedium,
     marginTop: '2%',
     lineHeight: 20,
+    width: '100%',
   },
   paddingHor10: {paddingHorizontal: moderateScale(10)},
   updateTitle: {
@@ -329,5 +334,20 @@ export let MyStyles = {
     alignSelf: 'center',
     marginTop: '25%',
     resizeMode: 'contain',
+  },
+  announceIcnTxtCont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  announceIcn: {
+    width: horizontalScale(35),
+    height: horizontalScale(35),
+    marginRight: '5%',
+  },
+  announceTxt: {
+    fontSize: SIZES.xl,
+    color: COLORS.white,
+    fontFamily: FONTS.urbanistSemiBold,
+    width: '80%',
   },
 };

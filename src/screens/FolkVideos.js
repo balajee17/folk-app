@@ -103,18 +103,7 @@ const FolkVideos = ({navigation, route}) => {
                     onReady={() => {
                       console.log('Ready_VIDEO');
                       setShimmer(prev => ({...prev, video: false}));
-                      // setVideoControl(prev => ({...prev, playVideo: true}));
                     }}
-                    // initialPlayerParams={{
-                    //   modestbranding: 1, // Hides YouTube logo
-                    //   controls: 1, // Enables player controls
-                    //   showinfo: 0, // Hides video title
-                    //   rel: 0, // Prevents related videos from showing after video ends
-                    //   fs: 0, // Hides fullscreen button
-                    //   iv_load_policy: 3, // Hides annotations
-                    //   disablekb: 1,
-                    // }}
-
                     play={videoControl?.playVideo}
                     mute={videoControl?.muteAudio}
                     onChangeState={onStateChange}

@@ -104,7 +104,10 @@ const FolkUpdates = ({navigation, route}) => {
                 return (
                   <>
                     <Text
-                      style={[MyStyles.subTitleText, {marginVertical: '5%'}]}>
+                      style={[
+                        MyStyles.subTitleText,
+                        {marginTop: '5%', marginBottom: '2%'},
+                      ]}>
                       {item?.day}
                     </Text>
 
@@ -145,6 +148,17 @@ const FolkUpdates = ({navigation, route}) => {
                                 colors={['#353a5f', '#9ebaf3']}
                                 style={[MyStyles.gradient]}>
                                 <View style={{padding: moderateScale(10)}}>
+                                  <View style={MyStyles.announceIcnTxtCont}>
+                                    <Image
+                                      source={{
+                                        uri: image?.icon,
+                                      }}
+                                      style={MyStyles.announceIcn}
+                                    />
+                                    <Text style={[MyStyles.announceTxt]}>
+                                      {image?.title}
+                                    </Text>
+                                  </View>
                                   <Text style={MyStyles.updateTxt}>
                                     {image?.text}
                                   </Text>

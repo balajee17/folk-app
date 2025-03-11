@@ -7,7 +7,6 @@ import {
   moderateScale,
   MyStyles,
   SIZES,
-  verticalScale,
 } from '../styles/MyStyles';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -15,6 +14,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import ProfileDetails from './ProfileDetails';
 import AttendanceHistory from './AttendanceHistory';
 import PaymentHistory from './PaymentHistory';
+import CustomHeader from '../components/CustomHeader';
+import {screenNames} from '../constants/ScreenNames';
 
 const Profile = ({navigation}) => {
   const [activeTab, setActiveTab] = useState(1);
@@ -28,28 +29,11 @@ const Profile = ({navigation}) => {
     <View style={MyStyles.contentCont}>
       <LinearGradient
         colors={[COLORS.charcoal, COLORS.dolphin, COLORS.dolphin]}>
-        {/* // @ header */}
-        <View style={styles.header}>
-          <TouchableOpacity // Left Icon
-            onPress={() => {
-              navigation.goBack();
-            }}
-            activeOpacity={0.6}
-            style={styles.menuIcon}>
-            <FontAwesome6
-              name="chevron-left"
-              size={moderateScale(15)}
-              color={COLORS.white}
-            />
-          </TouchableOpacity>
-          {/* Screen Name */}
-          <Text
-            numberOfLines={1}
-            style={[MyStyles.titleText, styles.screenName]}>
-            Profile
-          </Text>
-          <View style={styles.rightIcn} />
-        </View>
+        {/* // # Header */}
+        <CustomHeader
+          goBack={() => navigation.goBack()}
+          titleName={screenNames.profile}
+        />
         {/* // # User Image */}
         <View style={styles.usrImgCont}>
           <Image
@@ -134,10 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.backBg,
     zIndex: 99,
   },
-  rightIcn: {
-    height: horizontalScale(35),
-    width: horizontalScale(35),
-  },
+
   usrImgCont: {
     borderWidth: moderateScale(5),
     borderColor: COLORS.white,

@@ -12,6 +12,7 @@ import {
   FONTS,
   horizontalScale,
   moderateScale,
+  MyStyles,
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
@@ -19,6 +20,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {appVersion} from '../../AppVersion.json';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
+import {getImage} from '../utils/ImagePath';
 const CustomDrawer = ({navigation, route}) => {
   const menuItems = [
     {
@@ -71,25 +73,39 @@ const CustomDrawer = ({navigation, route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* // @ Profile Info */}
+
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            navigateTo(screenNames.profile);
+        {/* // # FOLK Logo */}
+        <Image
+          style={{
+            width: horizontalScale(60),
+            height: horizontalScale(60),
+            alignSelf: 'center',
           }}
-          activeOpacity={0.6}
-          style={styles.profImgCont}>
-          <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+          source={getImage.folk}
+          resizeMode="contain"
+        />
+        <View style={styles.profInfoCont}>
+          {/* // # Profile, Name, FOLK id */}
+          <TouchableOpacity
+            onPress={() => {
+              navigateTo(screenNames.profile);
             }}
-            style={styles.profImg}
-          />
-        </TouchableOpacity>
-        <View style={styles.profileTextCont}>
-          <Text style={styles.profName}>Naveen Alagarsamy</Text>
-          <Text style={[styles.profName, styles.mailTxt]}>
-            FOLK ID : 233q11241
-          </Text>
+            activeOpacity={0.6}
+            style={styles.profImgCont}>
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+              }}
+              style={styles.profImg}
+            />
+          </TouchableOpacity>
+          <View style={styles.profileTextCont}>
+            <Text style={styles.profName}>Naveen Alagarsamy</Text>
+            <Text style={[styles.profName, styles.mailTxt]}>
+              FOLK ID : 233q11241
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -150,10 +166,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.header,
     padding: '5%',
     borderTopRightRadius: moderateScale(20),
-    paddingTop: '20%',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
+  profInfoCont: {flexDirection: 'row', alignItems: 'center', marginTop: '4%'},
   profImgCont: {
     width: '25%',
     alignItems: 'center',
@@ -224,7 +238,7 @@ const styles = StyleSheet.create({
     padding: '5%',
     borderRadius: moderateScale(14),
     borderRadius: 10,
-    shadowColor: '#007AFF',
+    shadowColor: COLORS.infoPB,
     shadowOffset: {
       width: 0,
       height: 2,

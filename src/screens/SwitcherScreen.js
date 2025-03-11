@@ -28,16 +28,19 @@ const SwitcherScreen = ({navigation, route}) => {
     home: true,
     upcoming: true,
     registered: true,
+    connectUs: true,
   });
   const [eventTabIndex, setEventTabIndex] = useState(activeEventTab);
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
+  const [connectDetails, setConnectDetails] = useState({});
+
   const toast = useToast();
   const toastMsg = (msg, type) => {
     toast.show(msg, {
       type: type,
     });
   };
-  // # TitleName - DB1 Home, B2 Events, B3 Connectus,B4 Courses
+  // # TitleName - DB1 Home, B2 Events, B3 Courses,B4 Connectus
   const titleName =
     btTab === 'DB1'
       ? screenNames.home
@@ -79,6 +82,10 @@ const SwitcherScreen = ({navigation, route}) => {
         selScreen?.current,
       );
       getRegisteredList();
+    }
+    const checkConnectData = Object.keys(connectDetails || {})?.length === 0;
+    if (btTab === 'B4' && checkConnectData) {
+      getConnectDetails();
     }
   }, [btTab, eventTabIndex]);
 
@@ -147,6 +154,26 @@ const SwitcherScreen = ({navigation, route}) => {
     }
   };
 
+  // # API  to get Connect Us Details
+  const getConnectDetails = async () => {
+    try {
+      const params = {profile_id: profileId};
+      const response = await API.getConnectDetails(params);
+      console.log('Connect_US_response', response?.data);
+      const {data, successCode, message} = response?.data;
+      if (successCode === 1) {
+        setConnectDetails(data);
+      } else {
+        toastMsg(message, 'info');
+      }
+      setShimmer(prev => ({...prev, connectUs: false}));
+    } catch (err) {
+      console.log('ERR-Connect_US-screen', err);
+      setShimmer(prev => ({...prev, connectUs: false}));
+      toastMsg('', 'error');
+    }
+  };
+
   return (
     <Container>
       {/* // # Header */}
@@ -177,7 +204,7 @@ const SwitcherScreen = ({navigation, route}) => {
         ) : btTab === 'B3' ? (
           <Courses />
         ) : btTab === 'B4' ? (
-          <ConnectUs />
+          <ConnectUs apiData={connectDetails} shimmer={shimmer?.connectUs} />
         ) : (
           <Home />
         )}

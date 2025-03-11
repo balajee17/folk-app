@@ -11,6 +11,7 @@ import {getImage} from '../utils/ImagePath';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screenNames} from '../constants/ScreenNames';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
+import LinearGradient from 'react-native-linear-gradient';
 
 const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
   const filterIcnScreens =
@@ -30,14 +31,41 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
     titleName === screenNames.yfhForm ||
     titleName === screenNames.accommodation ||
     titleName === screenNames.contribution;
+
+  const bgColor =
+    titleName === screenNames.eventDetails || titleName === screenNames.profile
+      ? COLORS.transparent
+      : COLORS.header;
+
+  const noRightIcn =
+    titleName === screenNames.eventDetails ||
+    titleName === screenNames.profile ||
+    titleName === screenNames.connectUs;
+
+  const folkTitle =
+    titleName === screenNames.home || titleName === screenNames.profile;
+
+  const removeTitle =
+    titleName !== screenNames.eventDetails &&
+    titleName !== screenNames.connectUs;
   return (
-    <View style={[styles.header]}>
+    <View style={[styles.header, {backgroundColor: bgColor}]}>
       <TouchableOpacity // Left Icon
         onPress={() => {
           drawerScreens ? toggleDrawer() : goBack();
         }}
         activeOpacity={0.6}
-        style={styles.menuIcon(drawerScreens)}>
+        style={[
+          styles.menuIcon(drawerScreens),
+          {
+            backgroundColor:
+              titleName === screenNames.profile
+                ? COLORS.backBg
+                : titleName === screenNames.eventDetails
+                ? COLORS.halfTransparent
+                : COLORS.transparent,
+          },
+        ]}>
         {drawerScreens ? (
           <Image
             style={styles.menuImage}
@@ -46,45 +74,53 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
           />
         ) : (
           <FontAwesome
-            name="arrow-left-long"
-            size={moderateScale(25)}
+            name={'chevron-left'}
+            size={bgColor ? moderateScale(15) : moderateScale(25)}
             color={COLORS.white}
           />
         )}
       </TouchableOpacity>
       {/* Title */}
 
-      {titleName === screenNames.home ? (
+      {folkTitle ? (
         <Image
           style={styles.folkImg}
           source={getImage.folk}
           resizeMode="contain"
         />
       ) : (
-        <Text style={MyStyles.titleText}>{titleName}</Text>
+        <Text numberOfLines={1} style={[MyStyles.titleText]}>
+          {removeTitle && titleName}
+        </Text>
       )}
-      <TouchableOpacity // Right Icon
-        onPress={() => {
-          titleName === screenNames.home
-            ? rightIcnAction(0)
-            : rightIcnAction(1);
-        }}
-        activeOpacity={0.6}
-        style={styles.menuIcon(titleName === screenNames.home)}>
-        {titleName === screenNames.home ? (
-          <Image
-            style={styles.notifyImage}
-            source={getImage.notification}
-            resizeMode="contain"
-          />
-        ) : (
-          <MaterialCommunityIcons
-            name={filterIcnScreens ? 'filter' : plusIcnscreens ? 'plus' : null}
-            size={moderateScale(25)}
-            color={COLORS.white}
-          />
-        )}
-      </TouchableOpacity>
+      {!noRightIcn ? (
+        <TouchableOpacity // Right Icon
+          onPress={() => {
+            titleName === screenNames.home
+              ? rightIcnAction(0)
+              : rightIcnAction(1);
+          }}
+          activeOpacity={0.6}
+          style={styles.menuIcon(titleName === screenNames.home)}>
+          {titleName === screenNames.home ? (
+            <Image
+              style={styles.notifyImage}
+              source={getImage.notification}
+              resizeMode="contain"
+            />
+          ) : (
+            <MaterialCommunityIcons
+              name={
+                filterIcnScreens ? 'filter' : plusIcnscreens ? 'plus' : null
+              }
+              size={moderateScale(25)}
+              color={COLORS.white}
+            />
+          )}
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.rightIcn} />
+      )}
     </View>
   );
 };
@@ -100,16 +136,20 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.header,
   },
   menuIcon: screen => ({
-    padding: screen ? moderateScale(6) : undefined,
+    padding: moderateScale(6),
     borderWidth: screen ? moderateScale(1) : undefined,
     height: horizontalScale(35),
     width: horizontalScale(35),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: moderateScale(30),
-    borderColor: COLORS.white,
+    borderColor: screen ? COLORS.white : COLORS.transparent,
   }),
   menuImage: {height: '80%', width: '80%'},
   notifyImage: {height: '90%', width: '90%'},
   folkImg: {height: '100%', width: '50%'},
+  rightIcn: {
+    height: horizontalScale(35),
+    width: horizontalScale(35),
+  },
 });

@@ -14,6 +14,7 @@ import {
   moderateScale,
   MyStyles,
   verticalScale,
+  windowWidth,
 } from '../styles/MyStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screenNames} from '../constants/ScreenNames';
@@ -97,13 +98,15 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                     {marginTop: index == 0 ? '2%' : '5%'},
                   ]}>
                   {/* // # Card image */}
+
                   <Image
                     style={MyStyles.cdImage}
-                    resizeMode="stretch"
                     source={{
                       uri: item?.image,
                     }}
+                    resizeMode="stretch"
                   />
+
                   {/* // # Date Mode Container */}
                   <View style={MyStyles.dateModeCont}>
                     <View style={MyStyles.dateCont}>
@@ -163,7 +166,8 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                       {item?.is_attended === 'Y' && (
                         <TouchableOpacity
                           onPress={() =>
-                            navigateTo(screenNames.coupons, {eventId: item?.id})
+                            // navigateTo(screenNames.coupons, {eventId: item?.id})
+                            {}
                           }
                           style={MyStyles.iconStyle}
                           activeOpacity={0.6}>

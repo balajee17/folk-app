@@ -9,9 +9,11 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   COLORS,
+  FONTS,
   horizontalScale,
   moderateScale,
   MyStyles,
+  SIZES,
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
@@ -29,6 +31,8 @@ import {
 
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useAppContext} from '../../App';
+import LinearGradientBg from '../components/LinearGradientBg';
+import {useToast} from 'react-native-toast-notifications';
 
 const Home = ({apiData, shimmer}) => {
   const {setSelScreen} = useAppContext();
@@ -45,6 +49,13 @@ const Home = ({apiData, shimmer}) => {
       setSelScreen(prev => ({...prev, current: 'DB1'}));
     }
   }, [isFocused]);
+
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
 
   // # Youtube Video onStateChange
   const onStateChange = useCallback(state => {
@@ -81,11 +92,16 @@ const Home = ({apiData, shimmer}) => {
   const RenderHistoryIcon = (title, navigateTo, icnColor) => {
     return (
       <TouchableOpacity
-        onPress={() =>
-          navigateScreen(navigateTo, {
-            title: title,
-          })
-        }
+        onPress={() => {
+          if (navigateTo === screenNames.quotes) {
+            toastMsg('Coming Soon...', 'info');
+            return true;
+          } else {
+            navigateScreen(navigateTo, {
+              title: title,
+            });
+          }
+        }}
         style={styles.historyIcon}
         activeOpacity={0.6}>
         <MaterialCommunityIcons
@@ -231,7 +247,7 @@ const Home = ({apiData, shimmer}) => {
     );
   };
 
-  // @  Folk Updates
+  // @  Folk Announcements
   const FolkUpdates = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
@@ -315,18 +331,22 @@ const Home = ({apiData, shimmer}) => {
                       end={{x: 1, y: 1}}
                       colors={['#353a5f', '#9ebaf3']}
                       style={[MyStyles.gradient]}>
-                      <View style={{padding: moderateScale(10)}}>
-                        {/* <Text style={MyStyles.updateTitle}>
-                                  Welcome to Folk App
-                                </Text> */}
-                        {/* <Text
-                                  style={[
-                                    MyStyles.updateTxt,
-                                    {fontSize: SIZES.xl},
-                                  ]}>
-                                  Vaikunta Ekadasi,
-                                </Text> */}
-                        <Text style={[MyStyles.updateTxt, {marginTop: 0}]}>
+                      <View
+                        style={{
+                          padding: moderateScale(10),
+                        }}>
+                        <View style={MyStyles.announceIcnTxtCont}>
+                          <Image
+                            source={{
+                              uri: updateItem?.icon,
+                            }}
+                            style={MyStyles.announceIcn}
+                          />
+                          <Text style={[MyStyles.announceTxt]}>
+                            {updateItem?.title}
+                          </Text>
+                        </View>
+                        <Text style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
                           {updateItem?.text}
                         </Text>
                       </View>
@@ -438,19 +458,7 @@ const Home = ({apiData, shimmer}) => {
           paddingBottom: shimmer ? 0 : verticalScale(180),
         }}>
         <View style={MyStyles.contentCont}>
-          <LinearGradient
-            colors={[
-              'rgba(65, 110, 189, 1)',
-              'rgba(65, 110, 189, 0.9)',
-              'rgba(65, 110, 189, 0.6)',
-              'rgba(65, 110, 189, 0.1)',
-              COLORS.white,
-            ]}
-            // start={{x: 0, y: 0}}
-            // end={{x: 0, y: 1}}
-            style={styles.halfBg}
-          />
-
+          <LinearGradientBg />
           {apiData?.map((item, index) => {
             if (shimmer || apiData?.length > 0) {
               return renderItemsInOrder(item, index);
@@ -477,13 +485,7 @@ const styles = StyleSheet.create({
   dailyDarshanCont: {
     width: '100%',
   },
-  halfBg: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: verticalScale(300),
-  },
+
   textHstryIcon: {
     width: '100%',
     flexDirection: 'row',

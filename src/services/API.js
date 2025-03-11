@@ -100,4 +100,17 @@ export const API = {
     );
     return axios.post(getCouponListURL, requestData);
   },
+
+  // # Connect US
+  getConnectDetails(data) {
+    const getConnectDetailsURL = baseURL + '/connect';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Coupon List Data ',
+      getConnectDetailsURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(getConnectDetailsURL, requestData);
+  },
 };

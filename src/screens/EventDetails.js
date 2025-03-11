@@ -34,6 +34,8 @@ import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
 import Spinner from '../components/Spinner';
 import {TitleShimmer} from '../components/Shimmer';
+import CustomHeader from '../components/CustomHeader';
+import {screenNames} from '../constants/ScreenNames';
 
 const EventDetails = ({route, navigation}) => {
   const statusBarHeight = useStatusBarHeight();
@@ -44,6 +46,7 @@ const EventDetails = ({route, navigation}) => {
   const [eventDetails, setEventDetails] = useState({});
   const [showReadMore, setShowReadMore] = useState(false);
   const [shimmer, setShimmer] = useState(true);
+  const [amountDetails, setAmountDetails] = useState([]);
 
   const {screen, eventId} = route?.params;
   const toast = useToast();
@@ -56,7 +59,7 @@ const EventDetails = ({route, navigation}) => {
     getEventDetails();
   }, []);
 
-  const checkDataExist = Object.keys(eventDetails)?.length > 0;
+  const checkDataExist = Object.keys(eventDetails || {})?.length > 0;
 
   const handleTextLayout = e => {
     const {lines} = e.nativeEvent;
@@ -75,10 +78,11 @@ const EventDetails = ({route, navigation}) => {
       const params = {profile_id: profileId, event_id: eventId};
       const response = await API.getEventDetails(params);
 
-      console.log('Event_Details_response', response?.data);
-      const {Data, successCode, message} = response?.data;
+      const {data, successCode, message} = response?.data;
+      console.log('Event_Details_response', data?.message);
       if (successCode === 1) {
-        setEventDetails(Data);
+        setEventDetails(data);
+        setAmountDetails(data?.amountDetails);
       } else {
         setEventDetails({});
         toastMsg(message, 'info');
@@ -96,33 +100,20 @@ const EventDetails = ({route, navigation}) => {
     <>
       <SafeAreaView style={MyStyles.contentCont}>
         <StatusBarTransp />
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} overScrollMode="never">
           {!shimmer ? (
             <ImageBackground
               source={{
-                uri: eventDetails?.image,
+                uri: eventDetails?.Image,
               }}
+              resizeMode="stretch"
               style={styles.bgImg}>
-              {/* // @ header */}
-              <View style={styles.header(statusBarHeight)}>
-                <TouchableOpacity // Left Icon
-                  onPress={() => {
-                    navigation.goBack();
-                  }}
-                  activeOpacity={0.6}
-                  style={styles.menuIcon}>
-                  <FontAwesome
-                    name="chevron-left"
-                    size={moderateScale(15)}
-                    color={COLORS.charcoal}
-                  />
-                </TouchableOpacity>
-                {/* Screen Name */}
-                <Text
-                  numberOfLines={1}
-                  style={[MyStyles.titleText, styles.screenName]}>
-                  Events Details
-                </Text>
+              {/* // # Header */}
+              <View style={{marginTop: statusBarHeight}}>
+                <CustomHeader
+                  goBack={() => navigation.goBack()}
+                  titleName={screenNames.eventDetails}
+                />
               </View>
 
               {/* <LinearGradient
@@ -143,43 +134,41 @@ const EventDetails = ({route, navigation}) => {
             {/* // @ Title Section */}
             <View style={styles.titleSec}>
               {!shimmer ? (
-                <Text style={styles.title}>{eventDetails?.session_name}</Text>
+                <Text style={styles.title}>{eventDetails?.Title}</Text>
               ) : (
                 <TitleShimmer
                   height={verticalScale(70)}
                   width={horizontalScale(250)}
                 />
               )}
-
-              {!shimmer ? (
-                <Text style={styles.amtTxt}>
-                  ₹ {eventDetails?.prasadam_amount}
-                </Text>
-              ) : (
+              {shimmer ? (
                 <TitleShimmer
                   height={verticalScale(30)}
                   width={horizontalScale(60)}
                 />
+              ) : eventDetails?.Amount ? (
+                <Text style={styles.amtTxt}>
+                  {eventDetails?.Amount === 'Free'
+                    ? eventDetails?.Amount
+                    : eventDetails?.Amount}
+                </Text>
+              ) : (
+                <></>
               )}
             </View>
             {/* // # Description */}
-            {!shimmer ? (
-              renderSubTitle('Description')
-            ) : (
+            {shimmer ? (
               <TitleShimmer
                 height={verticalScale(25)}
                 width={horizontalScale(150)}
               />
+            ) : eventDetails?.Description ? (
+              renderSubTitle('Description')
+            ) : (
+              <></>
             )}
 
-            {eventDetails?.description && !shimmer ? (
-              <Text
-                numberOfLines={expanded ? undefined : 2}
-                onTextLayout={handleTextLayout}
-                style={styles.descripTxt}>
-                {eventDetails?.description}
-              </Text>
-            ) : (
+            {shimmer ? (
               <>
                 <TitleShimmer height={verticalScale(14)} width={'100%'} />
                 <TitleShimmer
@@ -188,6 +177,15 @@ const EventDetails = ({route, navigation}) => {
                   marginBottom={verticalScale(30)}
                 />
               </>
+            ) : eventDetails?.Description ? (
+              <Text
+                numberOfLines={expanded ? undefined : 2}
+                onTextLayout={handleTextLayout}
+                style={styles.descripTxt}>
+                {eventDetails?.Description}
+              </Text>
+            ) : (
+              <></>
             )}
             {showReadMore && (
               <TouchableOpacity
@@ -231,40 +229,63 @@ const EventDetails = ({route, navigation}) => {
                   ))}
 
             {/* // # Location */}
-            {!shimmer && renderSubTitle('Location')}
-            {eventDetails?.location && (
+            {eventDetails?.Event_mode === 'F' &&
+              eventDetails?.Location &&
+              renderSubTitle(
+                eventDetails?.Event_mode === 'F' ? 'Location' : 'Online Link',
+              )}
+            {eventDetails?.Event_mode === 'F' && eventDetails?.Location && (
               <View style={styles.locationCont}>
                 <Ionicons
                   style={styles.locationIcn}
-                  name="location-sharp"
+                  name={
+                    eventDetails?.Event_mode === 'F' ? 'location-sharp' : ''
+                  }
                   size={moderateScale(25)}
-                  color={COLORS.watermelon}
+                  color={
+                    eventDetails?.Event_mode === 'F'
+                      ? COLORS.watermelon
+                      : COLORS.dodger
+                  }
                 />
-                <Text style={[styles.descripTxt, styles.locationTxt]}>
-                  {eventDetails?.location}
+                <Text
+                  style={[
+                    styles.descripTxt,
+                    styles.locationTxt,
+                    {
+                      color:
+                        eventDetails?.Event_mode === 'F'
+                          ? COLORS.midGrey
+                          : COLORS.dodger,
+                    },
+                  ]}>
+                  {eventDetails?.Location}
                 </Text>
               </View>
             )}
 
             {/* // # Discount Code */}
-            {screen === 'Upcoming' && !shimmer && (
-              <View style={styles.discountCont}>
-                <TextInput
-                  placeholder="Enter Discount Code"
-                  placeholderTextColor={COLORS.midGrey}
-                  style={[styles.descripTxt, styles.discountTxtInpt]}
-                />
+            {eventDetails?.Is_paid_event === 'Y' &&
+              screen === 'Upcoming' &&
+              !shimmer && (
+                <View style={styles.discountCont}>
+                  <TextInput
+                    placeholder="Enter Discount Code"
+                    placeholderTextColor={COLORS.midGrey}
+                    style={[styles.descripTxt, styles.discountTxtInpt]}
+                  />
 
-                <TouchableOpacity activeOpacity={0.6} style={styles.applyBtn}>
-                  <Text style={styles.applyTxt}>Apply</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+                  <TouchableOpacity activeOpacity={0.6} style={styles.applyBtn}>
+                    <Text style={styles.applyTxt}>Apply</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
 
             {/* // # Amount Section */}
             {screen === 'Upcoming' &&
-              eventDetails?.amountDetails?.length > 0 &&
-              eventDetails?.amountDetails?.map((item, index) => {
+              eventDetails?.Is_paid_event === 'Y' &&
+              amountDetails?.length > 0 &&
+              amountDetails?.map((item, index) => {
                 return (
                   <View
                     style={[
@@ -287,7 +308,13 @@ const EventDetails = ({route, navigation}) => {
               })}
 
             {/* // # Pay Now Btn */}
-            {checkDataExist && !shimmer ? (
+            {shimmer ? (
+              <TitleShimmer
+                height={verticalScale(45)}
+                width={'100%'}
+                marginTop={verticalScale(80)}
+              />
+            ) : checkDataExist ? (
               <TouchableOpacity
                 disabled={eventDetails?.amtPaid === 'Y'}
                 activeOpacity={0.6}
@@ -309,11 +336,7 @@ const EventDetails = ({route, navigation}) => {
                 </Text>
               </TouchableOpacity>
             ) : (
-              <TitleShimmer
-                height={verticalScale(45)}
-                width={'100%'}
-                marginTop={verticalScale(80)}
-              />
+              <></>
             )}
           </View>
         </ScrollView>

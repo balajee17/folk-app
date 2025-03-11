@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Linking,
   StatusBar,
   StyleSheet,
   Text,
@@ -32,16 +33,23 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useToast} from 'react-native-toast-notifications';
+import Share from 'react-native-share';
 
 const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
   const WIDTH = windowWidth * 0.75;
   const HEIGHT = WIDTH * 1.58;
   const imagesData = selectedItem?.images;
 
-  console.log('selectedItem', selectedItem);
-
   const scrollX = useSharedValue(activeIndex);
   const scrollRef = useRef(null);
+
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
 
   useEffect(() => {
     scrollToIndex(activeIndex);
@@ -58,8 +66,29 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
     scrollRef?.current?.scrollToOffset({offset, animated: true}); // Scroll to the index
     scrollX.value = index; // Update the active index
   };
-  const download = link => {};
-  const shareLink = link => {};
+  const download = async url => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        toastMsg('Invalid URL or no supported app found.', 'warning');
+      }
+    } catch (err) {
+      toastMsg('Failed to open the link. Please try again.', 'error');
+    }
+  };
+  const shareLink = async link => {
+    const options = {
+      url: link,
+    };
+
+    try {
+      await Share.open(options);
+    } catch (err) {
+      toastMsg('Failed to share the link. Please try again.', 'error');
+    }
+  };
   return (
     <>
       <CommonStatusBar />
@@ -137,8 +166,8 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                 <Image
                   source={{uri: item?.link}}
                   style={{
-                    height: HEIGHT,
                     width: WIDTH,
+                    height: HEIGHT,
                     resizeMode: 'cover',
                     borderRadius: 16,
                   }}
@@ -173,7 +202,7 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => shareImage(item?.link)}
+                    onPress={() => shareLink(item?.link)}
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.3)',
                       width: horizontalScale(50),
