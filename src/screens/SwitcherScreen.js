@@ -15,10 +15,10 @@ import {API} from '../services/API';
 import {useNavigation} from '@react-navigation/native';
 
 const SwitcherScreen = ({navigation, route}) => {
-  const {selScreen, setSelScreen} = useAppContext();
+  const {globalState, setGlobalState} = useAppContext();
 
-  const {btTab, profileId, activeEventTab} = selScreen;
-
+  const {btTab, profileId, activeEventTab, isConnected} = globalState;
+  console.log('isConnected_SS', isConnected);
   const [opnFltr, setOpnFltr] = useState(false);
   const [tab1Data, setTab1Data] = useState([
     {section: 1, title: '', updates: [{id: 1, link: ''}], forLoader: 'Y'},
@@ -79,7 +79,7 @@ const SwitcherScreen = ({navigation, route}) => {
         'btTab',
         btTab,
         'current',
-        selScreen?.current,
+        globalState?.current,
       );
       getRegisteredList();
     }
@@ -92,6 +92,7 @@ const SwitcherScreen = ({navigation, route}) => {
   // # API Home Data
   const getHomeScreenData = async () => {
     try {
+      !shimmer?.home && setShimmer(prev => ({...prev, home: true}));
       const response = await API.getHomeScreenData();
 
       console.log('Home_response', response?.data);
@@ -105,7 +106,7 @@ const SwitcherScreen = ({navigation, route}) => {
       setShimmer(prev => ({...prev, home: false}));
     } catch (err) {
       setTab1Data([]);
-      toastMsg('', 'error');
+      // toastMsg('', 'error');
       setShimmer(prev => ({...prev, home: false}));
       console.log('ERR-Home-screen', err);
     }
@@ -114,6 +115,8 @@ const SwitcherScreen = ({navigation, route}) => {
   // # API Upcoming List
   const getUpcomingList = async () => {
     try {
+      !shimmer?.upcoming && setShimmer(prev => ({...prev, upcoming: true}));
+
       const params = {profile_id: profileId, tab: 'upcoming'};
       const response = await API.getEventList(params);
       const {data, successCode, message} = response?.data;
@@ -136,6 +139,8 @@ const SwitcherScreen = ({navigation, route}) => {
   // # API Registered List
   const getRegisteredList = async () => {
     try {
+      !shimmer?.registered && setShimmer(prev => ({...prev, registered: true}));
+
       const params = {profile_id: profileId, tab: 'registered'};
       const response = await API.getEventList(params);
       const {data, successCode, message} = response?.data;
@@ -157,6 +162,8 @@ const SwitcherScreen = ({navigation, route}) => {
   // # API  to get Connect Us Details
   const getConnectDetails = async () => {
     try {
+      !shimmer?.connectUs && setShimmer(prev => ({...prev, connectUs: true}));
+
       const params = {profile_id: profileId};
       const response = await API.getConnectDetails(params);
       console.log('Connect_US_response', response?.data);
@@ -213,7 +220,7 @@ const SwitcherScreen = ({navigation, route}) => {
       <CustomBottomTab
         selIcon={btTab}
         setSelIcon={value => {
-          setSelScreen(prev => ({...prev, btTab: value, current: value}));
+          setGlobalState(prev => ({...prev, btTab: value, current: value}));
         }}
       />
     </Container>

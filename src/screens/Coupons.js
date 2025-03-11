@@ -29,9 +29,9 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 
 const Coupons = ({navigation, route}) => {
-  const {selScreen} = useAppContext();
+  const {globalState} = useAppContext();
 
-  const {profileId} = selScreen;
+  const {profileId} = globalState;
   const dateTime = ['Date', 'Time'];
   const {eventId} = route?.params;
 

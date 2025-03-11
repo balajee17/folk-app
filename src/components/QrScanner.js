@@ -20,8 +20,8 @@ import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
 
 const QrScanner = ({navigation, route}) => {
-  const {selScreen, setSelScreen} = useAppContext();
-  const {profileId} = selScreen;
+  const {globalState, setGlobalState} = useAppContext();
+  const {profileId} = globalState;
 
   const [flash, setFlash] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -49,7 +49,7 @@ const QrScanner = ({navigation, route}) => {
       console.log('Event_Attendance_response', response?.data);
       const {Data, successCode, message} = response?.data;
       if (successCode === 1) {
-        await setSelScreen(prev => ({
+        await setGlobalState(prev => ({
           ...prev,
           current: 'B2',
           btTab: 'B2',

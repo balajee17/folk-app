@@ -12,14 +12,34 @@ import SpInAppUpdates, {
 } from 'sp-react-native-in-app-updates';
 import {ToastProvider, useToast} from 'react-native-toast-notifications';
 import ToastMessage from './src/components/ToastMessage';
+import NetInfo from '@react-native-community/netinfo';
+import NoNetwork from './src/components/NoNetwork';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
 
 const App = ({children}) => {
-  // useEffect(() => {
-  //   checkAppUpdates();
-  // }, []);
+  const [globalState, setGlobalState] = useState({
+    current: 'DB1',
+    btTab: 'DB1',
+    profileId: 1,
+    activeEventTab: 0,
+    isConnected: true,
+  });
+
+  useEffect(() => {
+    // # Listen for real-time network changes
+    // const unsubscribe = NetInfo.addEventListener(state => {
+    //   console.log('Internet Connected:', state.isConnected);
+    //   setGlobalState(prev => ({...prev, isConnected: state.isConnected}));
+    // });
+    // checkAppUpdates();
+    // return () => unsubscribe();
+
+    setTimeout(() => {
+      setGlobalState(prev => ({...prev, isConnected: false}));
+    }, 5000);
+  }, []);
 
   // const inAppUpdates = new SpInAppUpdates(true);
   // const majorUpdate = true;
@@ -66,13 +86,6 @@ const App = ({children}) => {
   //   }
   // };
 
-  const [selScreen, setSelScreen] = useState({
-    current: 'DB1',
-    btTab: 'DB1',
-    profileId: 1,
-    activeEventTab: 0,
-  });
-
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <StatusBarHeightProvider>
@@ -83,7 +96,7 @@ const App = ({children}) => {
           animationDuration={500}
           renderToast={toast => <ToastMessage toast={toast} />}
           swipeEnabled={true}>
-          <AppContext.Provider value={{selScreen, setSelScreen}}>
+          <AppContext.Provider value={{globalState, setGlobalState}}>
             <StackNavigation />
           </AppContext.Provider>
         </ToastProvider>

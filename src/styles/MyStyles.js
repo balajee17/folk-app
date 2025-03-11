@@ -130,6 +130,7 @@ export let FONTS = {
   interBold: 'InterBold',
   poppinsSemiBold: 'Poppins-SemiBold',
   poppinsRegular: 'Poppins-Regular',
+  ysabeauInfantRegular: 'YsabeauInfant-Regular',
 };
 
 // @ MyStyles

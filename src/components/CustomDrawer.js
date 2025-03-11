@@ -49,8 +49,8 @@ const CustomDrawer = ({navigation, route}) => {
     },
   ];
 
-  const {selScreen, setSelScreen} = useAppContext();
-  const {current} = selScreen;
+  const {globalState, setGlobalState} = useAppContext();
+  const {current} = globalState;
   const {closeDrawer} = navigation;
 
   // # Navigate Sreen
@@ -62,11 +62,11 @@ const CustomDrawer = ({navigation, route}) => {
     closeDrawer();
     if (id === 'DB1') {
       current !== 'DB1'
-        ? (setSelScreen(prev => ({...prev, btTab: id, current: id})),
+        ? (setGlobalState(prev => ({...prev, btTab: id, current: id})),
           navigateTo(screenNames.switcherScreen, route?.params))
         : null;
     } else {
-      setSelScreen(prev => ({...prev, current: id})), navigateTo(screenName);
+      setGlobalState(prev => ({...prev, current: id})), navigateTo(screenName);
     }
   };
 

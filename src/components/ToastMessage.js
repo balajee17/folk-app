@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
-import {useToast} from 'react-native-toast-notifications';
 import {COLORS, FONTS, SIZES, verticalScale} from '../styles/MyStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 

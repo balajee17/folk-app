@@ -35,7 +35,7 @@ import LinearGradientBg from '../components/LinearGradientBg';
 import {useToast} from 'react-native-toast-notifications';
 
 const Home = ({apiData, shimmer}) => {
-  const {setSelScreen} = useAppContext();
+  const {setGlobalState} = useAppContext();
 
   const navigation = useNavigation();
 
@@ -46,7 +46,7 @@ const Home = ({apiData, shimmer}) => {
 
   useEffect(() => {
     if (isFocused) {
-      setSelScreen(prev => ({...prev, current: 'DB1'}));
+      setGlobalState(prev => ({...prev, current: 'DB1'}));
     }
   }, [isFocused]);
 

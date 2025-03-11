@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {screenNames} from '../constants/ScreenNames';
 import {NavigationContainer} from '@react-navigation/native';
@@ -16,12 +16,29 @@ import Profile from '../screens/Profile';
 import PaymentDetails from '../screens/PaymentDetails';
 import QrScanner from '../components/QrScanner';
 import Courses from '../screens/Courses';
+import NoNetwork from '../components/NoNetwork';
+import {useAppContext} from '../../App';
 
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
+  const {globalState} = useAppContext();
+  const {isConnected} = globalState;
+  console.log('isConnected_SN', isConnected);
+
+  const navigationRef = useRef();
+
+  useEffect(() => {
+    if (navigationRef.current) {
+      if (isConnected) {
+        navigationRef.current.navigate(screenNames.drawerNavigation);
+      } else {
+        navigationRef.current.navigate('NN');
+      }
+    }
+  }, [isConnected]);
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName={screenNames.drawerNavigation}
         screenOptions={{headerShown: false}}>
@@ -89,6 +106,8 @@ const StackNavigation = () => {
         <Stack.Screen name={screenNames.scanner} component={QrScanner} />
         {/* // @ Courses */}
         <Stack.Screen name={screenNames.courses} component={Courses} />
+        {/* // @ No Network */}
+        <Stack.Screen name={'NN'} component={NoNetwork} />
       </Stack.Navigator>
     </NavigationContainer>
   );

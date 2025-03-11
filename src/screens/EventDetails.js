@@ -39,8 +39,8 @@ import {screenNames} from '../constants/ScreenNames';
 
 const EventDetails = ({route, navigation}) => {
   const statusBarHeight = useStatusBarHeight();
-  const {selScreen, setSelScreen} = useAppContext();
-  const {profileId} = selScreen;
+  const {globalState, setGlobalState} = useAppContext();
+  const {profileId} = globalState;
 
   const [expanded, setExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState({});
