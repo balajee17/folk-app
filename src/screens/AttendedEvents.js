@@ -11,8 +11,10 @@ import {
 import React from 'react';
 import {
   COLORS,
+  horizontalScale,
   moderateScale,
   MyStyles,
+  screenHeight,
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
@@ -27,6 +29,9 @@ import {
   RESULTS,
   openSettings,
 } from 'react-native-permissions';
+import {getImage} from '../utils/ImagePath';
+import FastImage from 'react-native-fast-image';
+import NoDataFound from '../components/NoDataFound';
 
 const AttendedEvents = ({navigation, shimmer, registeredList}) => {
   // # Navigate Sreen
@@ -192,6 +197,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
               </>
             );
           }}
+          ListEmptyComponent={<NoDataFound screen={screenNames.events} />}
         />
       ) : (
         Array(2)

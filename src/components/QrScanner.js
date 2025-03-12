@@ -18,6 +18,7 @@ import {API} from '../services/API';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
+import {getImage} from '../utils/ImagePath';
 
 const QrScanner = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -108,10 +109,7 @@ const QrScanner = ({navigation, route}) => {
       />
       {/* // @ Camera outer border img */}
       <View style={styles.outerBorderImg}>
-        <Image
-          source={require('../assets/images/scanner.png')}
-          style={styles.marker}
-        />
+        <Image source={getImage.scanner} style={styles.marker} />
       </View>
     </View>
   );

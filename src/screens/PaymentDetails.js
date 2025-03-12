@@ -19,6 +19,7 @@ import {CommonStatusBar} from '../components/StatusBarComponent';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {getImage} from '../utils/ImagePath';
 
 const PaymentDetails = ({navigation}) => {
   return (
@@ -40,10 +41,7 @@ const PaymentDetails = ({navigation}) => {
         </TouchableOpacity>
 
         {/* // @ Status, Amt, Event Name */}
-        <Image
-          source={require('../assets/images/success.png')}
-          style={styles.statusImg}
-        />
+        <Image source={getImage.success} style={styles.statusImg} />
         <Text style={styles.statusTxt}>Payment Successful</Text>
         <Text style={styles.eventName}>to Mango Mania</Text>
         <Text style={styles.amtTxt}>₹ 350</Text>

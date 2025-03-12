@@ -4,6 +4,7 @@ import {MyStyles, screenHeight, windowWidth} from '../styles/MyStyles';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
+import {getImage} from '../utils/ImagePath';
 
 const Accommodation = ({navigation}) => {
   return (
@@ -16,10 +17,7 @@ const Accommodation = ({navigation}) => {
         />
         {/* // # Contents */}
         <View style={MyStyles.contentCont}>
-          <Image
-            source={require('../assets/images/comingSoon.png')}
-            style={MyStyles.comingSoonImg}
-          />
+          <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
         </View>
       </SafeAreaView>
     </Container>

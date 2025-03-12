@@ -20,23 +20,43 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradientBg from '../components/LinearGradientBg';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import {useToast} from 'react-native-toast-notifications';
 import {API} from '../services/API';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {useAppContext} from '../../App';
 
 const ConnectUs = ({apiData, shimmer}) => {
-  const openLink = url => {
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
+
+  const openLink = async url => {
     try {
-      Linking.openURL(url);
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        toastMsg('Invalid URL or no supported app found.', 'warning');
+      }
     } catch (err) {
-      console.log('ERR_Redirect', err);
+      toastMsg('Failed to open the link. Please try again.', 'error');
     }
+  };
+
+  const copyToClipboard = (item, textToCopy) => {
+    Clipboard.setString(textToCopy);
+    toastMsg(`${item} copied to clipboard.`);
   };
 
   return (
     <ScrollView contentContainerStyle={{backgroundColor: COLORS.white}}>
       <LinearGradientBg />
+
       {/* // @ FOLK Guide Detail Box */}
       <View style={styles.FGDetailsBox}>
         {shimmer ? (
@@ -107,12 +127,42 @@ const ConnectUs = ({apiData, shimmer}) => {
               <Text numberOfLines={2} style={[styles.nameTxt]}>
                 {apiData?.guideDetails?.NAME}
               </Text>
-              <Text numberOfLines={1} style={[styles.emailTxt]}>
-                {apiData?.guideDetails?.MOBILE}
-              </Text>
-              <Text numberOfLines={2} style={[styles.emailTxt]}>
-                {apiData?.guideDetails?.MAIL}
-              </Text>
+              <View style={styles.mobileCopyCont}>
+                <Text numberOfLines={1} style={[styles.emailTxt]}>
+                  {apiData?.guideDetails?.MOBILE}
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    copyToClipboard(
+                      'Mobile number',
+                      apiData?.guideDetails?.MOBILE,
+                    )
+                  }
+                  activeOpacity={0.6}>
+                  <MaterialIcons
+                    name="content-copy"
+                    size={moderateScale(20)}
+                    color={COLORS.charcoal}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.mobileCopyCont}>
+                <Text numberOfLines={2} style={[styles.emailTxt]}>
+                  {apiData?.guideDetails?.MAIL}
+                  anandamayadasa@iskconbangalore.org
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    copyToClipboard('Email', apiData?.guideDetails?.MAIL)
+                  }
+                  activeOpacity={0.6}>
+                  <MaterialIcons
+                    name="content-copy"
+                    size={moderateScale(20)}
+                    color={COLORS.charcoal}
+                  />
+                </TouchableOpacity>
+              </View>
               {/* // # ICONS  */}
               <View style={styles.phoneWhatsappCont}>
                 <TouchableOpacity
@@ -249,13 +299,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
+  mobileCopyCont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'center',
+  },
   emailTxt: {
     fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.xl,
     color: COLORS.dolphin,
-    width: '100%',
     textAlign: 'center',
     marginTop: '1%',
+    marginHorizontal: '3%',
   },
   phoneWhatsappCont: {
     alignItems: 'center',

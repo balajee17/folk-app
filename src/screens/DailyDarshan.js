@@ -27,6 +27,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {DarshanShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
+import NoDataFound from '../components/NoDataFound';
 
 const DailyDarshan = ({navigation, route}) => {
   const [switchScreen, setSwitchSreen] = useState(false);
@@ -219,6 +220,7 @@ const DailyDarshan = ({navigation, route}) => {
                       </>
                     );
                   }}
+                  ListEmptyComponent={NoDataFound}
                 />
               )}
             </View>

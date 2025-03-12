@@ -12,4 +12,8 @@ export const getImage = {
   bookActive: require('../assets/images/bookActive.png'),
   account: require('../assets/images/account.png'),
   accountActive: require('../assets/images/accountActive.png'),
+  scanner: require('../assets/images/scanner.png'),
+  comingSoon: require('../assets/images/comingSoon.png'),
+  success: require('../assets/images/success.png'),
+  noData: require('../assets/images/noData.gif'),
 };

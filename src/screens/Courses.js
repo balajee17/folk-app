@@ -1,14 +1,12 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {MyStyles, screenHeight, windowWidth} from '../styles/MyStyles';
+import {getImage} from '../utils/ImagePath';
 
 const Courses = () => {
   return (
     <View style={MyStyles.contentCont}>
-      <Image
-        source={require('../assets/images/comingSoon.png')}
-        style={MyStyles.comingSoonImg}
-      />
+      <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
     </View>
   );
 };

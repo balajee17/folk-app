@@ -11,6 +11,7 @@ import {MyStyles, verticalScale} from '../styles/MyStyles';
 import {screenNames} from '../constants/ScreenNames';
 import {EventShimmer} from '../components/Shimmer';
 import moment from 'moment';
+import NoDataFound from '../components/NoDataFound';
 
 const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
   // # Navigate Sreen
@@ -101,6 +102,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
               </>
             );
           }}
+          ListEmptyComponent={<NoDataFound screen={screenNames.events} />}
         />
       ) : (
         Array(2)

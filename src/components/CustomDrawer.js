@@ -50,7 +50,7 @@ const CustomDrawer = ({navigation, route}) => {
   ];
 
   const {globalState, setGlobalState} = useAppContext();
-  const {current} = globalState;
+  const {current, folkId, userName} = globalState;
   const {closeDrawer} = navigation;
 
   // # Navigate Sreen
@@ -101,9 +101,9 @@ const CustomDrawer = ({navigation, route}) => {
             />
           </TouchableOpacity>
           <View style={styles.profileTextCont}>
-            <Text style={styles.profName}>Naveen Alagarsamy</Text>
+            <Text style={styles.profName}>{userName}</Text>
             <Text style={[styles.profName, styles.mailTxt]}>
-              FOLK ID : 233q11241
+              FOLK ID : {folkId}
             </Text>
           </View>
         </View>
@@ -182,10 +182,14 @@ const styles = StyleSheet.create({
   profileTextCont: {marginLeft: '4%', width: '71%'},
   profName: {
     fontSize: SIZES.subTitle,
-    fontFamily: FONTS.interMedium,
+    fontFamily: FONTS.ysabeauInfantBold,
     color: COLORS.white,
   },
-  mailTxt: {fontSize: SIZES.l, color: COLORS.ceramic},
+  mailTxt: {
+    fontSize: SIZES.l,
+    color: COLORS.ceramic,
+    fontFamily: FONTS.ysabeauInfantBold,
+  },
   menuItemBtn: {
     flexDirection: 'row',
     alignItems: 'center',

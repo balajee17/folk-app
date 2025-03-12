@@ -23,6 +23,7 @@ import CustomHeader from '../components/CustomHeader';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
+import NoDataFound from '../components/NoDataFound';
 
 const FolkUpdates = ({navigation, route}) => {
   const [shimmer, setShimmer] = useState(true);
@@ -172,6 +173,7 @@ const FolkUpdates = ({navigation, route}) => {
                   </>
                 );
               }}
+              ListEmptyComponent={NoDataFound}
             />
           )}
         </View>

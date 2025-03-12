@@ -25,20 +25,18 @@ const App = ({children}) => {
     profileId: 1,
     activeEventTab: 0,
     isConnected: true,
+    folkId: '20231204007',
+    userName: 'Naveen Alagarsamy',
   });
 
   useEffect(() => {
     // # Listen for real-time network changes
-    // const unsubscribe = NetInfo.addEventListener(state => {
-    //   console.log('Internet Connected:', state.isConnected);
-    //   setGlobalState(prev => ({...prev, isConnected: state.isConnected}));
-    // });
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log('Internet Connected:', state.isConnected);
+      setGlobalState(prev => ({...prev, isConnected: state.isConnected}));
+    });
     // checkAppUpdates();
-    // return () => unsubscribe();
-
-    setTimeout(() => {
-      setGlobalState(prev => ({...prev, isConnected: false}));
-    }, 5000);
+    return () => unsubscribe();
   }, []);
 
   // const inAppUpdates = new SpInAppUpdates(true);

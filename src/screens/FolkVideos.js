@@ -29,6 +29,7 @@ import {TitleShimmer, YoutubeShimmer} from '../components/Shimmer';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
+import NoDataFound from '../components/NoDataFound';
 
 const FolkVideos = ({navigation, route}) => {
   const [videoControl, setVideoControl] = useState({
@@ -288,6 +289,7 @@ const FolkVideos = ({navigation, route}) => {
                       </>
                     );
                   }}
+                  ListEmptyComponent={NoDataFound}
                 />
               )}
             </View>

@@ -40,6 +40,10 @@
     {
       "path": "src/assets/fonts/YsabeauInfant-Bold.ttf",
       "sha1": "fe3bdf0a91a4b829c9a5e8bb4d82c71b6b0a68d7"
+    },
+    {
+      "path": "src/assets/fonts/YsabeauInfant-Regular.ttf",
+      "sha1": "405644e928af6a09cf4b131b28c32b21026fb85b"
     }
   ]
 }

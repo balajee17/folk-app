@@ -26,7 +26,6 @@ import {useToast} from 'react-native-toast-notifications';
 const NoNetwork = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
   const {isConnected} = globalState;
-  console.log('isConnected_SN', isConnected);
 
   useEffect(() => {
     const backAction = () => {
@@ -53,7 +52,7 @@ const NoNetwork = ({navigation}) => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{name: screenNames.drawerNavigation}], // Change to your main screen
+          routes: [{name: screenNames.drawerNavigation}],
         }),
       );
     } else {
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     width: '80%',
     fontSize: SIZES.l,
     fontFamily: FONTS.ysabeauInfantRegular,
-    color: COLORS.black,
+    color: COLORS.osloGrey,
     alignSelf: 'center',
     marginTop: '3%',
   },
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     bottom: '10%',
   },
   reloadTxt: {
-    fontSize: SIZES.subTitle,
+    fontSize: SIZES.xl,
     fontFamily: FONTS.poppinsSemiBold,
     color: COLORS.white,
   },

@@ -25,4 +25,5 @@ export let screenNames = {
   paymentDetails: 'Payment Details',
   paymentHistory: 'Payment History',
   scanner: 'Scanner',
+  noNetwork: 'No Network',
 };

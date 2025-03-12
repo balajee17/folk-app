@@ -13,6 +13,7 @@ import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import FloatingInput from '../components/FloatingInput';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {getImage} from '../utils/ImagePath';
 
 const YFHForm = ({navigation}) => {
   const [formValues, setFormValues] = useState({});
@@ -104,10 +105,7 @@ const YFHForm = ({navigation}) => {
               justifyCenter: 'center',
             }}
           /> */}
-          <Image
-            source={require('../assets/images/comingSoon.png')}
-            style={MyStyles.comingSoonImg}
-          />
+          <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
         </ScrollView>
       </SafeAreaView>
     </Container>

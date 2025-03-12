@@ -24,7 +24,6 @@ const Stack = createStackNavigator();
 const StackNavigation = () => {
   const {globalState} = useAppContext();
   const {isConnected} = globalState;
-  console.log('isConnected_SN', isConnected);
 
   const navigationRef = useRef();
 
@@ -33,7 +32,7 @@ const StackNavigation = () => {
       if (isConnected) {
         navigationRef.current.navigate(screenNames.drawerNavigation);
       } else {
-        navigationRef.current.navigate('NN');
+        navigationRef.current.navigate(screenNames.noNetwork);
       }
     }
   }, [isConnected]);
@@ -107,7 +106,7 @@ const StackNavigation = () => {
         {/* // @ Courses */}
         <Stack.Screen name={screenNames.courses} component={Courses} />
         {/* // @ No Network */}
-        <Stack.Screen name={'NN'} component={NoNetwork} />
+        <Stack.Screen name={screenNames.noNetwork} component={NoNetwork} />
       </Stack.Navigator>
     </NavigationContainer>
   );
