@@ -46,7 +46,13 @@ const EventDetails = ({route, navigation}) => {
   const [eventDetails, setEventDetails] = useState({});
   const [showReadMore, setShowReadMore] = useState(false);
   const [shimmer, setShimmer] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [amountDetails, setAmountDetails] = useState([]);
+  const [coupon, setCoupon] = useState({
+    code: '',
+    warning: false,
+    applied: false,
+  });
 
   const {screen, eventId} = route?.params;
   const toast = useToast();
@@ -96,10 +102,42 @@ const EventDetails = ({route, navigation}) => {
     }
   };
 
+  // # API Apply Coupon
+  const applyCoupon = async () => {
+    try {
+      setLoader(true);
+      const params = {
+        profileId: profileId,
+        eventId: eventId,
+        couponCode: coupon?.code,
+      };
+      const response = await API.applyCoupon(params);
+
+      const {data, successCode, message} = response?.data;
+      console.log('Apply_Coupon_response', data?.message);
+      if (successCode === 1) {
+        setCoupon(prev => ({...prev, applied: true}));
+      } else {
+        coupon?.applied && setCoupon(prev => ({...prev, applied: false}));
+        toastMsg(message, 'info');
+      }
+      setLoader(false);
+    } catch (err) {
+      setLoader(false);
+      toastMsg('', 'error');
+      console.log('ERR-Apply_Coupon', err);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCoupon({code: '', applied: false, warning: false});
+  };
+
   return (
     <>
       <SafeAreaView style={MyStyles.contentCont}>
         <StatusBarTransp />
+        <Spinner spinnerVisible={loader} />
         <ScrollView showsVerticalScrollIndicator={false} overScrollMode="never">
           {!shimmer ? (
             <ImageBackground
@@ -146,12 +184,8 @@ const EventDetails = ({route, navigation}) => {
                   height={verticalScale(30)}
                   width={horizontalScale(60)}
                 />
-              ) : eventDetails?.Amount ? (
-                <Text style={styles.amtTxt}>
-                  {eventDetails?.Amount === 'Free'
-                    ? eventDetails?.Amount
-                    : eventDetails?.Amount}
-                </Text>
+              ) : !!eventDetails?.Amount ? (
+                <Text style={styles.amtTxt}>{eventDetails?.Amount}</Text>
               ) : (
                 <></>
               )}
@@ -219,8 +253,8 @@ const EventDetails = ({route, navigation}) => {
                     </View>
                   );
                 })
-              : Array(3)
-                  .fill(3)
+              : Array(2)
+                  .fill(2)
                   .map((_, index) => (
                     <View style={styles.lablValCont} key={index + 1}>
                       <TitleShimmer />
@@ -229,23 +263,24 @@ const EventDetails = ({route, navigation}) => {
                   ))}
 
             {/* // # Location */}
-            {eventDetails?.Event_mode === 'F' &&
-              eventDetails?.Location &&
+            {eventDetails?.Event_space &&
               renderSubTitle(
                 eventDetails?.Event_mode === 'F' ? 'Location' : 'Online Link',
               )}
-            {eventDetails?.Event_mode === 'F' && eventDetails?.Location && (
+            {eventDetails?.Event_space && (
               <View style={styles.locationCont}>
                 <Ionicons
                   style={styles.locationIcn}
                   name={
-                    eventDetails?.Event_mode === 'F' ? 'location-sharp' : ''
+                    eventDetails?.Event_mode === 'F'
+                      ? 'location-sharp'
+                      : 'videocam'
                   }
                   size={moderateScale(25)}
                   color={
                     eventDetails?.Event_mode === 'F'
                       ? COLORS.watermelon
-                      : COLORS.dodger
+                      : COLORS.midGrey
                   }
                 />
                 <Text
@@ -259,24 +294,50 @@ const EventDetails = ({route, navigation}) => {
                           : COLORS.dodger,
                     },
                   ]}>
-                  {eventDetails?.Location}
+                  {eventDetails?.Event_space}
                 </Text>
               </View>
             )}
 
             {/* // # Discount Code */}
-            {eventDetails?.Is_paid_event === 'Y' &&
+            {eventDetails?.Is_paid_event !== 'Y' &&
               screen === 'Upcoming' &&
               !shimmer && (
-                <View style={styles.discountCont}>
+                <View
+                  style={[
+                    styles.discountCont,
+                    coupon?.warning && {
+                      borderColor: COLORS.errorPB,
+                      borderWidth: 1.5,
+                    },
+                  ]}>
                   <TextInput
+                    value={coupon?.code}
+                    onChangeText={text => {
+                      setCoupon({code: text, warning: false, applied: false});
+                    }}
                     placeholder="Enter Discount Code"
                     placeholderTextColor={COLORS.midGrey}
                     style={[styles.descripTxt, styles.discountTxtInpt]}
                   />
 
-                  <TouchableOpacity activeOpacity={0.6} style={styles.applyBtn}>
-                    <Text style={styles.applyTxt}>Apply</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      coupon?.applied
+                        ? removeCoupon()
+                        : !coupon?.code
+                        ? (setCoupon(prev => ({...prev, warning: true})),
+                          toastMsg('Enter coupon code.', 'warning'))
+                        : applyCoupon();
+                    }}
+                    activeOpacity={0.6}
+                    style={[
+                      styles.applyBtn,
+                      coupon?.applied && {backgroundColor: COLORS.watermelon},
+                    ]}>
+                    <Text style={styles.applyTxt}>
+                      {coupon?.applied ? 'Remove' : 'Apply'}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -288,18 +349,17 @@ const EventDetails = ({route, navigation}) => {
               amountDetails?.map((item, index) => {
                 return (
                   <View
-                    style={[
-                      styles.lablValCont,
-                      {marginTop: index === 0 ? '10%' : '5%'},
-                    ]}
+                    style={[styles.lablValCont, styles.amountsec(index)]}
                     key={index + 1}>
-                    <Text style={styles.labelTxt}> {item?.label}</Text>
+                    <Text style={[styles.labelTxt, {width: '60%'}]}>
+                      {item?.label}
+                    </Text>
                     <Text style={[styles.labelTxt, styles.colon]}>:</Text>
                     <Text
                       style={[
                         styles.labelTxt,
                         styles.valTxt,
-                        {textAlign: 'right'},
+                        {textAlign: 'right', width: '35%'},
                       ]}>
                       {item?.value}
                     </Text>
@@ -328,10 +388,10 @@ const EventDetails = ({route, navigation}) => {
                   },
                 ]}>
                 <Text style={styles.payBtnTxt}>
-                  {eventDetails?.amtPaid === 'Y'
+                  {eventDetails?.Is_registered === 'Y'
                     ? 'Registered'
-                    : eventDetails?.paid_event === 'Y'
-                    ? 'Pay now'
+                    : eventDetails?.Is_paid_event === 'Y'
+                    ? 'Pay Now to Register'
                     : 'Register'}
                 </Text>
               </TouchableOpacity>
@@ -426,11 +486,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   lablValCont: {
-    width: '100%',
+    width: '50%',
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     marginTop: '5%',
+    alignSelf: 'center',
   },
   labelTxt: {
     width: '30%',
@@ -502,4 +563,9 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     textAlign: 'center',
   },
+  amountsec: index => ({
+    marginTop: index === 0 ? '10%' : '5%',
+    width: '60%',
+    alignSelf: 'flex-end',
+  }),
 });

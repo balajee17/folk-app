@@ -247,11 +247,12 @@ const Home = ({apiData, shimmer}) => {
     );
   };
 
-  // @  Folk Announcements
+  // @  Folk Announcements || Message from FOLK Guide
   const FolkUpdates = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
     const icnLink = data?.icon;
+    const section = data?.section;
     return (
       <>
         <View
@@ -269,35 +270,17 @@ const Home = ({apiData, shimmer}) => {
                 index === 0 ? COLORS.white : COLORS.gableGreen,
                 icnLink,
               )}
-              {RenderHistoryIcon(
-                TITLE,
-                screenNames.updates,
-                index === 0 ? COLORS.white : COLORS.gableGreen,
-              )}
+              {section !== 5 &&
+                RenderHistoryIcon(
+                  TITLE,
+                  screenNames.updates,
+                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                )}
             </>
           )}
         </View>
 
         {!shimmer &&
-          // (
-          //   <>
-          //     <ImageShimmer
-          //       width={'95%'}
-          //       height={verticalScale(250)}
-          //       borderRadius={moderateScale(15)}
-          //       marginTop={verticalScale(10)}
-          //       alignSelf={'center'}
-          //     />
-          //     <ImageShimmer
-          //       width={'95%'}
-          //       height={verticalScale(120)}
-          //       borderRadius={moderateScale(15)}
-          //       marginTop={verticalScale(10)}
-          //       alignSelf={'center'}
-          //     />
-          //   </>
-          // ) :
-
           UPDATES?.length > 0 &&
           UPDATES?.map((updateItem, updateIndex) => {
             return (
@@ -395,33 +378,25 @@ const Home = ({apiData, shimmer}) => {
         </View>
 
         <View style={[MyStyles.youtubeCont]}>
-          {!shimmer &&
-            //  (
-            //   <YoutubeShimmer
-            //     width={windowWidth * 0.95}
-            //     height={windowWidth * 0.95 * (9 / 16)}
-            //     borderRadius={moderateScale(15)}
-            //   />
-            // ) :
-            UPDATES?.length > 0 && (
-              <YoutubePlayer
-                width={windowWidth * 0.95}
-                height={windowWidth * 0.95 * (9 / 16)}
-                webViewStyle={{
-                  borderRadius: moderateScale(15),
-                }}
-                play={playVideo}
-                onReady={() => {
-                  // setShimmer(prev => ({...prev, video: false}));
-                }}
-                onError={() => {
-                  // setShimmer(prev => ({...prev, video: false}));
-                }}
-                mute={youtubeAudio}
-                videoId={UPDATES[0]?.code}
-                onChangeState={onStateChange}
-              />
-            )}
+          {!shimmer && UPDATES?.length > 0 && (
+            <YoutubePlayer
+              width={windowWidth * 0.95}
+              height={windowWidth * 0.95 * (9 / 16)}
+              webViewStyle={{
+                borderRadius: moderateScale(15),
+              }}
+              play={playVideo}
+              onReady={() => {
+                // setShimmer(prev => ({...prev, video: false}));
+              }}
+              onError={() => {
+                // setShimmer(prev => ({...prev, video: false}));
+              }}
+              mute={youtubeAudio}
+              videoId={UPDATES[0]?.code}
+              onChangeState={onStateChange}
+            />
+          )}
         </View>
         {!shimmer && apiData?.length - 1 > index && (
           <View style={styles.horizontalLine} />
@@ -439,6 +414,7 @@ const Home = ({apiData, shimmer}) => {
         return <Quotes data={item} index={index} />;
 
       case 3:
+      case 5:
         return <FolkUpdates data={item} index={index} />;
 
       case 4:

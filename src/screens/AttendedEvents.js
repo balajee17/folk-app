@@ -32,6 +32,8 @@ import {
 import {getImage} from '../utils/ImagePath';
 import FastImage from 'react-native-fast-image';
 import NoDataFound from '../components/NoDataFound';
+import {RedirectURL} from '../components/CommonFunctionalities';
+import {useToast} from 'react-native-toast-notifications';
 
 const AttendedEvents = ({navigation, shimmer, registeredList}) => {
   // # Navigate Sreen
@@ -77,7 +79,12 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
       console.log('Unable to open settings. Please go to settings manually.');
     });
   };
-
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
   return (
     <>
       {!shimmer ? (
@@ -123,16 +130,22 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                       </Text>
                     </View>
 
-                    <View style={MyStyles.modeCont}>
-                      <Text style={MyStyles.modeTxt}>
-                        {item?.event_type === 'F' ? 'Offline' : 'Online'}
-                      </Text>
-                    </View>
+                    {(item?.event_type === 'F' || item?.event_type === 'O') && (
+                      <View style={MyStyles.modeCont}>
+                        <Text style={MyStyles.modeTxt}>
+                          {item?.event_type === 'F'
+                            ? 'Offline'
+                            : item?.event_type === 'O'
+                            ? 'Online'
+                            : ''}
+                        </Text>
+                      </View>
+                    )}
                   </View>
 
                   {/* // # Content Container */}
                   <View style={MyStyles.boxContentContainer}>
-                    <View style={{width: '80%'}}>
+                    <View style={{width: '72%'}}>
                       <Text numberOfLines={1} style={MyStyles.titleTxt}>
                         {item?.session_name}
                       </Text>
@@ -141,10 +154,8 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                       </Text>
                     </View>
 
-                    <View style={{width: '18%'}}>
-                      <Text style={MyStyles.amtTxt}>
-                        {item?.is_attended === 'N' ? 'Free' : 'Paid'}
-                      </Text>
+                    <View style={{width: '25%'}}>
+                      <Text style={MyStyles.amtTxt}>{item?.amount}</Text>
                     </View>
                   </View>
 
@@ -154,8 +165,28 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                       MyStyles.boxContentContainer,
                       {marginBottom: '1%'},
                     ]}>
-                    <View style={[MyStyles.iconsContainer, {width: '30%'}]}>
-                      {item?.is_attended === 'N' && (
+                    <View style={[MyStyles.iconsContainer, {width: '40%'}]}>
+                      {!!item?.session_link && item?.event_type === 'O' && (
+                        <TouchableOpacity
+                          onPress={async () => {
+                            const result = await RedirectURL(
+                              item?.session_link,
+                            );
+                            if (!!result?.type) {
+                              toastMsg(result?.message, result?.type);
+                            }
+                          }}
+                          style={MyStyles.iconStyle}
+                          activeOpacity={0.6}>
+                          <MaterialCommunityIcons
+                            name="video"
+                            size={moderateScale(19)}
+                            color={COLORS.charcoal}
+                          />
+                        </TouchableOpacity>
+                      )}
+
+                      {item?.show_scan === 'Y' && (
                         <TouchableOpacity
                           onPress={() => checkCameraPermission(item?.id)}
                           style={MyStyles.iconStyle}
@@ -168,7 +199,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                         </TouchableOpacity>
                       )}
 
-                      {item?.is_attended === 'Y' && (
+                      {item?.show_voucher === 'Y' && (
                         <TouchableOpacity
                           onPress={() =>
                             // navigateTo(screenNames.coupons, {eventId: item?.id})
@@ -185,13 +216,20 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                       )}
                     </View>
 
-                    <Text
-                      style={[
-                        MyStyles.registerTxt,
-                        {color: COLORS.candlelight},
-                      ]}>
-                      {item?.is_registered === 'Y' && 'Registered ✓'}
-                    </Text>
+                    {(item?.is_attended === 'Y' ||
+                      item?.is_registered === 'Y') && (
+                      <Text
+                        style={[
+                          MyStyles.registerTxt,
+                          {color: COLORS.candlelight},
+                        ]}>
+                        {item?.is_attended === 'Y'
+                          ? 'Attended ✓✓'
+                          : item?.is_registered === 'Y'
+                          ? 'Registered ✓'
+                          : ''}
+                      </Text>
+                    )}
                   </View>
                 </TouchableOpacity>
               </>
@@ -204,9 +242,9 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
           .fill(2)
           .map((_, i) => {
             return (
-              <TouchableOpacity onPress={() => checkCameraPermission(5)}>
+              <View>
                 <EventShimmer marginTop={i === 0 ? '2%' : '5%'} />
-              </TouchableOpacity>
+              </View>
             );
           })
       )}

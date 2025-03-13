@@ -14,8 +14,10 @@ import {
   FONTS,
   horizontalScale,
   moderateScale,
+  screenHeight,
   SIZES,
   verticalScale,
+  windowHeight,
 } from '../styles/MyStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,6 +28,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {API} from '../services/API';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useAppContext} from '../../App';
+import {RedirectURL} from '../components/CommonFunctionalities';
 
 const ConnectUs = ({apiData, shimmer}) => {
   const toast = useToast();
@@ -35,26 +38,17 @@ const ConnectUs = ({apiData, shimmer}) => {
     });
   };
 
-  const openLink = async url => {
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        toastMsg('Invalid URL or no supported app found.', 'warning');
-      }
-    } catch (err) {
-      toastMsg('Failed to open the link. Please try again.', 'error');
-    }
-  };
-
   const copyToClipboard = (item, textToCopy) => {
     Clipboard.setString(textToCopy);
     toastMsg(`${item} copied to clipboard.`);
   };
 
   return (
-    <ScrollView contentContainerStyle={{backgroundColor: COLORS.white}}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        minHeight: screenHeight,
+      }}>
       <LinearGradientBg />
 
       {/* // @ FOLK Guide Detail Box */}
@@ -166,6 +160,15 @@ const ConnectUs = ({apiData, shimmer}) => {
               {/* // # ICONS  */}
               <View style={styles.phoneWhatsappCont}>
                 <TouchableOpacity
+                  onPress={async () => {
+                    const result = await RedirectURL(
+                      apiData?.guideDetails?.MOBILE,
+                      'phone',
+                    );
+                    if (!!result?.type) {
+                      toastMsg(result?.message, result?.type);
+                    }
+                  }}
                   activeOpacity={0.8}
                   style={[styles.contactBtn, {backgroundColor: COLORS.dodger}]}>
                   <FontAwesome
@@ -176,6 +179,15 @@ const ConnectUs = ({apiData, shimmer}) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
+                  onPress={async () => {
+                    const result = await RedirectURL(
+                      apiData?.guideDetails?.WHATSAPP,
+                      'whatsapp',
+                    );
+                    if (!!result?.type) {
+                      toastMsg(result?.message, result?.type);
+                    }
+                  }}
                   activeOpacity={0.8}
                   style={[
                     styles.contactBtn,
@@ -189,6 +201,14 @@ const ConnectUs = ({apiData, shimmer}) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
+                  onPress={async () => {
+                    const result = await RedirectURL(
+                      apiData?.guideDetails?.WEB,
+                    );
+                    if (!!result?.type) {
+                      toastMsg(result?.message, result?.type);
+                    }
+                  }}
                   activeOpacity={0.8}
                   style={[styles.contactBtn, {backgroundColor: COLORS.purple}]}>
                   <MaterialCommunityIcons
@@ -222,10 +242,7 @@ const ConnectUs = ({apiData, shimmer}) => {
               .fill(4)
               .map((_, i) => {
                 return (
-                  <View
-                    activeOpacity={0.8}
-                    key={i}
-                    style={styles.socialMediaBtn}>
+                  <View key={i} style={styles.socialMediaBtn}>
                     <ImageShimmer
                       width={horizontalScale(40)}
                       height={horizontalScale(40)}
@@ -240,7 +257,12 @@ const ConnectUs = ({apiData, shimmer}) => {
                   activeOpacity={0.8}
                   key={index + 1}
                   style={styles.socialMediaBtn}
-                  onPress={() => openLink(item?.URL)}>
+                  onPress={async () => {
+                    const result = await RedirectURL(item?.URL);
+                    if (!!result?.type) {
+                      toastMsg(result?.message, result?.type);
+                    }
+                  }}>
                   <Image
                     style={styles.socialMediaImg}
                     source={{uri: item?.ICON}}
@@ -270,7 +292,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: verticalScale(350),
+    height: horizontalScale(320),
     overflow: 'hidden',
   },
   imageContainer: {
@@ -334,7 +356,7 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     width: '90%',
     alignSelf: 'center',
-    marginTop: '30%',
+    marginTop: verticalScale(90),
     textAlign: 'center',
   },
   socialMediaBox: {

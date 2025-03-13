@@ -100,6 +100,12 @@ export const API = {
     );
     return axios.post(getCouponListURL, requestData);
   },
+  applyCoupon(data) {
+    const applyCouponURL = baseURL + '/event-apply-coupon';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL applyCoupon Data ', applyCouponURL, ' data ', requestData);
+    return axios.post(applyCouponURL, requestData);
+  },
 
   // # Connect US
   getConnectDetails(data) {

@@ -34,7 +34,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useToast} from 'react-native-toast-notifications';
-import Share from 'react-native-share';
+import {RedirectURL, ShareLink} from './CommonFunctionalities';
 
 const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
   const WIDTH = windowWidth * 0.75;
@@ -66,29 +66,7 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
     scrollRef?.current?.scrollToOffset({offset, animated: true}); // Scroll to the index
     scrollX.value = index; // Update the active index
   };
-  const download = async url => {
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        toastMsg('Invalid URL or no supported app found.', 'warning');
-      }
-    } catch (err) {
-      toastMsg('Failed to open the link. Please try again.', 'error');
-    }
-  };
-  const shareLink = async link => {
-    const options = {
-      url: link,
-    };
 
-    try {
-      await Share.open(options);
-    } catch (err) {
-      toastMsg('Failed to share the link. Please try again.', 'error');
-    }
-  };
   return (
     <>
       <CommonStatusBar />
@@ -180,8 +158,12 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                     justifyContent: 'space-around',
                   }}>
                   <TouchableOpacity
-                    onPress={() => {
-                      download(item?.link);
+                    onPress={async () => {
+                      const result = await RedirectURL(item?.URL);
+
+                      if (!!result?.type) {
+                        toastMsg(result?.message, result?.type);
+                      }
                     }}
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.3)',
@@ -202,7 +184,12 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => shareLink(item?.link)}
+                    onPress={() => {
+                      const result = ShareLink(item?.link);
+                      if (!!result?.type) {
+                        toastMsg(result?.message, result?.type);
+                      }
+                    }}
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.3)',
                       width: horizontalScale(50),

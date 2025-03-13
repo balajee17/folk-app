@@ -64,7 +64,7 @@ const QrScanner = ({navigation, route}) => {
       setLoader(false);
     } catch (err) {
       console.log('ERR-Event-Attendance-screen', err);
-      setShimmer(false);
+      setLoader(false);
       toastMsg('', 'error');
     }
   };

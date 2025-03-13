@@ -61,7 +61,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
 
                   {/* // # Content Container */}
                   <View style={MyStyles.boxContentContainer}>
-                    <View style={{width: '80%'}}>
+                    <View style={{width: '72%'}}>
                       <Text numberOfLines={1} style={MyStyles.titleTxt}>
                         {item?.session_name}
                       </Text>
@@ -70,10 +70,8 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
                       </Text>
                     </View>
 
-                    <View style={{width: '18%'}}>
-                      <Text style={MyStyles.amtTxt}>
-                        {item?.is_attended === 'N' ? 'Free' : 'Paid'}
-                      </Text>
+                    <View style={{width: '25%'}}>
+                      <Text style={MyStyles.amtTxt}>{item?.amount}</Text>
                     </View>
                   </View>
 
@@ -85,7 +83,6 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
                     ]}>
                     <TouchableOpacity
                       activeOpacity={0.6}
-                      disabled={item?.is_registered !== 'N'}
                       onPress={() => {
                         navigateTo(screenNames.eventDetails, {
                           screen: 'Upcoming',
@@ -93,9 +90,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
                         });
                       }}
                       style={MyStyles.registerBtn}>
-                      <Text style={MyStyles.registerTxt}>
-                        {item?.is_registered === 'N' && 'Register'}
-                      </Text>
+                      <Text style={MyStyles.registerTxt}>Register</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
