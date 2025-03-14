@@ -236,6 +236,8 @@ const SwitcherScreen = ({navigation, route}) => {
             shimmer={shimmer}
             eventList={eventList}
             navigation={navigation}
+            refreshUpcoming={() => getUpcomingList()}
+            refreshRegistered={() => getRegisteredList()}
           />
         ) : btTab === 'B3' ? (
           <Courses />

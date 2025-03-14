@@ -26,6 +26,8 @@ const Events = ({
   index,
   shimmer,
   eventList,
+  refreshUpcoming,
+  refreshRegistered,
 }) => {
   const [filterValues, setFilterValues] = useState({});
   const [filterDrpDwnLst, setFilterDrpDwnLst] = useState({
@@ -190,6 +192,7 @@ const Events = ({
                 navigation={navigation}
                 shimmer={shimmer?.upcoming}
                 upcomingList={eventList?.upcoming}
+                refresh={() => refreshUpcoming()}
               />
             );
           }
@@ -199,6 +202,7 @@ const Events = ({
                 navigation={navigation}
                 shimmer={shimmer?.registered}
                 registeredList={eventList?.registered}
+                refresh={() => refreshRegistered()}
               />
             );
           }

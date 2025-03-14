@@ -106,6 +106,17 @@ export const API = {
     console.log('URL applyCoupon Data ', applyCouponURL, ' data ', requestData);
     return axios.post(applyCouponURL, requestData);
   },
+  eventRegister(data) {
+    const eventRegisterURL = baseURL + '/event-register';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL eventRegisterURL Data ',
+      eventRegisterURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(eventRegisterURL, requestData);
+  },
 
   // # Connect US
   getConnectDetails(data) {

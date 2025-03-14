@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,7 +14,7 @@ import {EventShimmer} from '../components/Shimmer';
 import moment from 'moment';
 import NoDataFound from '../components/NoDataFound';
 
-const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
+const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
     navigation.navigate(screen, params);
@@ -97,6 +98,9 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer}) => {
               </>
             );
           }}
+          refreshControl={
+            <RefreshControl refreshing={shimmer} onRefresh={refresh} />
+          }
           ListEmptyComponent={<NoDataFound screen={screenNames.events} />}
         />
       ) : (

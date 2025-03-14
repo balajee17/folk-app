@@ -36,6 +36,7 @@ import Spinner from '../components/Spinner';
 import {TitleShimmer} from '../components/Shimmer';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
+import moment from 'moment';
 
 const EventDetails = ({route, navigation}) => {
   const statusBarHeight = useStatusBarHeight();
@@ -81,6 +82,7 @@ const EventDetails = ({route, navigation}) => {
   // # API Event Details
   const getEventDetails = async () => {
     try {
+      !shimmer && setShimmer(true);
       const params = {profile_id: profileId, event_id: eventId};
       const response = await API.getEventDetails(params);
 
@@ -118,7 +120,7 @@ const EventDetails = ({route, navigation}) => {
       if (successCode === 1) {
         setCoupon(prev => ({...prev, applied: true}));
       } else {
-        coupon?.applied && setCoupon(prev => ({...prev, applied: false}));
+        setCoupon(prev => ({...prev, warning: true}));
         toastMsg(message, 'info');
       }
       setLoader(false);
@@ -129,8 +131,66 @@ const EventDetails = ({route, navigation}) => {
     }
   };
 
+  // # API Register
+  const register = async () => {
+    const amountToPay = amountDetails?.filter(item => item?.id === 2);
+    try {
+      setLoader(true);
+      const params = {
+        profileId: profileId,
+        eventId: eventId,
+        offer_code: coupon?.applied ? coupon?.code : '',
+        isFreeEvent: eventDetails?.Event_mode,
+        pgName: 'cashFree',
+        pgMode: 'Online',
+        paidAmount:
+          eventDetails?.Is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
+        name: globalState?.userName,
+        mobileNumber: globalState?.mobileNumber,
+        transactionDate: moment().format('YYYY-MM-DD H:mm:ss'),
+        transactionStatus: eventDetails?.Is_paid_event === 'Y' ? 'I' : 'S',
+      };
+      const response = await API.eventRegister(params);
+
+      const {data, successCode, message} = response?.data;
+      console.log('Register_response', data?.message);
+      if (successCode === 1) {
+        if (eventDetails?.Event_mode === 'O') {
+          // call payment gateway => payment status screen => back to event details
+          // if amt > 0 then payment gateway
+          setLoader(false);
+        } else {
+          resetValues();
+          toastMsg(message, 'success');
+          getEventDetails();
+        }
+      } else {
+        toastMsg(message, 'info');
+      }
+    } catch (err) {
+      setLoader(false);
+      toastMsg('', 'error');
+      console.log('ERR-Register', err);
+    }
+  };
+
   const removeCoupon = () => {
     setCoupon({code: '', applied: false, warning: false});
+  };
+
+  const resetValues = () => {
+    expanded && setExpanded(false);
+    setEventDetails({});
+    showReadMore && setShowReadMore(false);
+    setShimmer(true);
+    setLoader(false);
+    setAmountDetails([]);
+    (coupon?.code !== '' || coupon?.warning || coupon?.applied) &&
+      setCoupon({
+        code: '',
+        warning: false,
+        applied: false,
+      });
   };
 
   return (
@@ -138,7 +198,10 @@ const EventDetails = ({route, navigation}) => {
       <SafeAreaView style={MyStyles.contentCont}>
         <StatusBarTransp />
         <Spinner spinnerVisible={loader} />
-        <ScrollView showsVerticalScrollIndicator={false} overScrollMode="never">
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          overScrollMode="never">
           {!shimmer ? (
             <ImageBackground
               source={{
@@ -256,7 +319,9 @@ const EventDetails = ({route, navigation}) => {
               : Array(2)
                   .fill(2)
                   .map((_, index) => (
-                    <View style={styles.lablValCont} key={index + 1}>
+                    <View
+                      style={[styles.lablValCont, {width: '100%'}]}
+                      key={index + 1}>
                       <TitleShimmer />
                       <TitleShimmer />
                     </View>
@@ -292,6 +357,8 @@ const EventDetails = ({route, navigation}) => {
                         eventDetails?.Event_mode === 'F'
                           ? COLORS.midGrey
                           : COLORS.dodger,
+                      textDecorationLine:
+                        eventDetails?.Event_mode === 'O' ? 'underline' : 'none',
                     },
                   ]}>
                   {eventDetails?.Event_space}
@@ -300,7 +367,7 @@ const EventDetails = ({route, navigation}) => {
             )}
 
             {/* // # Discount Code */}
-            {eventDetails?.Is_paid_event !== 'Y' &&
+            {eventDetails?.Is_paid_event === 'Y' &&
               screen === 'Upcoming' &&
               !shimmer && (
                 <View
@@ -314,7 +381,13 @@ const EventDetails = ({route, navigation}) => {
                   <TextInput
                     value={coupon?.code}
                     onChangeText={text => {
-                      setCoupon({code: text, warning: false, applied: false});
+                      coupon?.warning || coupon?.applied
+                        ? setCoupon({
+                            code: text,
+                            warning: false,
+                            applied: false,
+                          })
+                        : setCoupon(prev => ({...prev, code: text}));
                     }}
                     placeholder="Enter Discount Code"
                     placeholderTextColor={COLORS.midGrey}
@@ -330,7 +403,7 @@ const EventDetails = ({route, navigation}) => {
                           toastMsg('Enter coupon code.', 'warning'))
                         : applyCoupon();
                     }}
-                    activeOpacity={0.6}
+                    activeOpacity={0.8}
                     style={[
                       styles.applyBtn,
                       coupon?.applied && {backgroundColor: COLORS.watermelon},
@@ -376,7 +449,15 @@ const EventDetails = ({route, navigation}) => {
               />
             ) : checkDataExist ? (
               <TouchableOpacity
-                disabled={eventDetails?.amtPaid === 'Y'}
+                disabled={
+                  eventDetails?.Is_registered === 'Y' ||
+                  eventDetails?.Is_attended === 'Y'
+                }
+                onPress={() => {
+                  eventDetails?.Is_registered !== 'Y' &&
+                    eventDetails?.Is_attended !== 'Y' &&
+                    register();
+                }}
                 activeOpacity={0.6}
                 style={[
                   styles.payBtn,
@@ -388,7 +469,9 @@ const EventDetails = ({route, navigation}) => {
                   },
                 ]}>
                 <Text style={styles.payBtnTxt}>
-                  {eventDetails?.Is_registered === 'Y'
+                  {eventDetails?.Is_attended === 'Y'
+                    ? 'Attended'
+                    : eventDetails?.Is_registered === 'Y'
                     ? 'Registered'
                     : eventDetails?.Is_paid_event === 'Y'
                     ? 'Pay Now to Register'

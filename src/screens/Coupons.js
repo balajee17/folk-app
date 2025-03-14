@@ -1,8 +1,10 @@
 import {
+  FlatList,
   Image,
   ImageBackground,
   Modal,
   Pressable,
+  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -27,6 +29,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useAppContext} from '../../App';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
+import NoDataFound from '../components/NoDataFound';
+import moment from 'moment';
 
 const Coupons = ({navigation, route}) => {
   const {globalState} = useAppContext();
@@ -36,8 +40,9 @@ const Coupons = ({navigation, route}) => {
   const {eventId} = route?.params;
 
   const [opnAddCoupon, setOpnAddCoupon] = useState(false);
-  const [showQrCode, setShowQrCode] = useState(false);
+  const [qrCode, setQrCode] = useState({show: false, link: ''});
   const [loader, setLoader] = useState(false);
+  const [couponData, setCouponData] = useState({});
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -56,7 +61,8 @@ const Coupons = ({navigation, route}) => {
 
   const getCouponsList = async () => {
     try {
-      const params = {profile_id: profileId, eventId: eventId};
+      !loader && setLoader(true);
+      const params = {profile_id: profileId, event_id: eventId};
       const response = await API.getCouponList(params);
 
       console.log('Coupon_List_response', response?.data);
@@ -64,12 +70,12 @@ const Coupons = ({navigation, route}) => {
       if (SuccessCode === 1) {
         setCouponData(data);
       } else {
-        setCouponData([]);
+        setCouponData({});
         toastMsg(message, 'info');
       }
       setLoader(false);
     } catch (err) {
-      setCouponData([]);
+      setCouponData({});
       toastMsg('', 'error');
       setLoader(false);
       console.log('ERR-Coupon_List-screen', err);
@@ -89,59 +95,78 @@ const Coupons = ({navigation, route}) => {
       <SafeAreaView styles={[MyStyles.flex1]}>
         <View style={MyStyles.contentCont}>
           {/* // @ Coupon card */}
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => setShowQrCode(true)}
-            style={styles.couponCard}>
-            {/* // # Left Cutout */}
-            <View style={[styles.cutout, styles.leftCutout]} />
-            {/*  //# Vertical Line */}
-            <View style={styles.verticalLine} />
-            {/* // # Right Cutout */}
-            <View style={[styles.cutout, styles.rightCutout]} />
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={couponData?.couponList}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => setQrCode({show: true, link: item?.qrLink})}
+                  style={styles.couponCard}>
+                  {/* // # Left Cutout */}
+                  <View style={[styles.cutout, styles.leftCutout]} />
+                  {/*  //# Vertical Line */}
+                  <View style={styles.verticalLine} />
+                  {/* // # Right Cutout */}
+                  <View style={[styles.cutout, styles.rightCutout]} />
 
-            {/* // # Left Content */}
-            <View style={styles.leftContent}>
-              <Text numberOfLines={2} style={styles.couponCodeTxt}>
-                ECPN-5-5365
-              </Text>
-              <Text
-                numberOfLines={2}
-                style={[styles.couponCodeTxt, styles.eventName]}>
-                Prasadam Coupon
-              </Text>
+                  {/* // # Left Content */}
+                  <View style={styles.leftContent}>
+                    <Text numberOfLines={2} style={styles.couponCodeTxt}>
+                      {item?.code}
+                    </Text>
+                    <Text
+                      numberOfLines={2}
+                      style={[styles.couponCodeTxt, styles.eventName]}>
+                      {item?.couponTitle}
+                    </Text>
 
-              <View style={styles.dtTimeContainer}>
-                {dateTime.map((item, index) => {
-                  return (
-                    <View key={index + 1} style={{width: '45%'}}>
-                      <Text numberOfLines={1} style={styles.labelTxt}>
-                        {item}
-                      </Text>
-                      <Text numberOfLines={1} style={styles.valueTxt}>
-                        {index === 0 ? '11-02-2025' : '10:30 AM'}
-                      </Text>
+                    <View style={styles.dtTimeContainer}>
+                      {dateTime.map((dateItem, dateIndex) => {
+                        return (
+                          <View key={dateIndex} style={{width: '45%'}}>
+                            <Text numberOfLines={1} style={styles.labelTxt}>
+                              {dateItem}
+                            </Text>
+                            <Text numberOfLines={1} style={styles.valueTxt}>
+                              {index === 0
+                                ? moment(item?.dateTime).format('DD-MM-YYYY')
+                                : moment(item?.dateTime).format('h:mm:ss a')}
+                            </Text>
+                          </View>
+                        );
+                      })}
                     </View>
-                  );
-                })}
-              </View>
-            </View>
+                  </View>
 
-            {/* // # Right Content */}
-            <View style={styles.rightContent}>
-              <Text numberOfLines={1} style={[styles.eventName, styles.qtyTxt]}>
-                Qty
-              </Text>
-              <Text numberOfLines={1} style={styles.countTxt}>
-                01
-              </Text>
-              <Text
-                numberOfLines={1}
-                style={[styles.valueTxt, styles.amountTxt]}>
-                ₹ 120
-              </Text>
-            </View>
-          </TouchableOpacity>
+                  {/* // # Right Content */}
+                  <View style={styles.rightContent}>
+                    <Text
+                      numberOfLines={1}
+                      style={[styles.eventName, styles.qtyTxt]}>
+                      Qty
+                    </Text>
+                    <Text numberOfLines={1} style={styles.countTxt}>
+                      01
+                    </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={[styles.valueTxt, styles.amountTxt]}>
+                      {item?.isFree === 'Y' ? 'Free' : 'Paid'}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={loader}
+                onRefresh={() => getCouponsList()}
+              />
+            }
+            ListEmptyComponent={<NoDataFound screen={screenNames.coupons} />}
+          />
         </View>
       </SafeAreaView>
 
@@ -240,12 +265,10 @@ const Coupons = ({navigation, route}) => {
       {/*  // @ Show QrCode */}
       <Modal
         animationType="slide"
-        onRequestClose={() => setShowQrCode(false)}
-        visible={showQrCode}
+        onRequestClose={() => setQrCode(false)}
+        visible={qrCode}
         transparent>
-        <Pressable
-          onPress={() => setShowQrCode(false)}
-          style={styles.fltrModal}>
+        <Pressable onPress={() => setQrCode(false)} style={styles.fltrModal}>
           {/* // #  Qr Code Image */}
           <Pressable
             style={{

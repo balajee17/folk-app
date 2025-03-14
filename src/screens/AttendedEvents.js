@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   Platform,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -35,7 +36,7 @@ import NoDataFound from '../components/NoDataFound';
 import {RedirectURL} from '../components/CommonFunctionalities';
 import {useToast} from 'react-native-toast-notifications';
 
-const AttendedEvents = ({navigation, shimmer, registeredList}) => {
+const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
     navigation.navigate(screen, params);
@@ -199,11 +200,10 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
                         </TouchableOpacity>
                       )}
 
-                      {item?.show_voucher === 'Y' && (
+                      {item?.show_voucher !== 'Y' && (
                         <TouchableOpacity
                           onPress={() =>
-                            // navigateTo(screenNames.coupons, {eventId: item?.id})
-                            {}
+                            navigateTo(screenNames.coupons, {eventId: item?.id})
                           }
                           style={MyStyles.iconStyle}
                           activeOpacity={0.6}>
@@ -235,6 +235,9 @@ const AttendedEvents = ({navigation, shimmer, registeredList}) => {
               </>
             );
           }}
+          refreshControl={
+            <RefreshControl refreshing={shimmer} onRefresh={refresh} />
+          }
           ListEmptyComponent={<NoDataFound screen={screenNames.events} />}
         />
       ) : (

@@ -27,6 +27,7 @@ const App = ({children}) => {
     isConnected: true,
     folkId: '20231204007',
     userName: 'Naveen Alagarsamy',
+    mobileNumber: '6369455056',
   });
 
   useEffect(() => {
