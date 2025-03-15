@@ -9,9 +9,9 @@ const baseURL =
 
 export const API = {
   // # Home Screen API's
-  getHomeScreenData() {
+  getHomeScreenData(data) {
     const getHomeDataURL = baseURL + '/home-page-feeder';
-    const requestData = {accessKey: Access_Key};
+    const requestData = {accessKey: Access_Key, ...data};
     console.log('URL Home Screen Data ', getHomeDataURL, ' data ', requestData);
     return axios.post(getHomeDataURL, requestData);
   },

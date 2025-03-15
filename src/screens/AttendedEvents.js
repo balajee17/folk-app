@@ -33,7 +33,7 @@ import {
 import {getImage} from '../utils/ImagePath';
 import FastImage from 'react-native-fast-image';
 import NoDataFound from '../components/NoDataFound';
-import {RedirectURL} from '../components/CommonFunctionalities';
+import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
 import {useToast} from 'react-native-toast-notifications';
 
 const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
@@ -81,11 +81,9 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
     });
   };
   const toast = useToast();
-  const toastMsg = (msg, type) => {
-    toast.show(msg, {
-      type: type,
-    });
-  };
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
   return (
     <>
       {!shimmer ? (

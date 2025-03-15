@@ -2,7 +2,7 @@ export const getImage = {
   menu: require('../assets/images/menu.png'),
   notification: require('../assets/images/notification.png'),
   folk: require('../assets/images/folk.png'),
-  announce: require('../assets/images/announce.png'),
+  // announce: require('../assets/images/announce.png'),
   folkIcn: require('../assets/images/folkIcn.png'),
   home: require('../assets/images/home.png'),
   homeActive: require('../assets/images/homeActive.png'),

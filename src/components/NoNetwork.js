@@ -22,6 +22,7 @@ import {CommonActions} from '@react-navigation/native';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
+import {toastThrottle} from './CommonFunctionalities';
 
 const NoNetwork = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -41,11 +42,9 @@ const NoNetwork = ({navigation}) => {
   }, []);
 
   const toast = useToast();
-  const toastMsg = (msg, type) => {
-    toast.show(msg, {
-      type: type,
-    });
-  };
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
 
   const reloadApp = () => {
     if (isConnected) {

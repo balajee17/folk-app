@@ -22,7 +22,6 @@ const SwitcherScreen = ({navigation, route}) => {
   const toast = useToast();
 
   const {btTab, profileId, activeEventTab, isConnected} = globalState;
-  console.log('isConnected_SS', isConnected);
   const [opnFltr, setOpnFltr] = useState(false);
   const [tab1Data, setTab1Data] = useState([
     {section: 1, title: '', updates: [{id: 1, link: ''}], forLoader: 'Y'},
@@ -39,7 +38,6 @@ const SwitcherScreen = ({navigation, route}) => {
   const [connectDetails, setConnectDetails] = useState({});
 
   const toastMsg = (msg, type) => {
-    console.log('msg', msg);
     toast.show(msg, {
       type,
     });
@@ -111,7 +109,7 @@ const SwitcherScreen = ({navigation, route}) => {
   const getHomeScreenData = async () => {
     try {
       !shimmer?.home && setShimmer(prev => ({...prev, home: true}));
-      const response = await API.getHomeScreenData();
+      const response = await API.getHomeScreenData({profile_id: profileId});
 
       console.log('Home_response', response?.data);
       const {data, SuccessCode, message} = response?.data;

@@ -32,11 +32,9 @@ import {RedirectURL} from '../components/CommonFunctionalities';
 
 const ConnectUs = ({apiData, shimmer}) => {
   const toast = useToast();
-  const toastMsg = (msg, type) => {
-    toast.show(msg, {
-      type: type,
-    });
-  };
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
 
   const copyToClipboard = (item, textToCopy) => {
     Clipboard.setString(textToCopy);

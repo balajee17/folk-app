@@ -64,7 +64,7 @@ const Home = ({apiData, shimmer}) => {
     }
   });
 
-  // # Navigate Sreen
+  // # Navigate Screen
   const navigateScreen = (screen, params) => {
     navigation.navigate(screen, params);
   };
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     textAlign: 'left',
     marginLeft: '4%',
-    width: '70%',
+    width: '78%',
     textAlignVertical: 'center',
   },
   horizontalLine: {

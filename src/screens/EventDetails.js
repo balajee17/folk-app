@@ -37,6 +37,7 @@ import {TitleShimmer} from '../components/Shimmer';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import moment from 'moment';
+import {toastThrottle} from '../components/CommonFunctionalities';
 
 const EventDetails = ({route, navigation}) => {
   const statusBarHeight = useStatusBarHeight();
@@ -57,11 +58,9 @@ const EventDetails = ({route, navigation}) => {
 
   const {screen, eventId} = route?.params;
   const toast = useToast();
-  const toastMsg = (msg, type) => {
-    toast.show(msg, {
-      type: type,
-    });
-  };
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
   useEffect(() => {
     getEventDetails();
   }, []);

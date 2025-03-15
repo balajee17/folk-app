@@ -31,6 +31,8 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
 import moment from 'moment';
+import Spinner from '../components/Spinner';
+import {toastThrottle} from '../components/CommonFunctionalities';
 
 const Coupons = ({navigation, route}) => {
   const {globalState} = useAppContext();
@@ -39,20 +41,26 @@ const Coupons = ({navigation, route}) => {
   const dateTime = ['Date', 'Time'];
   const {eventId} = route?.params;
 
-  const [opnAddCoupon, setOpnAddCoupon] = useState(false);
+  const [addCoupon, setAddCoupon] = useState({
+    open: true,
+    type: 'R',
+    count: 1,
+    maxCount: 2,
+    refId: '',
+  });
   const [qrCode, setQrCode] = useState({show: false, link: ''});
   const [loader, setLoader] = useState(false);
-  const [couponData, setCouponData] = useState({});
+  const [refresh, setRefresh] = useState(false);
+  const [couponData, setCouponData] = useState([]);
 
   const toast = useToast();
-  const toastMsg = (msg, type) => {
-    toast.show(msg, {
-      type: type,
-    });
-  };
+
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
 
   const closeAddCpnModal = () => {
-    setOpnAddCoupon(false);
+    setAddCoupon(false);
   };
 
   useEffect(() => {
@@ -66,19 +74,156 @@ const Coupons = ({navigation, route}) => {
       const response = await API.getCouponList(params);
 
       console.log('Coupon_List_response', response?.data);
-      const {data, SuccessCode, message} = response?.data;
-      if (SuccessCode === 1) {
-        setCouponData(data);
+      const {data, successCode, message} = response?.data;
+      if (successCode === 1) {
+        // setCouponData(data?.coupons);
+        setCouponData({
+          couponList: [
+            {
+              dateTime: new Date(),
+              id: 1,
+              title: 'Prasadam Coupon Test',
+              code: '2#Ehguj668',
+              qty: 5,
+              requestedCoupon: 'N',
+
+              isPaid: 'N',
+
+              btnTxtColor: '',
+              btnBgColor: '',
+              dateColor: '',
+              labelColor: '',
+              codeColor: '',
+              titleColor: '',
+              countColor: '',
+              requestStatus: '',
+            },
+            {
+              dateTime: new Date(),
+              id: 2,
+              title: 'Prasadam Coupon Test',
+              code: '2#Ehguj668',
+              qty: 5,
+              requestedCoupon: 'N',
+              isPaid: 'Y',
+              btnTxtColor: '',
+              btnBgColor: '',
+              dateColor: '',
+              labelColor: '',
+              codeColor: '',
+              titleColor: '',
+              countColor: '',
+              requestStatus: '',
+            },
+            {
+              dateTime: new Date(),
+              id: 1,
+              title: 'Prasadam Coupon Test',
+              code: '2#Ehguj668',
+              qty: 5,
+              requestedCoupon: 'Y',
+
+              isPaid: 'N',
+
+              btnTxtColor: '',
+              btnBgColor: '',
+              dateColor: '',
+              labelColor: '',
+              codeColor: '',
+              titleColor: '',
+              countColor: '',
+              requestStatus: 'P',
+            },
+            {
+              dateTime: new Date(),
+              id: 1,
+              title: 'Prasadam Coupon Test',
+              code: '2#Ehguj668',
+              qty: 5,
+              requestedCoupon: 'Y',
+
+              isPaid: 'N',
+
+              btnTxtColor: '',
+              btnBgColor: '',
+              dateColor: '',
+              labelColor: '',
+              codeColor: '',
+              titleColor: '',
+              countColor: '',
+              requestStatus: 'A',
+            },
+            {
+              dateTime: new Date(),
+              id: 1,
+              title: 'Prasadam Coupon Test',
+              code: '2#Ehguj668',
+              qty: 5,
+              requestedCoupon: 'Y',
+
+              isPaid: 'N',
+
+              btnTxtColor: '',
+              btnBgColor: '',
+              dateColor: '',
+              labelColor: '',
+              codeColor: '',
+              titleColor: '',
+              countColor: '',
+              requestStatus: 'X',
+            },
+            {
+              dateTime: new Date(),
+              id: 1,
+              title: 'Prasadam Coupon Test',
+              code: '2#Ehguj668',
+              qty: 6,
+              requestedCoupon: 'Y',
+
+              isPaid: 'Y',
+
+              btnTxtColor: '',
+              btnBgColor: '',
+              dateColor: '',
+              labelColor: '',
+              codeColor: '',
+              titleColor: '',
+              countColor: '',
+              requestStatus: 'A',
+            },
+          ],
+        });
       } else {
-        setCouponData({});
+        setCouponData([]);
         toastMsg(message, 'info');
       }
       setLoader(false);
     } catch (err) {
-      setCouponData({});
       toastMsg('', 'error');
       setLoader(false);
       console.log('ERR-Coupon_List-screen', err);
+    }
+  };
+
+  const increment = () => {
+    const {maxCount, count} = addCoupon;
+    if (maxCount) {
+      if (maxCount > count) {
+        setAddCoupon(prev => ({...prev, count: count + 1}));
+      } else {
+        toastMsg(`Limit reached! Only ${maxCount} coupons allowed.`, 'warning');
+      }
+      return;
+    }
+    setAddCoupon(prev => ({...prev, count: count + 1}));
+  };
+
+  const decrement = () => {
+    const {count} = addCoupon;
+    if (count > 1) {
+      setAddCoupon(prev => ({...prev, count: count - 1}));
+    } else {
+      toastMsg(`Minimum 1 coupon required.`, 'warning');
     }
   };
 
@@ -89,89 +234,181 @@ const Coupons = ({navigation, route}) => {
         titleName={screenNames.coupons}
         goBack={() => navigation.goBack()}
         rightIcnAction={() => {
-          setOpnAddCoupon(true);
+          setAddCoupon(true);
         }}
       />
       <SafeAreaView styles={[MyStyles.flex1]}>
-        <View style={MyStyles.contentCont}>
-          {/* // @ Coupon card */}
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={couponData?.couponList}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => setQrCode({show: true, link: item?.qrLink})}
-                  style={styles.couponCard}>
-                  {/* // # Left Cutout */}
-                  <View style={[styles.cutout, styles.leftCutout]} />
-                  {/*  //# Vertical Line */}
-                  <View style={styles.verticalLine} />
-                  {/* // # Right Cutout */}
-                  <View style={[styles.cutout, styles.rightCutout]} />
+        <Spinner spinnerVisible={loader} />
+        {/* // @ Coupon card */}
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: '25%'}}
+          data={couponData?.couponList}
+          renderItem={({item, index}) => {
+            return (
+              <TouchableOpacity
+                disabled={
+                  item?.requestedCoupon === 'Y' || item?.requestStatus === 'X'
+                }
+                key={index + 1}
+                activeOpacity={0.8}
+                onPress={() => setQrCode({show: true, link: item?.qrLink})}
+                style={[styles.couponCard]}>
+                {/* // # Left Cutout */}
+                <View style={[styles.cutout, styles.leftCutout]} />
+                {/*  //# Vertical Line */}
+                <View style={styles.verticalLine} />
+                {/* // # Right Cutout */}
+                <View style={[styles.cutout, styles.rightCutout]} />
 
-                  {/* // # Left Content */}
-                  <View style={styles.leftContent}>
-                    <Text numberOfLines={2} style={styles.couponCodeTxt}>
-                      {item?.code}
-                    </Text>
-                    <Text
-                      numberOfLines={2}
-                      style={[styles.couponCodeTxt, styles.eventName]}>
-                      {item?.couponTitle}
-                    </Text>
+                {/* // # Left Content */}
+                <View style={styles.leftContent(item?.bgColor)}>
+                  <Text
+                    numberOfLines={2}
+                    style={[
+                      styles.couponCodeTxt,
+                      {color: item?.codeColor || COLORS.candlelight},
+                    ]}>
+                    {item?.code}
+                  </Text>
+                  <Text
+                    numberOfLines={2}
+                    style={[
+                      styles.couponCodeTxt,
+                      styles.eventName,
+                      {color: item?.titleColor || COLORS.white},
+                    ]}>
+                    {item?.title}
+                  </Text>
 
-                    <View style={styles.dtTimeContainer}>
-                      {dateTime.map((dateItem, dateIndex) => {
-                        return (
-                          <View key={dateIndex} style={{width: '45%'}}>
-                            <Text numberOfLines={1} style={styles.labelTxt}>
-                              {dateItem}
-                            </Text>
-                            <Text numberOfLines={1} style={styles.valueTxt}>
-                              {index === 0
-                                ? moment(item?.dateTime).format('DD-MM-YYYY')
-                                : moment(item?.dateTime).format('h:mm:ss a')}
-                            </Text>
-                          </View>
-                        );
-                      })}
-                    </View>
+                  <View style={styles.dtTimeContainer}>
+                    {dateTime.map((dateItem, dateIndex) => {
+                      return (
+                        <View key={dateIndex} style={{width: '45%'}}>
+                          <Text
+                            numberOfLines={1}
+                            style={[
+                              styles.labelTxt,
+                              {color: item?.labelColor || COLORS.cloud},
+                            ]}>
+                            {dateItem}
+                          </Text>
+                          <Text
+                            numberOfLines={1}
+                            style={[
+                              styles.valueTxt,
+                              {color: item?.dateColor || COLORS.white},
+                            ]}>
+                            {dateIndex === 0
+                              ? moment(item?.dateTime).format('DD-MM-YYYY')
+                              : moment(item?.dateTime).format('h:mm a')}
+                          </Text>
+                        </View>
+                      );
+                    })}
                   </View>
 
-                  {/* // # Right Content */}
-                  <View style={styles.rightContent}>
-                    <Text
-                      numberOfLines={1}
-                      style={[styles.eventName, styles.qtyTxt]}>
-                      Qty
-                    </Text>
-                    <Text numberOfLines={1} style={styles.countTxt}>
-                      01
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={[styles.valueTxt, styles.amountTxt]}>
-                      {item?.isFree === 'Y' ? 'Free' : 'Paid'}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-            refreshControl={
-              <RefreshControl
-                refreshing={loader}
-                onRefresh={() => getCouponsList()}
-              />
-            }
-            ListEmptyComponent={<NoDataFound screen={screenNames.coupons} />}
-          />
-        </View>
+                  {/* // # Pay Button */}
+                  {item?.requestedCoupon === 'Y' && (
+                    <TouchableOpacity
+                      disabled={
+                        item?.requestStatus === 'P' ||
+                        item?.requestStatus === 'X'
+                      }
+                      onPress={() => {
+                        if (item?.isPaid === 'Y') {
+                          setAddCoupon({
+                            open: true,
+                            type: 'P',
+                            count: item?.qty,
+                            maxCount: item?.qty,
+                            refId: item?.refId,
+                          });
+                        }
+                        if (item?.isPaid === 'N') {
+                          setAddCoupon({
+                            open: true,
+                            type: 'F',
+                            count: item?.qty,
+                            maxCount: item?.qty,
+                            refId: item?.refId,
+                          });
+                        }
+                      }}
+                      activeOpacity={0.8}
+                      style={[
+                        styles.payBtn,
+                        {backgroundColor: item?.btnBgColor || COLORS.golden},
+                      ]}>
+                      <Text
+                        style={[
+                          styles.btnTxt,
+                          {
+                            color: item?.btnTxtColor || COLORS.white,
+                          },
+                        ]}>
+                        {item?.requestStatus === 'X'
+                          ? 'Rejected'
+                          : item?.requestStatus === 'P'
+                          ? 'Pending'
+                          : item?.requestStatus === 'A' && item?.isPaid === 'Y'
+                          ? 'Pay Now'
+                          : 'Reedem'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                {/* // # Right Content */}
+                <View style={styles.rightContent}>
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      styles.eventName,
+                      styles.qtyTxt,
+                      {
+                        color: item?.dateColor || COLORS.white,
+                      },
+                    ]}>
+                    Qty
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      styles.countTxt,
+                      {color: item?.countColor || COLORS.candlelight},
+                    ]}>
+                    {item?.qty}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      styles.valueTxt,
+                      styles.amountTxt,
+                      {
+                        color: item?.dateColor || COLORS.white,
+                      },
+                    ]}>
+                    {item?.isPaid === 'Y' ? 'Paid' : 'Free'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={() => getCouponsList()}
+            />
+          }
+          ListEmptyComponent={
+            !loader && <NoDataFound screen={screenNames.coupons} />
+          }
+        />
       </SafeAreaView>
 
       {/* // @ Add Coupon Modal */}
-      <Modal animationType="slide" visible={opnAddCoupon} transparent>
+      <Modal animationType="slide" visible={addCoupon?.open} transparent>
         <View style={styles.fltrModal}>
           {/* // @  box */}
           <View style={styles.filterCard}>
@@ -188,7 +425,7 @@ const Coupons = ({navigation, route}) => {
             </TouchableOpacity>
             {/* // # card title */}
             <Text numberOfLines={1} style={styles.titleTxt}>
-              Buy Coupon
+              {addCoupon?.type === 'R' ? 'Request Coupon' : 'Avail Coupon'}
             </Text>
             {/* // # sub text  */}
             <Text numberOfLines={1} style={styles.subTxt}>
@@ -198,15 +435,21 @@ const Coupons = ({navigation, route}) => {
             <View style={styles.horizontalLine} />
             {/* // # Incre-count-decre btn */}
             <View style={styles.flexContainer}>
-              <TouchableOpacity activeOpacity={0.8} style={styles.countBtn}>
+              <TouchableOpacity
+                onPress={() => decrement()}
+                activeOpacity={0.8}
+                style={styles.countBtn}>
                 <MaterialCommunityIcons
                   name="minus"
                   size={moderateScale(25)}
                   color={COLORS.charcoal}
                 />
               </TouchableOpacity>
-              <Text style={styles.AddCpnCountTxt}>100</Text>
-              <TouchableOpacity activeOpacity={0.8} style={styles.countBtn}>
+              <Text style={styles.AddCpnCountTxt}>{addCoupon?.count}</Text>
+              <TouchableOpacity
+                onPress={() => increment()}
+                activeOpacity={0.8}
+                style={styles.countBtn}>
                 <MaterialCommunityIcons
                   name="plus"
                   size={moderateScale(25)}
@@ -217,29 +460,36 @@ const Coupons = ({navigation, route}) => {
             {/* // # horizontal line */}
             <View style={styles.horizontalLine} />
             {/* // # Amt section */}
-            <View
-              style={[styles.flexContainer, {justifyContent: 'space-between'}]}>
-              <Text numberOfLines={1} style={styles.amtLblTxt}>
-                Prasadam Amount
-              </Text>
-              <Text numberOfLines={1} style={styles.amtValTxt}>
-                ₹ 80
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.flexContainer,
-                {justifyContent: 'space-between', marginTop: '2%'},
-              ]}>
-              <Text numberOfLines={1} style={styles.amtLblTxt}>
-                Total Amount
-              </Text>
-              <Text numberOfLines={1} style={styles.amtValTxt}>
-                ₹ 380
-              </Text>
-            </View>
+            {addCoupon?.type !== 'F' && (
+              <View
+                style={[
+                  styles.flexContainer,
+                  {justifyContent: 'space-between'},
+                ]}>
+                <Text numberOfLines={1} style={styles.amtLblTxt}>
+                  Prasadam Amount
+                </Text>
+                <Text numberOfLines={1} style={styles.amtValTxt}>
+                  ₹ 80
+                </Text>
+              </View>
+            )}
+            {addCoupon?.type !== 'F' && (
+              <View
+                style={[
+                  styles.flexContainer,
+                  {justifyContent: 'space-between', marginTop: '2%'},
+                ]}>
+                <Text numberOfLines={1} style={styles.amtLblTxt}>
+                  Total Amount
+                </Text>
+                <Text numberOfLines={1} style={styles.amtValTxt}>
+                  ₹ 380
+                </Text>
+              </View>
+            )}
             {/* // # horizontal line */}
-            <View style={styles.horizontalLine} />
+            {addCoupon?.type !== 'F' && <View style={styles.horizontalLine} />}
             {/* // # Buttons */}
             <TouchableOpacity activeOpacity={0.8} style={styles.paymentBtn}>
               <Text
@@ -247,7 +497,11 @@ const Coupons = ({navigation, route}) => {
                   styles.AddCpnCountTxt,
                   {color: COLORS.white, fontSize: SIZES.xl},
                 ]}>
-                Payment
+                {addCoupon?.type === 'R'
+                  ? 'Request'
+                  : addCoupon?.type === 'F'
+                  ? 'Redeem'
+                  : 'Pay'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -270,16 +524,10 @@ const Coupons = ({navigation, route}) => {
         transparent>
         <Pressable onPress={() => setQrCode(false)} style={styles.fltrModal}>
           {/* // #  Qr Code Image */}
-          <Pressable
-            style={{
-              width: windowWidth * 0.85,
-              height: windowWidth * 0.85,
-              backgroundColor: '#fff',
-              borderRadius: moderateScale(20),
-            }}>
+          <Pressable style={styles.qrCodeContainer}>
             <Image
               source={{
-                uri: 'https://pngimg.com/uploads/qr_code/small/qr_code_PNG33.png',
+                uri: qrCode?.link,
               }}
               style={{height: '100%', width: '100%'}}
             />
@@ -334,10 +582,10 @@ const styles = StyleSheet.create({
     right: horizontalScale(92),
     zIndex: 99,
   },
-  leftContent: {
-    backgroundColor: COLORS.windowsBlue,
+  leftContent: bgColor => ({
+    backgroundColor: bgColor || COLORS.windowsBlue,
     width: horizontalScale(244.5),
-  },
+  }),
   couponCodeTxt: {
     width: '85%',
     textAlign: 'left',
@@ -377,8 +625,8 @@ const styles = StyleSheet.create({
   rightContent: {
     backgroundColor: COLORS.charcoal,
     width: horizontalScale(95),
-    paddingVertical: '5%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   qtyTxt: {
     width: '90%',
@@ -497,5 +745,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.midGrey,
     marginTop: '4%',
+  },
+  payBtn: {
+    width: horizontalScale(70),
+    height: horizontalScale(25),
+    borderRadius: moderateScale(4),
+    marginBottom: '5%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnTxt: {
+    fontFamily: FONTS.urbanistSemiBold,
+    fontSize: SIZES.l,
+  },
+  qrCodeContainer: {
+    width: windowWidth * 0.85,
+    height: windowWidth * 0.85,
+    backgroundColor: '#fff',
+    borderRadius: moderateScale(20),
   },
 });
