@@ -28,7 +28,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {API} from '../services/API';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useAppContext} from '../../App';
-import {RedirectURL} from '../components/CommonFunctionalities';
+import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
 
 const ConnectUs = ({apiData, shimmer}) => {
   const toast = useToast();

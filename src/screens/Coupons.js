@@ -39,14 +39,18 @@ const Coupons = ({navigation, route}) => {
 
   const {profileId} = globalState;
   const dateTime = ['Date', 'Time'];
-  const {eventId} = route?.params;
+  // const {eventId} = route?.params;
 
   const [addCoupon, setAddCoupon] = useState({
-    open: true,
+    open: false,
     type: 'R',
-    count: 1,
-    maxCount: 2,
+    freeCount: 1,
+    freeMaxCount: 2,
     refId: '',
+    prasadamAmt: 100,
+    totalAmt: 100,
+    paidCount: 1,
+    paidMaxCount: '',
   });
   const [qrCode, setQrCode] = useState({show: false, link: ''});
   const [loader, setLoader] = useState(false);
@@ -59,12 +63,132 @@ const Coupons = ({navigation, route}) => {
     toast.show(msg, {type});
   }, 3400);
 
-  const closeAddCpnModal = () => {
-    setAddCoupon(false);
-  };
-
   useEffect(() => {
-    getCouponsList();
+    // getCouponsList();
+    setCouponData({
+      couponList: [
+        {
+          dateTime: new Date(),
+          id: 1,
+          title: 'Prasadam Coupon Test',
+          code: '2#Ehguj668',
+          qty: 5,
+          requestedCoupon: 'N',
+
+          isPaid: 'N',
+
+          btnTxtColor: '',
+          btnBgColor: '',
+          dateColor: '',
+          labelColor: '',
+          codeColor: '',
+          titleColor: '',
+          countColor: '',
+          requestStatus: '',
+          totalAmt: '',
+          prasadamAmt: '',
+        },
+        {
+          dateTime: new Date(),
+          id: 2,
+          title: 'Prasadam Coupon Test',
+          code: '2#Ehguj668',
+          qty: 5,
+          requestedCoupon: 'N',
+          isPaid: 'Y',
+          btnTxtColor: '',
+          btnBgColor: '',
+          dateColor: '',
+          labelColor: '',
+          codeColor: '',
+          titleColor: '',
+          countColor: '',
+          requestStatus: '',
+          totalAmt: '',
+          prasadamAmt: '',
+        },
+        {
+          dateTime: new Date(),
+          id: 1,
+          title: 'Prasadam Coupon Test',
+          code: '2#Ehguj668',
+          qty: 5,
+          requestedCoupon: 'Y',
+
+          isPaid: 'N',
+
+          btnTxtColor: '',
+          btnBgColor: '',
+          dateColor: '',
+          labelColor: '',
+          codeColor: '',
+          titleColor: '',
+          countColor: '',
+          requestStatus: 'P',
+        },
+        {
+          dateTime: new Date(),
+          id: 1,
+          title: 'Prasadam Coupon Test',
+          code: '2#Ehguj668',
+          qty: 5,
+          requestedCoupon: 'Y',
+
+          isPaid: 'N',
+
+          btnTxtColor: '',
+          btnBgColor: '',
+          dateColor: '',
+          labelColor: '',
+          codeColor: '',
+          titleColor: '',
+          countColor: '',
+          requestStatus: 'A',
+          totalAmt: 50,
+          prasadamAmt: 10,
+        },
+        {
+          dateTime: new Date(),
+          id: 1,
+          title: 'Prasadam Coupon Test',
+          code: '2#Ehguj668',
+          qty: 5,
+          requestedCoupon: 'Y',
+
+          isPaid: 'N',
+
+          btnTxtColor: '',
+          btnBgColor: '',
+          dateColor: '',
+          labelColor: '',
+          codeColor: '',
+          titleColor: '',
+          countColor: '',
+          requestStatus: 'X',
+        },
+        {
+          dateTime: new Date(),
+          id: 1,
+          title: 'Prasadam Coupon Test',
+          code: '2#Ehguj668',
+          qty: 6,
+          requestedCoupon: 'Y',
+
+          isPaid: 'Y',
+
+          btnTxtColor: '',
+          btnBgColor: '',
+          dateColor: '',
+          labelColor: '',
+          codeColor: '',
+          titleColor: '',
+          countColor: '',
+          requestStatus: 'A',
+          totalAmt: 60,
+          prasadamAmt: 10,
+        },
+      ],
+    });
   }, []);
 
   const getCouponsList = async () => {
@@ -205,25 +329,122 @@ const Coupons = ({navigation, route}) => {
     }
   };
 
-  const increment = () => {
-    const {maxCount, count} = addCoupon;
-    if (maxCount) {
-      if (maxCount > count) {
-        setAddCoupon(prev => ({...prev, count: count + 1}));
+  const increment = couponType => {
+    const {prasadamAmt, totalAmt} = addCoupon;
+    const PAID_TYPE = couponType === 'P';
+    const COUNT = PAID_TYPE ? addCoupon?.paidCount : addCoupon?.freeCount;
+    const MAX_COUNT = PAID_TYPE
+      ? addCoupon?.paidMaxCount
+      : addCoupon?.freeMaxCount;
+
+    if (MAX_COUNT) {
+      if (MAX_COUNT > COUNT) {
+        if (PAID_TYPE) {
+          setAddCoupon(prev => ({
+            ...prev,
+            paidCount: Number(COUNT) + 1,
+            totalAmt: Number(totalAmt) + Number(prasadamAmt),
+          }));
+        } else {
+          setAddCoupon(prev => ({
+            ...prev,
+            freeCount: Number(COUNT) + 1,
+          }));
+        }
       } else {
-        toastMsg(`Limit reached! Only ${maxCount} coupons allowed.`, 'warning');
+        toastMsg(
+          `Limit reached! Only ${MAX_COUNT} coupons allowed.`,
+          'warning',
+        );
       }
       return;
     }
-    setAddCoupon(prev => ({...prev, count: count + 1}));
+    PAID_TYPE
+      ? setAddCoupon(prev => ({
+          ...prev,
+          paidCount: Number(COUNT) + 1,
+          totalAmt: Number(totalAmt) + Number(prasadamAmt),
+        }))
+      : setAddCoupon(prev => ({...prev, freeCount: Number(COUNT) + 1}));
   };
 
-  const decrement = () => {
-    const {count} = addCoupon;
-    if (count > 1) {
-      setAddCoupon(prev => ({...prev, count: count - 1}));
+  const decrement = couponType => {
+    const {prasadamAmt, totalAmt} = addCoupon;
+    const PAID_TYPE = couponType === 'P';
+    const COUNT = PAID_TYPE ? addCoupon?.paidCount : addCoupon?.freeCount;
+    if (COUNT > 1 || (addCoupon?.type === 'R' && COUNT > 0)) {
+      if (PAID_TYPE) {
+        setAddCoupon(prev => ({
+          ...prev,
+          paidCount: Number(COUNT) - 1,
+          totalAmt: Number(totalAmt) - Number(prasadamAmt),
+        }));
+      } else {
+        setAddCoupon(prev => ({
+          ...prev,
+          freeCount: Number(COUNT) - 1,
+        }));
+      }
     } else {
-      toastMsg(`Minimum 1 coupon required.`, 'warning');
+      addCoupon?.type === 'R' && COUNT === 0
+        ? null
+        : toastMsg(`Minimum 1 coupon required.`, 'warning');
+    }
+  };
+
+  const closeAddCpnModal = () => {
+    setAddCoupon({
+      open: false,
+      type: 'R',
+      refId: '',
+      prasadamAmt: 100,
+      freeCount: 1,
+      freeMaxCount: 0,
+      totalAmt: 100,
+      paidCount: 1,
+      paidMaxCount: '',
+    });
+  };
+
+  const submitCoupon = () => {
+    const TYPE =
+      addCoupon?.type === 'R' ? 'R' : addCoupon?.type === 'F' ? 'F' : 'P';
+    if (TYPE === 'R' && addCoupon?.freeCount === 0 && addCoupon?.paidCount) {
+      toastMsg('Select atleast 1 Free or 1 Paid coupon.');
+      return;
+    }
+    TYPE === 'P' ? paymentAPI() : sendCouponDetails();
+  };
+
+  const paymentAPI = () => {};
+
+  const sendCouponDetails = async () => {
+    try {
+      const TYPE = addCoupon?.type;
+      !loader && setLoader(true);
+      const params = {
+        profile_id: profileId,
+        event_id: eventId,
+        refId: TYPE === 'R' ? '' : addCoupon?.refId,
+        couponType: TYPE, // R - req, F - free, P - paid
+        freeCount: addCoupon?.freeCount > 0 ? addCoupon?.freeCount : 0,
+        paidCount: addCoupon?.paidCount > 0 ? addCoupon?.paidCount : 0,
+        totalAmount: addCoupon?.totalAmt > 0 ? addCoupon?.totalAmt : 0,
+      };
+      const response = await API.getCouponList(params);
+
+      console.log('SEND_Coupon_response', response?.data);
+      const {data, successCode, message} = response?.data;
+      if (successCode === 1) {
+        toastMsg(message, 'success');
+      } else {
+        toastMsg(message, 'info');
+      }
+      setLoader(false);
+    } catch (err) {
+      toastMsg('', 'error');
+      setLoader(false);
+      console.log('ERR-SEND_Coupon', err);
     }
   };
 
@@ -234,7 +455,17 @@ const Coupons = ({navigation, route}) => {
         titleName={screenNames.coupons}
         goBack={() => navigation.goBack()}
         rightIcnAction={() => {
-          setAddCoupon(true);
+          setAddCoupon({
+            open: true,
+            type: 'R',
+            refId: '',
+            freeCount: 1,
+            freeMaxCount: 0,
+            paidCount: 1,
+            totalAmt: 100,
+            prasadamAmt: 100,
+            paidMaxCount: '',
+          });
         }}
       />
       <SafeAreaView styles={[MyStyles.flex1]}>
@@ -320,18 +551,22 @@ const Coupons = ({navigation, route}) => {
                           setAddCoupon({
                             open: true,
                             type: 'P',
-                            count: item?.qty,
-                            maxCount: item?.qty,
                             refId: item?.refId,
+                            prasadamAmt: item?.prasadamAmt,
+                            totalAmt: item?.totalAmt,
+                            paidCount: item?.qty,
+                            paidMaxCount: item?.qty,
                           });
                         }
                         if (item?.isPaid === 'N') {
                           setAddCoupon({
                             open: true,
                             type: 'F',
-                            count: item?.qty,
-                            maxCount: item?.qty,
+                            freeCount: item?.qty,
+                            freeMaxCount: item?.qty,
                             refId: item?.refId,
+                            prasadamAmt: item?.prasadamAmt,
+                            totalAmt: item?.totalAmt,
                           });
                         }
                       }}
@@ -434,29 +669,89 @@ const Coupons = ({navigation, route}) => {
             {/* // # horizontal line */}
             <View style={styles.horizontalLine} />
             {/* // # Incre-count-decre btn */}
-            <View style={styles.flexContainer}>
-              <TouchableOpacity
-                onPress={() => decrement()}
-                activeOpacity={0.8}
-                style={styles.countBtn}>
-                <MaterialCommunityIcons
-                  name="minus"
-                  size={moderateScale(25)}
-                  color={COLORS.charcoal}
-                />
-              </TouchableOpacity>
-              <Text style={styles.AddCpnCountTxt}>{addCoupon?.count}</Text>
-              <TouchableOpacity
-                onPress={() => increment()}
-                activeOpacity={0.8}
-                style={styles.countBtn}>
-                <MaterialCommunityIcons
-                  name="plus"
-                  size={moderateScale(25)}
-                  color={COLORS.charcoal}
-                />
-              </TouchableOpacity>
-            </View>
+            {addCoupon?.type !== 'R' && (
+              <View style={styles.flexContainer}>
+                <TouchableOpacity
+                  onPress={() => decrement(addCoupon?.type)}
+                  activeOpacity={0.8}
+                  style={styles.countBtn}>
+                  <MaterialCommunityIcons
+                    name="minus"
+                    size={moderateScale(25)}
+                    color={COLORS.charcoal}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.AddCpnCountTxt}>
+                  {addCoupon?.type === 'P'
+                    ? addCoupon?.paidCount
+                    : addCoupon?.freeCount}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => increment(addCoupon?.type)}
+                  activeOpacity={0.8}
+                  style={styles.countBtn}>
+                  <MaterialCommunityIcons
+                    name="plus"
+                    size={moderateScale(25)}
+                    color={COLORS.charcoal}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {addCoupon?.type === 'R' &&
+              Array(2)
+                .fill(2)
+                .map((_, index) => (
+                  <View
+                    style={[
+                      styles.flexContainer,
+                      {justifyContent: 'space-between'},
+                    ]}>
+                    <Text style={styles.couponTypeTxt}>
+                      {index === 0 ? 'Free' : 'Paid'}
+                    </Text>
+                    <View
+                      style={[
+                        styles.flexContainer,
+                        {
+                          justifyContent: 'space-between',
+                          width: '50%',
+                        },
+                      ]}>
+                      <TouchableOpacity
+                        onPress={() => decrement(index === 0 ? 'F' : 'P')}
+                        activeOpacity={0.8}
+                        style={styles.reqCountBtn}>
+                        <MaterialCommunityIcons
+                          name="minus"
+                          size={moderateScale(18)}
+                          color={COLORS.charcoal}
+                        />
+                      </TouchableOpacity>
+                      <Text
+                        style={[
+                          styles.AddCpnCountTxt,
+                          {fontSize: SIZES.xxl + SIZES.l, width: '40%'},
+                        ]}>
+                        {index === 0
+                          ? addCoupon?.freeCount
+                          : addCoupon?.paidCount}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => increment(index === 0 ? 'F' : 'P')}
+                        activeOpacity={0.8}
+                        style={styles.reqCountBtn}>
+                        <MaterialCommunityIcons
+                          name="plus"
+                          size={moderateScale(18)}
+                          color={COLORS.charcoal}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))}
+
             {/* // # horizontal line */}
             <View style={styles.horizontalLine} />
             {/* // # Amt section */}
@@ -470,7 +765,7 @@ const Coupons = ({navigation, route}) => {
                   Prasadam Amount
                 </Text>
                 <Text numberOfLines={1} style={styles.amtValTxt}>
-                  ₹ 80
+                  ₹ {addCoupon?.prasadamAmt}
                 </Text>
               </View>
             )}
@@ -484,14 +779,19 @@ const Coupons = ({navigation, route}) => {
                   Total Amount
                 </Text>
                 <Text numberOfLines={1} style={styles.amtValTxt}>
-                  ₹ 380
+                  ₹ {addCoupon?.totalAmt}
                 </Text>
               </View>
             )}
             {/* // # horizontal line */}
             {addCoupon?.type !== 'F' && <View style={styles.horizontalLine} />}
             {/* // # Buttons */}
-            <TouchableOpacity activeOpacity={0.8} style={styles.paymentBtn}>
+            <TouchableOpacity
+              onPress={() => {
+                submitCoupon();
+              }}
+              activeOpacity={0.8}
+              style={styles.paymentBtn}>
               <Text
                 style={[
                   styles.AddCpnCountTxt,
@@ -712,11 +1012,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.midGrey,
   },
+  reqCountBtn: {
+    width: horizontalScale(25),
+    height: horizontalScale(25),
+    borderRadius: moderateScale(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.midGrey,
+  },
   AddCpnCountTxt: {
     fontFamily: FONTS.interMedium,
     fontSize: SIZES.xxl + SIZES.xxl,
     color: COLORS.black,
     marginHorizontal: '4%',
+    textAlign: 'center',
   },
   amtLblTxt: {
     fontFamily: FONTS.urbanistBold,
@@ -764,5 +1074,11 @@ const styles = StyleSheet.create({
     height: windowWidth * 0.85,
     backgroundColor: '#fff',
     borderRadius: moderateScale(20),
+  },
+  couponTypeTxt: {
+    fontFamily: FONTS.urbanistSemiBold,
+    fontSize: SIZES.xxl,
+    color: COLORS.black,
+    width: '35%',
   },
 });

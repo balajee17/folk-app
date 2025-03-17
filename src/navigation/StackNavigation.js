@@ -30,7 +30,7 @@ const StackNavigation = () => {
   useEffect(() => {
     if (navigationRef.current) {
       if (isConnected) {
-        navigationRef.current.navigate(screenNames.drawerNavigation);
+        navigationRef.current.navigate(screenNames.coupons);
       } else {
         navigationRef.current.navigate(screenNames.noNetwork);
       }
