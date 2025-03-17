@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -7,6 +7,7 @@ import {
   moderateScale,
   MyStyles,
   SIZES,
+  verticalScale,
 } from '../styles/MyStyles';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -16,15 +17,84 @@ import AttendanceHistory from './AttendanceHistory';
 import PaymentHistory from './PaymentHistory';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
+import {useAppContext} from '../../App';
+import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
+import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 
 const Profile = ({navigation}) => {
-  const [activeTab, setActiveTab] = useState(1);
+  const {globalState, setGlobalState} = useAppContext();
+
+  const {profileId} = globalState;
+  const [activeTab, setActiveTab] = useState(3);
+
+  const [shimmer, setShimmer] = useState({
+    primary: false,
+    profile: false,
+    attendance: false,
+    payment: false,
+  });
+  const [userData, setUserData] = useState({});
 
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
     {id: 2, tabName: 'Attendance', icon: 'calendar-outline'},
     {id: 3, tabName: 'Payment', icon: 'receipt-outline'},
   ];
+
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type,
+    });
+  };
+
+  useEffect(() => {
+    // getUserData(1);
+  }, []);
+
+  const shimmerController = (selTab, type) => {
+    type === true
+      ? setShimmer(prev => ({
+          ...prev,
+          profile: selTab === 1,
+          attendance: selTab === 2,
+          payment: selTab === 3,
+        }))
+      : setShimmer({
+          primary: false,
+          profile: false,
+          attendance: false,
+          payment: false,
+        });
+  };
+
+  // # API to get user details
+  const getUserData = async selTab => {
+    try {
+      !shimmer?.primary &&
+        (setActiveTab(selTab), shimmerController(selTab, true));
+
+      const params = {
+        profile_id: profileId,
+        tab: selTab === 1 ? 'Profile' : selTab === 2 ? 'Attendance' : 'Payment',
+      };
+      const response = await API.getUserDetails(params);
+      const {data, successCode, message} = response?.data;
+      if (successCode === 1) {
+        setUserData(data);
+      } else {
+        setUserData({});
+        toastMsg(message, 'info');
+      }
+      shimmerController('', false);
+    } catch (err) {
+      setUserData({});
+      shimmerController('', false);
+      toastMsg('', 'error');
+      console.log('ERR-Upcoming', err);
+    }
+  };
   return (
     <View style={MyStyles.contentCont}>
       <LinearGradient
@@ -36,25 +106,59 @@ const Profile = ({navigation}) => {
         />
         {/* // # User Image */}
         <View style={styles.usrImgCont}>
-          <Image
-            source={{
-              uri: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1740649285~exp=1740652885~hmac=e3b71acbedc8749e46bba369cb9356231a0aecdaea4f8b197ef34c7cb2fc929b&w=740',
-            }}
-            style={styles.usrImg}
-          />
+          {shimmer?.primary ? (
+            <ImageShimmer
+              width={horizontalScale(104)}
+              borderRadius={moderateScale(55)}
+              height={horizontalScale(104)}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1740649285~exp=1740652885~hmac=e3b71acbedc8749e46bba369cb9356231a0aecdaea4f8b197ef34c7cb2fc929b&w=740',
+              }}
+              style={styles.usrImg}
+            />
+          )}
         </View>
         {/* // # User Name */}
-        <Text style={styles.usrName}>Kotresh R</Text>
+        {shimmer?.primary ? (
+          <TitleShimmer
+            marginTop={'2%'}
+            height={verticalScale(15)}
+            width={'60%'}
+            alignSelf={'center'}
+          />
+        ) : (
+          <Text style={styles.usrName}>Kotresh R</Text>
+        )}
         {/* // # User FOLK ID */}
-        <Text style={styles.folkIdTxt}>FOLK ID : 457698625398</Text>
+        {shimmer?.primary ? (
+          <TitleShimmer
+            marginTop={'1%'}
+            height={verticalScale(12)}
+            width={'40%'}
+            alignSelf={'center'}
+          />
+        ) : (
+          <Text style={styles.folkIdTxt}>FOLK ID : 457698625398</Text>
+        )}
 
         {/* // # Tab Bar */}
         <View style={styles.tabBarCont}>
-          {tabItems.map((item, index) => {
-            return (
+          {tabItems.map((item, index) =>
+            shimmer?.primary ? (
+              <ImageShimmer
+                width={horizontalScale(110)}
+                borderRadius={moderateScale(20)}
+                padding={'2.5%'}
+                height={verticalScale(45)}
+              />
+            ) : (
               <TouchableOpacity
                 key={item?.id}
                 onPress={() => {
+                  // getUserData(item?.id);
                   setActiveTab(item?.id);
                 }}
                 activeOpacity={0.6}
@@ -77,18 +181,27 @@ const Profile = ({navigation}) => {
                   {item?.tabName}
                 </Text>
               </TouchableOpacity>
-            );
-          })}
+            ),
+          )}
         </View>
       </LinearGradient>
 
       {/* // @ Content */}
       {activeTab === 1 ? (
-        <ProfileDetails />
+        <ProfileDetails
+          shimmer={shimmer?.profile}
+          profileDetails={userData?.profileDetails}
+        />
       ) : activeTab === 2 ? (
-        <AttendanceHistory />
+        <AttendanceHistory
+          shimmer={shimmer?.attendance}
+          attendanceHistory={userData?.attendanceHistory}
+        />
       ) : activeTab === 3 ? (
-        <PaymentHistory />
+        <PaymentHistory
+          shimmer={shimmer?.payment}
+          paymentHistory={userData?.paymentHistory}
+        />
       ) : null}
     </View>
   );
@@ -132,7 +245,7 @@ const styles = StyleSheet.create({
   usrImg: {
     width: horizontalScale(104),
     height: horizontalScale(104),
-    borderRadius: moderateScale(50),
+    borderRadius: moderateScale(55),
   },
   usrName: {
     fontSize: SIZES.xxxl,

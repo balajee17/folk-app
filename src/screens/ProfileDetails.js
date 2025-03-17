@@ -16,32 +16,75 @@ import {
   verticalScale,
 } from '../styles/MyStyles';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 
-const ProfileDetails = () => {
+const ProfileDetails = ({shimmer, profileDetails}) => {
   return (
     <ScrollView contentContainerStyle={styles.scrollCntStyle}>
       {/* // # Title and Edit Btn Container */}
       <View style={styles.titleEditCont}>
-        <Text numberOfLines={1} style={styles.titleTxt}>
-          Details
-        </Text>
-        <TouchableOpacity
-          onPress={() => {}}
-          activeOpacity={0.8}
-          style={styles.editIcnBtn}>
-          <Text style={styles.editTxt}>Edit</Text>
-          <FontAwesome6
-            name="edit"
-            size={moderateScale(15)}
-            color={COLORS.white}
-          />
-        </TouchableOpacity>
+        {shimmer ? (
+          <>
+            <TitleShimmer
+              height={horizontalScale(25)}
+              width={horizontalScale(100)}
+              alignSelf={'center'}
+            />
+            <ImageShimmer
+              width={horizontalScale(75)}
+              borderRadius={moderateScale(12)}
+              height={horizontalScale(35)}
+            />
+          </>
+        ) : (
+          <>
+            <Text numberOfLines={1} style={styles.titleTxt}>
+              Details
+            </Text>
+            <TouchableOpacity
+              onPress={() => {}}
+              activeOpacity={0.8}
+              style={styles.editIcnBtn}>
+              <Text style={styles.editTxt}>Edit</Text>
+              <FontAwesome6
+                name="edit"
+                size={moderateScale(15)}
+                color={COLORS.white}
+              />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
       {/* // # user details */}
-      <Text style={[styles.labelTxt, {marginTop: '6%'}]}>Email ID</Text>
-      <View style={styles.valueBox}>
-        <Text style={styles.valueTxt}>kotreshrudresh@gmail.com</Text>
-      </View>
+      {shimmer &&
+        Array(4)
+          .fill(4)
+          .map(_ => (
+            <>
+              <TitleShimmer
+                marginTop={'6%'}
+                height={horizontalScale(15)}
+                width={horizontalScale(100)}
+              />
+
+              <ImageShimmer
+                marginTop={'2%'}
+                width={'100%'}
+                borderRadius={moderateScale(12)}
+                height={horizontalScale(40)}
+              />
+            </>
+          ))}
+
+      {!shimmer &&
+        profileDetails?.map((item, index) => (
+          <>
+            <Text style={[styles.labelTxt, {marginTop: '6%'}]}>Email ID</Text>
+            <View style={styles.valueBox}>
+              <Text style={styles.valueTxt}>kotreshrudresh@gmail.com</Text>
+            </View>
+          </>
+        ))}
     </ScrollView>
   );
 };

@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: COLORS.header,
+    zIndex: 99,
   },
   menuIcon: screen => ({
     padding: moderateScale(6),

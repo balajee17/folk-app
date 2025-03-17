@@ -253,7 +253,7 @@ const ConnectUs = ({apiData, shimmer}) => {
               return (
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  key={index + 1}
+                  key={index}
                   style={styles.socialMediaBtn}
                   onPress={async () => {
                     const result = await RedirectURL(item?.URL);

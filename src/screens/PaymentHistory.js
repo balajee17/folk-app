@@ -10,8 +10,9 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {screenNames} from '../constants/ScreenNames';
 import {useNavigation} from '@react-navigation/native';
+import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 
-const PaymentHistory = () => {
+const PaymentHistory = ({shimmer, paymentHistory}) => {
   const navigation = useNavigation();
 
   // # Navigate Sreen
@@ -20,44 +21,96 @@ const PaymentHistory = () => {
   };
   return (
     <TouchableOpacity
+      disabled={shimmer}
       onPress={() => navigateTo(screenNames.paymentDetails)}
       activeOpacity={0.8}
-      style={styles.attendanceCard}>
+      style={[
+        styles.attendanceCard,
+        shimmer && {backgroundColor: COLORS.charcoal},
+      ]}>
       <View style={styles.evtImgNameCont}>
         {/* // # First Letter of Event Name */}
-        <View style={styles.eventImg}>
-          <Text style={styles.eventFrstLetter}>V</Text>
-        </View>
+        {shimmer ? (
+          <ImageShimmer
+            width={horizontalScale(45)}
+            borderRadius={moderateScale(25)}
+            height={horizontalScale(45)}
+          />
+        ) : (
+          <View style={styles.eventImg}>
+            <Text style={styles.eventFrstLetter}>V</Text>
+          </View>
+        )}
         {/* // # Transaction ID & Event Name */}
         <View style={styles.idEvntNameCont}>
-          <Text numberOfLines={1} style={[styles.txid, {width: '100%'}]}>
-            TXID : 54366773575768
-          </Text>
-
-          <Text numberOfLines={1} style={[styles.eventName, {width: '100%'}]}>
-            Vaikuntha Ekadashi
-          </Text>
+          {shimmer ? (
+            <>
+              <TitleShimmer width={'60%'} height={horizontalScale(12)} />
+              <TitleShimmer width={'90%'} height={horizontalScale(15)} />
+            </>
+          ) : (
+            <>
+              <Text numberOfLines={1} style={[styles.txid, {width: '100%'}]}>
+                TXID : 54366773575768
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={[styles.eventName, {width: '100%'}]}>
+                Vaikuntha Ekadashi
+              </Text>
+            </>
+          )}
         </View>
         {/*  // # Amount */}
-        <Text style={styles.amtTxt}>₹ 12000</Text>
+        {shimmer ? (
+          <View
+            style={{
+              width: '25%',
+              justifyContent: 'flex-end',
+            }}>
+            <TitleShimmer
+              width={horizontalScale(80)}
+              height={horizontalScale(20)}
+            />
+          </View>
+        ) : (
+          <Text style={styles.amtTxt}>₹ 12000</Text>
+        )}
       </View>
       {/*  // # Date & status  */}
       <View style={styles.dateStatusCont}>
-        <View style={[styles.dateTimeCont, {width: '40%'}]}>
-          <Text style={styles.dateTxt}>07 Feb 2025</Text>
-          <View style={styles.dot} />
-          <Text style={styles.dateTxt}>10:30AM</Text>
-        </View>
-        <View style={[styles.dateTimeCont, {width: '30%'}]}>
-          <Text numberOfLines={1} style={[styles.eventName, styles.statusTxt]}>
-            Successful
-          </Text>
-          <FontAwesome
-            name="check-circle"
-            size={moderateScale(20)}
-            color={COLORS.moss}
-          />
-        </View>
+        {shimmer ? (
+          <>
+            <TitleShimmer
+              width={horizontalScale(120)}
+              height={horizontalScale(12)}
+            />
+            <TitleShimmer
+              width={horizontalScale(100)}
+              height={horizontalScale(12)}
+            />
+          </>
+        ) : (
+          <>
+            <View style={[styles.dateTimeCont, {width: '40%'}]}>
+              <Text style={styles.dateTxt}>07 Feb 2025</Text>
+              <View style={styles.dot} />
+              <Text style={styles.dateTxt}>10:30AM</Text>
+            </View>
+            <View style={[styles.dateTimeCont, {width: '30%'}]}>
+              <Text
+                numberOfLines={1}
+                style={[styles.eventName, styles.statusTxt]}>
+                Successful
+              </Text>
+              <FontAwesome
+                name="check-circle"
+                size={moderateScale(20)}
+                color={COLORS.moss}
+              />
+            </View>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );

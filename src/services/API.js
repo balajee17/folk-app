@@ -130,4 +130,17 @@ export const API = {
     );
     return axios.post(getConnectDetailsURL, requestData);
   },
+
+  // # Profile Screen
+  getUserDetails(data) {
+    const getUserDetailsURL = baseURL + '/';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Coupon List Data ',
+      getUserDetailsURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(getUserDetailsURL, requestData);
+  },
 };

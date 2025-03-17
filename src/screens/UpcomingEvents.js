@@ -99,7 +99,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
             );
           }}
           refreshControl={
-            <RefreshControl refreshing={shimmer} onRefresh={refresh} />
+            <RefreshControl refreshing={false} onRefresh={refresh} />
           }
           ListEmptyComponent={<NoDataFound screen={screenNames.events} />}
         />

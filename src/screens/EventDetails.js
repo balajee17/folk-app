@@ -320,7 +320,7 @@ const EventDetails = ({route, navigation}) => {
                   .map((_, index) => (
                     <View
                       style={[styles.lablValCont, {width: '100%'}]}
-                      key={index + 1}>
+                      key={index}>
                       <TitleShimmer />
                       <TitleShimmer />
                     </View>
@@ -422,7 +422,7 @@ const EventDetails = ({route, navigation}) => {
                 return (
                   <View
                     style={[styles.lablValCont, styles.amountsec(index)]}
-                    key={index + 1}>
+                    key={index}>
                     <Text style={[styles.labelTxt, {width: '60%'}]}>
                       {item?.label}
                     </Text>

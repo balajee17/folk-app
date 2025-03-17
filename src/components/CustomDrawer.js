@@ -112,7 +112,7 @@ const CustomDrawer = ({navigation, route}) => {
       {/* // @ Menu Items */}
       {menuItems.map((item, index) => (
         <TouchableOpacity
-          key={index + 1}
+          key={index}
           style={[
             styles.menuItemBtn,
             {

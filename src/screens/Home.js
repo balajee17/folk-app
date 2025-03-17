@@ -1,5 +1,6 @@
 import {
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -34,7 +35,7 @@ import {useAppContext} from '../../App';
 import LinearGradientBg from '../components/LinearGradientBg';
 import {useToast} from 'react-native-toast-notifications';
 
-const Home = ({apiData, shimmer}) => {
+const Home = ({apiData, shimmer, refreshData}) => {
   const {setGlobalState} = useAppContext();
 
   const navigation = useNavigation();
@@ -430,6 +431,9 @@ const Home = ({apiData, shimmer}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         overScrollMode="never"
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={() => refreshData()} />
+        }
         contentContainerStyle={{
           paddingBottom: shimmer ? 0 : verticalScale(180),
         }}>

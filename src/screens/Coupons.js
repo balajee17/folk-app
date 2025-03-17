@@ -41,20 +41,20 @@ const Coupons = ({navigation, route}) => {
   const dateTime = ['Date', 'Time'];
   // const {eventId} = route?.params;
 
-  const [addCoupon, setAddCoupon] = useState({
+  const [requestCoupon, setRequestCoupon] = useState({
     open: false,
     type: 'R',
     freeCount: 1,
-    freeMaxCount: 2,
+    freeMaxCount: 0,
     refId: '',
-    prasadamAmt: 100,
-    totalAmt: 100,
+    prasadamAmt: 0,
+    totalAmt: 0,
     paidCount: 1,
-    paidMaxCount: '',
+    paidMaxCount: 0,
   });
+  const [selCoupon, setSelCoupon] = useState(requestCoupon);
   const [qrCode, setQrCode] = useState({show: false, link: ''});
   const [loader, setLoader] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const [couponData, setCouponData] = useState([]);
 
   const toast = useToast();
@@ -87,6 +87,8 @@ const Coupons = ({navigation, route}) => {
           requestStatus: '',
           totalAmt: '',
           prasadamAmt: '',
+          qrLink:
+            'https://upload.wikimedia.org/wikipedia/commons/3/31/MM_QRcode.png',
         },
         {
           dateTime: new Date(),
@@ -106,10 +108,12 @@ const Coupons = ({navigation, route}) => {
           requestStatus: '',
           totalAmt: '',
           prasadamAmt: '',
+          qrLink:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFjSHz3XGUqXd6hsKnkkj2drA_ZfXkam7Kry893Avx5UcKOPS-irr8SOeZ7lfUwVQ47Co&usqp=CAU',
         },
         {
           dateTime: new Date(),
-          id: 1,
+          id: 3,
           title: 'Prasadam Coupon Test',
           code: '2#Ehguj668',
           qty: 5,
@@ -125,10 +129,11 @@ const Coupons = ({navigation, route}) => {
           titleColor: '',
           countColor: '',
           requestStatus: 'P',
+          qrLink: '',
         },
         {
           dateTime: new Date(),
-          id: 1,
+          id: 4,
           title: 'Prasadam Coupon Test',
           code: '2#Ehguj668',
           qty: 5,
@@ -146,10 +151,11 @@ const Coupons = ({navigation, route}) => {
           requestStatus: 'A',
           totalAmt: 50,
           prasadamAmt: 10,
+          qrLink: '',
         },
         {
           dateTime: new Date(),
-          id: 1,
+          id: 5,
           title: 'Prasadam Coupon Test',
           code: '2#Ehguj668',
           qty: 5,
@@ -165,10 +171,11 @@ const Coupons = ({navigation, route}) => {
           titleColor: '',
           countColor: '',
           requestStatus: 'X',
+          qrLink: '',
         },
         {
           dateTime: new Date(),
-          id: 1,
+          id: 6,
           title: 'Prasadam Coupon Test',
           code: '2#Ehguj668',
           qty: 6,
@@ -186,6 +193,7 @@ const Coupons = ({navigation, route}) => {
           requestStatus: 'A',
           totalAmt: 60,
           prasadamAmt: 10,
+          qrLink: '',
         },
       ],
     });
@@ -201,6 +209,8 @@ const Coupons = ({navigation, route}) => {
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         // setCouponData(data?.coupons);
+        setRequestCoupon(data?.requestPrasadamAmt);
+        setSelCoupon(data?.requestPrasadamAmt);
         setCouponData({
           couponList: [
             {
@@ -330,23 +340,23 @@ const Coupons = ({navigation, route}) => {
   };
 
   const increment = couponType => {
-    const {prasadamAmt, totalAmt} = addCoupon;
+    const {prasadamAmt, totalAmt} = selCoupon;
     const PAID_TYPE = couponType === 'P';
-    const COUNT = PAID_TYPE ? addCoupon?.paidCount : addCoupon?.freeCount;
+    const COUNT = PAID_TYPE ? selCoupon?.paidCount : selCoupon?.freeCount;
     const MAX_COUNT = PAID_TYPE
-      ? addCoupon?.paidMaxCount
-      : addCoupon?.freeMaxCount;
+      ? selCoupon?.paidMaxCount
+      : selCoupon?.freeMaxCount;
 
     if (MAX_COUNT) {
       if (MAX_COUNT > COUNT) {
         if (PAID_TYPE) {
-          setAddCoupon(prev => ({
+          setSelCoupon(prev => ({
             ...prev,
             paidCount: Number(COUNT) + 1,
             totalAmt: Number(totalAmt) + Number(prasadamAmt),
           }));
         } else {
-          setAddCoupon(prev => ({
+          setSelCoupon(prev => ({
             ...prev,
             freeCount: Number(COUNT) + 1,
           }));
@@ -360,83 +370,95 @@ const Coupons = ({navigation, route}) => {
       return;
     }
     PAID_TYPE
-      ? setAddCoupon(prev => ({
+      ? setSelCoupon(prev => ({
           ...prev,
           paidCount: Number(COUNT) + 1,
           totalAmt: Number(totalAmt) + Number(prasadamAmt),
         }))
-      : setAddCoupon(prev => ({...prev, freeCount: Number(COUNT) + 1}));
+      : setSelCoupon(prev => ({...prev, freeCount: Number(COUNT) + 1}));
   };
 
   const decrement = couponType => {
-    const {prasadamAmt, totalAmt} = addCoupon;
+    const {prasadamAmt, totalAmt} = selCoupon;
     const PAID_TYPE = couponType === 'P';
-    const COUNT = PAID_TYPE ? addCoupon?.paidCount : addCoupon?.freeCount;
-    if (COUNT > 1 || (addCoupon?.type === 'R' && COUNT > 0)) {
+    const COUNT = PAID_TYPE ? selCoupon?.paidCount : selCoupon?.freeCount;
+    if (COUNT > 1 || (selCoupon?.type === 'R' && COUNT > 0)) {
       if (PAID_TYPE) {
-        setAddCoupon(prev => ({
+        setSelCoupon(prev => ({
           ...prev,
           paidCount: Number(COUNT) - 1,
           totalAmt: Number(totalAmt) - Number(prasadamAmt),
         }));
       } else {
-        setAddCoupon(prev => ({
+        setSelCoupon(prev => ({
           ...prev,
           freeCount: Number(COUNT) - 1,
         }));
       }
     } else {
-      addCoupon?.type === 'R' && COUNT === 0
+      selCoupon?.type === 'R' && COUNT === 0
         ? null
         : toastMsg(`Minimum 1 coupon required.`, 'warning');
     }
   };
 
   const closeAddCpnModal = () => {
-    setAddCoupon({
-      open: false,
-      type: 'R',
-      refId: '',
-      prasadamAmt: 100,
-      freeCount: 1,
-      freeMaxCount: 0,
-      totalAmt: 100,
-      paidCount: 1,
-      paidMaxCount: '',
-    });
+    setSelCoupon(requestCoupon);
   };
 
   const submitCoupon = () => {
     const TYPE =
-      addCoupon?.type === 'R' ? 'R' : addCoupon?.type === 'F' ? 'F' : 'P';
-    if (TYPE === 'R' && addCoupon?.freeCount === 0 && addCoupon?.paidCount) {
+      selCoupon?.type === 'R' ? 'R' : selCoupon?.type === 'F' ? 'F' : 'P';
+    if (
+      TYPE === 'R' &&
+      selCoupon?.freeCount === 0 &&
+      selCoupon?.paidCount === 0
+    ) {
       toastMsg('Select atleast 1 Free or 1 Paid coupon.');
       return;
     }
-    TYPE === 'P' ? paymentAPI() : sendCouponDetails();
+    sendCouponDetails();
   };
 
   const paymentAPI = () => {};
 
   const sendCouponDetails = async () => {
     try {
-      const TYPE = addCoupon?.type;
+      const TYPE = selCoupon?.type;
       !loader && setLoader(true);
-      const params = {
-        profile_id: profileId,
-        event_id: eventId,
-        refId: TYPE === 'R' ? '' : addCoupon?.refId,
-        couponType: TYPE, // R - req, F - free, P - paid
-        freeCount: addCoupon?.freeCount > 0 ? addCoupon?.freeCount : 0,
-        paidCount: addCoupon?.paidCount > 0 ? addCoupon?.paidCount : 0,
-        totalAmount: addCoupon?.totalAmt > 0 ? addCoupon?.totalAmt : 0,
-      };
+      const params =
+        TYPE === 'F'
+          ? {
+              profile_id: profileId,
+              refId: selCoupon?.refId ? selCoupon?.refId : null,
+              couponType: TYPE,
+              freeCount: selCoupon?.freeCount > 0 ? selCoupon?.freeCount : null,
+            }
+          : {
+              profile_id: profileId,
+              // event_id: eventId,
+              refId:
+                TYPE === 'R'
+                  ? null
+                  : selCoupon?.refId
+                  ? selCoupon?.refId
+                  : null,
+              couponType: TYPE, // R - req, F - free, P - paid
+              freeCount: selCoupon?.freeCount > 0 ? selCoupon?.freeCount : null,
+              paidCount: selCoupon?.paidCount > 0 ? selCoupon?.paidCount : null,
+              prasadamAmt: TYPE === 'P' ? selCoupon?.prasadamAmt : null,
+              totalAmount: TYPE === 'P' ? selCoupon?.totalAmt : null,
+            };
+
+      console.log('PARAMS', params);
+
       const response = await API.getCouponList(params);
 
       console.log('SEND_Coupon_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         toastMsg(message, 'success');
+        TYPE === 'P' ? paymentAPI() : setSelCoupon(requestCoupon);
       } else {
         toastMsg(message, 'info');
       }
@@ -455,17 +477,10 @@ const Coupons = ({navigation, route}) => {
         titleName={screenNames.coupons}
         goBack={() => navigation.goBack()}
         rightIcnAction={() => {
-          setAddCoupon({
+          setSelCoupon(prev => ({
+            ...prev,
             open: true,
-            type: 'R',
-            refId: '',
-            freeCount: 1,
-            freeMaxCount: 0,
-            paidCount: 1,
-            totalAmt: 100,
-            prasadamAmt: 100,
-            paidMaxCount: '',
-          });
+          }));
         }}
       />
       <SafeAreaView styles={[MyStyles.flex1]}>
@@ -473,7 +488,7 @@ const Coupons = ({navigation, route}) => {
         {/* // @ Coupon card */}
         <FlatList
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: '25%'}}
+          contentContainerStyle={{paddingBottom: '25%', overflow: 'hidden'}}
           data={couponData?.couponList}
           renderItem={({item, index}) => {
             return (
@@ -481,7 +496,7 @@ const Coupons = ({navigation, route}) => {
                 disabled={
                   item?.requestedCoupon === 'Y' || item?.requestStatus === 'X'
                 }
-                key={index + 1}
+                key={index}
                 activeOpacity={0.8}
                 onPress={() => setQrCode({show: true, link: item?.qrLink})}
                 style={[styles.couponCard]}>
@@ -548,7 +563,7 @@ const Coupons = ({navigation, route}) => {
                       }
                       onPress={() => {
                         if (item?.isPaid === 'Y') {
-                          setAddCoupon({
+                          setSelCoupon({
                             open: true,
                             type: 'P',
                             refId: item?.refId,
@@ -559,14 +574,14 @@ const Coupons = ({navigation, route}) => {
                           });
                         }
                         if (item?.isPaid === 'N') {
-                          setAddCoupon({
+                          setSelCoupon({
                             open: true,
                             type: 'F',
                             freeCount: item?.qty,
                             freeMaxCount: item?.qty,
                             refId: item?.refId,
                             prasadamAmt: item?.prasadamAmt,
-                            totalAmt: item?.totalAmt,
+                            totalAmt: 0,
                           });
                         }
                       }}
@@ -632,7 +647,7 @@ const Coupons = ({navigation, route}) => {
           }}
           refreshControl={
             <RefreshControl
-              refreshing={refresh}
+              refreshing={false}
               onRefresh={() => getCouponsList()}
             />
           }
@@ -643,7 +658,7 @@ const Coupons = ({navigation, route}) => {
       </SafeAreaView>
 
       {/* // @ Add Coupon Modal */}
-      <Modal animationType="slide" visible={addCoupon?.open} transparent>
+      <Modal animationType="slide" visible={selCoupon?.open} transparent>
         <View style={styles.fltrModal}>
           {/* // @  box */}
           <View style={styles.filterCard}>
@@ -660,7 +675,7 @@ const Coupons = ({navigation, route}) => {
             </TouchableOpacity>
             {/* // # card title */}
             <Text numberOfLines={1} style={styles.titleTxt}>
-              {addCoupon?.type === 'R' ? 'Request Coupon' : 'Avail Coupon'}
+              {selCoupon?.type === 'R' ? 'Request Coupon' : 'Avail Coupon'}
             </Text>
             {/* // # sub text  */}
             <Text numberOfLines={1} style={styles.subTxt}>
@@ -669,10 +684,10 @@ const Coupons = ({navigation, route}) => {
             {/* // # horizontal line */}
             <View style={styles.horizontalLine} />
             {/* // # Incre-count-decre btn */}
-            {addCoupon?.type !== 'R' && (
+            {selCoupon?.type !== 'R' && (
               <View style={styles.flexContainer}>
                 <TouchableOpacity
-                  onPress={() => decrement(addCoupon?.type)}
+                  onPress={() => decrement(selCoupon?.type)}
                   activeOpacity={0.8}
                   style={styles.countBtn}>
                   <MaterialCommunityIcons
@@ -682,12 +697,12 @@ const Coupons = ({navigation, route}) => {
                   />
                 </TouchableOpacity>
                 <Text style={styles.AddCpnCountTxt}>
-                  {addCoupon?.type === 'P'
-                    ? addCoupon?.paidCount
-                    : addCoupon?.freeCount}
+                  {selCoupon?.type === 'P'
+                    ? selCoupon?.paidCount
+                    : selCoupon?.freeCount}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => increment(addCoupon?.type)}
+                  onPress={() => increment(selCoupon?.type)}
                   activeOpacity={0.8}
                   style={styles.countBtn}>
                   <MaterialCommunityIcons
@@ -699,7 +714,7 @@ const Coupons = ({navigation, route}) => {
               </View>
             )}
 
-            {addCoupon?.type === 'R' &&
+            {selCoupon?.type === 'R' &&
               Array(2)
                 .fill(2)
                 .map((_, index) => (
@@ -735,8 +750,8 @@ const Coupons = ({navigation, route}) => {
                           {fontSize: SIZES.xxl + SIZES.l, width: '40%'},
                         ]}>
                         {index === 0
-                          ? addCoupon?.freeCount
-                          : addCoupon?.paidCount}
+                          ? selCoupon?.freeCount
+                          : selCoupon?.paidCount}
                       </Text>
                       <TouchableOpacity
                         onPress={() => increment(index === 0 ? 'F' : 'P')}
@@ -755,7 +770,7 @@ const Coupons = ({navigation, route}) => {
             {/* // # horizontal line */}
             <View style={styles.horizontalLine} />
             {/* // # Amt section */}
-            {addCoupon?.type !== 'F' && (
+            {selCoupon?.type !== 'F' && (
               <View
                 style={[
                   styles.flexContainer,
@@ -765,11 +780,11 @@ const Coupons = ({navigation, route}) => {
                   Prasadam Amount
                 </Text>
                 <Text numberOfLines={1} style={styles.amtValTxt}>
-                  ₹ {addCoupon?.prasadamAmt}
+                  ₹ {selCoupon?.prasadamAmt}
                 </Text>
               </View>
             )}
-            {addCoupon?.type !== 'F' && (
+            {selCoupon?.type !== 'F' && (
               <View
                 style={[
                   styles.flexContainer,
@@ -779,12 +794,12 @@ const Coupons = ({navigation, route}) => {
                   Total Amount
                 </Text>
                 <Text numberOfLines={1} style={styles.amtValTxt}>
-                  ₹ {addCoupon?.totalAmt}
+                  ₹ {selCoupon?.totalAmt}
                 </Text>
               </View>
             )}
             {/* // # horizontal line */}
-            {addCoupon?.type !== 'F' && <View style={styles.horizontalLine} />}
+            {selCoupon?.type !== 'F' && <View style={styles.horizontalLine} />}
             {/* // # Buttons */}
             <TouchableOpacity
               onPress={() => {
@@ -797,9 +812,9 @@ const Coupons = ({navigation, route}) => {
                   styles.AddCpnCountTxt,
                   {color: COLORS.white, fontSize: SIZES.xl},
                 ]}>
-                {addCoupon?.type === 'R'
+                {selCoupon?.type === 'R'
                   ? 'Request'
-                  : addCoupon?.type === 'F'
+                  : selCoupon?.type === 'F'
                   ? 'Redeem'
                   : 'Pay'}
               </Text>
@@ -819,10 +834,12 @@ const Coupons = ({navigation, route}) => {
       {/*  // @ Show QrCode */}
       <Modal
         animationType="slide"
-        onRequestClose={() => setQrCode(false)}
-        visible={qrCode}
+        onRequestClose={() => setQrCode({show: false, qrLink: ''})}
+        visible={qrCode?.show}
         transparent>
-        <Pressable onPress={() => setQrCode(false)} style={styles.fltrModal}>
+        <Pressable
+          onPress={() => setQrCode({show: false, qrLink: ''})}
+          style={styles.fltrModal}>
           {/* // #  Qr Code Image */}
           <Pressable style={styles.qrCodeContainer}>
             <Image
@@ -842,7 +859,6 @@ export default Coupons;
 
 const styles = StyleSheet.create({
   couponCard: {
-    backgroundColor: 'pink',
     width: '90%',
     borderTopRightRadius: moderateScale(15),
     borderTopLeftRadius: moderateScale(30),

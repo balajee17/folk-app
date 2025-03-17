@@ -108,7 +108,8 @@ const SwitcherScreen = ({navigation, route}) => {
   // # API Home Data
   const getHomeScreenData = async () => {
     try {
-      !shimmer?.home && setShimmer(prev => ({...prev, home: true}));
+      !shimmer?.home &&
+        setShimmer(prev => ({...prev, home: true, refresh: false}));
       const response = await API.getHomeScreenData({profile_id: profileId});
 
       console.log('Home_response', response?.data);
@@ -221,7 +222,13 @@ const SwitcherScreen = ({navigation, route}) => {
         {/* // # Contents */}
         {btTab === 'DB1' ? (
           shimmer?.home || checkHomeData ? (
-            <Home shimmer={shimmer?.home} apiData={tab1Data} />
+            <Home
+              shimmer={shimmer?.home}
+              apiData={tab1Data}
+              refreshData={() => {
+                getHomeScreenData();
+              }}
+            />
           ) : (
             <NoDataFound />
           )
