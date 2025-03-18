@@ -39,7 +39,7 @@ const Coupons = ({navigation, route}) => {
 
   const {profileId} = globalState;
   const dateTime = ['Date', 'Time'];
-  // const {eventId} = route?.params;
+  const {eventId} = route?.params;
 
   const [requestCoupon, setRequestCoupon] = useState({
     open: false,
@@ -54,7 +54,7 @@ const Coupons = ({navigation, route}) => {
   });
   const [selCoupon, setSelCoupon] = useState(requestCoupon);
   const [qrCode, setQrCode] = useState({show: false, link: ''});
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [couponData, setCouponData] = useState([]);
 
   const toast = useToast();
@@ -64,140 +64,34 @@ const Coupons = ({navigation, route}) => {
   }, 3400);
 
   useEffect(() => {
-    // getCouponsList();
-    setCouponData({
-      couponList: [
-        {
-          dateTime: new Date(),
-          id: 1,
-          title: 'Prasadam Coupon Test',
-          code: '2#Ehguj668',
-          qty: 5,
-          requestedCoupon: 'N',
-
-          isPaid: 'N',
-
-          btnTxtColor: '',
-          btnBgColor: '',
-          dateColor: '',
-          labelColor: '',
-          codeColor: '',
-          titleColor: '',
-          countColor: '',
-          requestStatus: '',
-          totalAmt: '',
-          prasadamAmt: '',
-          qrLink:
-            'https://upload.wikimedia.org/wikipedia/commons/3/31/MM_QRcode.png',
-        },
-        {
-          dateTime: new Date(),
-          id: 2,
-          title: 'Prasadam Coupon Test',
-          code: '2#Ehguj668',
-          qty: 5,
-          requestedCoupon: 'N',
-          isPaid: 'Y',
-          btnTxtColor: '',
-          btnBgColor: '',
-          dateColor: '',
-          labelColor: '',
-          codeColor: '',
-          titleColor: '',
-          countColor: '',
-          requestStatus: '',
-          totalAmt: '',
-          prasadamAmt: '',
-          qrLink:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFjSHz3XGUqXd6hsKnkkj2drA_ZfXkam7Kry893Avx5UcKOPS-irr8SOeZ7lfUwVQ47Co&usqp=CAU',
-        },
-        {
-          dateTime: new Date(),
-          id: 3,
-          title: 'Prasadam Coupon Test',
-          code: '2#Ehguj668',
-          qty: 5,
-          requestedCoupon: 'Y',
-
-          isPaid: 'N',
-
-          btnTxtColor: '',
-          btnBgColor: '',
-          dateColor: '',
-          labelColor: '',
-          codeColor: '',
-          titleColor: '',
-          countColor: '',
-          requestStatus: 'P',
-          qrLink: '',
-        },
-        {
-          dateTime: new Date(),
-          id: 4,
-          title: 'Prasadam Coupon Test',
-          code: '2#Ehguj668',
-          qty: 5,
-          requestedCoupon: 'Y',
-
-          isPaid: 'N',
-
-          btnTxtColor: '',
-          btnBgColor: '',
-          dateColor: '',
-          labelColor: '',
-          codeColor: '',
-          titleColor: '',
-          countColor: '',
-          requestStatus: 'A',
-          totalAmt: 50,
-          prasadamAmt: 10,
-          qrLink: '',
-        },
-        {
-          dateTime: new Date(),
-          id: 5,
-          title: 'Prasadam Coupon Test',
-          code: '2#Ehguj668',
-          qty: 5,
-          requestedCoupon: 'Y',
-
-          isPaid: 'N',
-
-          btnTxtColor: '',
-          btnBgColor: '',
-          dateColor: '',
-          labelColor: '',
-          codeColor: '',
-          titleColor: '',
-          countColor: '',
-          requestStatus: 'X',
-          qrLink: '',
-        },
-        {
-          dateTime: new Date(),
-          id: 6,
-          title: 'Prasadam Coupon Test',
-          code: '2#Ehguj668',
-          qty: 6,
-          requestedCoupon: 'Y',
-
-          isPaid: 'Y',
-
-          btnTxtColor: '',
-          btnBgColor: '',
-          dateColor: '',
-          labelColor: '',
-          codeColor: '',
-          titleColor: '',
-          countColor: '',
-          requestStatus: 'A',
-          totalAmt: 60,
-          prasadamAmt: 10,
-          qrLink: '',
-        },
-      ],
-    });
+    getCouponsList();
   }, []);
+
+  const setDefaultStates = () => {
+    setCouponData([]);
+    setSelCoupon({
+      open: false,
+      type: 'R',
+      freeCount: 1,
+      freeMaxCount: 0,
+      refId: '',
+      prasadamAmt: 0,
+      totalAmt: 0,
+      paidCount: 1,
+      paidMaxCount: 0,
+    });
+    setRequestCoupon({
+      open: false,
+      type: 'R',
+      freeCount: 1,
+      freeMaxCount: 0,
+      refId: '',
+      prasadamAmt: 0,
+      totalAmt: 0,
+      paidCount: 1,
+      paidMaxCount: 0,
+    });
+  };
 
   const getCouponsList = async () => {
     try {
@@ -208,132 +102,28 @@ const Coupons = ({navigation, route}) => {
       console.log('Coupon_List_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-        // setCouponData(data?.coupons);
-        setRequestCoupon(data?.requestPrasadamAmt);
-        setSelCoupon(data?.requestPrasadamAmt);
-        setCouponData({
-          couponList: [
-            {
-              dateTime: new Date(),
-              id: 1,
-              title: 'Prasadam Coupon Test',
-              code: '2#Ehguj668',
-              qty: 5,
-              requestedCoupon: 'N',
-
-              isPaid: 'N',
-
-              btnTxtColor: '',
-              btnBgColor: '',
-              dateColor: '',
-              labelColor: '',
-              codeColor: '',
-              titleColor: '',
-              countColor: '',
-              requestStatus: '',
-            },
-            {
-              dateTime: new Date(),
-              id: 2,
-              title: 'Prasadam Coupon Test',
-              code: '2#Ehguj668',
-              qty: 5,
-              requestedCoupon: 'N',
-              isPaid: 'Y',
-              btnTxtColor: '',
-              btnBgColor: '',
-              dateColor: '',
-              labelColor: '',
-              codeColor: '',
-              titleColor: '',
-              countColor: '',
-              requestStatus: '',
-            },
-            {
-              dateTime: new Date(),
-              id: 1,
-              title: 'Prasadam Coupon Test',
-              code: '2#Ehguj668',
-              qty: 5,
-              requestedCoupon: 'Y',
-
-              isPaid: 'N',
-
-              btnTxtColor: '',
-              btnBgColor: '',
-              dateColor: '',
-              labelColor: '',
-              codeColor: '',
-              titleColor: '',
-              countColor: '',
-              requestStatus: 'P',
-            },
-            {
-              dateTime: new Date(),
-              id: 1,
-              title: 'Prasadam Coupon Test',
-              code: '2#Ehguj668',
-              qty: 5,
-              requestedCoupon: 'Y',
-
-              isPaid: 'N',
-
-              btnTxtColor: '',
-              btnBgColor: '',
-              dateColor: '',
-              labelColor: '',
-              codeColor: '',
-              titleColor: '',
-              countColor: '',
-              requestStatus: 'A',
-            },
-            {
-              dateTime: new Date(),
-              id: 1,
-              title: 'Prasadam Coupon Test',
-              code: '2#Ehguj668',
-              qty: 5,
-              requestedCoupon: 'Y',
-
-              isPaid: 'N',
-
-              btnTxtColor: '',
-              btnBgColor: '',
-              dateColor: '',
-              labelColor: '',
-              codeColor: '',
-              titleColor: '',
-              countColor: '',
-              requestStatus: 'X',
-            },
-            {
-              dateTime: new Date(),
-              id: 1,
-              title: 'Prasadam Coupon Test',
-              code: '2#Ehguj668',
-              qty: 6,
-              requestedCoupon: 'Y',
-
-              isPaid: 'Y',
-
-              btnTxtColor: '',
-              btnBgColor: '',
-              dateColor: '',
-              labelColor: '',
-              codeColor: '',
-              titleColor: '',
-              countColor: '',
-              requestStatus: 'A',
-            },
-          ],
-        });
+        setCouponData(data?.coupons);
+        const DATA = {
+          open: false,
+          type: 'R',
+          freeCount: 1,
+          freeMaxCount: 0,
+          refId: '',
+          paidCount: 1,
+          paidMaxCount: 0,
+          prasadamAmt: data?.requestPrasadamAmt,
+          totalAmt: data?.requestPrasadamAmt,
+        };
+        setRequestCoupon(DATA);
+        setSelCoupon(DATA);
       } else {
-        setCouponData([]);
+        setDefaultStates();
         toastMsg(message, 'info');
       }
       setLoader(false);
     } catch (err) {
       toastMsg('', 'error');
+      setDefaultStates();
       setLoader(false);
       console.log('ERR-Coupon_List-screen', err);
     }
@@ -432,11 +222,12 @@ const Coupons = ({navigation, route}) => {
               profile_id: profileId,
               refId: selCoupon?.refId ? selCoupon?.refId : null,
               couponType: TYPE,
+              event_id: eventId,
               freeCount: selCoupon?.freeCount > 0 ? selCoupon?.freeCount : null,
             }
           : {
               profile_id: profileId,
-              // event_id: eventId,
+              event_id: eventId,
               refId:
                 TYPE === 'R'
                   ? null
@@ -444,25 +235,25 @@ const Coupons = ({navigation, route}) => {
                   ? selCoupon?.refId
                   : null,
               couponType: TYPE, // R - req, F - free, P - paid
-              freeCount: selCoupon?.freeCount > 0 ? selCoupon?.freeCount : null,
-              paidCount: selCoupon?.paidCount > 0 ? selCoupon?.paidCount : null,
-              prasadamAmt: TYPE === 'P' ? selCoupon?.prasadamAmt : null,
-              totalAmount: TYPE === 'P' ? selCoupon?.totalAmt : null,
+              freeCount:
+                selCoupon?.freeCount > 0 ? Number(selCoupon?.freeCount) : 0,
+              paidCount:
+                selCoupon?.paidCount > 0 ? Number(selCoupon?.paidCount) : 0,
+              prasadamAmt: TYPE === 'P' ? Number(selCoupon?.prasadamAmt) : null,
+              totalAmount: TYPE === 'P' ? Number(selCoupon?.totalAmt) : 0,
             };
 
-      console.log('PARAMS', params);
-
-      const response = await API.getCouponList(params);
+      const response = await API.addCoupon(params);
 
       console.log('SEND_Coupon_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         toastMsg(message, 'success');
-        TYPE === 'P' ? paymentAPI() : setSelCoupon(requestCoupon);
+        TYPE === 'P' ? paymentAPI() : getCouponsList();
       } else {
         toastMsg(message, 'info');
+        setLoader(false);
       }
-      setLoader(false);
     } catch (err) {
       toastMsg('', 'error');
       setLoader(false);
@@ -489,16 +280,18 @@ const Coupons = ({navigation, route}) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: '25%', overflow: 'hidden'}}
-          data={couponData?.couponList}
+          data={couponData}
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity
                 disabled={
-                  item?.requestedCoupon === 'Y' || item?.requestStatus === 'X'
+                  item?.requestedCoupon === 'Y' ||
+                  item?.requestStatus === 'X' ||
+                  item?.is_Availed === 'Y'
                 }
                 key={index}
                 activeOpacity={0.8}
-                onPress={() => setQrCode({show: true, link: item?.qrLink})}
+                onPress={() => setQrCode({show: true, link: item?.qrImage})}
                 style={[styles.couponCard]}>
                 {/* // # Left Cutout */}
                 <View style={[styles.cutout, styles.leftCutout]} />
@@ -508,7 +301,11 @@ const Coupons = ({navigation, route}) => {
                 <View style={[styles.cutout, styles.rightCutout]} />
 
                 {/* // # Left Content */}
-                <View style={styles.leftContent(item?.bgColor)}>
+                <View
+                  style={[
+                    styles.leftContent(item?.bgColor),
+                    item?.is_Availed === 'Y' && {opacity: 0.5},
+                  ]}>
                   <Text
                     numberOfLines={2}
                     style={[
@@ -546,8 +343,8 @@ const Coupons = ({navigation, route}) => {
                               {color: item?.dateColor || COLORS.white},
                             ]}>
                             {dateIndex === 0
-                              ? moment(item?.dateTime).format('DD-MM-YYYY')
-                              : moment(item?.dateTime).format('h:mm a')}
+                              ? moment(item?.date).format('DD-MM-YYYY')
+                              : moment(item?.time).format('h:mm a')}
                           </Text>
                         </View>
                       );
@@ -610,7 +407,11 @@ const Coupons = ({navigation, route}) => {
                 </View>
 
                 {/* // # Right Content */}
-                <View style={styles.rightContent}>
+                <View
+                  style={[
+                    styles.rightContent,
+                    item?.is_Availed === 'Y' && {opacity: 0.5},
+                  ]}>
                   <Text
                     numberOfLines={1}
                     style={[
@@ -1090,6 +891,7 @@ const styles = StyleSheet.create({
     height: windowWidth * 0.85,
     backgroundColor: '#fff',
     borderRadius: moderateScale(20),
+    overflow: 'hidden',
   },
   couponTypeTxt: {
     fontFamily: FONTS.urbanistSemiBold,

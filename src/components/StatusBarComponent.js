@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {NativeModules, Platform, StatusBar, View} from 'react-native';
 import {COLORS} from '../styles/MyStyles';
+import {screenNames} from '../constants/ScreenNames';
 
 const {StatusBarManager} = NativeModules;
 
@@ -33,15 +34,17 @@ export const StatusBarHeightProvider = ({children}) => {
 export const useStatusBarHeight = () => useContext(StatusBarHeightContext);
 
 // # StatusBarTransp: Component for rendering a transparent status bar
-export const StatusBarTransp = () => {
+export const StatusBarTransp = ({screen}) => {
   const statusBarHeight = useStatusBarHeight();
-
+  console.log('screen === screenNames.login', screen === screenNames.login);
   return (
     <>
       {Platform.OS === 'android' ? (
         <StatusBar
           backgroundColor={COLORS.transparent}
-          barStyle="light-content"
+          barStyle={
+            screen === screenNames.login ? 'dark-content' : 'light-content'
+          }
           animated
           translucent
         />

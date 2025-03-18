@@ -27,26 +27,26 @@ const ICONS = [
   {
     id: 'DB1',
     name: 'Home',
-    image: require('../assets/images/home.png'),
-    activeImage: require('../assets/images/homeActive.png'),
+    image: getImage.home,
+    activeImage: getImage.homeActive,
   },
   {
     id: 'B2',
     name: 'Events',
-    image: require('../assets/images/calendar.png'),
-    activeImage: require('../assets/images/calendarActive.png'),
+    image: getImage.calendar,
+    activeImage: getImage.calendarActive,
   },
   {
     id: 'B3',
     name: 'Courses',
-    image: require('../assets/images/book.png'),
-    activeImage: require('../assets/images/bookActive.png'),
+    image: getImage.book,
+    activeImage: getImage.bookActive,
   },
   {
     id: 'B4',
     name: 'Connect',
-    image: require('../assets/images/account.png'),
-    activeImage: require('../assets/images/accountActive.png'),
+    image: getImage.account,
+    activeImage: getImage.accountActive,
   },
 ];
 

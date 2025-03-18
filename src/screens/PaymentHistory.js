@@ -11,6 +11,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {screenNames} from '../constants/ScreenNames';
 import {useNavigation} from '@react-navigation/native';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
+import moment from 'moment';
 
 const PaymentHistory = ({shimmer, paymentHistory}) => {
   const navigation = useNavigation();
@@ -19,100 +20,102 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
   const navigateTo = screen => {
     navigation.navigate(screen);
   };
-  return (
-    <TouchableOpacity
-      disabled={shimmer}
-      onPress={() => navigateTo(screenNames.paymentDetails)}
-      activeOpacity={0.8}
-      style={[
-        styles.attendanceCard,
-        shimmer && {backgroundColor: COLORS.charcoal},
-      ]}>
+  return shimmer ? (
+    <View style={[styles.attendanceCard]}>
       <View style={styles.evtImgNameCont}>
         {/* // # First Letter of Event Name */}
-        {shimmer ? (
-          <ImageShimmer
-            width={horizontalScale(45)}
-            borderRadius={moderateScale(25)}
-            height={horizontalScale(45)}
-          />
-        ) : (
-          <View style={styles.eventImg}>
-            <Text style={styles.eventFrstLetter}>V</Text>
-          </View>
-        )}
+        <ImageShimmer
+          width={horizontalScale(45)}
+          borderRadius={moderateScale(25)}
+          height={horizontalScale(45)}
+        />
         {/* // # Transaction ID & Event Name */}
         <View style={styles.idEvntNameCont}>
-          {shimmer ? (
-            <>
-              <TitleShimmer width={'60%'} height={horizontalScale(12)} />
-              <TitleShimmer width={'90%'} height={horizontalScale(15)} />
-            </>
-          ) : (
-            <>
-              <Text numberOfLines={1} style={[styles.txid, {width: '100%'}]}>
-                TXID : 54366773575768
-              </Text>
-              <Text
-                numberOfLines={1}
-                style={[styles.eventName, {width: '100%'}]}>
-                Vaikuntha Ekadashi
-              </Text>
-            </>
-          )}
+          <TitleShimmer width={'60%'} height={horizontalScale(12)} />
+          <TitleShimmer width={'90%'} height={horizontalScale(15)} />
         </View>
         {/*  // # Amount */}
-        {shimmer ? (
-          <View
-            style={{
-              width: '25%',
-              justifyContent: 'flex-end',
-            }}>
-            <TitleShimmer
-              width={horizontalScale(80)}
-              height={horizontalScale(20)}
-            />
-          </View>
-        ) : (
-          <Text style={styles.amtTxt}>₹ 12000</Text>
-        )}
+        <View
+          style={{
+            width: '25%',
+            justifyContent: 'flex-end',
+          }}>
+          <TitleShimmer
+            width={horizontalScale(80)}
+            height={horizontalScale(20)}
+          />
+        </View>
       </View>
       {/*  // # Date & status  */}
       <View style={styles.dateStatusCont}>
-        {shimmer ? (
-          <>
-            <TitleShimmer
-              width={horizontalScale(120)}
-              height={horizontalScale(12)}
-            />
-            <TitleShimmer
-              width={horizontalScale(100)}
-              height={horizontalScale(12)}
-            />
-          </>
-        ) : (
-          <>
-            <View style={[styles.dateTimeCont, {width: '40%'}]}>
-              <Text style={styles.dateTxt}>07 Feb 2025</Text>
-              <View style={styles.dot} />
-              <Text style={styles.dateTxt}>10:30AM</Text>
-            </View>
-            <View style={[styles.dateTimeCont, {width: '30%'}]}>
-              <Text
-                numberOfLines={1}
-                style={[styles.eventName, styles.statusTxt]}>
-                Successful
-              </Text>
-              <FontAwesome
-                name="check-circle"
-                size={moderateScale(20)}
-                color={COLORS.moss}
-              />
-            </View>
-          </>
-        )}
+        <TitleShimmer
+          width={horizontalScale(120)}
+          height={horizontalScale(12)}
+        />
+        <TitleShimmer
+          width={horizontalScale(100)}
+          height={horizontalScale(12)}
+        />
       </View>
-    </TouchableOpacity>
+    </View>
+  ) : (
+    paymentHistory?.map((item, index) => (
+      <TouchableOpacity
+        key={index}
+        onPress={() => navigateTo(screenNames.paymentDetails)}
+        activeOpacity={0.8}
+        style={[styles.attendanceCard]}>
+        <View style={styles.evtImgNameCont}>
+          {/* // # First Letter of Event Name */}
+          <View style={styles.eventImg}>
+            <Text style={styles.eventFrstLetter}>
+              {item?.PURPOSE?.charAt(0)}
+            </Text>
+          </View>
+          {/* // # Transaction ID & Event Name */}
+          <View style={styles.idEvntNameCont}>
+            <Text numberOfLines={1} style={[styles.txid, {width: '100%'}]}>
+              TXID : {item?.TRANSACTION_ID}
+            </Text>
+            <Text numberOfLines={1} style={[styles.eventName, {width: '100%'}]}>
+              {item?.PURPOSE}
+            </Text>
+          </View>
+          {/*  // # Amount */}
+          <Text style={styles.amtTxt}>{item?.TOTAL_AMOUNT}</Text>
+        </View>
+        {/*  // # Date & status  */}
+        <View style={styles.dateStatusCont}>
+          <View style={[styles.dateTimeCont, {width: '40%'}]}>
+            <Text style={styles.dateTxt}>
+              {moment(item?.TRANSACTION_DATE).format('DD-MM-YYYY')}
+            </Text>
+            <View style={styles.dot} />
+            <Text style={styles.dateTxt}>
+              {moment(item?.TRANSACTION_DATE).format('hh:mm:ss a')}
+            </Text>
+          </View>
+          <View style={[styles.dateTimeCont, {width: '30%'}]}>
+            <Text
+              numberOfLines={1}
+              style={[styles.eventName, styles.statusTxt]}>
+              {item?.STATUS}
+            </Text>
+            <FontAwesome
+              name={
+                item?.TRANSACTION_STATUS === 'S'
+                  ? 'check-circle'
+                  : item?.TRANSACTION_STATUS === 'F'
+                  ? 'times-circle'
+                  : 'exclamation-circle'
+              }
+              size={moderateScale(20)}
+              color={COLORS.moss}
+            />
+          </View>
+        </View>
+      </TouchableOpacity>
+    ))
   );
 };
 
@@ -184,5 +187,5 @@ const styles = StyleSheet.create({
     height: horizontalScale(5),
     borderRadius: moderateScale(3),
   },
-  statusTxt: {width: '74%', textAlign: 'center'},
+  statusTxt: {width: '74%', textAlign: 'right'},
 });

@@ -29,6 +29,7 @@ import {API} from '../services/API';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useAppContext} from '../../App';
 import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
+import {getImage} from '../utils/ImagePath';
 
 const ConnectUs = ({apiData, shimmer}) => {
   const toast = useToast();
@@ -104,9 +105,7 @@ const ConnectUs = ({apiData, shimmer}) => {
             </View>
           </View>
         ) : (
-          <ImageBackground
-            source={require('../assets/images/connectCdBg.png')}
-            style={styles.cdBgImg}>
+          <ImageBackground source={getImage.connectCard} style={styles.cdBgImg}>
             <View style={{padding: '4%'}}>
               {/* // # FG Image */}
               <View style={styles.imageContainer}>

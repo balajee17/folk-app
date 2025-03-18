@@ -2,6 +2,7 @@ import {ActivityIndicator, Modal, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import {horizontalScale} from '../styles/MyStyles';
+import {getImage} from '../utils/ImagePath';
 
 const Spinner = ({spinnerVisible}) => {
   return (
@@ -11,7 +12,7 @@ const Spinner = ({spinnerVisible}) => {
          */}
         <FastImage
           style={styles.gif}
-          source={require('../assets/images/coupon.gif')}
+          source={getImage.appLoader}
           resizeMode={FastImage.resizeMode.contain}
         />
       </View>

@@ -46,10 +46,10 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                   <View style={MyStyles.dateModeCont}>
                     <View style={MyStyles.dateCont}>
                       <Text style={MyStyles.dateTxt}>
-                        {moment(item?.start_datetime).format('DD')}
+                        {moment(item?.start_date).format('DD')}
                       </Text>
                       <Text style={MyStyles.monthTxt}>
-                        {moment(item?.start_datetime).format('MMM')}
+                        {moment(item?.start_month).format('MMM')}
                       </Text>
                     </View>
 
@@ -101,7 +101,9 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
           refreshControl={
             <RefreshControl refreshing={false} onRefresh={refresh} />
           }
-          ListEmptyComponent={<NoDataFound screen={screenNames.events} />}
+          ListEmptyComponent={
+            !shimmer && <NoDataFound screen={screenNames.events} />
+          }
         />
       ) : (
         Array(2)

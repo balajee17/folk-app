@@ -26,6 +26,7 @@
 		E3DBE7E9FFAC4D5688A9B4AC /* Urbanist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4CCE02590AC94C3D8451D748 /* Urbanist-Medium.ttf */; };
 		F9F46A4D533B4C4685ACA9CF /* Urbanist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B088827A3ACE447EA4FC509B /* Urbanist-SemiBold.ttf */; };
 		FF57239DEE2A6129FB371C34 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EB18D0CA8F185DE44AC3E117 /* PrivacyInfo.xcprivacy */; };
+		85E4EE0296064767B340CEEB /* LufgaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C28F4130B1F24A4298029411 /* LufgaBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		CD503B5F3220444DA248BB8B /* Urbanist-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-Regular.ttf"; path = "../src/assets/fonts/Urbanist-Regular.ttf"; sourceTree = "<group>"; };
 		EB18D0CA8F185DE44AC3E117 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = FOLK/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		C28F4130B1F24A4298029411 /* LufgaBold.ttf */ = {isa = PBXFileReference; name = "LufgaBold.ttf"; path = "../src/assets/fonts/LufgaBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				1040EFD61C8546A382DBD980 /* Poppins-SemiBold.ttf */,
 				CA0413D7BBBA47C793564E64 /* Poppins-Regular.ttf */,
 				56650E94866E4F4D87D12C3E /* YsabeauInfant-Regular.ttf */,
+				C28F4130B1F24A4298029411 /* LufgaBold.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -302,6 +305,7 @@
 				CE0ABEFFEAEC4D6F8129DAA3 /* Poppins-SemiBold.ttf in Resources */,
 				DBC355A6CD7D4D69A6C16E4E /* Poppins-Regular.ttf in Resources */,
 				C1BDF71A497346C081A081A2 /* YsabeauInfant-Regular.ttf in Resources */,
+				85E4EE0296064767B340CEEB /* LufgaBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

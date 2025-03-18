@@ -23,6 +23,8 @@ import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
 import {toastThrottle} from './CommonFunctionalities';
+import {getImage} from '../utils/ImagePath';
+import FastImage from 'react-native-fast-image';
 
 const NoNetwork = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -62,15 +64,14 @@ const NoNetwork = ({navigation}) => {
   return (
     <SafeAreaView style={[MyStyles.contentCont, {justifyContent: 'center'}]}>
       <CommonStatusBar />
-      <Image
+      <FastImage
         style={{
           alignSelf: 'center',
           width: horizontalScale(200),
           height: horizontalScale(200),
         }}
-        source={{
-          uri: 'https://cdni.iconscout.com/illustration/premium/thumb/no-internet-connection-illustration-download-in-svg-png-gif-file-formats--wifi-logo-error-browser-ecommerce-empty-pack-e-commerce-shopping-illustrations-6632283.png',
-        }}
+        source={getImage.noNetwork}
+        resizeMode={FastImage.resizeMode.contain}
       />
       <Text style={styles.whooopsTxt}>Whooops!</Text>
       <Text style={styles.infoTxt}>

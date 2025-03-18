@@ -26,26 +26,26 @@ const CustomDrawer = ({navigation, route}) => {
     {
       id: 'DB1',
       screenName: screenNames.home,
-      whiteIcon: require('../assets/images/homeWhite.png'),
-      blackIcon: require('../assets/images/homeBlack.png'),
+      whiteIcon: getImage.homeWhite,
+      blackIcon: getImage.homeBlack,
     },
     {
       id: 'D2',
       screenName: screenNames.yfhForm,
-      whiteIcon: require('../assets/images/formWhite.png'),
-      blackIcon: require('../assets/images/formBlack.png'),
+      whiteIcon: getImage.formWhite,
+      blackIcon: getImage.formBlack,
     },
     {
       id: 'D3',
       screenName: screenNames.accommodation,
-      whiteIcon: require('../assets/images/accommodationWhite.png'),
-      blackIcon: require('../assets/images/accommodationBlack.png'),
+      whiteIcon: getImage.accommodationWhite,
+      blackIcon: getImage.accommodationBlack,
     },
     {
       id: 'D4',
       screenName: 'Contribution',
-      whiteIcon: require('../assets/images/donateWhite.png'),
-      blackIcon: require('../assets/images/donateBlack.png'),
+      whiteIcon: getImage.donateWhite,
+      blackIcon: getImage.donateBlack,
     },
   ];
 

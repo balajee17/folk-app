@@ -11,67 +11,62 @@ import {
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 
 const AttendanceHistory = ({shimmer, attendanceHistory}) => {
-  console.log('shimmer', shimmer);
-  return (
-    <View
-      style={[
-        styles.attendanceCard,
-        shimmer && {backgroundColor: COLORS.charcoal},
-      ]}>
+  return shimmer ? (
+    <View style={[styles.attendanceCard, {backgroundColor: COLORS.charcoal}]}>
       <View style={styles.evtImgNameCont}>
         {/* // # Event Image */}
-        {shimmer ? (
-          <ImageShimmer
-            width={horizontalScale(60)}
-            borderRadius={moderateScale(40)}
-            height={horizontalScale(60)}
-          />
-        ) : (
+        <ImageShimmer
+          width={horizontalScale(60)}
+          borderRadius={moderateScale(40)}
+          height={horizontalScale(60)}
+        />
+
+        {/* // # Event Name & Event Description */}
+        <View style={styles.nameDescrpCont}>
+          <TitleShimmer height={verticalScale(15)} width={verticalScale(200)} />
+          <TitleShimmer height={verticalScale(12)} width={verticalScale(150)} />
+        </View>
+      </View>
+      {/*  // # Date  */}
+      <TitleShimmer
+        height={verticalScale(12)}
+        width={verticalScale(80)}
+        alignSelf={'flex-end'}
+      />
+    </View>
+  ) : (
+    attendanceHistory?.map((item, index) => (
+      <View
+        key={index}
+        style={[
+          styles.attendanceCard,
+          shimmer && {backgroundColor: COLORS.charcoal},
+        ]}>
+        <View style={styles.evtImgNameCont}>
+          {/* // # Event Image */}
           <Image
             source={{
               uri: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1740649285~exp=1740652885~hmac=e3b71acbedc8749e46bba369cb9356231a0aecdaea4f8b197ef34c7cb2fc929b&w=740',
             }}
             style={styles.eventImg}
           />
-        )}
-        {/* // # Event Name & Event Description */}
-        <View style={styles.nameDescrpCont}>
-          {shimmer ? (
-            <>
-              <TitleShimmer
-                height={verticalScale(15)}
-                width={verticalScale(200)}
-              />
-              <TitleShimmer
-                height={verticalScale(12)}
-                width={verticalScale(150)}
-              />
-            </>
-          ) : (
-            <>
-              <Text numberOfLines={2} style={styles.eventName}>
-                Mango Mania
-              </Text>
-              <Text numberOfLines={2} style={styles.descripTxt}>
-                Celebration
-              </Text>
-            </>
-          )}
+
+          {/* // # Event Name & Event Description */}
+          <View style={styles.nameDescrpCont}>
+            <Text numberOfLines={2} style={styles.eventName}>
+              {item?.EVENT_NAME}
+            </Text>
+            <Text numberOfLines={2} style={styles.descripTxt}>
+              {item?.DESCRIPTION}
+            </Text>
+          </View>
         </View>
-      </View>
-      {/*  // # Date  */}
-      {shimmer ? (
-        <TitleShimmer
-          height={verticalScale(12)}
-          width={verticalScale(80)}
-          alignSelf={'flex-end'}
-        />
-      ) : (
+        {/*  // # Date  */}
         <Text numberOfLines={2} style={[styles.descripTxt, styles.dateTxt]}>
-          25-Jun-2024
+          {item?.ATT_DATE}
         </Text>
-      )}
-    </View>
+      </View>
+    ))
   );
 };
 

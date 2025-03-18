@@ -18,6 +18,7 @@ import QrScanner from '../components/QrScanner';
 import Courses from '../screens/Courses';
 import NoNetwork from '../components/NoNetwork';
 import {useAppContext} from '../../App';
+import Login from '../screens/Login';
 
 const Stack = createStackNavigator();
 
@@ -30,7 +31,7 @@ const StackNavigation = () => {
   useEffect(() => {
     if (navigationRef.current) {
       if (isConnected) {
-        navigationRef.current.navigate(screenNames.drawerNavigation);
+        navigationRef.current.navigate(screenNames.login);
       } else {
         navigationRef.current.navigate(screenNames.noNetwork);
       }
@@ -38,9 +39,10 @@ const StackNavigation = () => {
   }, [isConnected]);
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator
-        initialRouteName={screenNames.drawerNavigation}
-        screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        {/* // @ Login */}
+        <Stack.Screen name={screenNames.login} component={Login} />
+
         {/* // @ Drawer Component */}
         <Stack.Screen
           name={screenNames.drawerNavigation}

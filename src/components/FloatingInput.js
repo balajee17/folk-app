@@ -15,6 +15,7 @@ import {
 } from '../styles/MyStyles';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
+import {screenNames} from '../constants/ScreenNames';
 
 const FloatingInput = React.forwardRef((props, ref) => {
   const {
@@ -32,6 +33,7 @@ const FloatingInput = React.forwardRef((props, ref) => {
     drpdwnContStyle,
     type = 'txtInput',
     drpDwnStyle,
+    screen,
   } = props;
   const [focused, setFocused] = useState(false);
 
@@ -66,7 +68,11 @@ const FloatingInput = React.forwardRef((props, ref) => {
   });
 
   const textTransformY = useDerivedValue(() => {
-    return interpolate(labelAnimationValue.value, [0, 1], [0, -23]);
+    return interpolate(
+      labelAnimationValue.value,
+      [0, 1],
+      [0, screenNames.login === screen ? -38 : -23],
+    );
   });
 
   const onFocus = () => {
@@ -122,6 +128,7 @@ const FloatingInput = React.forwardRef((props, ref) => {
           cursorColor={COLORS.windowsBlue}
           onFocus={onFocus}
           onBlur={onBlur}
+          selectionColor={COLORS.header}
           style={[
             styles.txtInptStyle(props?.disabled),
             txtInptStyle,

@@ -89,17 +89,7 @@ export const API = {
     );
     return axios.post(getEventAttendanceURL, requestData);
   },
-  getCouponList(data) {
-    const getCouponListURL = baseURL + '/prasadam-coupon-list';
-    const requestData = {accessKey: Access_Key, ...data};
-    console.log(
-      'URL Coupon List Data ',
-      getCouponListURL,
-      ' data ',
-      requestData,
-    );
-    return axios.post(getCouponListURL, requestData);
-  },
+
   applyCoupon(data) {
     const applyCouponURL = baseURL + '/event-apply-coupon';
     const requestData = {accessKey: Access_Key, ...data};
@@ -133,7 +123,7 @@ export const API = {
 
   // # Profile Screen
   getUserDetails(data) {
-    const getUserDetailsURL = baseURL + '/';
+    const getUserDetailsURL = baseURL + '/view-profile';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL Coupon List Data ',
@@ -142,5 +132,23 @@ export const API = {
       requestData,
     );
     return axios.post(getUserDetailsURL, requestData);
+  },
+  // # COUPONS
+  getCouponList(data) {
+    const getCouponListURL = baseURL + '/prasadam-coupon-list';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Coupon List Data ',
+      getCouponListURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(getCouponListURL, requestData);
+  },
+  addCoupon(data) {
+    const addCouponURL = baseURL + '/request-prasadam-coupon';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL Add Coupon Data ', addCouponURL, ' data ', requestData);
+    return axios.post(addCouponURL, requestData);
   },
 };

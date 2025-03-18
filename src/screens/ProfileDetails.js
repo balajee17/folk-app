@@ -1,4 +1,5 @@
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -77,14 +78,33 @@ const ProfileDetails = ({shimmer, profileDetails}) => {
           ))}
 
       {!shimmer &&
-        profileDetails?.map((item, index) => (
-          <>
-            <Text style={[styles.labelTxt, {marginTop: '6%'}]}>Email ID</Text>
-            <View style={styles.valueBox}>
-              <Text style={styles.valueTxt}>kotreshrudresh@gmail.com</Text>
-            </View>
-          </>
-        ))}
+        profileDetails?.map(
+          (item, index) =>
+            item?.Value && (
+              <>
+                <Text style={[styles.labelTxt, {marginTop: '6%'}]}>
+                  {item?.Label}
+                </Text>
+                <View style={styles.valueBox}>
+                  {item?.Id === 12 ? (
+                    <Image
+                      style={{
+                        width: horizontalScale(250),
+                        height: horizontalScale(250),
+                        borderRadius: moderateScale(20),
+                        alignSelf: 'center',
+                      }}
+                      source={{
+                        uri: item?.Value,
+                      }}
+                    />
+                  ) : (
+                    <Text style={styles.valueTxt}>{item?.Value}</Text>
+                  )}
+                </View>
+              </>
+            ),
+        )}
     </ScrollView>
   );
 };

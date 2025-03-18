@@ -26,7 +26,7 @@ const Profile = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
 
   const {profileId} = globalState;
-  const [activeTab, setActiveTab] = useState(3);
+  const [activeTab, setActiveTab] = useState(1);
 
   const [shimmer, setShimmer] = useState({
     primary: false,
@@ -34,7 +34,9 @@ const Profile = ({navigation}) => {
     attendance: false,
     payment: false,
   });
-  const [userData, setUserData] = useState({});
+  const [profileData, setProfileDetails] = useState({});
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [paymentData, setPaymentData] = useState([]);
 
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
@@ -50,8 +52,17 @@ const Profile = ({navigation}) => {
   };
 
   useEffect(() => {
-    // getUserData(1);
+    getUserData(1);
   }, []);
+
+  const checkProfileExist =
+    typeof profileData === 'object' && Object.keys(profileData)?.length > 0;
+
+  const checkAttendanceExist =
+    Array.isArray(attendanceData) && attendanceData?.length > 0;
+
+  const checkPaymentExist =
+    Array.isArray(paymentData) && paymentData?.length > 0;
 
   const shimmerController = (selTab, type) => {
     type === true
@@ -69,32 +80,46 @@ const Profile = ({navigation}) => {
         });
   };
 
+  const setData = (selTab, data) => {
+    const DATA = data;
+    if (selTab === 1) {
+      setProfileDetails(DATA);
+    }
+    if (selTab === 2) {
+      setAttendanceData(DATA);
+    }
+    if (selTab === 3) {
+      setPaymentData(DATA);
+    }
+  };
+
   // # API to get user details
   const getUserData = async selTab => {
     try {
-      !shimmer?.primary &&
-        (setActiveTab(selTab), shimmerController(selTab, true));
+      !shimmer?.primary && shimmerController(selTab, true);
 
       const params = {
-        profile_id: profileId,
+        profileId: profileId,
         tab: selTab === 1 ? 'Profile' : selTab === 2 ? 'Attendance' : 'Payment',
       };
       const response = await API.getUserDetails(params);
+      // console.log('response_profile', response?.data?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-        setUserData(data);
+        setData(selTab, data);
       } else {
-        setUserData({});
+        setData(selTab, selTab === 1 ? {} : []);
         toastMsg(message, 'info');
       }
       shimmerController('', false);
     } catch (err) {
-      setUserData({});
+      setData(selTab, selTab === 1 ? {} : []);
       shimmerController('', false);
       toastMsg('', 'error');
       console.log('ERR-Upcoming', err);
     }
   };
+
   return (
     <View style={MyStyles.contentCont}>
       <LinearGradient
@@ -115,7 +140,7 @@ const Profile = ({navigation}) => {
           ) : (
             <Image
               source={{
-                uri: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1740649285~exp=1740652885~hmac=e3b71acbedc8749e46bba369cb9356231a0aecdaea4f8b197ef34c7cb2fc929b&w=740',
+                uri: profileData?.primaryDetails?.Profile_image,
               }}
               style={styles.usrImg}
             />
@@ -130,7 +155,9 @@ const Profile = ({navigation}) => {
             alignSelf={'center'}
           />
         ) : (
-          <Text style={styles.usrName}>Kotresh R</Text>
+          <Text style={styles.usrName}>
+            {profileData?.primaryDetails?.Name}
+          </Text>
         )}
         {/* // # User FOLK ID */}
         {shimmer?.primary ? (
@@ -141,7 +168,9 @@ const Profile = ({navigation}) => {
             alignSelf={'center'}
           />
         ) : (
-          <Text style={styles.folkIdTxt}>FOLK ID : 457698625398</Text>
+          <Text style={styles.folkIdTxt}>
+            {profileData?.primaryDetails?.Folk_id}
+          </Text>
         )}
 
         {/* // # Tab Bar */}
@@ -158,8 +187,20 @@ const Profile = ({navigation}) => {
               <TouchableOpacity
                 key={item?.id}
                 onPress={() => {
-                  // getUserData(item?.id);
                   setActiveTab(item?.id);
+
+                  const checkAPICall = Object.values(shimmer).some(
+                    value => value === true,
+                  );
+
+                  const conditions = {
+                    1: checkProfileExist,
+                    2: checkAttendanceExist,
+                    3: checkPaymentExist,
+                  };
+                  if (!checkAPICall && !conditions[item?.id]) {
+                    getUserData(item?.id);
+                  }
                 }}
                 activeOpacity={0.6}
                 style={[
@@ -190,17 +231,17 @@ const Profile = ({navigation}) => {
       {activeTab === 1 ? (
         <ProfileDetails
           shimmer={shimmer?.profile}
-          profileDetails={userData?.profileDetails}
+          profileDetails={profileData?.profileDetails}
         />
       ) : activeTab === 2 ? (
         <AttendanceHistory
           shimmer={shimmer?.attendance}
-          attendanceHistory={userData?.attendanceHistory}
+          attendanceHistory={attendanceData}
         />
       ) : activeTab === 3 ? (
         <PaymentHistory
           shimmer={shimmer?.payment}
-          paymentHistory={userData?.paymentHistory}
+          paymentHistory={paymentData}
         />
       ) : null}
     </View>

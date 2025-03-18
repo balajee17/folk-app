@@ -115,6 +115,7 @@ export let COLORS = {
   infoPB: '#3B82F6',
   purple: '#7F85E6',
   halfTransparent: 'rgba(0, 0, 0, 0.5)',
+  otpBtn: 'rgba(136, 177, 96, 1)',
 };
 
 // @ FONTS
@@ -131,6 +132,7 @@ export let FONTS = {
   poppinsSemiBold: 'Poppins-SemiBold',
   poppinsRegular: 'Poppins-Regular',
   ysabeauInfantRegular: 'YsabeauInfant-Regular',
+  LufgaBold: 'LufgaBold',
 };
 
 // @ MyStyles

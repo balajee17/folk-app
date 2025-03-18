@@ -37,7 +37,7 @@ import {TitleShimmer} from '../components/Shimmer';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import moment from 'moment';
-import {toastThrottle} from '../components/CommonFunctionalities';
+import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
 
 const EventDetails = ({route, navigation}) => {
   const statusBarHeight = useStatusBarHeight();
@@ -347,21 +347,34 @@ const EventDetails = ({route, navigation}) => {
                       : COLORS.midGrey
                   }
                 />
-                <Text
-                  style={[
-                    styles.descripTxt,
-                    styles.locationTxt,
-                    {
-                      color:
-                        eventDetails?.Event_mode === 'F'
-                          ? COLORS.midGrey
-                          : COLORS.dodger,
-                      textDecorationLine:
-                        eventDetails?.Event_mode === 'O' ? 'underline' : 'none',
-                    },
-                  ]}>
-                  {eventDetails?.Event_space}
-                </Text>
+                <TouchableOpacity
+                  disabled={eventDetails?.Event_mode === 'F'}
+                  style={{width: '85%'}}
+                  activeOpacity={0.6}
+                  onPress={async () => {
+                    const result = await RedirectURL(eventDetails?.Event_space);
+                    if (!!result?.type) {
+                      toastMsg(result?.message, result?.type);
+                    }
+                  }}>
+                  <Text
+                    style={[
+                      styles.descripTxt,
+                      styles.locationTxt,
+                      {
+                        color:
+                          eventDetails?.Event_mode === 'F'
+                            ? COLORS.midGrey
+                            : COLORS.dodger,
+                        textDecorationLine:
+                          eventDetails?.Event_mode === 'O'
+                            ? 'underline'
+                            : 'none',
+                      },
+                    ]}>
+                    {eventDetails?.Event_space}
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
 
@@ -598,7 +611,7 @@ const styles = StyleSheet.create({
     padding: '2%',
     borderRadius: moderateScale(25),
   },
-  locationTxt: {marginTop: 0, width: '85%'},
+  locationTxt: {marginTop: 0, width: '100%'},
   locationIcn: {
     width: '13%',
     textAlign: 'center',
