@@ -118,7 +118,7 @@ const Coupons = ({navigation, route}) => {
         setSelCoupon(DATA);
       } else {
         setDefaultStates();
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setLoader(false);
     } catch (err) {
@@ -251,7 +251,7 @@ const Coupons = ({navigation, route}) => {
         toastMsg(message, 'success');
         TYPE === 'P' ? paymentAPI() : getCouponsList();
       } else {
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
         setLoader(false);
       }
     } catch (err) {

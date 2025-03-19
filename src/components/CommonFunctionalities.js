@@ -1,6 +1,7 @@
 import {Linking} from 'react-native';
 import Share from 'react-native-share';
 
+// @ Redirect Link
 export const RedirectURL = async (url, app = '') => {
   try {
     if (!url) {
@@ -45,6 +46,8 @@ export const RedirectURL = async (url, app = '') => {
     return errMsg;
   }
 };
+
+// @ Share Link
 export const ShareLink = async link => {
   const options = {
     url: link,
@@ -64,7 +67,7 @@ export const ShareLink = async link => {
     }
   }
 };
-
+// @ Toast Throttle
 export const toastThrottle = (func, limit) => {
   let lastCall = 0;
   return (...args) => {
@@ -75,3 +78,6 @@ export const toastThrottle = (func, limit) => {
     }
   };
 };
+
+//  @ Mobile Regex
+export const mobileRegex = /^[1-9]\d{9}$/;

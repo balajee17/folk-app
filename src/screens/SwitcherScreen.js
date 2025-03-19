@@ -121,7 +121,7 @@ const SwitcherScreen = ({navigation, route}) => {
           {section: 1, title: '', updates: [{id: 1, link: ''}], forLoader: 'Y'},
           {section: 2, title: '', updates: [{id: 1, link: ''}]},
         ]);
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(prev => ({...prev, home: false}));
     } catch (err) {
@@ -147,7 +147,7 @@ const SwitcherScreen = ({navigation, route}) => {
         setEventList(prev => ({...prev, upcoming: data?.Upcoming}));
       } else {
         setEventList(prev => ({...prev, upcoming: []}));
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(prev => ({...prev, upcoming: false}));
     } catch (err) {
@@ -170,7 +170,7 @@ const SwitcherScreen = ({navigation, route}) => {
         setEventList(prev => ({...prev, registered: data?.Registered}));
       } else {
         setEventList(prev => ({...prev, registered: []}));
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(prev => ({...prev, registered: false}));
     } catch (err) {
@@ -194,7 +194,7 @@ const SwitcherScreen = ({navigation, route}) => {
         setConnectDetails(data);
       } else {
         setConnectDetails({});
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(prev => ({...prev, connectUs: false}));
     } catch (err) {

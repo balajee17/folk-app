@@ -109,7 +109,7 @@ const Events = ({
                 alignSelf: 'left',
               }}
               value={filterValues?.eventName}
-              onChange={item => {
+              onChangeText={item => {
                 handleChange('eventName', item);
               }}
               cntnrStyle={styles.dropdownCont}
@@ -127,7 +127,7 @@ const Events = ({
               data={filterDrpDwnLst?.eventTypes}
               label={'Event Type'}
               value={filterValues?.eventType}
-              onChange={item => {
+              onChangeText={item => {
                 handleChange('eventType', item);
               }}
               drpdwnContStyle={{backgroundColor: COLORS.dropDownBg}}
@@ -146,7 +146,7 @@ const Events = ({
               data={filterDrpDwnLst?.eventTypes}
               label={'Date'}
               value={filterValues?.eventType}
-              onChange={item => {
+              onChangeText={item => {
                 handleChange('eventType', item);
               }}
               cntnrStyle={styles.dropdownCont}

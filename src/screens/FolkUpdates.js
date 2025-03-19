@@ -51,7 +51,7 @@ const FolkUpdates = ({navigation, route}) => {
         setFolkUpdates(history);
       } else {
         setFolkUpdates([]);
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(false);
     } catch (err) {

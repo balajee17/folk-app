@@ -59,7 +59,7 @@ const DailyDarshan = ({navigation, route}) => {
         setDarshanData(history);
       } else {
         setDarshanData([]);
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(false);
     } catch (err) {

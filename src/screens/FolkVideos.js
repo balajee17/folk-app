@@ -69,7 +69,7 @@ const FolkVideos = ({navigation, route}) => {
         setPlayingVideo(history[0]);
       } else {
         setVideosData([]);
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer({video: false, text: false});
     } catch (err) {

@@ -92,7 +92,7 @@ const EventDetails = ({route, navigation}) => {
         setAmountDetails(data?.amountDetails);
       } else {
         setEventDetails({});
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(false);
     } catch (err) {
@@ -120,7 +120,7 @@ const EventDetails = ({route, navigation}) => {
         setCoupon(prev => ({...prev, applied: true}));
       } else {
         setCoupon(prev => ({...prev, warning: true}));
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setLoader(false);
     } catch (err) {
@@ -164,7 +164,7 @@ const EventDetails = ({route, navigation}) => {
           getEventDetails();
         }
       } else {
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
     } catch (err) {
       setLoader(false);

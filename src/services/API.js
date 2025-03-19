@@ -8,6 +8,20 @@ const baseURL =
   deploymentURL == 1 ? 'http://192.168.1.11/FOLKDashboard/api' : '';
 
 export const API = {
+  // # Get OTP
+  getOTP(data) {
+    const getOTPURL = baseURL + '/';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL get OTPURL Data ', getHomeDataURL, ' data ', requestData);
+    return axios.post(getOTPURL, requestData);
+  },
+  // # Verify OTP
+  verifyOTP(data) {
+    const verifyOTPURL = baseURL + '/';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL VerifyOTPURL Data ', verifyOTPURL, ' data ', requestData);
+    return axios.post(verifyOTPURL, requestData);
+  },
   // # Home Screen API's
   getHomeScreenData(data) {
     const getHomeDataURL = baseURL + '/home-page-feeder';

@@ -109,7 +109,7 @@ const Profile = ({navigation}) => {
         setData(selTab, data);
       } else {
         setData(selTab, selTab === 1 ? {} : []);
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       shimmerController('', false);
     } catch (err) {

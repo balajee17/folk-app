@@ -91,7 +91,7 @@ const Quotes = ({navigation, route}) => {
         // setNewData(filterImages);
       } else {
         setQuotesData([]);
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setShimmer(false);
     } catch (err) {

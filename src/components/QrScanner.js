@@ -59,7 +59,7 @@ const QrScanner = ({navigation, route}) => {
         toastMsg(message, 'success');
         navigation.navigate(screenNames.drawerNavigation);
       } else {
-        toastMsg(message, 'info');
+        toastMsg(message, 'warning');
       }
       setLoader(false);
     } catch (err) {
