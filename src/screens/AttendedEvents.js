@@ -121,12 +121,8 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                   {/* // # Date Mode Container */}
                   <View style={MyStyles.dateModeCont}>
                     <View style={MyStyles.dateCont}>
-                      <Text style={MyStyles.dateTxt}>
-                        {moment(item?.start_date).format('DD')}
-                      </Text>
-                      <Text style={MyStyles.monthTxt}>
-                        {moment(item?.start_time).format('MMM')}
-                      </Text>
+                      <Text style={MyStyles.dateTxt}>{item?.start_date}</Text>
+                      <Text style={MyStyles.monthTxt}>{item?.start_time}</Text>
                     </View>
 
                     {(item?.event_type === 'F' || item?.event_type === 'O') && (

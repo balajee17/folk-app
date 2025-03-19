@@ -189,16 +189,14 @@ const Profile = ({navigation}) => {
                 onPress={() => {
                   setActiveTab(item?.id);
 
-                  const checkAPICall = Object.values(shimmer).some(
-                    value => value === true,
-                  );
+                  const checkCurrentSectionLoading = shimmer[item?.id] === true;
 
                   const conditions = {
                     1: checkProfileExist,
                     2: checkAttendanceExist,
                     3: checkPaymentExist,
                   };
-                  if (!checkAPICall && !conditions[item?.id]) {
+                  if (!checkCurrentSectionLoading && !conditions[item?.id]) {
                     getUserData(item?.id);
                   }
                 }}

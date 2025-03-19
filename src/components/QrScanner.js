@@ -19,10 +19,12 @@ import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
 import {getImage} from '../utils/ImagePath';
+import {useStatusBarHeight} from './StatusBarComponent';
 
 const QrScanner = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
   const {profileId} = globalState;
+  const statusBarHeight = useStatusBarHeight();
 
   const [flash, setFlash] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -72,7 +74,7 @@ const QrScanner = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       {/* // @ Header - Flash Icn, Title, Close Icn  */}
-      <View style={styles.header}>
+      <View style={styles.header(statusBarHeight)}>
         <TouchableOpacity
           onPress={() => setFlash(!flash)}
           activeOpacity={0.8}
@@ -124,14 +126,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  header: {
+  header: statusBarHeight => ({
     width: '95%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'absolute',
-    top: screenHeight * 0.04,
-  },
+    top: statusBarHeight,
+    marginTop: '3%',
+  }),
   title: {
     fontFamily: FONTS.urbanistSemiBold,
     fontSize: SIZES.xxl,

@@ -10,14 +10,14 @@ const baseURL =
 export const API = {
   // # Get OTP
   getOTP(data) {
-    const getOTPURL = baseURL + '/';
+    const getOTPURL = baseURL + '/get-otp';
     const requestData = {accessKey: Access_Key, ...data};
-    console.log('URL get OTPURL Data ', getHomeDataURL, ' data ', requestData);
+    console.log('URL get OTPURL Data ', getOTPURL, ' data ', requestData);
     return axios.post(getOTPURL, requestData);
   },
   // # Verify OTP
   verifyOTP(data) {
-    const verifyOTPURL = baseURL + '/';
+    const verifyOTPURL = baseURL + '/confirm-otp';
     const requestData = {accessKey: Access_Key, ...data};
     console.log('URL VerifyOTPURL Data ', verifyOTPURL, ' data ', requestData);
     return axios.post(verifyOTPURL, requestData);

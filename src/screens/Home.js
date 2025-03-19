@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Image,
   RefreshControl,
   ScrollView,
@@ -34,6 +35,7 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useAppContext} from '../../App';
 import LinearGradientBg from '../components/LinearGradientBg';
 import {useToast} from 'react-native-toast-notifications';
+import {CustomPopup} from '../components/BackHandler';
 
 const Home = ({apiData, shimmer, refreshData}) => {
   const {setGlobalState} = useAppContext();

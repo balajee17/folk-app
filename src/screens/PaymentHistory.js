@@ -87,13 +87,9 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
         {/*  // # Date & status  */}
         <View style={styles.dateStatusCont}>
           <View style={[styles.dateTimeCont, {width: '40%'}]}>
-            <Text style={styles.dateTxt}>
-              {moment(item?.TRANSACTION_DATE).format('DD-MM-YYYY')}
-            </Text>
+            <Text style={styles.dateTxt}>{item?.TRANSACTION_DATE}</Text>
             <View style={styles.dot} />
-            <Text style={styles.dateTxt}>
-              {moment(item?.TRANSACTION_DATE).format('hh:mm:ss a')}
-            </Text>
+            <Text style={styles.dateTxt}>{item?.TRANSACTION_TIME}</Text>
           </View>
           <View style={[styles.dateTimeCont, {width: '30%'}]}>
             <Text

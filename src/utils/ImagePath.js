@@ -25,7 +25,8 @@ export const getImage = {
   donateBlack: require('../assets/images/donateBlack.png'),
   connectCard: require('../assets/images/connectCdBg.png'),
   loginBg: require('../assets/images/loginBg.png'),
-  appLoader: require('../assets/images/coupon.gif'),
+  appLoader: require('../assets/images/appLoader.gif'),
   folkGIF: require('../assets/images/folkGIF.gif'),
   noNetwork: require('../assets/images/noNetwork.gif'),
+  alert: require('../assets/images/alert.png'),
 };

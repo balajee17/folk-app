@@ -342,9 +342,7 @@ const Coupons = ({navigation, route}) => {
                               styles.valueTxt,
                               {color: item?.dateColor || COLORS.white},
                             ]}>
-                            {dateIndex === 0
-                              ? moment(item?.date).format('DD-MM-YYYY')
-                              : moment(item?.time).format('h:mm a')}
+                            {dateIndex === 0 ? item?.date : item?.time}
                           </Text>
                         </View>
                       );

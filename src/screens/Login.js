@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   ImageBackground,
   Keyboard,
   SafeAreaView,
@@ -8,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   StatusBarTransp,
   useStatusBarHeight,
@@ -31,14 +32,18 @@ import {useToast} from 'react-native-toast-notifications';
 import {API} from '../services/API';
 import Spinner from '../components/Spinner';
 import OtpInput from '../components/OtpInput';
+import {useFocusEffect} from '@react-navigation/native';
+import DeviceInformation from '../components/DeviceInfo';
+import AndroidBackHandler, {CustomPopup} from '../components/BackHandler';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const statusBarHeight = useStatusBarHeight();
 
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
   const [showOtp, setShowOtp] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [exitAppModal, setExitAppModal] = useState(false);
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -49,44 +54,115 @@ const Login = () => {
 
   const txtInpt = useRef(null);
 
-  useEffect(() => {}, []);
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const exit = () => {
+  //       if (!loader && showOtp) {
+  //         setOtp('');
+  //         setShowOtp(false);
+  //         return true;
+  //       }
+
+  //       // if (!exitAppModal) {
+  //       //   setExitAppModal(true);
+  //       //   return true;
+  //       // }
+
+  //       return false;
+  //     };
+
+  //     BackHandler.addEventListener('hardwareBackPress', exit);
+
+  //     return () => BackHandler.removeEventListener('hardwareBackPress', exit);
+  //   }, [showOtp]),
+  // );
+
+  // # Back Handler
+  useEffect(() => {
+    const backAction = () => {
+      console.log('first');
+      setExitAppModal(!exitAppModal);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const handleOkay = () => {
+    BackHandler.exitApp();
+  };
+
+  const handleCancel = () => {
+    setExitAppModal(false);
+  };
 
   // # Validate Mobile No
-  const validateMobile = () => {
+  const validateMobile = type => {
     console.log('first', mobile);
-    if (mobile.length < 10) {
-      toastMsg('Enter 10 Digit Mobile Number');
+    if (type === 1 && mobile.length < 10) {
+      toastMsg('Enter 10 Digit Mobile Number.');
       return;
     }
-    if (!mobileRegex.test(mobile)) {
-      toastMsg('Invalid Mobile Number');
+    if (type === 1 && !mobileRegex.test(mobile)) {
+      toastMsg('Invalid Mobile Number.');
       return;
     }
-    // loginAPI(1);
-
-    setShowOtp(true);
+    console.log('otp?.length', otp?.length);
+    if (type === 2 && otp?.length < 4) {
+      toastMsg('Enter 4 digit OTP.');
+      return;
+    }
+    loginAPI(type);
   };
 
   //   # API GET OTP - type => 1 getOTP, 2 verifyOTP
   const loginAPI = async type => {
     try {
       setLoader(true);
-
-      const params = type === 1 ? {mobileNumber: mobile} : {};
+      const {
+        getAppVersion,
+        getDeviceId,
+        getDeviceModel,
+        getDeviceName,
+        getDeviceOS,
+        getDeviceOsVersion,
+        getDeviceVersion,
+      } = DeviceInformation;
+      const params =
+        type === 1
+          ? {mobileNumber: mobile}
+          : {
+              mobileNumber: mobile,
+              otp: otp,
+              fcm_id: 'FCM-1564564149845456845',
+              device_id: await getDeviceId(),
+              device_name: await getDeviceName(),
+              device_model: await getDeviceModel(),
+              device_version: await getDeviceVersion(),
+              app_version: await getAppVersion(),
+              device_os: await getDeviceOS(),
+            };
       const response =
         type === 1 ? await API.getOTP(params) : await API.verifyOTP(params);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         if (type === 1) {
-          toastMsg(message, 'info');
+          setShowOtp(true);
+          toastMsg(message, 'success');
+          setLoader(false);
         } else {
-          // toastMsg(message, 'warning');
+          setLoader(false);
           navigation.navigate(screenNames.drawerNavigation);
         }
       } else {
+        setLoader(false);
         toastMsg(message, 'warning');
       }
-      setLoader(false);
     } catch (err) {
       setLoader(false);
       toastMsg('', 'error');
@@ -100,6 +176,13 @@ const Login = () => {
       <ImageBackground style={MyStyles.flex1} source={getImage.loginBg}>
         <Spinner spinnerVisible={loader} />
         <SafeAreaView style={MyStyles.flex1}>
+          {/* // @ Exit App Modal */}
+          <CustomPopup
+            visible={exitAppModal}
+            onOkay={() => handleOkay()}
+            onCancel={() => handleCancel()}
+          />
+
           {/* // @ FOLK GIF */}
           <FastImage
             style={styles.folkGIF(statusBarHeight)}
@@ -144,7 +227,7 @@ const Login = () => {
             {/* // @ Get OTP Btn */}
             {showOtp && (
               <TouchableOpacity
-                onPress={() => loginAPI(2)}
+                onPress={() => validateMobile(2)}
                 activeOpacity={0.8}
                 style={styles.resendBtn}>
                 <Text style={styles.resendTxt}>Resend</Text>
@@ -153,7 +236,7 @@ const Login = () => {
 
             {/* // @ Button */}
             <TouchableOpacity
-              onPress={validateMobile}
+              onPress={() => validateMobile(showOtp ? 2 : 1)}
               activeOpacity={0.8}
               style={[styles.otpBtn, showOtp && {marginTop: '10%'}]}>
               <Text style={styles.otpBtnTxt}>

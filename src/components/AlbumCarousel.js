@@ -159,7 +159,8 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                   }}>
                   <TouchableOpacity
                     onPress={async () => {
-                      const result = await RedirectURL(item?.URL);
+                      console.log('item?.URL', item?.link);
+                      const result = await RedirectURL(item?.link);
 
                       if (!!result?.type) {
                         toastMsg(result?.message, result?.type);

@@ -1,4 +1,11 @@
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  BackHandler,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CustomBottomTab from '../components/CustomBottomTab';
 import Home from './Home';
@@ -16,6 +23,7 @@ import {CommonActions, useNavigation} from '@react-navigation/native';
 import NoNetwork from '../components/NoNetwork';
 import NoDataFound from '../components/NoDataFound';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {CustomPopup} from '../components/BackHandler';
 
 const SwitcherScreen = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -36,7 +44,7 @@ const SwitcherScreen = ({navigation, route}) => {
   const [eventTabIndex, setEventTabIndex] = useState(activeEventTab);
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
   const [connectDetails, setConnectDetails] = useState({});
-
+  const [exitAppModal, setExitAppModal] = useState(false);
   const toastMsg = (msg, type) => {
     toast.show(msg, {
       type,
@@ -104,6 +112,30 @@ const SwitcherScreen = ({navigation, route}) => {
       getConnectDetails();
     }
   }, [btTab, eventTabIndex]);
+
+  // # Back Handler
+  useEffect(() => {
+    const backAction = () => {
+      console.log('first');
+      setExitAppModal(!exitAppModal);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const handleOkay = () => {
+    BackHandler.exitApp();
+  };
+
+  const handleCancel = () => {
+    setExitAppModal(false);
+  };
 
   // # API Home Data
   const getHomeScreenData = async () => {
@@ -219,6 +251,12 @@ const SwitcherScreen = ({navigation, route}) => {
         goBack={() => navigation.goBack()}
       />
       <SafeAreaView styles={MyStyles.flex1}>
+        {/* // @ Exit App Modal */}
+        <CustomPopup
+          visible={exitAppModal}
+          onOkay={() => handleOkay()}
+          onCancel={() => handleCancel()}
+        />
         {/* // # Contents */}
         {btTab === 'DB1' ? (
           shimmer?.home || checkHomeData ? (

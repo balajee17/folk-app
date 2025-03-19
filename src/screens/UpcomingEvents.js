@@ -45,12 +45,8 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                   {/* // # Date Mode Container */}
                   <View style={MyStyles.dateModeCont}>
                     <View style={MyStyles.dateCont}>
-                      <Text style={MyStyles.dateTxt}>
-                        {moment(item?.start_date).format('DD')}
-                      </Text>
-                      <Text style={MyStyles.monthTxt}>
-                        {moment(item?.start_month).format('MMM')}
-                      </Text>
+                      <Text style={MyStyles.dateTxt}>{item?.start_date}</Text>
+                      <Text style={MyStyles.monthTxt}>{item?.start_month}</Text>
                     </View>
 
                     <View style={MyStyles.modeCont}>

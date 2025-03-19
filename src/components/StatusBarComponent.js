@@ -36,7 +36,6 @@ export const useStatusBarHeight = () => useContext(StatusBarHeightContext);
 // # StatusBarTransp: Component for rendering a transparent status bar
 export const StatusBarTransp = ({screen}) => {
   const statusBarHeight = useStatusBarHeight();
-  console.log('screen === screenNames.login', screen === screenNames.login);
   return (
     <>
       {Platform.OS === 'android' ? (

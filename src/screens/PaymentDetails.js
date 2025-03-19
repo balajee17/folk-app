@@ -15,13 +15,17 @@ import {
   MyStyles,
   SIZES,
 } from '../styles/MyStyles';
-import {CommonStatusBar} from '../components/StatusBarComponent';
+import {
+  CommonStatusBar,
+  useStatusBarHeight,
+} from '../components/StatusBarComponent';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {getImage} from '../utils/ImagePath';
 
 const PaymentDetails = ({navigation}) => {
+  const statusBarHeight = useStatusBarHeight();
   return (
     <>
       <CommonStatusBar bgColor={COLORS.header} />
@@ -32,7 +36,7 @@ const PaymentDetails = ({navigation}) => {
             navigation.goBack();
           }}
           activeOpacity={0.6}
-          style={styles.menuIcon}>
+          style={styles.menuIcon(statusBarHeight)}>
           <FontAwesome6
             name="chevron-left"
             size={moderateScale(23)}
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: COLORS.white,
   },
-  menuIcon: {
+  menuIcon: statusBarHeight => ({
     padding: moderateScale(6),
     height: horizontalScale(40),
     width: horizontalScale(40),
@@ -128,7 +132,8 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(30),
     margin: '3%',
     zIndex: 99,
-  },
+    marginTop: statusBarHeight,
+  }),
   statusImg: {
     alignSelf: 'center',
     width: horizontalScale(100),

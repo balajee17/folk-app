@@ -12,8 +12,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {screenNames} from '../constants/ScreenNames';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
+import {useStatusBarHeight} from './StatusBarComponent';
 
 const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
+  const statusBarHeight = useStatusBarHeight();
   const filterIcnScreens =
     titleName === screenNames.quotes ||
     titleName === screenNames.dailyDarshan ||
@@ -48,8 +50,9 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
   const removeTitle =
     titleName !== screenNames.eventDetails &&
     titleName !== screenNames.connectUs;
+
   return (
-    <View style={[styles.header, {backgroundColor: bgColor}]}>
+    <View style={[styles.header(statusBarHeight), {backgroundColor: bgColor}]}>
       <TouchableOpacity // Left Icon
         onPress={() => {
           drawerScreens ? toggleDrawer() : goBack();
@@ -128,14 +131,15 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
 export default CustomHeader;
 
 const styles = StyleSheet.create({
-  header: {
+  header: statusBarHeight => ({
     padding: moderateScale(15),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: COLORS.header,
     zIndex: 99,
-  },
+    marginTop: statusBarHeight,
+  }),
   menuIcon: screen => ({
     padding: moderateScale(6),
     borderWidth: screen ? moderateScale(1) : undefined,

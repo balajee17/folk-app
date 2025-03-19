@@ -146,7 +146,6 @@ const EventDetails = ({route, navigation}) => {
           eventDetails?.Is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
         name: globalState?.userName,
         mobileNumber: globalState?.mobileNumber,
-        transactionDate: moment().format('YYYY-MM-DD H:mm:ss'),
         transactionStatus: eventDetails?.Is_paid_event === 'Y' ? 'I' : 'S',
       };
       const response = await API.eventRegister(params);

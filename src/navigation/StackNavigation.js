@@ -31,7 +31,7 @@ const StackNavigation = () => {
   useEffect(() => {
     if (navigationRef.current) {
       if (isConnected) {
-        navigationRef.current.navigate(screenNames.profile);
+        navigationRef.current.navigate(screenNames.login);
       } else {
         navigationRef.current.navigate(screenNames.noNetwork);
       }
@@ -42,7 +42,6 @@ const StackNavigation = () => {
       <Stack.Navigator screenOptions={{headerShown: false}}>
         {/* // @ Login */}
         <Stack.Screen name={screenNames.login} component={Login} />
-
         {/* // @ Drawer Component */}
         <Stack.Screen
           name={screenNames.drawerNavigation}

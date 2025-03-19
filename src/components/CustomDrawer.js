@@ -21,6 +21,7 @@ import {appVersion} from '../../AppVersion.json';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
+import {useStatusBarHeight} from './StatusBarComponent';
 const CustomDrawer = ({navigation, route}) => {
   const menuItems = [
     {
@@ -48,7 +49,7 @@ const CustomDrawer = ({navigation, route}) => {
       blackIcon: getImage.donateBlack,
     },
   ];
-
+  const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
   const {current, folkId, userName} = globalState;
   const {closeDrawer} = navigation;
@@ -74,7 +75,7 @@ const CustomDrawer = ({navigation, route}) => {
     <SafeAreaView style={{flex: 1}}>
       {/* // @ Profile Info */}
 
-      <View style={styles.header}>
+      <View style={styles.header(statusBarHeight)}>
         {/* // # FOLK Logo */}
         <Image
           style={{
@@ -162,11 +163,12 @@ const CustomDrawer = ({navigation, route}) => {
 export default CustomDrawer;
 
 const styles = StyleSheet.create({
-  header: {
+  header: statusBarHeight => ({
     backgroundColor: COLORS.header,
     padding: '5%',
     borderTopRightRadius: moderateScale(20),
-  },
+    marginTop: statusBarHeight,
+  }),
   profInfoCont: {flexDirection: 'row', alignItems: 'center', marginTop: '4%'},
   profImgCont: {
     width: '25%',
