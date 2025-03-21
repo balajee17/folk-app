@@ -20,8 +20,9 @@ import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
 import {getImage} from '../utils/ImagePath';
 import {useStatusBarHeight} from './StatusBarComponent';
+import AndroidBackHandler from './BackHandler';
 
-const QrScanner = ({navigation, route}) => {
+const QrScanner = props => {
   const {globalState, setGlobalState} = useAppContext();
   const {profileId} = globalState;
   const statusBarHeight = useStatusBarHeight();
@@ -33,7 +34,13 @@ const QrScanner = ({navigation, route}) => {
     console.log('QR Code Scanned:', e.data);
     sendEventAttendance(e.data);
   };
+  const {navigation, route} = props;
   const {eventId} = route?.params;
+
+  useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+    return AndroidBackHandler.removerHandler();
+  }, []);
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -132,8 +139,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'absolute',
-    top: statusBarHeight,
-    marginTop: '3%',
+    top: '3%',
+    // marginTop: '3%',
   }),
   title: {
     fontFamily: FONTS.urbanistSemiBold,

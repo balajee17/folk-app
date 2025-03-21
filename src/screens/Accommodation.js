@@ -1,12 +1,19 @@
 import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {MyStyles, screenHeight, windowWidth} from '../styles/MyStyles';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import {getImage} from '../utils/ImagePath';
+import AndroidBackHandler from '../components/BackHandler';
 
-const Accommodation = ({navigation}) => {
+const Accommodation = props => {
+  const {navigation} = props;
+  useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
+    return AndroidBackHandler.removerHandler();
+  }, []);
   return (
     <Container>
       <SafeAreaView style={MyStyles.flex1}>

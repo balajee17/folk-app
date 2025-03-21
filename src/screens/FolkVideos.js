@@ -30,8 +30,9 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
+import AndroidBackHandler from '../components/BackHandler';
 
-const FolkVideos = ({navigation, route}) => {
+const FolkVideos = props => {
   const [videoControl, setVideoControl] = useState({
     playVideo: true,
     muteAudio: false,
@@ -45,6 +46,7 @@ const FolkVideos = ({navigation, route}) => {
       setVideoControl(prev => ({...prev, playVideo: false}));
     }
   });
+  const {navigation, route} = props;
 
   const {title} = route?.params;
   const toast = useToast();
@@ -54,7 +56,9 @@ const FolkVideos = ({navigation, route}) => {
     });
   };
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
     getVideosHistory();
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   // # API Call to get Videos History

@@ -24,10 +24,12 @@ import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
+import AndroidBackHandler from '../components/BackHandler';
 
-const FolkUpdates = ({navigation, route}) => {
+const FolkUpdates = props => {
   const [shimmer, setShimmer] = useState(true);
   const [folkUpdates, setFolkUpdates] = useState([]);
+  const {navigation, route} = props;
 
   const {title} = route?.params;
   const toast = useToast();
@@ -37,7 +39,9 @@ const FolkUpdates = ({navigation, route}) => {
     });
   };
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
     getUpdatesHistory();
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   // # API Call to get Updates History

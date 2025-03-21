@@ -33,8 +33,9 @@ import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
+import AndroidBackHandler from '../components/BackHandler';
 
-const Quotes = ({navigation, route}) => {
+const Quotes = props => {
   const [quotesData, setQuotesData] = useState([
     {
       id: 1,
@@ -63,7 +64,7 @@ const Quotes = ({navigation, route}) => {
   const [shimmer, setShimmer] = useState(false);
 
   const animatedValue = useSharedValue(0);
-
+  const {navigatio, route} = props;
   // const {title} = route?.params;
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -72,7 +73,10 @@ const Quotes = ({navigation, route}) => {
     });
   };
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
     // getQuotesHistory();
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   // # API Call to get Quotes History

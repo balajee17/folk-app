@@ -26,7 +26,6 @@ const DrawerNavigation = () => {
       <Drawer.Screen
         name={screenNames.switcherScreen}
         component={SwitcherScreen}
-        initialParams={''}
       />
       <Drawer.Screen name={screenNames.yfhForm} component={YFHForm} />
       <Drawer.Screen

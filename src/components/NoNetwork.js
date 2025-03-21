@@ -25,22 +25,20 @@ import {useToast} from 'react-native-toast-notifications';
 import {toastThrottle} from './CommonFunctionalities';
 import {getImage} from '../utils/ImagePath';
 import FastImage from 'react-native-fast-image';
+import AndroidBackHandler from './BackHandler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NoNetwork = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
   const {isConnected} = globalState;
 
   useEffect(() => {
-    const backAction = () => {
-      return true; // Blocks back button
-    };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
-      backAction,
+      AndroidBackHandler.noGoingBack(),
     );
 
-    return () => backHandler.remove(); // Cleanup
+    return () => backHandler.remove();
   }, []);
 
   const toast = useToast();
@@ -48,14 +46,23 @@ const NoNetwork = ({navigation}) => {
     toast.show(msg, {type});
   }, 3400);
 
-  const reloadApp = () => {
+  const reloadApp = async () => {
     if (isConnected) {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: screenNames.drawerNavigation}],
-        }),
-      );
+      const storedVal = await AsyncStorage.getItem('userDetails');
+      const parsedData = JSON.parse(storedVal);
+      parsedData?.profileId
+        ? navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: screenNames.drawerNavigation}],
+            }),
+          )
+        : navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: screenNames.login}],
+            }),
+          );
     } else {
       toastMsg('No internet connectivity.', 'error');
     }

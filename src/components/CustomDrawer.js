@@ -22,6 +22,7 @@ import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
 import {useStatusBarHeight} from './StatusBarComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const CustomDrawer = ({navigation, route}) => {
   const menuItems = [
     {
@@ -51,7 +52,7 @@ const CustomDrawer = ({navigation, route}) => {
   ];
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
-  const {current, folkId, userName} = globalState;
+  const {current, folkId, userName, photo} = globalState;
   const {closeDrawer} = navigation;
 
   // # Navigate Sreen
@@ -69,6 +70,21 @@ const CustomDrawer = ({navigation, route}) => {
     } else {
       setGlobalState(prev => ({...prev, current: id})), navigateTo(screenName);
     }
+  };
+
+  const logout = async () => {
+    await setGlobalState({
+      current: 'DB1',
+      btTab: 'DB1',
+      profileId: '',
+      activeEventTab: 0,
+      isConnected: true,
+      folkId: '',
+      userName: '',
+      mobileNumber: '',
+    });
+    await AsyncStorage.clear();
+    navigation.replace(screenNames.login);
   };
 
   return (
@@ -96,7 +112,7 @@ const CustomDrawer = ({navigation, route}) => {
             style={styles.profImgCont}>
             <Image
               source={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                uri: photo,
               }}
               style={styles.profImg}
             />
@@ -145,7 +161,10 @@ const CustomDrawer = ({navigation, route}) => {
 
       {/* // @ Logout Btn */}
       <View style={styles.logoutCont}>
-        <TouchableOpacity style={styles.logoutBtn}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => logout()}
+          style={styles.logoutBtn}>
           <MaterialCommunityIcons
             name="logout"
             size={moderateScale(25)}
@@ -167,7 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.header,
     padding: '5%',
     borderTopRightRadius: moderateScale(20),
-    marginTop: statusBarHeight,
+    // marginTop: statusBarHeight,
   }),
   profInfoCont: {flexDirection: 'row', alignItems: 'center', marginTop: '4%'},
   profImgCont: {
@@ -179,18 +198,20 @@ const styles = StyleSheet.create({
     width: horizontalScale(70),
     height: horizontalScale(70),
     resizeMode: 'cover',
-    borderRadius: moderateScale(40),
+    borderRadius: moderateScale(50),
   },
   profileTextCont: {marginLeft: '4%', width: '71%'},
   profName: {
     fontSize: SIZES.subTitle,
     fontFamily: FONTS.ysabeauInfantBold,
     color: COLORS.white,
+    width: '100%',
   },
   mailTxt: {
     fontSize: SIZES.l,
     color: COLORS.ceramic,
     fontFamily: FONTS.ysabeauInfantBold,
+    width: '100%',
   },
   menuItemBtn: {
     flexDirection: 'row',

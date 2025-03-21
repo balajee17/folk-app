@@ -21,13 +21,14 @@ import {useAppContext} from '../../App';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
+import AndroidBackHandler from '../components/BackHandler';
 
-const Profile = ({navigation}) => {
+const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
 
   const {profileId} = globalState;
   const [activeTab, setActiveTab] = useState(1);
-
+  const {navigation} = props;
   const [shimmer, setShimmer] = useState({
     primary: false,
     profile: false,
@@ -52,7 +53,10 @@ const Profile = ({navigation}) => {
   };
 
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
     getUserData(1);
+
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   const checkProfileExist =
@@ -134,7 +138,7 @@ const Profile = ({navigation}) => {
           {shimmer?.primary ? (
             <ImageShimmer
               width={horizontalScale(104)}
-              borderRadius={moderateScale(55)}
+              borderRadius={moderateScale(70)}
               height={horizontalScale(104)}
             />
           ) : (
@@ -284,7 +288,7 @@ const styles = StyleSheet.create({
   usrImg: {
     width: horizontalScale(104),
     height: horizontalScale(104),
-    borderRadius: moderateScale(55),
+    borderRadius: moderateScale(70),
   },
   usrName: {
     fontSize: SIZES.xxxl,

@@ -33,12 +33,14 @@ import NoDataFound from '../components/NoDataFound';
 import moment from 'moment';
 import Spinner from '../components/Spinner';
 import {toastThrottle} from '../components/CommonFunctionalities';
+import AndroidBackHandler from '../components/BackHandler';
 
-const Coupons = ({navigation, route}) => {
+const Coupons = props => {
   const {globalState} = useAppContext();
 
   const {profileId} = globalState;
   const dateTime = ['Date', 'Time'];
+  const {route, navigation} = props;
   const {eventId} = route?.params;
 
   const [requestCoupon, setRequestCoupon] = useState({
@@ -64,7 +66,9 @@ const Coupons = ({navigation, route}) => {
   }, 3400);
 
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
     getCouponsList();
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   const setDefaultStates = () => {
@@ -263,23 +267,23 @@ const Coupons = ({navigation, route}) => {
 
   return (
     <Container>
-      {/* // # Header */}
-      <CustomHeader
-        titleName={screenNames.coupons}
-        goBack={() => navigation.goBack()}
-        rightIcnAction={() => {
-          setSelCoupon(prev => ({
-            ...prev,
-            open: true,
-          }));
-        }}
-      />
       <SafeAreaView styles={[MyStyles.flex1]}>
+        {/* // # Header */}
+        <CustomHeader
+          titleName={screenNames.coupons}
+          goBack={() => navigation.goBack()}
+          rightIcnAction={() => {
+            setSelCoupon(prev => ({
+              ...prev,
+              open: true,
+            }));
+          }}
+        />
         <Spinner spinnerVisible={loader} />
         {/* // @ Coupon card */}
         <FlatList
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: '25%', overflow: 'hidden'}}
+          contentContainerStyle={{paddingBottom: '40%', overflow: 'hidden'}}
           data={couponData}
           renderItem={({item, index}) => {
             return (

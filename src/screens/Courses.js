@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {MyStyles, screenHeight, windowWidth} from '../styles/MyStyles';
 import {getImage} from '../utils/ImagePath';
 

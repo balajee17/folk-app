@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -23,94 +23,219 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {getImage} from '../utils/ImagePath';
+import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
+import {useAppContext} from '../../App';
+import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 
-const PaymentDetails = ({navigation}) => {
-  const statusBarHeight = useStatusBarHeight();
+const PaymentDetails = ({navigation, route}) => {
+  const {globalState} = useAppContext();
+  const {profileId} = globalState;
+  console.log('profileId', profileId);
+  const {paymentId} = route?.params;
+  const [shimmer, setShimmer] = useState(true);
+  const [paymentDetails, setPaymentDetails] = useState([]);
+
+  useEffect(() => {
+    getPaymentDetails();
+  }, []);
+
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
+
+  const getPaymentDetails = async () => {
+    try {
+      const params = {profileId: profileId, paymentId: paymentId};
+      const response = await API.getPaymentDetails(params);
+
+      console.log('Payment_details_response', response?.data);
+      const {data, successCode, message} = response?.data;
+      if (successCode === 1) {
+        setPaymentDetails(data);
+      } else {
+        toastMsg(message, 'warning');
+      }
+      setShimmer(false);
+    } catch (err) {
+      toastMsg('', 'error');
+      setShimmer(false);
+      console.log('ERR-Payment_details-screen', err);
+    }
+  };
+
   return (
     <>
       <CommonStatusBar bgColor={COLORS.header} />
       <SafeAreaView style={[MyStyles.flex1, styles.mainContainer]}>
         {/* // @ Left Arrow Icon */}
+
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
           }}
           activeOpacity={0.6}
-          style={styles.menuIcon(statusBarHeight)}>
+          style={styles.menuIcon}>
           <FontAwesome6
             name="chevron-left"
             size={moderateScale(23)}
-            color={COLORS.black}
+            color={COLORS.white}
           />
         </TouchableOpacity>
 
         {/* // @ Status, Amt, Event Name */}
-        <Image source={getImage.success} style={styles.statusImg} />
-        <Text style={styles.statusTxt}>Payment Successful</Text>
-        <Text style={styles.eventName}>to Mango Mania</Text>
-        <Text style={styles.amtTxt}>₹ 350</Text>
+        {shimmer ? (
+          <ImageShimmer
+            height={horizontalScale(100)}
+            width={horizontalScale(100)}
+            borderRadius={moderateScale(20)}
+            alignSelf={'center'}
+          />
+        ) : (
+          <Image
+            source={paymentDetails?.STATUS_IMAGE}
+            style={styles.statusImg}
+          />
+        )}
+        {shimmer ? (
+          <>
+            <TitleShimmer
+              height={horizontalScale(15)}
+              width={horizontalScale(220)}
+              borderRadius={moderateScale(20)}
+              alignSelf={'center'}
+              marginTop={'2%'}
+            />
+            <TitleShimmer
+              height={horizontalScale(12)}
+              width={horizontalScale(150)}
+              borderRadius={moderateScale(20)}
+              alignSelf={'center'}
+              marginTop={'1%'}
+            />
+            <TitleShimmer
+              height={horizontalScale(40)}
+              width={horizontalScale(100)}
+              borderRadius={moderateScale(10)}
+              alignSelf={'center'}
+              marginTop={'4%'}
+            />
+          </>
+        ) : (
+          <>
+            <Text style={styles.statusTxt}>{paymentDetails?.STATUS}</Text>
+            <Text style={styles.eventName}>{paymentDetails?.EVENT_NAME}</Text>
+            <Text style={styles.eventName}>{paymentDetails?.PURPOSE}</Text>
+            <Text style={styles.amtTxt}>{paymentDetails?.TOTAL_AMOUNT}</Text>
+          </>
+        )}
 
         {/* // @ Payment Details */}
-        <View style={styles.payDetailsBox}>
+        <View
+          style={[
+            styles.payDetailsBox,
+            shimmer && {backgroundColor: COLORS.charcoal},
+          ]}>
           {/* // # Icon and Pay Details */}
           <View style={styles.payDetailIcnCont}>
-            <AntDesign
-              name="profile"
-              size={moderateScale(22)}
-              color={COLORS.white}
-              style={styles.payDtlIcn}
-            />
-            <Text numberOfLines={1} style={styles.payDetailTxt}>
-              Payment Details
-            </Text>
+            {shimmer ? (
+              <TitleShimmer
+                height={horizontalScale(20)}
+                width={horizontalScale(200)}
+                borderRadius={moderateScale(10)}
+                alignSelf={'center'}
+              />
+            ) : (
+              <>
+                <AntDesign
+                  name="profile"
+                  size={moderateScale(22)}
+                  color={COLORS.white}
+                  style={styles.payDtlIcn}
+                />
+                <Text numberOfLines={1} style={styles.payDetailTxt}>
+                  Payment Details
+                </Text>
+              </>
+            )}
           </View>
           {/* // # Transaction ID and Copy Option  */}
-          <View style={styles.txidCopyCont}>
-            <View style={{width: '80%'}}>
-              <Text style={styles.labelTxt}>Transaction ID</Text>
-              <Text
-                style={[styles.labelTxt, styles.valueTxt, {marginTop: '1%'}]}>
-                T25020701216322
-              </Text>
+          {shimmer ? (
+            <>
+              <TitleShimmer
+                height={horizontalScale(15)}
+                width={horizontalScale(180)}
+                borderRadius={moderateScale(10)}
+                alignSelf={'left'}
+                marginTop={'4%'}
+              />
+              <TitleShimmer
+                height={horizontalScale(10)}
+                width={horizontalScale(140)}
+                borderRadius={moderateScale(10)}
+                alignSelf={'left'}
+                marginTop={'2%'}
+              />
+            </>
+          ) : (
+            <View style={styles.txidCopyCont}>
+              <View style={{width: '80%'}}>
+                <Text style={styles.labelTxt}>Transaction ID</Text>
+                <Text
+                  style={[styles.labelTxt, styles.valueTxt, {marginTop: '1%'}]}>
+                  {paymentDetails?.BANK_TRANSACTION_ID}
+                </Text>
+              </View>
+              <MaterialIcons
+                name="content-copy"
+                size={moderateScale(25)}
+                color={COLORS.charcoal}
+                style={{textAlignVertical: 'bottom'}}
+              />
             </View>
-            <MaterialIcons
-              name="content-copy"
-              size={moderateScale(25)}
-              color={COLORS.charcoal}
-              style={{textAlignVertical: 'bottom'}}
-            />
-          </View>
+          )}
           {/*  // # Date Time */}
-          <Text style={[styles.labelTxt, styles.valueTxt, {marginTop: '2%'}]}>
-            12 February 2025 04:37 PM
-          </Text>
+          {!shimmer && (
+            <Text style={[styles.labelTxt, styles.valueTxt, {marginTop: '2%'}]}>
+              {paymentDetails?.TRANSACTION_DATE}
+            </Text>
+          )}
           {/* // # Amount Container */}
-          <View style={styles.txidCopyCont}>
-            <Text numberOfLines={1} style={[styles.labelTxt, {width: '60%'}]}>
-              Total Amount :
-            </Text>
-            <Text style={[styles.labelTxt, styles.valueTxt, styles.amtValue]}>
-              ₹ 350
-            </Text>
-          </View>
-
-          <View style={styles.txidCopyCont}>
-            <Text numberOfLines={1} style={[styles.labelTxt, {width: '60%'}]}>
-              Discount Amount :
-            </Text>
-            <Text style={[styles.labelTxt, styles.valueTxt, styles.amtValue]}>
-              ₹ 35000
-            </Text>
-          </View>
-
-          <View style={styles.txidCopyCont}>
-            <Text numberOfLines={1} style={[styles.labelTxt, {width: '60%'}]}>
-              Amount to be pay :
-            </Text>
-            <Text style={[styles.labelTxt, styles.valueTxt, styles.amtValue]}>
-              ₹ 35000
-            </Text>
-          </View>
+          {shimmer
+            ? Array(2)
+                .fill(2)
+                .map(() => (
+                  <View style={styles.txidCopyCont}>
+                    <TitleShimmer
+                      height={horizontalScale(15)}
+                      width={horizontalScale(150)}
+                      borderRadius={moderateScale(10)}
+                      marginTop={'4%'}
+                    />
+                    <TitleShimmer
+                      height={horizontalScale(20)}
+                      width={horizontalScale(70)}
+                      borderRadius={moderateScale(6)}
+                      marginTop={'2%'}
+                    />
+                  </View>
+                ))
+            : paymentDetails?.amountDetails?.map((item, index) => (
+                <View style={styles.txidCopyCont}>
+                  <Text
+                    numberOfLines={1}
+                    style={[styles.labelTxt, {width: '60%'}]}>
+                    {item?.label}
+                  </Text>
+                  <Text
+                    style={[styles.labelTxt, styles.valueTxt, styles.amtValue]}>
+                    {item?.value}
+                  </Text>
+                </View>
+              ))}
         </View>
       </SafeAreaView>
     </>
@@ -123,7 +248,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: COLORS.white,
   },
-  menuIcon: statusBarHeight => ({
+  menuIcon: {
     padding: moderateScale(6),
     height: horizontalScale(40),
     width: horizontalScale(40),
@@ -132,8 +257,8 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(30),
     margin: '3%',
     zIndex: 99,
-    marginTop: statusBarHeight,
-  }),
+    backgroundColor: COLORS.modalBg,
+  },
   statusImg: {
     alignSelf: 'center',
     width: horizontalScale(100),

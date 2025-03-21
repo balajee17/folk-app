@@ -18,16 +18,17 @@ import NoNetwork from './src/components/NoNetwork';
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
 
-const App = ({children}) => {
+const App = () => {
   const [globalState, setGlobalState] = useState({
     current: 'DB1',
     btTab: 'DB1',
     profileId: 1,
     activeEventTab: 0,
     isConnected: true,
-    folkId: '20231204007',
-    userName: 'Naveen Alagarsamy',
-    mobileNumber: '6369455056',
+    folkId: '',
+    userName: '',
+    mobileNumber: '',
+    photo: '',
   });
 
   useEffect(() => {

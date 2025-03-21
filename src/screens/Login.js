@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
+  CommonStatusBar,
   StatusBarTransp,
   useStatusBarHeight,
 } from '../components/StatusBarComponent';
@@ -35,9 +36,13 @@ import OtpInput from '../components/OtpInput';
 import {useFocusEffect} from '@react-navigation/native';
 import DeviceInformation from '../components/DeviceInfo';
 import AndroidBackHandler, {CustomPopup} from '../components/BackHandler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAppContext} from '../../App';
 
 const Login = ({navigation}) => {
   const statusBarHeight = useStatusBarHeight();
+
+  const {setGlobalState} = useAppContext();
 
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
@@ -54,33 +59,15 @@ const Login = ({navigation}) => {
 
   const txtInpt = useRef(null);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const exit = () => {
-  //       if (!loader && showOtp) {
-  //         setOtp('');
-  //         setShowOtp(false);
-  //         return true;
-  //       }
-
-  //       // if (!exitAppModal) {
-  //       //   setExitAppModal(true);
-  //       //   return true;
-  //       // }
-
-  //       return false;
-  //     };
-
-  //     BackHandler.addEventListener('hardwareBackPress', exit);
-
-  //     return () => BackHandler.removeEventListener('hardwareBackPress', exit);
-  //   }, [showOtp]),
-  // );
-
   // # Back Handler
   useEffect(() => {
     const backAction = () => {
       console.log('first');
+      if (showOtp) {
+        setShowOtp(false);
+        setOtp('');
+        return true;
+      }
       setExitAppModal(!exitAppModal);
       return true;
     };
@@ -149,7 +136,7 @@ const Login = ({navigation}) => {
             };
       const response =
         type === 1 ? await API.getOTP(params) : await API.verifyOTP(params);
-      const {data, successCode, message} = response?.data;
+      const {successCode, message} = response?.data;
       if (successCode === 1) {
         if (type === 1) {
           setShowOtp(true);
@@ -157,7 +144,25 @@ const Login = ({navigation}) => {
           setLoader(false);
         } else {
           setLoader(false);
-          navigation.navigate(screenNames.drawerNavigation);
+          console.log('data12345', response?.data);
+          const {id, photo, name, folkId, mobile} = response?.data?.profile;
+          const userDetails = {profileId: id, photo, name, folkId, mobile};
+          await setGlobalState({
+            current: 'DB1',
+            btTab: 'DB1',
+            profileId: id,
+            activeEventTab: 0,
+            isConnected: true,
+            folkId: folkId,
+            userName: name,
+            mobileNumber: mobile,
+            photo: photo,
+          });
+          await AsyncStorage.setItem(
+            'userDetails',
+            JSON.stringify(userDetails),
+          );
+          await navigation.replace(screenNames.drawerNavigation);
         }
       } else {
         setLoader(false);
@@ -172,7 +177,7 @@ const Login = ({navigation}) => {
 
   return (
     <>
-      <StatusBarTransp screen={screenNames.login} />
+      <CommonStatusBar bgColor={COLORS.white} screen={screenNames.login} />
       <ImageBackground style={MyStyles.flex1} source={getImage.loginBg}>
         <Spinner spinnerVisible={loader} />
         <SafeAreaView style={MyStyles.flex1}>
@@ -257,7 +262,7 @@ const styles = StyleSheet.create({
     width: horizontalScale(320),
     height: horizontalScale(320),
     alignSelf: 'center',
-    marginTop: statusBarHeight,
+    // marginTop: statusBarHeight,
   }),
   loginTxt: {
     fontFamily: FONTS.LufgaBold,

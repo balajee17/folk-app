@@ -19,27 +19,30 @@ import Courses from '../screens/Courses';
 import NoNetwork from '../components/NoNetwork';
 import {useAppContext} from '../../App';
 import Login from '../screens/Login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Splash from '../screens/Splash';
 
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
-  const {globalState} = useAppContext();
+  const {globalState, setGlobalState} = useAppContext();
   const {isConnected} = globalState;
 
   const navigationRef = useRef();
 
   useEffect(() => {
     if (navigationRef.current) {
-      if (isConnected) {
-        navigationRef.current.navigate(screenNames.login);
-      } else {
+      if (!isConnected) {
         navigationRef.current.navigate(screenNames.noNetwork);
       }
     }
   }, [isConnected]);
+
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
+        {/* // @ Splash */}
+        <Stack.Screen name={screenNames.splash} component={Splash} />
         {/* // @ Login */}
         <Stack.Screen name={screenNames.login} component={Login} />
         {/* // @ Drawer Component */}

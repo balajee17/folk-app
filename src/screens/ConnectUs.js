@@ -46,7 +46,7 @@ const ConnectUs = ({apiData, shimmer}) => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
-        minHeight: screenHeight,
+        paddingBottom: '70%',
       }}>
       <LinearGradientBg />
 
@@ -363,10 +363,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: moderateScale(20),
     paddingHorizontal: '5%',
-    marginTop: '8%',
     alignSelf: 'center',
   },
-
   socialMediaBtn: {
     width: horizontalScale(45),
     height: verticalScale(45),

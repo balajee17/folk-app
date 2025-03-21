@@ -8,6 +8,13 @@ const baseURL =
   deploymentURL == 1 ? 'http://192.168.1.11/FOLKDashboard/api' : '';
 
 export const API = {
+  // # checkFCMId
+  checkFCMId(data) {
+    const getFCM_URL = baseURL + '/check-fcm';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL get OTPURL Data ', getFCM_URL, ' data ', requestData);
+    return axios.post(getFCM_URL, requestData);
+  },
   // # Get OTP
   getOTP(data) {
     const getOTPURL = baseURL + '/get-otp';
@@ -164,5 +171,25 @@ export const API = {
     const requestData = {accessKey: Access_Key, ...data};
     console.log('URL Add Coupon Data ', addCouponURL, ' data ', requestData);
     return axios.post(addCouponURL, requestData);
+  },
+
+  // # PaymentDetails
+  getPaymentDetails(data) {
+    const payDetailsURL = baseURL + '/payment-details';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL Add Coupon Data ', payDetailsURL, ' data ', requestData);
+    return axios.post(payDetailsURL, requestData);
+  },
+  // # NotificationList
+  getNotificationList(data) {
+    const notifyListURL = baseURL + '/notification-list';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL notify List URL Data ',
+      notifyListURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(notifyListURL, requestData);
   },
 };

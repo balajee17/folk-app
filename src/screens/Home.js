@@ -437,7 +437,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
           <RefreshControl refreshing={false} onRefresh={() => refreshData()} />
         }
         contentContainerStyle={{
-          paddingBottom: shimmer ? 0 : verticalScale(180),
+          paddingBottom: shimmer ? 0 : verticalScale(220),
         }}>
         <View style={MyStyles.contentCont}>
           <LinearGradientBg />

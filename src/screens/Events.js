@@ -65,11 +65,16 @@ const Events = ({
             activeOpacity={0.8}
             key={i}
             onPress={() => eventTabChange(i)}
-            style={[styles.tabItem]}>
+            style={[
+              styles.tabItem,
+              index === i && {
+                backgroundColor: COLORS.atlantis,
+                borderRadius: moderateScale(30),
+              },
+            ]}>
             <Text style={[styles.tabText, index === i && styles.activeTabText]}>
               {route.title}
             </Text>
-            {index === i && <View style={styles.tabIndicator} />}
           </TouchableOpacity>
         ))}
       </View>

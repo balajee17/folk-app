@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import CustomBottomTab from '../components/CustomBottomTab';
 import Home from './Home';
 import Events from './Events';
@@ -19,7 +19,11 @@ import {useToast} from 'react-native-toast-notifications';
 import Courses from './Courses';
 import {useAppContext} from '../../App';
 import {API} from '../services/API';
-import {CommonActions, useNavigation} from '@react-navigation/native';
+import {
+  CommonActions,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import NoNetwork from '../components/NoNetwork';
 import NoDataFound from '../components/NoDataFound';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -114,20 +118,21 @@ const SwitcherScreen = ({navigation, route}) => {
   }, [btTab, eventTabIndex]);
 
   // # Back Handler
-  useEffect(() => {
-    const backAction = () => {
-      console.log('first');
-      setExitAppModal(!exitAppModal);
-      return true;
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        setExitAppModal(!exitAppModal);
+        return true;
+      };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
 
-    return () => backHandler.remove();
-  }, []);
+      return () => backHandler.remove();
+    }, []),
+  );
 
   const handleOkay = () => {
     BackHandler.exitApp();
@@ -250,7 +255,7 @@ const SwitcherScreen = ({navigation, route}) => {
         }}
         goBack={() => navigation.goBack()}
       />
-      <SafeAreaView styles={MyStyles.flex1}>
+      <SafeAreaView styles={[MyStyles.flex1]}>
         {/* // @ Exit App Modal */}
         <CustomPopup
           visible={exitAppModal}

@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from '../components/Container';
 import {COLORS, MyStyles, screenHeight} from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
@@ -14,9 +14,18 @@ import {screenNames} from '../constants/ScreenNames';
 import FloatingInput from '../components/FloatingInput';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getImage} from '../utils/ImagePath';
+import AndroidBackHandler from '../components/BackHandler';
 
-const YFHForm = ({navigation}) => {
+const YFHForm = props => {
   const [formValues, setFormValues] = useState({});
+
+  const {navigation} = props;
+
+  useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
+    return AndroidBackHandler.removerHandler();
+  }, []);
 
   const handleChange = (key, value) => {
     setFormValues(prevState => ({

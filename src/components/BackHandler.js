@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {COLORS, FONTS, MyStyles, screenWidth, SIZES} from '../styles/MyStyles';
 import {getImage} from '../utils/ImagePath';
+import {toastThrottle} from './CommonFunctionalities';
 
 let AndroidBackHandler = {
   // Control Back Handler i.e go back to pervious page
@@ -57,7 +58,7 @@ export const CustomPopup = ({visible, onOkay, onCancel}) => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={{...styles.button, backgroundColor: COLORS.header}}
+              style={{...styles.button, backgroundColor: COLORS.errorPB}}
               onPress={onOkay}>
               <Text style={styles.textStyle}>Yes</Text>
             </TouchableOpacity>
@@ -65,7 +66,7 @@ export const CustomPopup = ({visible, onOkay, onCancel}) => {
               activeOpacity={0.7}
               style={{
                 ...styles.button,
-                backgroundColor: COLORS.errorPB,
+                backgroundColor: COLORS.header,
               }}
               onPress={onCancel}>
               <Text style={[styles.textStyle]}>No</Text>

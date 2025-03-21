@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: COLORS.header,
     zIndex: 99,
-    marginTop: statusBarHeight,
+    // marginTop: statusBarHeight,
   }),
   menuIcon: screen => ({
     padding: moderateScale(6),

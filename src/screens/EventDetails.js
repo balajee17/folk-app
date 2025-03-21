@@ -38,8 +38,9 @@ import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import moment from 'moment';
 import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
+import AndroidBackHandler from '../components/BackHandler';
 
-const EventDetails = ({route, navigation}) => {
+const EventDetails = props => {
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
   const {profileId} = globalState;
@@ -55,14 +56,17 @@ const EventDetails = ({route, navigation}) => {
     warning: false,
     applied: false,
   });
-
+  const {route, navigation} = props;
   const {screen, eventId} = route?.params;
   const toast = useToast();
   const toastMsg = toastThrottle((msg, type) => {
     toast.show(msg, {type});
   }, 3400);
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
     getEventDetails();
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   const checkDataExist = Object.keys(eventDetails || {})?.length > 0;
@@ -208,7 +212,7 @@ const EventDetails = ({route, navigation}) => {
               resizeMode="stretch"
               style={styles.bgImg}>
               {/* // # Header */}
-              <View style={{marginTop: statusBarHeight}}>
+              <View>
                 <CustomHeader
                   goBack={() => navigation.goBack()}
                   titleName={screenNames.eventDetails}
@@ -511,7 +515,7 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(10),
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: statusHeight,
+    // marginTop: statusHeight,
   }),
   screenName: {
     width: '50%',

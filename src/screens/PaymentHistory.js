@@ -17,8 +17,8 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
   const navigation = useNavigation();
 
   // # Navigate Sreen
-  const navigateTo = screen => {
-    navigation.navigate(screen);
+  const navigateTo = (screen, paymentId) => {
+    navigation.navigate(screen, {paymentId: 98});
   };
   return shimmer ? (
     <View style={[styles.attendanceCard]}>
@@ -62,7 +62,7 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
     paymentHistory?.map((item, index) => (
       <TouchableOpacity
         key={index}
-        onPress={() => navigateTo(screenNames.paymentDetails)}
+        onPress={() => navigateTo(screenNames.paymentDetails, item?.PAYMENT_ID)}
         activeOpacity={0.8}
         style={[styles.attendanceCard]}>
         <View style={styles.evtImgNameCont}>

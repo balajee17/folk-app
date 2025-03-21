@@ -28,13 +28,16 @@ import {DarshanShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
+import AndroidBackHandler from '../components/BackHandler';
 
-const DailyDarshan = ({navigation, route}) => {
+const DailyDarshan = props => {
   const [switchScreen, setSwitchSreen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [shimmer, setShimmer] = useState(true);
 
   const [darshanData, setDarshanData] = useState([]);
+  const {navigation, route} = props;
+
   const {title} = route?.params;
 
   const toast = useToast();
@@ -43,9 +46,11 @@ const DailyDarshan = ({navigation, route}) => {
       type: type,
     });
   };
-
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
     getDarshanHistory();
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   // # API Call to get Darshan History
