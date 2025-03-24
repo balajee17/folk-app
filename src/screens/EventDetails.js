@@ -90,7 +90,7 @@ const EventDetails = props => {
       const response = await API.getEventDetails(params);
 
       const {data, successCode, message} = response?.data;
-      console.log('Event_Details_response', data?.message);
+      console.log('Event_Details_response', data);
       if (successCode === 1) {
         setEventDetails(data);
         setAmountDetails(data?.amountDetails);
@@ -212,7 +212,7 @@ const EventDetails = props => {
               resizeMode="stretch"
               style={styles.bgImg}>
               {/* // # Header */}
-              <View>
+              <View style={{marginTop: statusBarHeight}}>
                 <CustomHeader
                   goBack={() => navigation.goBack()}
                   titleName={screenNames.eventDetails}
@@ -484,7 +484,7 @@ const EventDetails = props => {
                   },
                 ]}>
                 <Text style={styles.payBtnTxt}>
-                  {eventDetails?.Is_attended === 'Y'
+                  {eventDetails?.is_attended === 'Y'
                     ? 'Attended'
                     : eventDetails?.Is_registered === 'Y'
                     ? 'Registered'
@@ -515,7 +515,7 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(10),
     flexDirection: 'row',
     alignItems: 'center',
-    // marginTop: statusHeight,
+    marginTop: statusHeight,
   }),
   screenName: {
     width: '50%',

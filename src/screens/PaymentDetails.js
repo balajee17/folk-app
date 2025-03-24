@@ -27,12 +27,15 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {useAppContext} from '../../App';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
+import CustomHeader from '../components/CustomHeader';
+import {screenNames} from '../constants/ScreenNames';
 
 const PaymentDetails = ({navigation, route}) => {
   const {globalState} = useAppContext();
   const {profileId} = globalState;
-  console.log('profileId', profileId);
+
   const {paymentId} = route?.params;
+
   const [shimmer, setShimmer] = useState(true);
   const [paymentDetails, setPaymentDetails] = useState([]);
 
@@ -73,7 +76,7 @@ const PaymentDetails = ({navigation, route}) => {
       <SafeAreaView style={[MyStyles.flex1, styles.mainContainer]}>
         {/* // @ Left Arrow Icon */}
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.goBack();
           }}
@@ -84,7 +87,12 @@ const PaymentDetails = ({navigation, route}) => {
             size={moderateScale(23)}
             color={COLORS.white}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
+        <CustomHeader
+          goBack={() => navigation.goBack()}
+          titleName={screenNames.paymentDetails}
+        />
 
         {/* // @ Status, Amt, Event Name */}
         {shimmer ? (

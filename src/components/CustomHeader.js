@@ -35,7 +35,9 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
     titleName === screenNames.contribution;
 
   const bgColor =
-    titleName === screenNames.eventDetails || titleName === screenNames.profile
+    titleName === screenNames.eventDetails ||
+    titleName === screenNames.profile ||
+    titleName === screenNames.paymentDetails
       ? COLORS.transparent
       : COLORS.header;
 
@@ -49,7 +51,8 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
 
   const removeTitle =
     titleName !== screenNames.eventDetails &&
-    titleName !== screenNames.connectUs;
+    titleName !== screenNames.connectUs &&
+    titleName !== screenNames.paymentDetails;
 
   return (
     <View style={[styles.header(statusBarHeight), {backgroundColor: bgColor}]}>
@@ -66,6 +69,8 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
                 ? COLORS.backBg
                 : titleName === screenNames.eventDetails
                 ? COLORS.halfTransparent
+                : titleName === screenNames.paymentDetails
+                ? '#F1F1F1'
                 : COLORS.transparent,
           },
         ]}>
@@ -79,7 +84,11 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
           <FontAwesome
             name={'chevron-left'}
             size={bgColor ? moderateScale(15) : moderateScale(25)}
-            color={COLORS.white}
+            color={
+              titleName === screenNames.paymentDetails
+                ? COLORS.black
+                : COLORS.white
+            }
           />
         )}
       </TouchableOpacity>

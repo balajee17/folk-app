@@ -18,7 +18,7 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
 
   // # Navigate Sreen
   const navigateTo = (screen, paymentId) => {
-    navigation.navigate(screen, {paymentId: 98});
+    navigation.navigate(screen, {paymentId});
   };
   return shimmer ? (
     <View style={[styles.attendanceCard]}>

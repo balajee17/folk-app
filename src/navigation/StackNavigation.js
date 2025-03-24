@@ -21,6 +21,8 @@ import {useAppContext} from '../../App';
 import Login from '../screens/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../screens/Splash';
+import PAYMENT from '../components/PAYMENT';
+import WheelColor from '../components/WheelColor';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +43,7 @@ const StackNavigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name={'WheelColor'} component={PAYMENT} />
         {/* // @ Splash */}
         <Stack.Screen name={screenNames.splash} component={Splash} />
         {/* // @ Login */}
