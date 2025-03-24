@@ -18,8 +18,9 @@ import {
 } from '../styles/MyStyles';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
+import {screenNames} from '../constants/ScreenNames';
 
-const ProfileDetails = ({shimmer, profileDetails}) => {
+const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
   return (
     <ScrollView contentContainerStyle={styles.scrollCntStyle}>
       {/* // # Title and Edit Btn Container */}
@@ -43,7 +44,9 @@ const ProfileDetails = ({shimmer, profileDetails}) => {
               Details
             </Text>
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate(screenNames.editProfile);
+              }}
               activeOpacity={0.8}
               style={styles.editIcnBtn}>
               <Text style={styles.editTxt}>Edit</Text>

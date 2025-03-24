@@ -234,6 +234,7 @@ const Profile = props => {
         <ProfileDetails
           shimmer={shimmer?.profile}
           profileDetails={profileData?.profileDetails}
+          navigation={navigation}
         />
       ) : activeTab === 2 ? (
         <AttendanceHistory

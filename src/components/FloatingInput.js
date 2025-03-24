@@ -125,10 +125,10 @@ const FloatingInput = React.forwardRef((props, ref) => {
       {type === 'txtInput' ? (
         <TextInput
           ref={ref}
-          cursorColor={COLORS.windowsBlue}
+          cursorColor={COLORS.atlantis}
           onFocus={onFocus}
           onBlur={onBlur}
-          selectionColor={COLORS.header}
+          selectionColor={COLORS.atlantis}
           style={[
             styles.txtInptStyle(props?.disabled),
             txtInptStyle,
@@ -143,9 +143,9 @@ const FloatingInput = React.forwardRef((props, ref) => {
           ref={ref}
           style={[styles.dropdownStyle, drpDwnStyle]}
           selectedTextStyle={styles.drpdwnSelTxt(props?.disabled)}
-          itemTextStyle={styles.drpdwnItemTxt}
+          itemTextStyle={[styles.drpdwnItemTxt]}
           containerStyle={[styles.drpdwnCont, drpdwnContStyle]}
-          activeColor={COLORS.windowsBlue}
+          activeColor={COLORS.atlantis}
           placeholder=""
           data={data}
           labelField="label"
@@ -168,7 +168,6 @@ export default FloatingInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    backgroundColor: COLORS.white,
     borderRadius: moderateScale(14),
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -216,6 +215,7 @@ const styles = StyleSheet.create({
   drpdwnItemTxt: {
     color: COLORS.black,
     fontSize: SIZES.l,
+    fontFamily: FONTS.urbanistRegular,
   },
   drpdwnCont: {
     backgroundColor: COLORS.inputBg,

@@ -194,4 +194,41 @@ export const API = {
     );
     return axios.post(notifyListURL, requestData);
   },
+  // # getProfileDropdown
+  getProfileDropdown() {
+    const profileDropdownURL = baseURL + '/';
+    const requestData = {accessKey: Access_Key};
+    console.log(
+      'URL profile Dropdown URL Data ',
+      profileDropdownURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(profileDropdownURL, requestData);
+  },
+
+  //# sendEditProfileDetails
+  sendEditProfileDetails() {
+    const editProfileURL = baseURL + '/';
+    const requestData = {accessKey: Access_Key};
+    console.log(
+      'URL Edit Profile  URL Data ',
+      editProfileURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(editProfileURL, requestData);
+  },
+  // # getStateLists
+  getStateLists() {
+    const stateListURL = baseURL + '/';
+    const requestData = {accessKey: Access_Key};
+    console.log(
+      'URL get State Lists  URL Data ',
+      stateListURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(stateListURL, requestData);
+  },
 };

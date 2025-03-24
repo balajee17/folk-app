@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -23,6 +23,13 @@ import {useAppContext} from '../../App';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import Spinner from '../components/Spinner';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import NotificationCard from '../components/NotificationCard';
 
 const Notifications = props => {
   const {navigation} = props;
@@ -64,6 +71,13 @@ const Notifications = props => {
       console.log('ERR Notification List screen', err);
     }
   };
+
+  const removeNotification = useCallback(item => {
+    console.log('remove_item', item);
+    setLoader(true);
+    setTimeout(() => setLoader(false), 3000);
+  }, []);
+
   return (
     <Container>
       <SafeAreaView style={MyStyles.flex1}>
@@ -79,33 +93,15 @@ const Notifications = props => {
           <FlatList
             data={notificationList}
             contentContainerStyle={{paddingBottom: '5%'}}
-            renderItem={({item, index}) => (
-              <View style={styles.notifyCard} key={item?.NOT_ID}>
-                {/* // #  icon title container */}
-                <View style={styles.titleIconCont}>
-                  <View style={styles.circleIcon}>
-                    <Text style={styles.iconLetter}>
-                      {item?.TITLE.charAt(0)}
-                    </Text>
-                  </View>
-
-                  <Text numberOfLines={2} style={styles.titleTxt}>
-                    {item?.TITLE}
-                  </Text>
-                </View>
-
-                {/* // #  Description */}
-                <Text style={styles.descrpTxt}>{item?.NOTIFICATION}</Text>
-
-                {/* // # Date time age Container */}
-                <View style={[styles.titleIconCont, styles.dateTimeCont]}>
-                  <Text style={styles.dateTxt}>{item?.DATE}</Text>
-                  <Text style={[styles.dateTxt, {textAlign: 'right'}]}>
-                    {item?.TIME}
-                  </Text>
-                </View>
-              </View>
-            )}
+            renderItem={({item, index}) => {
+              return (
+                <NotificationCard
+                  item={item}
+                  index={index}
+                  removeNotification={removeNotification}
+                />
+              );
+            }}
           />
         </View>
       </SafeAreaView>
@@ -115,51 +111,4 @@ const Notifications = props => {
 
 export default Notifications;
 
-const styles = StyleSheet.create({
-  notifyCard: {
-    backgroundColor: COLORS.chromeWhite,
-    width: '95%',
-    marginTop: '4%',
-    padding: '3%',
-    alignSelf: 'center',
-    borderRadius: moderateScale(20),
-  },
-  titleIconCont: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  circleIcon: {
-    width: horizontalScale(25),
-    height: horizontalScale(25),
-    borderRadius: moderateScale(20),
-    backgroundColor: COLORS.charcoal,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconLetter: {
-    fontFamily: FONTS.urbanistBold,
-    fontSize: SIZES.xl,
-    color: COLORS.white,
-  },
-  titleTxt: {
-    fontFamily: FONTS.urbanistSemiBold,
-    fontSize: SIZES.subTitle,
-    color: COLORS.black,
-    width: '85%',
-    marginLeft: '4%',
-  },
-  descrpTxt: {
-    fontFamily: FONTS.urbanistMedium,
-    fontSize: SIZES.l,
-    color: COLORS.midGrey,
-    width: '100%',
-    marginTop: '2%',
-  },
-  dateTimeCont: {justifyContent: 'space-between', marginTop: '4%'},
-  dateTxt: {
-    fontFamily: FONTS.urbanistSemiBold,
-    fontSize: SIZES.m,
-    color: COLORS.midGrey,
-    width: '25%',
-  },
-});
+const styles = StyleSheet.create({});

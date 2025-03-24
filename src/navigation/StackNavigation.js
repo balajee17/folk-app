@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../screens/Splash';
 import PAYMENT from '../components/PAYMENT';
 import WheelColor from '../components/WheelColor';
+import EditProfile from '../screens/EditProfile';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +44,7 @@ const StackNavigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name={'WheelColor'} component={PAYMENT} />
+        {/* <Stack.Screen name={'WheelColor'} component={WheelColor} /> */}
         {/* // @ Splash */}
         <Stack.Screen name={screenNames.splash} component={Splash} />
         {/* // @ Login */}
@@ -102,6 +103,8 @@ const StackNavigation = () => {
 
         {/* // @ Profile */}
         <Stack.Screen name={screenNames.profile} component={Profile} />
+        {/* // @ Edit Profile */}
+        <Stack.Screen name={screenNames.editProfile} component={EditProfile} />
 
         {/* // @ Payment Details */}
         <Stack.Screen
@@ -112,6 +115,7 @@ const StackNavigation = () => {
         <Stack.Screen name={screenNames.scanner} component={QrScanner} />
         {/* // @ Courses */}
         <Stack.Screen name={screenNames.courses} component={Courses} />
+
         {/* // @ No Network */}
         <Stack.Screen name={screenNames.noNetwork} component={NoNetwork} />
       </Stack.Navigator>

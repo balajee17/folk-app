@@ -26,4 +26,5 @@ export let screenNames = {
   paymentHistory: 'Payment History',
   scanner: 'Scanner',
   noNetwork: 'No Network',
+  editProfile: 'Edit Profile',
 };
