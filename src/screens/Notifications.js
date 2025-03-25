@@ -72,11 +72,31 @@ const Notifications = props => {
     }
   };
 
-  const removeNotification = useCallback(item => {
+  const swipedNotify = useCallback(item => {
     console.log('remove_item', item);
-    setLoader(true);
-    setTimeout(() => setLoader(false), 3000);
+    removeNotification(item);
   }, []);
+
+  const removeNotification = async item => {
+    try {
+      setLoader(true);
+      const params = {profileId: profileId, notId: item?.NOT_ID};
+      const response = await API.removeNotification(params);
+
+      console.log('Notification List response', response?.data);
+      const {data, successCode, message} = response?.data;
+      if (successCode === 1) {
+        toastMsg(message, 'success');
+      } else {
+        toastMsg(message, 'warning');
+      }
+      setLoader(false);
+    } catch (err) {
+      toastMsg('', 'error');
+      setLoader(false);
+      console.log('ERR Notification List screen', err);
+    }
+  };
 
   return (
     <Container>
@@ -98,7 +118,7 @@ const Notifications = props => {
                 <NotificationCard
                   item={item}
                   index={index}
-                  removeNotification={removeNotification}
+                  swipedNotify={swipedNotify}
                 />
               );
             }}

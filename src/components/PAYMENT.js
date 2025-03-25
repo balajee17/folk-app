@@ -109,7 +109,6 @@ const PAYMENT = () => {
     }
   };
 
-  console.log(sets[0]);
   return (
     <View>
       <Text>PAYMENT</Text>

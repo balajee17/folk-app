@@ -55,6 +55,7 @@ const StackNavigation = () => {
           component={DrawerNavigation}
         />
 
+        {/* // @ Home Screen */}
         <Stack.Screen name={screenNames.home} component={Home} />
 
         {/*  // @ History Component's */}
@@ -80,11 +81,11 @@ const StackNavigation = () => {
         />
 
         {/* // @ Drawer Screens */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name={screenNames.yfhForm}
           options={{gestureEnabled: false}}
           component={YFHForm}
-        />
+        /> */}
 
         {/* // @ Event Details */}
         <Stack.Screen

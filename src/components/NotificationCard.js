@@ -20,8 +20,8 @@ import {
 } from '../styles/MyStyles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-const NotificationCard = ({item, index, removeNotification}) => {
-  const Margin_Top = verticalScale(25);
+const NotificationCard = ({item, index, swipedNotify}) => {
+  const Margin_Top = verticalScale(15);
   const HEIGHT = verticalScale(120);
 
   const translateX = useSharedValue(0);
@@ -41,8 +41,8 @@ const NotificationCard = ({item, index, removeNotification}) => {
         marginTop.value = withTiming(0);
         height.value = withTiming(0);
         opacity.value = withTiming(0, undefined, isFinised => {
-          if (isFinised && removeNotification) {
-            runOnJS(removeNotification)(item);
+          if (isFinised && swipedNotify) {
+            runOnJS(swipedNotify)(item);
           }
         });
       } else {
@@ -81,21 +81,23 @@ const NotificationCard = ({item, index, removeNotification}) => {
         <Animated.View
           style={[styles.notifyCard, cardAnimate]}
           key={item?.NOT_ID}>
-          {/* // #  icon title container */}
-          <View style={styles.titleIconCont}>
-            <View style={styles.circleIcon}>
-              <Text style={styles.iconLetter}>{item?.TITLE.charAt(0)}</Text>
+          <View>
+            {/* // #  icon title container */}
+            <View style={styles.titleIconCont}>
+              <View style={styles.circleIcon}>
+                <Text style={styles.iconLetter}>{item?.TITLE.charAt(0)}</Text>
+              </View>
+
+              <Text numberOfLines={2} style={styles.titleTxt}>
+                {item?.TITLE}
+              </Text>
             </View>
 
-            <Text numberOfLines={2} style={styles.titleTxt}>
-              {item?.TITLE}
+            {/* // #  Description */}
+            <Text numberOfLines={2} style={styles.descrpTxt}>
+              {item?.NOTIFICATION}
             </Text>
           </View>
-
-          {/* // #  Description */}
-          <Text numberOfLines={2} style={styles.descrpTxt}>
-            {item?.NOTIFICATION}
-          </Text>
 
           {/* // # Date time age Container */}
           <View style={[styles.titleIconCont, styles.dateTimeCont]}>
@@ -125,14 +127,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.chromeWhite,
     width: '95%',
     padding: '3%',
-
     alignSelf: 'center',
+    justifyContent: 'space-between',
+    height: '100%',
     borderRadius: moderateScale(20),
   },
   titleIconCont: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: '25%',
   },
   circleIcon: {
     width: horizontalScale(25),
@@ -160,18 +162,20 @@ const styles = StyleSheet.create({
     color: COLORS.midGrey,
     width: '100%',
     marginTop: '2%',
-    height: '38%',
   },
-  dateTimeCont: {justifyContent: 'space-between', marginTop: '4%'},
+  dateTimeCont: {
+    justifyContent: 'space-between',
+    marginTop: '4%',
+  },
   dateTxt: {
     fontFamily: FONTS.urbanistSemiBold,
-    fontSize: SIZES.m,
+    fontSize: SIZES.s,
     color: COLORS.midGrey,
     width: '25%',
   },
 
   deleteIcon: {
-    height: horizontalScale(120),
+    height: '100%',
     width: horizontalScale(40),
     borderRadius: moderateScale(8),
     alignItems: 'center',

@@ -296,7 +296,7 @@ const SwitcherScreen = ({navigation, route}) => {
             <NoDataFound />
           )
         ) : (
-          <Home />
+          <></>
         )}
       </SafeAreaView>
       {/* // @ Bottom Tab */}

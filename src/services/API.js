@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const Access_Key = '856!@nHKRKkbngsppnsg@856';
 
-const deploymentURL = '2'; // 1 for Test || 2 for Live
+const deploymentURL = 1; // 1 for Test || 2 for Live
 
 const baseURL =
   deploymentURL == 1
@@ -230,5 +230,18 @@ export const API = {
       requestData,
     );
     return axios.post(stateListURL, requestData);
+  },
+
+  //# removeNotification
+  removeNotification(data) {
+    const removeNotificationURL = baseURL + '/close-notification';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL remove Notification URL Data ',
+      removeNotificationURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(removeNotificationURL, requestData);
   },
 };

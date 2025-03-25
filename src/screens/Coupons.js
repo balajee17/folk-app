@@ -34,6 +34,7 @@ import moment from 'moment';
 import Spinner from '../components/Spinner';
 import {toastThrottle} from '../components/CommonFunctionalities';
 import AndroidBackHandler from '../components/BackHandler';
+import FloatingInput from '../components/FloatingInput';
 
 const Coupons = props => {
   const {globalState} = useAppContext();
@@ -54,6 +55,7 @@ const Coupons = props => {
     paidCount: 1,
     paidMaxCount: 0,
   });
+  const [requestReason, setRequestReason] = useState('');
   const [selCoupon, setSelCoupon] = useState(requestCoupon);
   const [qrCode, setQrCode] = useState({show: false, link: ''});
   const [loader, setLoader] = useState(true);
@@ -211,6 +213,10 @@ const Coupons = props => {
       toastMsg('Select atleast 1 Free or 1 Paid coupon.');
       return;
     }
+    if (TYPE === 'R' && !requestReason) {
+      toastMsg('Provide request reason.');
+      return;
+    }
     sendCouponDetails();
   };
 
@@ -245,6 +251,7 @@ const Coupons = props => {
                 selCoupon?.paidCount > 0 ? Number(selCoupon?.paidCount) : 0,
               prasadamAmt: TYPE === 'P' ? Number(selCoupon?.prasadamAmt) : null,
               totalAmount: TYPE === 'P' ? Number(selCoupon?.totalAmt) : 0,
+              reason: TYPE === 'R' ? requestReason : '',
             };
 
       const response = await API.addCoupon(params);
@@ -570,6 +577,19 @@ const Coupons = props => {
                   </View>
                 ))}
 
+            {selCoupon?.type === 'R' && (
+              <View style={{marginTop: '2%', marginBottom: '8%'}}>
+                <FloatingInput
+                  label={'Reason*'}
+                  value={requestReason}
+                  onChangeText={item => {
+                    setRequestReason(item);
+                  }}
+                  cntnrStyle={styles.dropdownCont}
+                />
+              </View>
+            )}
+
             {/* // # horizontal line */}
             <View style={styles.horizontalLine} />
             {/* // # Amt section */}
@@ -579,10 +599,18 @@ const Coupons = props => {
                   styles.flexContainer,
                   {justifyContent: 'space-between'},
                 ]}>
-                <Text numberOfLines={1} style={styles.amtLblTxt}>
-                  Prasadam Amount
-                </Text>
-                <Text numberOfLines={1} style={styles.amtValTxt}>
+                <View style={styles.prasAmtCont}>
+                  <Text
+                    numberOfLines={1}
+                    style={[styles.amtLblTxt, {width: '70%'}]}>
+                    Prasadam Donation
+                  </Text>
+                  <Text numberOfLines={1} style={[styles.perPersonTxt]}>
+                    (per person)
+                  </Text>
+                </View>
+
+                <Text numberOfLines={1} style={[styles.amtValTxt]}>
                   ₹ {selCoupon?.prasadamAmt}
                 </Text>
               </View>
@@ -900,5 +928,30 @@ const styles = StyleSheet.create({
     fontSize: SIZES.xxl,
     color: COLORS.black,
     width: '35%',
+  },
+  prasAmtCont: {
+    width: '70%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  perPersonTxt: {
+    fontFamily: FONTS.urbanistRegular,
+    fontSize: SIZES.s,
+    color: COLORS.dolphin,
+    width: '30%',
+  },
+  dropdownCont: {
+    width: '100%',
+    alignSelf: 'center',
+    paddingHorizontal: '4%',
+    paddingRight: 0,
+    height: verticalScale(48),
+    marginTop: '5%',
+    borderRadius: moderateScale(10),
+    backgroundColor: COLORS.dropDownBg,
+  },
+  dropdownCntStyle: {
+    backgroundColor: COLORS.dropDownBg,
+    alignSelf: 'left',
   },
 });

@@ -11,6 +11,7 @@ import {useAppContext} from '../../App';
 
 const Contribution = props => {
   const {globalState, setGlobalState} = useAppContext();
+
   const {navigation} = props;
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
@@ -30,6 +31,17 @@ const Contribution = props => {
           <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
         </View>
       </SafeAreaView>
+
+      {/* // @ Bottom Tab */}
+      <CustomBottomTab
+        selIcon={''}
+        setSelIcon={value => {
+          if (value) {
+            navigation.navigate(screenNames.switcherScreen);
+            setGlobalState(prev => ({...prev, btTab: value, current: value}));
+          }
+        }}
+      />
     </Container>
   );
 };

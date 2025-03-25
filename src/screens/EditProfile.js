@@ -69,7 +69,7 @@ const EditProfile = ({navigation}) => {
   // # Get Profile & Dropdown Data
   const getProfileDetails = async () => {
     try {
-      const response = await API.getProfileDropdown(params);
+      const response = await API.getProfileDropdown();
 
       console.log('get Profile Dropdown_response', response?.data);
       const {data, successCode, message} = response?.data;

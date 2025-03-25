@@ -1,16 +1,17 @@
 import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
-import {MyStyles, screenHeight, windowWidth} from '../styles/MyStyles';
-import Container from '../components/Container';
+import {MyStyles} from '../styles/MyStyles';
+import {getImage} from '../utils/ImagePath';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
-import {getImage} from '../utils/ImagePath';
 import AndroidBackHandler from '../components/BackHandler';
+import Container from '../components/Container';
 import CustomBottomTab from '../components/CustomBottomTab';
 import {useAppContext} from '../../App';
 
-const Accommodation = props => {
+const FolkMerchant = props => {
   const {setGlobalState} = useAppContext();
+
   const {navigation} = props;
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
@@ -23,7 +24,7 @@ const Accommodation = props => {
         {/* // # Header */}
         <CustomHeader
           toggleDrawer={() => navigation.openDrawer()}
-          titleName={screenNames.accommodation}
+          titleName={screenNames.folkMerchant}
         />
         {/* // # Contents */}
         <View style={MyStyles.contentCont}>
@@ -45,6 +46,6 @@ const Accommodation = props => {
   );
 };
 
-export default Accommodation;
+export default FolkMerchant;
 
 const styles = StyleSheet.create({});

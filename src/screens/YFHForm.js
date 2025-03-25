@@ -15,9 +15,12 @@ import FloatingInput from '../components/FloatingInput';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getImage} from '../utils/ImagePath';
 import AndroidBackHandler from '../components/BackHandler';
+import CustomBottomTab from '../components/CustomBottomTab';
+import {useAppContext} from '../../App';
 
 const YFHForm = props => {
   const [formValues, setFormValues] = useState({});
+  const {setGlobalState} = useAppContext();
 
   const {navigation} = props;
 
@@ -33,6 +36,7 @@ const YFHForm = props => {
       [key]: value,
     }));
   };
+
   return (
     <Container>
       <SafeAreaView style={MyStyles.flex1}>
@@ -117,6 +121,17 @@ const YFHForm = props => {
           <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
         </ScrollView>
       </SafeAreaView>
+
+      {/* // @ Bottom Tab */}
+      <CustomBottomTab
+        selIcon={''}
+        setSelIcon={value => {
+          if (value) {
+            navigation.navigate(screenNames.switcherScreen);
+            setGlobalState(prev => ({...prev, btTab: value, current: value}));
+          }
+        }}
+      />
     </Container>
   );
 };

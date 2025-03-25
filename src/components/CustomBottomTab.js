@@ -80,6 +80,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
         : selIcon === 'B4'
         ? 3
         : 0;
+
     handlePress(selIcon, index);
   }, [selIcon]);
 
@@ -89,22 +90,24 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
   return (
     <View style={styles.btTabContainer}>
       {/* // @ Active Circle */}
-      <Animated.View style={[styles.activeCircle, circleStyle]}>
-        <Animated.Image
-          source={
-            selIcon === 'DB1'
-              ? getImage.homeActive
-              : selIcon === 'B2'
-              ? getImage.calendarActive
-              : selIcon === 'B3'
-              ? getImage.bookActive
-              : selIcon === 'B4'
-              ? getImage.accountActive
-              : getImage.homeActive
-          }
-          style={[styles.icon]}
-        />
-      </Animated.View>
+      {selIcon !== '' && (
+        <Animated.View style={[styles.activeCircle, circleStyle]}>
+          <Animated.Image
+            source={
+              selIcon === 'DB1'
+                ? getImage.homeActive
+                : selIcon === 'B2'
+                ? getImage.calendarActive
+                : selIcon === 'B3'
+                ? getImage.bookActive
+                : selIcon === 'B4'
+                ? getImage.accountActive
+                : getImage.homeActive
+            }
+            style={[styles.icon]}
+          />
+        </Animated.View>
+      )}
       <View style={styles.tabContainer}>
         {/* // @ Tab Buttons */}
         {ICONS?.map((item, index) => {

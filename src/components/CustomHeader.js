@@ -32,6 +32,7 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
     titleName === screenNames.courses ||
     titleName === screenNames.yfhForm ||
     titleName === screenNames.accommodation ||
+    titleName === screenNames.folkMerchant ||
     titleName === screenNames.contribution;
 
   const bgColor =
@@ -47,7 +48,9 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
     titleName === screenNames.connectUs;
 
   const folkTitle =
-    titleName === screenNames.home || titleName === screenNames.profile;
+    titleName === screenNames.home ||
+    titleName === screenNames.profile ||
+    titleName === screenNames.connectUs;
 
   const removeTitle =
     titleName !== screenNames.eventDetails &&

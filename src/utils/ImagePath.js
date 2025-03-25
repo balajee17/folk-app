@@ -21,6 +21,8 @@ export const getImage = {
   formBlack: require('../assets/images/formBlack.png'),
   accommodationWhite: require('../assets/images/accommodationWhite.png'),
   accommodationBlack: require('../assets/images/accommodationBlack.png'),
+  merchantWhite: require('../assets/images/merchantWhite.png'),
+  merchantBlack: require('../assets/images/merchantBlack.png'),
   donateWhite: require('../assets/images/donateWhite.png'),
   donateBlack: require('../assets/images/donateBlack.png'),
   connectCard: require('../assets/images/connectCdBg.png'),

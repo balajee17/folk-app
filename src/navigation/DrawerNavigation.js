@@ -8,6 +8,7 @@ import SwitcherScreen from '../screens/SwitcherScreen';
 import YFHForm from '../screens/YFHForm';
 import Accommodation from '../screens/Accommodation';
 import Contribution from '../screens/Contribution';
+import FolkMerchant from '../screens/FolkMerchant';
 
 const Drawer = createDrawerNavigator();
 
@@ -32,6 +33,7 @@ const DrawerNavigation = () => {
         name={screenNames.accommodation}
         component={Accommodation}
       />
+      <Drawer.Screen name={screenNames.folkMerchant} component={FolkMerchant} />
       <Drawer.Screen name={screenNames.contribution} component={Contribution} />
     </Drawer.Navigator>
   );

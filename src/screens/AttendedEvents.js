@@ -122,7 +122,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                   <View style={MyStyles.dateModeCont}>
                     <View style={MyStyles.dateCont}>
                       <Text style={MyStyles.dateTxt}>{item?.start_date}</Text>
-                      <Text style={MyStyles.monthTxt}>{item?.start_time}</Text>
+                      <Text style={MyStyles.monthTxt}>{item?.start_month}</Text>
                     </View>
 
                     {(item?.event_type === 'F' || item?.event_type === 'O') && (
@@ -173,10 +173,11 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                           }}
                           style={MyStyles.iconStyle}
                           activeOpacity={0.6}>
-                          <MaterialCommunityIcons
-                            name="video"
-                            size={moderateScale(19)}
-                            color={COLORS.charcoal}
+                          <Image
+                            source={{
+                              uri: item?.videoIcon,
+                            }}
+                            style={styles.iconImgStyle}
                           />
                         </TouchableOpacity>
                       )}
@@ -186,10 +187,11 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                           onPress={() => checkCameraPermission(item?.id)}
                           style={MyStyles.iconStyle}
                           activeOpacity={0.6}>
-                          <MaterialCommunityIcons
-                            name="qrcode-scan"
-                            size={moderateScale(19)}
-                            color={COLORS.charcoal}
+                          <Image
+                            source={{
+                              uri: item?.scannerIcon,
+                            }}
+                            style={styles.iconImgStyle}
                           />
                         </TouchableOpacity>
                       )}
@@ -201,10 +203,16 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                           }
                           style={MyStyles.iconStyle}
                           activeOpacity={0.6}>
-                          <MaterialCommunityIcons
+                          {/* <MaterialCommunityIcons
                             name="ticket-percent-outline"
                             size={moderateScale(22)}
                             color={COLORS.charcoal}
+                          /> */}
+                          <Image
+                            source={{
+                              uri: item?.prasadamIcon,
+                            }}
+                            style={styles.iconImgStyle}
                           />
                         </TouchableOpacity>
                       )}
@@ -251,4 +259,9 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
 
 export default AttendedEvents;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  iconImgStyle: {
+    width: moderateScale(25),
+    height: moderateScale(25),
+  },
+});
