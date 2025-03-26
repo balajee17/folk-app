@@ -8,7 +8,13 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {MyStyles, verticalScale} from '../styles/MyStyles';
+import {
+  COLORS,
+  FONTS,
+  MyStyles,
+  SIZES,
+  verticalScale,
+} from '../styles/MyStyles';
 import {screenNames} from '../constants/ScreenNames';
 import {EventShimmer} from '../components/Shimmer';
 import moment from 'moment';
@@ -76,8 +82,15 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                   <View
                     style={[
                       MyStyles.boxContentContainer,
-                      {marginBottom: '1%', justifyContent: 'flex-end'},
+                      {marginBottom: '1%', justifyContent: 'space-between'},
                     ]}>
+                    <View style={styles.leftContainer}>
+                      <Text style={styles.avlSlotTxt}>
+                        {item?.availableSlot && item?.availableSlot !== ''
+                          ? `Available Seats : ${item?.availableSlot}`
+                          : ''}
+                      </Text>
+                    </View>
                     <TouchableOpacity
                       activeOpacity={0.6}
                       onPress={() => {
@@ -86,8 +99,19 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                           eventId: item?.id,
                         });
                       }}
-                      style={MyStyles.registerBtn}>
-                      <Text style={MyStyles.registerTxt}>Register</Text>
+                      style={[
+                        MyStyles.registerBtn,
+                        {opacity: item?.availableSlot === 0 ? 0.5 : 1},
+                        {
+                          backgroundColor:
+                            item?.availableSlot === 0
+                              ? COLORS.cloud
+                              : COLORS.atlantis,
+                        },
+                      ]}>
+                      <Text style={MyStyles.registerTxt}>
+                        {item?.availableSlot === 0 ? 'Full' : 'Register'}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -112,4 +136,13 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
 
 export default UpcomingEvents;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  leftContainer: {
+    width: '40%',
+  },
+  avlSlotTxt: {
+    fontFamily: FONTS.urbanistRegular,
+    fontSize: SIZES.m,
+    color: COLORS.white,
+  },
+});

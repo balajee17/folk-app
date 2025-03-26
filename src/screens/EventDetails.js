@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -28,7 +28,7 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {API} from '../services/API';
 import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
@@ -37,13 +37,18 @@ import {TitleShimmer} from '../components/Shimmer';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import moment from 'moment';
-import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
+import {
+  CashFreePayment,
+  GetPaymentStatus,
+  RedirectURL,
+  toastThrottle,
+} from '../components/CommonFunctionalities';
 import AndroidBackHandler from '../components/BackHandler';
 
 const EventDetails = props => {
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
-  const {profileId} = globalState;
+  const {profileId, reloadEventList} = globalState;
 
   const [expanded, setExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState({});
@@ -68,6 +73,13 @@ const EventDetails = props => {
     getEventDetails();
     return AndroidBackHandler.removerHandler();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('EVT_DETAILS', reloadEventList);
+      reloadEventList === 'Y' && getEventDetails();
+    }, []),
+  );
 
   const checkDataExist = Object.keys(eventDetails || {})?.length > 0;
 
@@ -136,44 +148,85 @@ const EventDetails = props => {
 
   // # API Register
   const register = async () => {
-    const amountToPay = amountDetails?.filter(item => item?.id === 2);
+    console.log('amountDetails', amountDetails);
+    const amountToPay = amountDetails?.filter(item => item?.id == 2);
     try {
       setLoader(true);
       const params = {
         profileId: profileId,
         eventId: eventId,
         offer_code: coupon?.applied ? coupon?.code : '',
-        isFreeEvent: eventDetails?.Event_mode,
+        isPaidEvent: eventDetails?.is_paid_event,
         pgName: 'cashFree',
         pgMode: 'Online',
         paidAmount:
-          eventDetails?.Is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
+          eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
         name: globalState?.userName,
         mobileNumber: globalState?.mobileNumber,
-        transactionStatus: eventDetails?.Is_paid_event === 'Y' ? 'I' : 'S',
+        transactionStatus: eventDetails?.is_paid_event === 'Y' ? 'I' : 'S',
       };
       const response = await API.eventRegister(params);
 
       const {data, successCode, message} = response?.data;
       console.log('Register_response', data?.message);
-      if (successCode === 1) {
-        if (eventDetails?.Event_mode === 'O') {
-          // call payment gateway => payment status screen => back to event details
-          // if amt > 0 then payment gateway
-          setLoader(false);
-        } else {
-          resetValues();
-          toastMsg(message, 'success');
-          getEventDetails();
-        }
+      if (successCode !== 1) {
+        setLoader(false);
+        return toastMsg(message, 'warning');
+      }
+
+      if (eventDetails?.is_paid_event === 'N') {
+        resetValues();
+        toastMsg(message, 'success');
+        setLoader(false);
+        return getEventDetails();
+      }
+
+      const orderId = 'order_105263592urDHAcG67Ch3S8YfUVRSfK49pU';
+      const paymentSessionId =
+        'session_RoeLNsZJ_ft1NLDBNuhdb70GYL9N92uMkmO_gwXNlOS6t5o-XuWoNc0dkjQipNN-__V0U1Fa1kKVfJ4gZm9iWUTgn53zM-qyA56r4lc0vhCS9QEnWEtgHQUsBwpaymentpayment';
+
+      if (!paymentSessionId || !orderId) {
+        setLoader(false);
+        return toastMsg('', 'error');
+      }
+
+      const paymentGatewayRes = await CashFreePayment(
+        paymentSessionId,
+        orderId,
+      );
+      console.log('paymentGatewayRes', paymentGatewayRes);
+
+      if (paymentGatewayRes?.type === 'ID') {
+        await getPaymentStatusAPI(paymentGatewayRes?.orderId);
       } else {
-        toastMsg(message, 'warning');
+        toastMsg('', 'error');
       }
     } catch (err) {
       setLoader(false);
       toastMsg('', 'error');
       console.log('ERR-Register', err);
     }
+  };
+
+  const getPaymentStatusAPI = async orderId => {
+    const paymentStatusRes = await GetPaymentStatus(profileId, orderId);
+    console.log('paymentStatusRes', paymentStatusRes);
+    setLoader(false);
+    navigation.navigate(screenNames.paymentDetails, {
+      // paymentStatus: paymentStatusRes,
+      paymentStatus: {
+        amountDetails: [{label: 'Total Amount', value: '110.15'}],
+        TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
+        BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
+        STATUS: 'Payment Success',
+        EVENT_NAME: 'Cash Free Payment Gateway',
+        PURPOSE: 'Cash Free Testing',
+        TOTAL_AMOUNT: '110.15',
+        STATUS_IMAGE:
+          'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
+      },
+      screenFrom: screenNames.eventDetails,
+    });
   };
 
   const removeCoupon = () => {
@@ -330,11 +383,12 @@ const EventDetails = props => {
                   ))}
 
             {/* // # Location */}
-            {eventDetails?.Event_space &&
+            {!shimmer &&
+              eventDetails?.Event_space &&
               renderSubTitle(
                 eventDetails?.Event_mode === 'F' ? 'Location' : 'Online Link',
               )}
-            {eventDetails?.Event_space && (
+            {!shimmer && eventDetails?.Event_space && (
               <View style={styles.locationCont}>
                 <Ionicons
                   style={styles.locationIcn}
@@ -382,7 +436,7 @@ const EventDetails = props => {
             )}
 
             {/* // # Discount Code */}
-            {eventDetails?.Is_paid_event === 'Y' &&
+            {eventDetails?.is_paid_event === 'Y' &&
               screen === 'Upcoming' &&
               !shimmer && (
                 <View
@@ -432,7 +486,7 @@ const EventDetails = props => {
 
             {/* // # Amount Section */}
             {screen === 'Upcoming' &&
-              eventDetails?.Is_paid_event === 'Y' &&
+              eventDetails?.is_paid_event === 'Y' &&
               amountDetails?.length > 0 &&
               amountDetails?.map((item, index) => {
                 return (
@@ -488,7 +542,7 @@ const EventDetails = props => {
                     ? 'Attended'
                     : eventDetails?.Is_registered === 'Y'
                     ? 'Registered'
-                    : eventDetails?.Is_paid_event === 'Y'
+                    : eventDetails?.is_paid_event === 'Y'
                     ? 'Pay Now to Register'
                     : 'Register'}
                 </Text>

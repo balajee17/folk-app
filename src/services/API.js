@@ -244,4 +244,17 @@ export const API = {
     );
     return axios.post(removeNotificationURL, requestData);
   },
+
+  // # PAYMENT API
+  getPaymentStatus(data) {
+    const paymentStatusURL = baseURL + '/';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL payment Status URL Data ',
+      paymentStatusURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(paymentStatusURL, requestData);
+  },
 };

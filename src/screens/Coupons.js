@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
@@ -32,14 +32,19 @@ import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
 import moment from 'moment';
 import Spinner from '../components/Spinner';
-import {toastThrottle} from '../components/CommonFunctionalities';
+import {
+  CashFreePayment,
+  GetPaymentStatus,
+  toastThrottle,
+} from '../components/CommonFunctionalities';
 import AndroidBackHandler from '../components/BackHandler';
 import FloatingInput from '../components/FloatingInput';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 const Coupons = props => {
-  const {globalState} = useAppContext();
+  const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId} = globalState;
+  const {profileId, reloadCoupon} = globalState;
   const dateTime = ['Date', 'Time'];
   const {route, navigation} = props;
   const {eventId} = route?.params;
@@ -47,12 +52,13 @@ const Coupons = props => {
   const [requestCoupon, setRequestCoupon] = useState({
     open: false,
     type: 'R',
-    freeCount: 1,
+    freeCount: 0,
     freeMaxCount: 0,
     refId: '',
     prasadamAmt: 0,
+    prasadamAmtLbl: 0,
     totalAmt: 0,
-    paidCount: 1,
+    paidCount: 0,
     paidMaxCount: 0,
   });
   const [requestReason, setRequestReason] = useState('');
@@ -60,8 +66,22 @@ const Coupons = props => {
   const [qrCode, setQrCode] = useState({show: false, link: ''});
   const [loader, setLoader] = useState(true);
   const [couponData, setCouponData] = useState([]);
+  const [reloadCouponVal, setReloadCouponVal] = useState(reloadCoupon);
 
   const toast = useToast();
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('reloadCoupon', reloadCouponVal);
+      reloadCouponVal === 'Y' && reloadScreen();
+    }, [reloadCouponVal]),
+  );
+
+  const reloadScreen = async () => {
+    console.log('RELOAD');
+    await setGlobalState(prev => ({...prev, reloadCoupon: 'N'}));
+    getCouponsList();
+  };
 
   const toastMsg = toastThrottle((msg, type) => {
     toast.show(msg, {type});
@@ -78,23 +98,25 @@ const Coupons = props => {
     setSelCoupon({
       open: false,
       type: 'R',
-      freeCount: 1,
+      freeCount: 0,
       freeMaxCount: 0,
       refId: '',
       prasadamAmt: 0,
+      prasadamAmtLbl: 0,
       totalAmt: 0,
-      paidCount: 1,
+      paidCount: 0,
       paidMaxCount: 0,
     });
     setRequestCoupon({
       open: false,
       type: 'R',
-      freeCount: 1,
+      freeCount: 0,
       freeMaxCount: 0,
       refId: '',
       prasadamAmt: 0,
+      prasadamAmtLbl: 0,
       totalAmt: 0,
-      paidCount: 1,
+      paidCount: 0,
       paidMaxCount: 0,
     });
   };
@@ -112,13 +134,14 @@ const Coupons = props => {
         const DATA = {
           open: false,
           type: 'R',
-          freeCount: 1,
+          freeCount: 0,
           freeMaxCount: 0,
           refId: '',
-          paidCount: 1,
+          paidCount: 0,
           paidMaxCount: 0,
           prasadamAmt: data?.requestPrasadamAmt,
-          totalAmt: data?.requestPrasadamAmt,
+          prasadamAmtLbl: data?.requestPrasadamAmtLabel,
+          totalAmt: 0,
         };
         setRequestCoupon(DATA);
         setSelCoupon(DATA);
@@ -220,8 +243,6 @@ const Coupons = props => {
     sendCouponDetails();
   };
 
-  const paymentAPI = () => {};
-
   const sendCouponDetails = async () => {
     try {
       const TYPE = selCoupon?.type;
@@ -250,7 +271,7 @@ const Coupons = props => {
               paidCount:
                 selCoupon?.paidCount > 0 ? Number(selCoupon?.paidCount) : 0,
               prasadamAmt: TYPE === 'P' ? Number(selCoupon?.prasadamAmt) : null,
-              totalAmount: TYPE === 'P' ? Number(selCoupon?.totalAmt) : 0,
+              totalAmount: TYPE === 'P' ? 100 : 0,
               reason: TYPE === 'R' ? requestReason : '',
             };
 
@@ -260,7 +281,11 @@ const Coupons = props => {
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         toastMsg(message, 'success');
-        TYPE === 'P' ? paymentAPI() : getCouponsList();
+        const paymentSessionId = data?.payment_session_id;
+        const orderId = data?.orderId;
+        TYPE === 'P'
+          ? getPaymentGateway(paymentSessionId, orderId)
+          : (setDefaultStates(), getCouponsList());
       } else {
         toastMsg(message, 'warning');
         setLoader(false);
@@ -270,6 +295,59 @@ const Coupons = props => {
       setLoader(false);
       console.log('ERR-SEND_Coupon', err);
     }
+  };
+
+  const getPaymentGateway = async (payment_session_id, orderId) => {
+    try {
+      setLoader(true);
+      const orderId = 'order_105263592urD75HuONsZljL8Yn4DOSCecsB';
+      const paymentSessionId =
+        'session_wEZVPslq__Whn0thQGtjSfiYHF4mD-7zYF1bqRdUOvBSJo4oYzCczApoZ7qxyKXEmeQgTcGC3QfSoUWGUAMxn72EhFaKlvmFECsfillS61vJLkIAwzOeQFhCQgpaymentpayment';
+
+      if (!paymentSessionId || !orderId) {
+        setLoader(false);
+        return toastMsg('', 'error');
+      }
+
+      const paymentGatewayRes = await CashFreePayment(
+        paymentSessionId,
+        orderId,
+      );
+      console.log('paymentGatewayRes', paymentGatewayRes);
+
+      if (paymentGatewayRes?.type === 'ID') {
+        await getPaymentStatusAPI(paymentGatewayRes?.orderId);
+      } else {
+        toastMsg('', 'error');
+      }
+    } catch (err) {
+      setLoader(false);
+      toastMsg('', 'error');
+      console.log('ERR-Register', err);
+    }
+  };
+
+  const getPaymentStatusAPI = async orderId => {
+    const paymentStatusRes = await GetPaymentStatus(profileId, orderId);
+    console.log('paymentStatusRes', paymentStatusRes);
+    setLoader(false);
+    setDefaultStates();
+
+    navigation.navigate(screenNames.paymentDetails, {
+      // paymentStatus: paymentStatusRes,
+      paymentStatus: {
+        amountDetails: [{label: 'Total Amount', value: '1001.15'}],
+        TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
+        BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
+        STATUS: 'Payment Success',
+        EVENT_NAME: 'Cash Free Payment Gateway',
+        PURPOSE: 'Cash Free Testing',
+        TOTAL_AMOUNT: '110.15',
+        STATUS_IMAGE:
+          'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
+      },
+      screenFrom: screenNames.coupons,
+    });
   };
 
   return (
@@ -369,12 +447,15 @@ const Coupons = props => {
                       }
                       onPress={() => {
                         if (item?.isPaid === 'Y') {
+                          console.log('COUPON_ITEM', item);
                           setSelCoupon({
                             open: true,
                             type: 'P',
                             refId: item?.refId,
                             prasadamAmt: item?.prasadamAmt,
-                            totalAmt: item?.totalAmt,
+                            prasadamAmtLbl: item?.prasadamAmtLabel,
+                            totalAmt:
+                              Number(item?.qty) * Number(item?.prasadamAmt),
                             paidCount: item?.qty,
                             paidMaxCount: item?.qty,
                           });
@@ -485,7 +566,9 @@ const Coupons = props => {
             </TouchableOpacity>
             {/* // # card title */}
             <Text numberOfLines={1} style={styles.titleTxt}>
-              {selCoupon?.type === 'R' ? 'Request Coupon' : 'Avail Coupon'}
+              {selCoupon?.type === 'R'
+                ? 'Request Prasadam Coupon'
+                : 'Avail Prasadam Coupon'}
             </Text>
             {/* // # sub text  */}
             <Text numberOfLines={1} style={styles.subTxt}>
@@ -611,7 +694,7 @@ const Coupons = props => {
                 </View>
 
                 <Text numberOfLines={1} style={[styles.amtValTxt]}>
-                  ₹ {selCoupon?.prasadamAmt}
+                  {selCoupon?.prasadamAmtLbl}
                 </Text>
               </View>
             )}

@@ -69,6 +69,7 @@ export const CommonStatusBar = ({bgColor}) => {
         <StatusBar
           backgroundColor={bgColor || COLORS.header}
           barStyle={bgColor ? 'dark-content' : 'light-content'}
+          translucent={false}
           animated
         />
       ) : (

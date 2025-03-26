@@ -22,6 +22,7 @@ import {API} from '../services/API';
 import {
   CommonActions,
   useFocusEffect,
+  useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
 import NoNetwork from '../components/NoNetwork';
@@ -33,7 +34,7 @@ const SwitcherScreen = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
   const toast = useToast();
 
-  const {btTab, profileId, activeEventTab, isConnected} = globalState;
+  const {btTab, profileId, activeEventTab, reloadEventList} = globalState;
   const [opnFltr, setOpnFltr] = useState(false);
   const [tab1Data, setTab1Data] = useState([
     {section: 1, title: '', updates: [{id: 1, link: ''}], forLoader: 'Y'},
@@ -49,6 +50,8 @@ const SwitcherScreen = ({navigation, route}) => {
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
   const [connectDetails, setConnectDetails] = useState({});
   const [exitAppModal, setExitAppModal] = useState(false);
+  const [reloadEventVal, setReloadEventVal] = useState(reloadEventList);
+
   const toastMsg = (msg, type) => {
     toast.show(msg, {
       type,
@@ -96,19 +99,23 @@ const SwitcherScreen = ({navigation, route}) => {
     }
 
     if (
-      btTab === 'B2' &&
-      eventTabIndex === 0 &&
-      activeEventTab !== 1 &&
-      !checkUpComingData
+      (btTab === 'B2' &&
+        eventTabIndex === 0 &&
+        activeEventTab !== 1 &&
+        !checkUpComingData) ||
+      reloadEventList === 'Y'
     ) {
+      setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
       getUpcomingList();
     }
 
     if (
-      btTab === 'B2' &&
-      !checkRegisteredData &&
-      (activeEventTab === 1 || eventTabIndex === 1)
+      (btTab === 'B2' &&
+        !checkRegisteredData &&
+        (activeEventTab === 1 || eventTabIndex === 1)) ||
+      reloadEventList === 'Y'
     ) {
+      setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
       getRegisteredList();
     }
 
@@ -132,6 +139,13 @@ const SwitcherScreen = ({navigation, route}) => {
 
       return () => backHandler.remove();
     }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      reloadEventVal === 'Y' &&
+        (setEventList({upcoming: [], registered: []}), getUpcomingList());
+    }, [reloadEventVal]),
   );
 
   const handleOkay = () => {

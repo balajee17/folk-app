@@ -29,6 +29,8 @@ const App = () => {
     userName: '',
     mobileNumber: '',
     photo: '',
+    reloadEventList: 'N',
+    reloadCoupon: 'N',
   });
 
   useEffect(() => {

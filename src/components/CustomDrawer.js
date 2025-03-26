@@ -45,13 +45,13 @@ const CustomDrawer = ({navigation, route}) => {
     },
     {
       id: 'D4',
-      screenName: 'Contribution',
+      screenName: screenNames.contribution,
       whiteIcon: getImage.donateWhite,
       blackIcon: getImage.donateBlack,
     },
     {
       id: 'D5',
-      screenName: 'FOLK Merchant',
+      screenName: screenNames.folkMerchant,
       whiteIcon: getImage.merchantWhite,
       blackIcon: getImage.merchantBlack,
     },

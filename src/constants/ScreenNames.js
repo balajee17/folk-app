@@ -27,5 +27,5 @@ export let screenNames = {
   scanner: 'Scanner',
   noNetwork: 'No Network',
   editProfile: 'Edit Profile',
-  folkMerchant: 'FOLK Merchant',
+  folkMerchant: 'FOLK Merchandise',
 };

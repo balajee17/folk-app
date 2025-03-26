@@ -14,7 +14,13 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
 import {useStatusBarHeight} from './StatusBarComponent';
 
-const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
+const CustomHeader = ({
+  toggleDrawer,
+  titleName,
+  goBack,
+  rightIcnAction,
+  martop,
+}) => {
   const statusBarHeight = useStatusBarHeight();
   const filterIcnScreens =
     titleName === screenNames.quotes ||
@@ -50,7 +56,8 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
   const folkTitle =
     titleName === screenNames.home ||
     titleName === screenNames.profile ||
-    titleName === screenNames.connectUs;
+    titleName === screenNames.connectUs ||
+    titleName === screenNames.coupons;
 
   const removeTitle =
     titleName !== screenNames.eventDetails &&
@@ -58,7 +65,11 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
     titleName !== screenNames.paymentDetails;
 
   return (
-    <View style={[styles.header(statusBarHeight), {backgroundColor: bgColor}]}>
+    <View
+      style={[
+        styles.header(statusBarHeight, martop),
+        {backgroundColor: bgColor},
+      ]}>
       <TouchableOpacity // Left Icon
         onPress={() => {
           drawerScreens ? toggleDrawer() : goBack();
@@ -143,14 +154,14 @@ const CustomHeader = ({toggleDrawer, titleName, goBack, rightIcnAction}) => {
 export default CustomHeader;
 
 const styles = StyleSheet.create({
-  header: statusBarHeight => ({
+  header: (statusBarHeight, martop) => ({
     padding: moderateScale(15),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: COLORS.header,
     zIndex: 99,
-    // marginTop: statusBarHeight,
+    // marginTop: martop ? statusBarHeight : 0,
   }),
   menuIcon: screen => ({
     padding: moderateScale(6),

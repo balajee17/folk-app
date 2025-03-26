@@ -31,17 +31,33 @@ import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 
 const PaymentDetails = ({navigation, route}) => {
-  const {globalState} = useAppContext();
+  const {globalState, setGlobalState} = useAppContext();
   const {profileId} = globalState;
 
-  const {paymentId} = route?.params;
+  const {paymentId = '', paymentStatus = {}, screenFrom = ''} = route?.params;
 
-  const [shimmer, setShimmer] = useState(true);
+  const [shimmer, setShimmer] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState([]);
 
   useEffect(() => {
-    getPaymentDetails();
+    typeof paymentStatus === 'object' && Object.keys(paymentStatus).length > 0
+      ? storePaymentStatus()
+      : getPaymentDetails();
   }, []);
+
+  const storePaymentStatus = async () => {
+    console.log(
+      'screenFrom === screenNames.coupons',
+      screenFrom === screenNames.coupons,
+    );
+    setPaymentDetails(paymentStatus);
+
+    await setGlobalState(prev => ({
+      ...prev,
+      reloadCoupon: screenFrom === screenNames.coupons ? 'Y' : 'N',
+      reloadEventList: screenFrom === screenNames.eventDetails ? 'Y' : 'N',
+    }));
+  };
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -52,6 +68,7 @@ const PaymentDetails = ({navigation, route}) => {
 
   const getPaymentDetails = async () => {
     try {
+      setShimmer(true);
       const params = {profileId: profileId, paymentId: paymentId};
       const response = await API.getPaymentDetails(params);
 
@@ -90,6 +107,12 @@ const PaymentDetails = ({navigation, route}) => {
         </TouchableOpacity> */}
 
         <CustomHeader
+          martop={
+            typeof paymentStatus === 'object' &&
+            Object.keys(paymentStatus).length > 0
+              ? true
+              : false
+          }
           goBack={() => navigation.goBack()}
           titleName={screenNames.paymentDetails}
         />
@@ -104,7 +127,7 @@ const PaymentDetails = ({navigation, route}) => {
           />
         ) : (
           <Image
-            source={paymentDetails?.STATUS_IMAGE}
+            source={{uri: paymentDetails?.STATUS_IMAGE}}
             style={styles.statusImg}
           />
         )}

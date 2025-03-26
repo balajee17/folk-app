@@ -122,37 +122,40 @@ const ConnectUs = ({apiData, shimmer}) => {
                 <Text numberOfLines={1} style={[styles.emailTxt]}>
                   {apiData?.guideDetails?.MOBILE}
                 </Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    copyToClipboard(
-                      'Mobile number',
-                      apiData?.guideDetails?.MOBILE,
-                    )
-                  }
-                  activeOpacity={0.6}>
-                  <MaterialIcons
-                    name="content-copy"
-                    size={moderateScale(20)}
-                    color={COLORS.charcoal}
-                  />
-                </TouchableOpacity>
+                {apiData?.guideDetails?.MOBILE && (
+                  <TouchableOpacity
+                    onPress={() =>
+                      copyToClipboard(
+                        'Mobile number',
+                        apiData?.guideDetails?.MOBILE,
+                      )
+                    }
+                    activeOpacity={0.6}>
+                    <MaterialIcons
+                      name="content-copy"
+                      size={moderateScale(20)}
+                      color={COLORS.charcoal}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
               <View style={styles.mobileCopyCont}>
                 <Text numberOfLines={2} style={[styles.emailTxt]}>
                   {apiData?.guideDetails?.MAIL}
-                  anandamayadasa@iskconbangalore.org
                 </Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    copyToClipboard('Email', apiData?.guideDetails?.MAIL)
-                  }
-                  activeOpacity={0.6}>
-                  <MaterialIcons
-                    name="content-copy"
-                    size={moderateScale(20)}
-                    color={COLORS.charcoal}
-                  />
-                </TouchableOpacity>
+                {apiData?.guideDetails?.MAIL && (
+                  <TouchableOpacity
+                    onPress={() =>
+                      copyToClipboard('Email', apiData?.guideDetails?.MAIL)
+                    }
+                    activeOpacity={0.6}>
+                    <MaterialIcons
+                      name="content-copy"
+                      size={moderateScale(20)}
+                      color={COLORS.charcoal}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
               {/* // # ICONS  */}
               <View style={styles.phoneWhatsappCont}>
@@ -170,7 +173,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                   style={[styles.contactBtn, {backgroundColor: COLORS.dodger}]}>
                   <FontAwesome
                     name="phone"
-                    size={moderateScale(18)}
+                    size={moderateScale(23)}
                     color={COLORS.white}
                   />
                 </TouchableOpacity>
@@ -192,7 +195,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                   ]}>
                   <FontAwesome
                     name="whatsapp"
-                    size={moderateScale(20)}
+                    size={moderateScale(23)}
                     color={COLORS.white}
                   />
                 </TouchableOpacity>
@@ -210,7 +213,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                   style={[styles.contactBtn, {backgroundColor: COLORS.purple}]}>
                   <MaterialCommunityIcons
                     name="web"
-                    size={moderateScale(20)}
+                    size={moderateScale(23)}
                     color={COLORS.white}
                   />
                 </TouchableOpacity>
@@ -336,16 +339,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '60%',
+    width: '70%',
     alignSelf: 'center',
     marginTop: '8%',
   },
   contactBtn: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: horizontalScale(30),
-    height: horizontalScale(30),
-    borderRadius: moderateScale(20),
+    width: horizontalScale(40),
+    height: horizontalScale(40),
+    borderRadius: moderateScale(40),
   },
   connectWithTxt: {
     fontFamily: FONTS.urbanistMedium,

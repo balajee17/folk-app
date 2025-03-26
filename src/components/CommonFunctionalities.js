@@ -1,5 +1,20 @@
 import {Linking} from 'react-native';
 import Share from 'react-native-share';
+import {
+  CFCallback,
+  CFErrorResponse,
+  CFPaymentGatewayService,
+} from 'react-native-cashfree-pg-sdk';
+import {
+  CFDropCheckoutPayment,
+  CFEnvironment,
+  CFPaymentComponentBuilder,
+  CFPaymentModes,
+  CFSession,
+  CFThemeBuilder,
+} from 'cashfree-pg-api-contract';
+import {API} from '../services/API';
+import {COLORS} from '../styles/MyStyles';
 
 // @ Redirect Link
 export const RedirectURL = async (url, app = '') => {
@@ -81,3 +96,74 @@ export const toastThrottle = (func, limit) => {
 
 //  @ Mobile Regex
 export const mobileRegex = /^[1-9]\d{9}$/;
+
+// @ CashFree Payment Gateway
+export const CashFreePayment = (payment_session_id, order_id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      CFPaymentGatewayService.setCallback({
+        onVerify(orderID) {
+          console.log('ON_VERIFY', orderID);
+          resolve({type: 'ID', orderID});
+        },
+        onError(error, orderID) {
+          console.log('ON_ERROR', error, 'OD_ID', orderID);
+          reject({type: 'ID', orderID});
+        },
+      });
+
+      const session = new CFSession(
+        payment_session_id,
+        order_id,
+        CFEnvironment.SANDBOX,
+      );
+
+      const paymentModes = new CFPaymentComponentBuilder()
+        .add(CFPaymentModes.CARD)
+        .add(CFPaymentModes.NB)
+        .add(CFPaymentModes.WALLET)
+        .add(CFPaymentModes.UPI)
+        .build();
+
+      const theme = new CFThemeBuilder()
+        .setNavigationBarBackgroundColor(COLORS.header)
+        .setNavigationBarTextColor('#FFFFFF')
+        .setButtonBackgroundColor(COLORS.atlantis)
+        .setButtonTextColor('#FFFFFF')
+        .setPrimaryTextColor('#212121')
+        .setSecondaryTextColor('#757575')
+        .build();
+
+      const dropdown = new CFDropCheckoutPayment(session, paymentModes, theme);
+
+      CFPaymentGatewayService.doPayment(dropdown);
+    } catch (err) {
+      console.log('Payment_Gateway_err', err);
+      reject({type: 'ERROR', error: err});
+    }
+  });
+};
+
+export const GetPaymentStatus = async (profileId, orderId) => {
+  try {
+    const params = {
+      profileId,
+      orderId,
+    };
+    const response = await API.getPaymentStatus(params);
+
+    const {data, successCode, message} = response?.data;
+    console.log('Payment_status_response', data?.message);
+    if (successCode === 1) {
+      const returnData = {type: 'SUCCESS', message, data};
+      return returnData;
+    } else {
+      const returnData = {type: 'ERROR', message};
+      return returnData;
+    }
+  } catch (err) {
+    console.log('ERR-Apply_Coupon', err);
+    const returnData = {type: 'ERROR', message: ''};
+    return returnData;
+  }
+};
