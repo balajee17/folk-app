@@ -126,88 +126,10 @@ const PAYMENT = () => {
         }}>
         <Text style={{fontSize: 16, color: 'white'}}>cashFree</Text>
       </TouchableOpacity>
-      <ScrollView>
-        {Array(7)
-          .fill(7)
-          .map((_, index) => (
-            <View style={{marginTop: index > 0 ? '60%' : 0}}>
-              <Swiper
-                cards={sets[index]}
-                renderCard={card => {
-                  return (
-                    <View style={styles.card}>
-                      <ImageBackground
-                        source={{uri: card}}
-                        style={styles.image}>
-                        {/* Buttons: Like and Share */}
-                        <View style={styles.buttonsContainer}>
-                          <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonText}>Like</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonText}>Share</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </ImageBackground>
-                    </View>
-                  );
-                }}
-                onSwiped={cardIndex => {
-                  console.log(cardIndex);
-                }}
-                onSwipedAll={() => {
-                  console.log('onSwipedAll');
-                }}
-                cardIndex={0}
-                backgroundColor={'#0000'}
-                animateCardOpacity
-                disableBottomSwipe
-                disableTopSwipe
-                stackSeparation={-30}
-                stackScale={6}
-                horizontalSwipe
-                infinite
-                stackSize={3}></Swiper>
-            </View>
-          ))}
-      </ScrollView>
     </View>
   );
 };
 
 export default PAYMENT;
 
-const styles = StyleSheet.create({
-  card: {
-    // flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // position: 'relative',
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-  },
-  buttonsContainer: {
-    position: 'absolute',
-    bottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  button: {
-    backgroundColor: '#1E90FF',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-});
+const styles = StyleSheet.create({});

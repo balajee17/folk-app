@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -34,6 +35,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import AndroidBackHandler from '../components/BackHandler';
+import Swiper from 'react-native-deck-swiper';
 
 const Quotes = props => {
   const [quotesData, setQuotesData] = useState([
@@ -64,7 +66,7 @@ const Quotes = props => {
   const [shimmer, setShimmer] = useState(false);
 
   const animatedValue = useSharedValue(0);
-  const {navigatio, route} = props;
+  const {navigation, route} = props;
   // const {title} = route?.params;
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -137,37 +139,50 @@ const Quotes = props => {
                 })}
             </View>
           ) : (
-            // <FlatList
-            //   data={quotesData}
-            //   keyExtractor={(_, index) => index}
-            //   showsVerticalScrollIndicator={false}
-            //   renderItem={({item, index}) => {
-            //     return (
             <View style={styles.cardCont}>
-              {/* {quotesData.map((item, index) => {
-                return ( */}
-              {/* <> */}
               <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
                 Today
               </Text>
-              {newData?.map((quotesImg, QuotesIndex) => {
-                return (
-                  <SwipeCard
-                    currentIndex={currentIndex}
-                    setCurrentIndex={setCurrentIndex}
-                    animatedValue={animatedValue}
-                    newData={newData}
-                    setNewData={setNewData}
-                    item={quotesImg}
-                    index={QuotesIndex}
-                    imageSource={quotesData}
-                  />
-                );
-              })}
 
-              {/* // );
-            //   }}
-            // /> */}
+              <View style={{marginTop: index > 0 ? '60%' : 0}}>
+                <Swiper
+                  cards={sets[index]}
+                  renderCard={card => {
+                    return (
+                      <View style={styles.card}>
+                        <ImageBackground
+                          source={{uri: card}}
+                          style={styles.image}>
+                          {/* Buttons: Like and Share */}
+                          <View style={styles.buttonsContainer}>
+                            <TouchableOpacity style={styles.button}>
+                              <Text style={styles.buttonText}>Like</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button}>
+                              <Text style={styles.buttonText}>Share</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </ImageBackground>
+                      </View>
+                    );
+                  }}
+                  onSwiped={cardIndex => {
+                    console.log(cardIndex);
+                  }}
+                  onSwipedAll={() => {
+                    console.log('onSwipedAll');
+                  }}
+                  cardIndex={0}
+                  backgroundColor={'#0000'}
+                  animateCardOpacity
+                  disableBottomSwipe
+                  disableTopSwipe
+                  stackSeparation={-30}
+                  stackScale={6}
+                  horizontalSwipe
+                  infinite
+                  stackSize={3}></Swiper>
+              </View>
             </View>
           )}
         </View>
@@ -187,5 +202,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: moderateScale(10),
+  },
+  card: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+    overflow: 'hidden',
+    alignSelf: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+  },
+  buttonsContainer: {
+    position: 'absolute',
+    bottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  button: {
+    backgroundColor: COLORS.header,
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
   },
 });

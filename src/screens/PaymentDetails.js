@@ -127,7 +127,7 @@ const PaymentDetails = ({navigation, route}) => {
           />
         ) : (
           <Image
-            source={{uri: paymentDetails?.STATUS_IMAGE}}
+            source={{uri: paymentDetails?.STATUS_ICON}}
             style={styles.statusImg}
           />
         )}
