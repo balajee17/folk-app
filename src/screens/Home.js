@@ -1,6 +1,7 @@
 import {
   BackHandler,
   Image,
+  ImageBackground,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -36,6 +37,9 @@ import {useAppContext} from '../../App';
 import LinearGradientBg from '../components/LinearGradientBg';
 import {useToast} from 'react-native-toast-notifications';
 import {CustomPopup} from '../components/BackHandler';
+import Swiper from 'react-native-deck-swiper';
+import Feather from 'react-native-vector-icons/Feather';
+import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
 
 const Home = ({apiData, shimmer, refreshData}) => {
   const {setGlobalState} = useAppContext();
@@ -96,14 +100,9 @@ const Home = ({apiData, shimmer, refreshData}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          if (navigateTo === screenNames.quotes) {
-            toastMsg('Coming Soon...', 'info');
-            return true;
-          } else {
-            navigateScreen(navigateTo, {
-              title: title,
-            });
-          }
+          navigateScreen(navigateTo, {
+            title: title,
+          });
         }}
         style={styles.historyIcon}
         activeOpacity={0.6}>
@@ -176,7 +175,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
     );
   };
 
-  // @  Quotes
+  // @  Quotes - Swiper
   const Quotes = ({data, index}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
@@ -232,12 +231,81 @@ const Home = ({apiData, shimmer, refreshData}) => {
           />
         ) : (
           UPDATES?.length > 0 && (
-            <View style={styles.quotesImgCont}>
-              <Image
-                style={[MyStyles.quotesImg]}
-                source={{
-                  uri: UPDATES[0]?.link,
+            // <View style={styles.quotesImgCont}>
+            //   <Image
+            //     style={[MyStyles.quotesImg]}
+            //     source={{
+            //       uri: UPDATES[0]?.link,
+            //     }}
+            //   />
+            // </View>
+
+            <View style={styles.quotesCont}>
+              <Swiper
+                cards={UPDATES}
+                containerStyle={styles.swiperContainer}
+                cardStyle={styles.swiperCard}
+                renderCard={card => {
+                  return (
+                    <ImageBackground
+                      key={card?.id}
+                      source={{uri: card?.link}}
+                      style={styles.quotesImg}>
+                      {/* // # Share & Download Button  */}
+                      <View style={styles.shareDwnldCont}>
+                        <TouchableOpacity
+                          onPress={async () => {
+                            const result = await RedirectURL(
+                              item?.session_link,
+                            );
+                            if (!!result?.type) {
+                              toastMsg(result?.message, result?.type);
+                            }
+                          }}
+                          style={styles.quotesBtns}
+                          activeOpacity={0.6}>
+                          <Feather
+                            name="download"
+                            size={moderateScale(30)}
+                            color={COLORS.white}
+                          />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          onPress={() => {
+                            const result = ShareLink(item?.link);
+                            if (!!result?.type) {
+                              toastMsg(result?.message, result?.type);
+                            }
+                          }}
+                          style={styles.quotesBtns}
+                          activeOpacity={0.6}>
+                          <MaterialCommunityIcons
+                            name="share"
+                            size={moderateScale(30)}
+                            color={COLORS.white}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  );
                 }}
+                onSwiped={cardIndex => {
+                  console.log(cardIndex);
+                }}
+                onSwipedAll={() => {
+                  console.log('onSwipedAll');
+                }}
+                cardIndex={0}
+                backgroundColor={'#0000'}
+                animateCardOpacity
+                disableBottomSwipe
+                disableTopSwipe
+                stackSeparation={-20}
+                stackScale={6}
+                horizontalSwipe
+                infinite
+                stackSize={3}
               />
             </View>
           )
@@ -504,4 +572,45 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(30),
   },
   shimmerCont: {width: '70%', marginTop: verticalScale(15)},
+  quotesCont: {
+    height: horizontalScale(270),
+    width: windowWidth,
+  },
+  swiperContainer: {
+    width: windowWidth,
+    height: horizontalScale(350),
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  swiperCard: {
+    width: horizontalScale(300),
+    height: horizontalScale(300),
+    alignSelf: 'center',
+    borderRadius: moderateScale(10),
+    overflow: 'hidden',
+    marginTop: '-6%',
+    marginLeft: '5%',
+  },
+  quotesImg: {
+    width: horizontalScale(300),
+    height: horizontalScale(300),
+  },
+  shareDwnldCont: {
+    position: 'absolute',
+    bottom: horizontalScale(10),
+    width: '50%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  quotesBtns: {
+    backgroundColor: COLORS.shareBtn,
+    width: horizontalScale(45),
+    height: horizontalScale(45),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: moderateScale(30),
+  },
 });

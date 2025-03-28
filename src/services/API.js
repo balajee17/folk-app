@@ -5,7 +5,7 @@ const Access_Key = '856!@nHKRKkbngsppnsg@856';
 const deploymentURL = 1; // 1 for Test || 2 for Live
 
 const baseURL =
-  deploymentURL == 1
+  deploymentURL == 2
     ? 'http://192.168.1.11/FOLKDashboard/api'
     : 'https://dashboard.folknet.in/api';
 

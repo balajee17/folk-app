@@ -36,33 +36,15 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import AndroidBackHandler from '../components/BackHandler';
 import Swiper from 'react-native-deck-swiper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
+import {ShareLink} from '../components/CommonFunctionalities';
 
 const Quotes = props => {
-  const [quotesData, setQuotesData] = useState([
-    {
-      id: 1,
-      link: 'http://192.168.1.11/FOLKDashboard/public/inspiring-quotes/20_.jpg',
-    },
-    {
-      id: 2,
-      link: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6ym84uF34s_5vPN7GDhVj_c5Z9qnBmS6Egw&s',
-    },
-    {
-      id: 3,
-      link: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsy5J-mW2R2DLkJjBdqVNVABMJXzadf39KMQ&s',
-    },
-    {
-      id: 4,
-      link: 'https://i.pinimg.com/1200x/d8/f5/db/d8f5dbe5e4030e6c5fc9a611c849ec88.jpg',
-    },
-    {
-      id: 5,
-      link: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiiyvozGlueHLXLfZucK03IitAENUvoKsyOu9kXG-XrW9m7ieYokQSQFw5pRawNc8NI8J45CP1fq8MxYUiqp0wChhf-_aqQfykWv0THTD4v1zbaYez9d0HLAm7cQbGUQbnf5kGK6BVQJCA/s1600/srila+prabhupada+quotes+on+life-best+life+changing+words+by+srila+prabhupada-jnanakadlai.jpg',
-    },
-  ]);
+  const [quotesData, setQuotesData] = useState([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [newData, setNewData] = useState(quotesData);
+  // const [newData, setNewData] = useState(quotesData);
   const [shimmer, setShimmer] = useState(false);
 
   const animatedValue = useSharedValue(0);
@@ -76,8 +58,7 @@ const Quotes = props => {
   };
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
-
-    // getQuotesHistory();
+    getQuotesHistory();
     return AndroidBackHandler.removerHandler();
   }, []);
 
@@ -90,11 +71,6 @@ const Quotes = props => {
       const {history, SuccessCode, message} = response?.data;
       if (SuccessCode === 1) {
         setQuotesData(history);
-        // const filterImages = history?.map(item => {
-        //   return item?.images;
-        // });
-        // console.log('filterImages', filterImages);
-        // setNewData(filterImages);
       } else {
         setQuotesData([]);
         toastMsg(message, 'warning');
@@ -103,7 +79,6 @@ const Quotes = props => {
     } catch (err) {
       toastMsg('', 'error');
       setShimmer(false);
-
       console.log('ERR-Updates-screen', err);
     }
   };
@@ -116,9 +91,9 @@ const Quotes = props => {
           goBack={() => navigation.goBack()}
           titleName={screenNames.quotes}
         />
-        {/* // # Contents */}
 
-        <View style={MyStyles.contentContainer}>
+        {/* // # Contents */}
+        <View style={styles.contentCont}>
           {shimmer ? (
             <View>
               {Array(3)
@@ -139,51 +114,93 @@ const Quotes = props => {
                 })}
             </View>
           ) : (
-            <View style={styles.cardCont}>
-              <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
-                Today
-              </Text>
+            <FlatList
+              data={quotesData}
+              contentContainerStyle={{flexGrow: 1}}
+              keyExtractor={item => item?.id}
+              renderItem={({item}) => {
+                return (
+                  <>
+                    <Text
+                      style={[
+                        MyStyles.subTitleText,
+                        MyStyles.marTop3Per,
+                        {paddingHorizontal: horizontalScale(10)},
+                      ]}>
+                      {item?.day}
+                    </Text>
 
-              <View style={{marginTop: index > 0 ? '60%' : 0}}>
-                <Swiper
-                  cards={sets[index]}
-                  renderCard={card => {
-                    return (
-                      <View style={styles.card}>
-                        <ImageBackground
-                          source={{uri: card}}
-                          style={styles.image}>
-                          {/* Buttons: Like and Share */}
-                          <View style={styles.buttonsContainer}>
-                            <TouchableOpacity style={styles.button}>
-                              <Text style={styles.buttonText}>Like</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button}>
-                              <Text style={styles.buttonText}>Share</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </ImageBackground>
-                      </View>
-                    );
-                  }}
-                  onSwiped={cardIndex => {
-                    console.log(cardIndex);
-                  }}
-                  onSwipedAll={() => {
-                    console.log('onSwipedAll');
-                  }}
-                  cardIndex={0}
-                  backgroundColor={'#0000'}
-                  animateCardOpacity
-                  disableBottomSwipe
-                  disableTopSwipe
-                  stackSeparation={-30}
-                  stackScale={6}
-                  horizontalSwipe
-                  infinite
-                  stackSize={3}></Swiper>
-              </View>
-            </View>
+                    <View style={styles.quotesCont}>
+                      <Swiper
+                        cards={item?.images}
+                        containerStyle={styles.swiperContainer}
+                        cardStyle={styles.swiperCard}
+                        renderCard={card => {
+                          return (
+                            <ImageBackground
+                              source={{uri: card}}
+                              style={styles.quotesImg}>
+                              {/* // # Share & Download Button  */}
+                              <View style={styles.shareDwnldCont}>
+                                <TouchableOpacity
+                                  onPress={async () => {
+                                    const result = await RedirectURL(
+                                      item?.session_link,
+                                    );
+                                    if (!!result?.type) {
+                                      toastMsg(result?.message, result?.type);
+                                    }
+                                  }}
+                                  style={styles.quotesBtns}
+                                  activeOpacity={0.6}>
+                                  <Feather
+                                    name="download"
+                                    size={moderateScale(30)}
+                                    color={COLORS.white}
+                                  />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    const result = ShareLink(item?.link);
+                                    if (!!result?.type) {
+                                      toastMsg(result?.message, result?.type);
+                                    }
+                                  }}
+                                  style={styles.quotesBtns}
+                                  activeOpacity={0.6}>
+                                  <MaterialCommunityIcons
+                                    name="share"
+                                    size={moderateScale(30)}
+                                    color={COLORS.white}
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                            </ImageBackground>
+                          );
+                        }}
+                        onSwiped={cardIndex => {
+                          console.log(cardIndex);
+                        }}
+                        onSwipedAll={() => {
+                          console.log('onSwipedAll');
+                        }}
+                        cardIndex={0}
+                        backgroundColor={'#0000'}
+                        animateCardOpacity
+                        disableBottomSwipe
+                        disableTopSwipe
+                        stackSeparation={-20}
+                        stackScale={6}
+                        horizontalSwipe
+                        infinite
+                        stackSize={3}
+                      />
+                    </View>
+                  </>
+                );
+              }}
+            />
           )}
         </View>
       </SafeAreaView>
@@ -194,43 +211,49 @@ const Quotes = props => {
 export default Quotes;
 
 const styles = StyleSheet.create({
-  cardCont: {
-    alignSelf: 'center',
+  contentCont: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  quotesCont: {
+    height: horizontalScale(350),
     width: windowWidth,
-    height: verticalScale(350),
-    marginTop: '8%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: moderateScale(10),
   },
-  card: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-    overflow: 'hidden',
+  swiperContainer: {
+    width: windowWidth,
+    height: horizontalScale(300),
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
+  swiperCard: {
+    width: horizontalScale(300),
+    height: horizontalScale(300),
+    alignSelf: 'center',
+    borderRadius: moderateScale(10),
+    overflow: 'hidden',
+    marginTop: '-6%',
+    marginLeft: '5%',
   },
-  buttonsContainer: {
+  quotesImg: {
+    width: horizontalScale(300),
+    height: horizontalScale(300),
+  },
+  shareDwnldCont: {
     position: 'absolute',
-    bottom: 10,
+    bottom: horizontalScale(10),
+    width: '50%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
   },
-  button: {
-    backgroundColor: COLORS.header,
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
+  quotesBtns: {
+    backgroundColor: COLORS.shareBtn,
+    width: horizontalScale(45),
+    height: horizontalScale(45),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: moderateScale(30),
   },
 });
