@@ -1,5 +1,5 @@
 import {Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -23,12 +23,14 @@ import {useToast} from 'react-native-toast-notifications';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import AndroidBackHandler from '../components/BackHandler';
 import { CaptureImage, ChooseImage, ImageUploadModal } from '../components/CommonFunctionalities';
+import Spinner from '../components/Spinner';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId} = globalState;
+  const {profileId,reloadProfile} = globalState;
   const [activeTab, setActiveTab] = useState(1);
   const {navigation} = props;
   const [shimmer, setShimmer] = useState({
@@ -40,7 +42,10 @@ const Profile = props => {
   const [profileData, setProfileDetails] = useState({});
   const [attendanceData, setAttendanceData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
-  const [imagePicker,setImagePicker]=useState({visible:false,uploadType:'',path:'',name:''});
+  const [loader, setLoader] = useState(false);
+  const [imagePicker,setImagePicker]=useState(false);
+  const [reloadProfileVal,setReloadProfileVal]=useState(reloadProfile);
+
 
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
@@ -61,6 +66,18 @@ const Profile = props => {
 
     return AndroidBackHandler.removerHandler();
   }, []);
+
+   useFocusEffect(
+      useCallback(() => {
+        reloadProfileVal === 'Y' && reloadScreen();
+      }, [reloadProfileVal]),
+    );
+  
+    const reloadScreen = async () => {
+      await setGlobalState(prev => ({...prev, reloadProfile: 'N'}));
+      activeTab!==1 && setActiveTab(1);
+      getUserData(1);
+    };
 
   const checkProfileExist =
     typeof profileData === 'object' && Object.keys(profileData)?.length > 0;
@@ -123,7 +140,7 @@ const Profile = props => {
       setData(selTab, selTab === 1 ? {} : []);
       shimmerController('', false);
       toastMsg('', 'error');
-      console.log('ERR-Upcoming', err);
+      console.log('ERR-User Details', err);
     }
   };
 
@@ -135,11 +152,37 @@ const uploadType=async(type)=>{
 
   if(typeof result === 'object' && Object.keys(result).length > 0){
     console.log("result IF");
-    setImagePicker({visible:false,path:result?.path,name:result?.name,uploadType:''})
-    // API Call to send data
+    setImagePicker(false);
+
+    changeProfilePhoto(result);
   }
   else{ 
-    setImagePicker({visible:false,uploadType:'',path:'',name:''})
+    setImagePicker(false);
+  }
+}
+
+// # Change Photo API
+const changeProfilePhoto=async(imageData)=>{
+  try {
+   setLoader(true);
+    const params = {
+      profileId: profileId,
+      imgPath:imageData?.path,
+      imgName:imageData?.name
+    };
+    const response = await API.sendEditProfileDetails(params);
+    console.log('response_profile_photo', response?.data?.data);
+    const {data, successCode, message} = response?.data;
+    if (successCode === 1) {
+      setGlobalState((prev)=>({...prev,photo:data}));
+    } else {
+      toastMsg(message, 'warning');
+    }
+    setLoader(false);
+  } catch (err) {
+    setLoader(false);
+    toastMsg('', 'error');
+    console.log('ERR-Photo', err);
   }
 }
 
@@ -152,8 +195,10 @@ const uploadType=async(type)=>{
           goBack={() => navigation.goBack()}
           titleName={screenNames.profile}
         />
+
+        <Spinner spinnerVisible={loader} />
         {/* // # User Image */}
-        <Pressable disabled={shimmer?.primary} onPress={()=>setImagePicker((prev)=>({...prev,visible:true}))}  style={styles.usrImgCont}>
+        <Pressable disabled={shimmer?.primary} onPress={()=>setImagePicker(true)}  style={styles.usrImgCont}>
           {shimmer?.primary ? (
             <ImageShimmer
               width={horizontalScale(104)}
@@ -268,7 +313,7 @@ const uploadType=async(type)=>{
       ) : null}
 
       {/* // @ Pick Image upload */}
-      <ImageUploadModal visible={imagePicker?.visible} uploadType={uploadType} closeModal={()=>setImagePicker({uploadType:'',visible:false,path:''})} />
+      <ImageUploadModal visible={imagePicker} uploadType={uploadType} closeModal={()=>setImagePicker(false)} />
     </View>
   );
 };

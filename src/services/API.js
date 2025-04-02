@@ -2,10 +2,10 @@ import axios from 'axios';
 
 const Access_Key = '856!@nHKRKkbngsppnsg@856';
 
-const deploymentURL = 1; // 1 for Test || 2 for Live
+const deploymentURL = 2; // 1 for Test || 2 for Live
 
 const baseURL =
-  deploymentURL == 2
+  deploymentURL == 1
     ? 'http://192.168.1.11/FOLKDashboard/api'
     : 'https://dashboard.folknet.in/api';
 
@@ -196,7 +196,7 @@ export const API = {
   },
   // # getProfileDropdown
   getProfileDropdown() {
-    const profileDropdownURL = baseURL + '/';
+    const profileDropdownURL = baseURL + '/edit-profile-dropdown';
     const requestData = {accessKey: Access_Key};
     console.log(
       'URL profile Dropdown URL Data ',
@@ -208,9 +208,9 @@ export const API = {
   },
 
   //# sendEditProfileDetails
-  sendEditProfileDetails() {
-    const editProfileURL = baseURL + '/';
-    const requestData = {accessKey: Access_Key};
+  sendEditProfileDetails(data) {
+    const editProfileURL = baseURL + '/update-profile';
+    const requestData = {accessKey: Access_Key,...data};
     console.log(
       'URL Edit Profile  URL Data ',
       editProfileURL,

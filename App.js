@@ -31,6 +31,7 @@ const App = () => {
     photo: '',
     reloadEventList: 'N',
     reloadCoupon: 'N',
+    reloadProfile:'N'
   });
 
   useEffect(() => {

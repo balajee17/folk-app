@@ -159,11 +159,9 @@ const EventDetails = props => {
         isPaidEvent: eventDetails?.is_paid_event,
         pgName: 'cashFree',
         pgMode: 'Online',
-        paidAmount:
-          eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
+        paidAmount: eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
         name: globalState?.userName,
         mobileNumber: globalState?.mobileNumber,
-        transactionStatus: eventDetails?.is_paid_event === 'Y' ? 'I' : 'S',
       };
       const response = await API.eventRegister(params);
 
@@ -543,7 +541,7 @@ const EventDetails = props => {
                     : eventDetails?.Is_registered === 'Y'
                     ? 'Registered'
                     : eventDetails?.is_paid_event === 'Y'
-                    ? 'Pay Now to Register'
+                    ? 'Pay Now'
                     : 'Register'}
                 </Text>
               </TouchableOpacity>

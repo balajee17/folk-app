@@ -45,7 +45,7 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate(screenNames.editProfile);
+                navigation.navigate(screenNames.editProfile,{userData:profileDetails});
               }}
               activeOpacity={0.8}
               style={styles.editIcnBtn}>

@@ -87,6 +87,8 @@ const PaymentDetails = ({navigation, route}) => {
     }
   };
 
+  console.log('paymentDetails?.amountDetails',paymentDetails?.amountDetails)
+
   return (
     <>
       <CommonStatusBar bgColor={COLORS.header} />

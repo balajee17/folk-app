@@ -1,4 +1,5 @@
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -25,35 +26,36 @@ import FloatingInput from '../components/FloatingInput';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
+import { CaptureImage, ChooseImage, ImageUploadModal } from '../components/CommonFunctionalities';
 
-const EditProfile = ({navigation}) => {
-  const {globalState} = useAppContext();
+const EditProfile = ({navigation,route}) => {
+  const {globalState,setGlobalState} = useAppContext();
+
+  const {userData} = route?.params;
+
   const [loader, setLoader] = useState(false);
   const [profileDetails, setProfileDetails] = useState({
-    country: 'India',
-    city: 'Madurai',
-    state: 'Tamil Nadu',
-    address: 'uakyfkjhvkjhvjvhj jlhaglsfjhnn,ahafljhvh',
+    country: {label:'',value:''},
+    city: '',
+    state: {label:'',value:''},
+    address: '',
     highestQualification: '',
-    occupation: '',
+    occupation: {label:'',value:''},
     designation: '',
-    livingStatus: '',
-    maritalStatus: '',
+    livingStatus: {label:'',value:''},
+    maritalStatus: {label:'',value:''},
+    passportPhoto:''
   });
-
-  const [dropdownData, setDropdownData] = useState([
+  const [imagePicker, setImagePicker] = useState({visible:false,path:''});
+  const [dropdownData, setDropdownData] = useState(
     {
-      country: [
-        {label: 'India', value: 'India'},
-        {label: 'Sri Lanka', value: 'Sri Lanka'},
-        {label: 'Russia', value: 'Russia'},
-      ],
-      state: ['Tamil Nadu', 'Kerala', 'Gujarat'],
-      livingStatus: ['Independant', 'With Parents'],
-      maritalStatus: ['Married', 'Single'],
-      occupation: ['Student', 'Self-Employed'],
-    },
-  ]);
+      country: [],
+      state: [],
+      livingStatus: [],
+      maritalStatus: [],
+      occupation: [],
+    }
+  );
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -74,7 +76,8 @@ const EditProfile = ({navigation}) => {
       console.log('get Profile Dropdown_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-        setDropdownData(data);
+        setDropdownData(data?.dropdown);
+        setProfileDetails(data?.profileDetails);
       } else {
         toastMsg(message, 'warning');
       }
@@ -90,13 +93,25 @@ const EditProfile = ({navigation}) => {
   const sendEditProfile = async () => {
     try {
       setLoader(true);
-      const params = profileDetails;
+      const params = {
+        country:profileDetails?.country?.value,
+        city: profileDetails?.city,
+        state:profileDetails?.state?.value,
+        address: profileDetails?.address,
+        highestQualification: profileDetails?.highestQualification,
+        occupation:profileDetails?.occupation?.value,
+        designation: profileDetails?.designation,
+        livingStatus:profileDetails?.livingStatus?.value,
+        maritalStatus:profileDetails?.maritalStatus?.value,
+        passportPhoto:profileDetails?.passportPhoto
+      };
       const response = await API.sendEditProfileDetails(params);
 
       console.log('Edit Profile_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         setProfileDetails(data);
+        await setGlobalState((prev)=>({...prev,reloadProfile:'Y'}));
       } else {
         toastMsg(message, 'warning');
       }
@@ -136,6 +151,19 @@ const EditProfile = ({navigation}) => {
     }));
   };
 
+  // # Upload Type 
+  const uploadType=async(type)=>{
+  
+    const result = type==='C' ? await CaptureImage() : await ChooseImage();
+  
+    if(typeof result === 'object' && Object.keys(result).length > 0){
+      setImagePicker({visible:false,path:result?.path});
+    }
+    else{ 
+      setImagePicker({visible:false,path:''});
+    }
+  }
+
   return (
     <Container>
       <SafeAreaView style={MyStyles.flex1}>
@@ -149,7 +177,7 @@ const EditProfile = ({navigation}) => {
           {/* // # Country */}
           <FloatingInput
             type="dropdown"
-            data={dropdownData?.[0]?.country}
+            data={dropdownData?.country}
             label={'Country'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.country}
@@ -171,7 +199,7 @@ const EditProfile = ({navigation}) => {
           {/* // # State */}
           <FloatingInput
             type="dropdown"
-            data={dropdownData?.[0]?.state}
+            data={dropdownData?.state}
             label={'State'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.state}
@@ -212,7 +240,7 @@ const EditProfile = ({navigation}) => {
           {/* // # Living Status */}
           <FloatingInput
             type="dropdown"
-            data={dropdownData?.[0]?.livingStatus}
+            data={dropdownData?.livingStatus}
             label={'Living Status'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.livingStatus}
@@ -231,7 +259,7 @@ const EditProfile = ({navigation}) => {
           {/* // # Marital Status */}
           <FloatingInput
             type="dropdown"
-            data={dropdownData?.[0]?.maritalStatus}
+            data={dropdownData?.maritalStatus}
             label={'Marital Status'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.maritalStatus}
@@ -262,7 +290,7 @@ const EditProfile = ({navigation}) => {
           {/* // # Occupation */}
           <FloatingInput
             type="dropdown"
-            data={dropdownData?.[0]?.occupation}
+            data={dropdownData?.occupation}
             label={'Occupation'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.occupation}
@@ -290,6 +318,29 @@ const EditProfile = ({navigation}) => {
             cntnrStyle={styles.dropdownCont}
           />
 
+          {/* // # Passport size photo */}
+<View style={styles.passportCont}>
+          {!!profileDetails?.passportPhoto?
+          <>
+          <Image
+            style={styles.passportImg}
+            source={{
+              uri: profileDetails?.passportPhoto,
+            }}
+          />
+          <TouchableOpacity onPress={()=>setImagePicker((prev)=>({...prev,visible:true}))} activeOpacity={0.8} style={styles.changeBtn}>
+            <Text style={styles.submitTxt}>Change</Text>
+          </TouchableOpacity>
+          </>
+           :
+          <TouchableOpacity  onPress={()=>setImagePicker((prev)=>({...prev,visible:true}))} activeOpacity={0.8} style={styles.addPhotoBtn}>
+            <MaterialCommunityIcons name='plus' color={COLORS.osloGrey} size={moderateScale(25)} />
+            <Text style={styles.addPhototTxt}>Upload Passport size photo</Text>
+          </TouchableOpacity>
+          }
+          </View>
+
+       {/* // # Submit Button */}
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => sendEditProfile()}
@@ -297,6 +348,9 @@ const EditProfile = ({navigation}) => {
             <Text style={styles.submitTxt}>Submit</Text>
           </TouchableOpacity>
         </ScrollView>
+
+        {/* // @ Pick Image upload */}
+        <ImageUploadModal visible={imagePicker?.visible} uploadType={uploadType} closeModal={()=>setImagePicker((prev)=>({...prev,visible:false}))} />
       </SafeAreaView>
     </Container>
   );
@@ -334,4 +388,21 @@ const styles = StyleSheet.create({
     fontSize: SIZES.l,
     color: COLORS.white,
   },
+  passportCont:{  
+    marginTop: "5%",
+    backgroundColor: COLORS.dropDownBg,
+    width: "90%",
+    borderRadius: moderateScale(10),
+    alignSelf:'center',
+    justifyContent:'center',alignItems:'center',
+    padding: "4%"
+  },
+  passportImg:{
+    width: horizontalScale(200),
+    height: horizontalScale(200),
+    borderRadius: moderateScale(20),
+  },
+  changeBtn:{backgroundColor:COLORS.atlantis,width:horizontalScale(70),height:horizontalScale(30),borderRadius:moderateScale(6),alignItems:'center',justifyContent:'center',marginTop:'10%'},
+  addPhotoBtn:{width:horizontalScale(100),height:horizontalScale(100),borderRadius:moderateScale(6), borderWidth:1,borderStyle:'dashed',borderColor:COLORS.osloGrey,justifyContent:'center',alignItems:'center'},
+  addPhototTxt:{fontFamily:FONTS.urbanistRegular,fontSize:SIZES.s,color:COLORS.osloGrey,marginTop:'10%',textAlign:'center'}
 });
