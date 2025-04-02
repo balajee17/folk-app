@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
   },
   shimmerCont: {width: '70%', marginTop: verticalScale(15)},
   quotesCont: {
-    height: horizontalScale(270),
+    height: horizontalScale(330),
     width: windowWidth,
   },
   swiperContainer: {

@@ -1,4 +1,4 @@
-import {Linking} from 'react-native';
+import {Image, Linking, Modal, Pressable, Text, TouchableOpacity, View} from 'react-native';
 import Share from 'react-native-share';
 import {
   CFCallback,
@@ -14,7 +14,11 @@ import {
   CFThemeBuilder,
 } from 'cashfree-pg-api-contract';
 import {API} from '../services/API';
-import {COLORS} from '../styles/MyStyles';
+import {COLORS, FONTS, moderateScale, MyStyles, screenHeight} from '../styles/MyStyles';
+import ImagePicker from 'react-native-image-crop-picker';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
 
 // @ Redirect Link
 export const RedirectURL = async (url, app = '') => {
@@ -167,3 +171,101 @@ export const GetPaymentStatus = async (profileId, orderId) => {
     return returnData;
   }
 };
+
+ // # Choose Image
+ export const  ChooseImage = async() => {
+    const result = await ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+      includeBase64: true,
+      compressImageQuality: 0.5,
+    });
+      const path = result.path;
+    const fileName = path.substring(path.lastIndexOf('/') + 1);
+
+   const imageData ={
+    path: result?.data,
+      name: fileName,
+    };
+    return imageData;
+    
+  };
+
+  // # Capture Image
+  export const CaptureImage = async () => {
+    const result = await ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+      includeBase64: true,
+      compressImageQuality: 0.5,
+    });
+    const path = result.path;
+    const fileName = path.substring(path.lastIndexOf('/') + 1);
+
+   const imageData ={
+      path: result?.data,
+      name: fileName,
+    };
+    console.log('imageData',imageData);
+    return imageData;
+  };
+
+  export const ImageUploadModal=({visible,closeModal,uploadType})=>{
+    return(
+      <Modal visible={visible} transparent animationType={'slide'}>
+      <Pressable
+        onPress={closeModal}
+        style={MyStyles.modal}>
+        <Pressable
+          style={MyStyles.container}>
+          <TouchableOpacity
+            onPress={closeModal}
+            activeOpacity={0.7}
+            style={MyStyles.closeBtn}>
+            <MaterialCommunityIcons
+              name="close"
+              color={COLORS.header}
+              size={moderateScale(30)}
+            />
+          </TouchableOpacity>
+          <Text
+            style={MyStyles.modalTitle}>
+            Media Upload Type
+          </Text>
+          <View
+            style={MyStyles.uploadTypeCont}>
+            <Pressable
+              onPress={()=>uploadType('C')}
+              style={MyStyles.cameraBtn}>
+              <Image
+                resizeMode="contain"
+                source={require('../assets/images/camera.png')}
+                style={{width: 35, height: 35}}
+              />
+              <Text
+                style={MyStyles.btnTxt}>
+                Capture
+              </Text>
+            </Pressable>
+            <Pressable
+             onPress={()=>uploadType('G')}
+              style={MyStyles.cameraBtn}>
+              <Image
+                resizeMode="contain"
+                source={require('../assets/images/gallery.png')}
+                style={{width: 35, height: 35}}
+              />
+              <Text
+                style={MyStyles.btnTxt}>
+                Choose
+              </Text>
+            </Pressable>
+            
+          </View>
+        </Pressable>
+      </Pressable>
+    </Modal>
+    )
+  }

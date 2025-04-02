@@ -29,6 +29,7 @@
     "react-native-element-dropdown": "^2.12.4",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "2.21.2",
+    "react-native-image-crop-picker": "^0.42.0",
     "react-native-linear-gradient": "2.8.3",
     "react-native-pager-view": "^6.7.0",
     "react-native-permissions": "^5.2.5",
@@ -47,7 +48,7 @@
     "react-native-youtube": "^2.0.2",
     "react-native-youtube-iframe": "^2.3.0",
     "redux": "5.0.1",
-    "sp-react-native-in-app-updates": "^1.4.0"
+    "sp-react-native-in-app-updates": "1.4.0"
   },
   "devDependencies": {
     "@babel/core": "7.20.0",

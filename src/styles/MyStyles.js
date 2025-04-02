@@ -354,4 +354,58 @@ export let MyStyles = {
     fontFamily: FONTS.urbanistSemiBold,
     width: '80%',
   },
+
+  // # Image Upload Modal Styles
+  modal:{
+    height: '100%',
+    width: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  container:{
+    backgroundColor: COLORS.white,
+    padding: '4%',
+    borderTopLeftRadius: moderateScale(25),
+    borderTopRightRadius: moderateScale(25),          
+    width: screenWidth,
+    justifyContent: 'space-around',
+  },
+  closeBtn: {
+    alignItems: 'center',
+    width: 30,
+    height: 30,
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+  },
+  modalTitle:{
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.subTitle,
+    color: COLORS.black,
+    textAlign: 'center',
+  },
+  uploadTypeCont:{marginVertical: screenHeight * 0.04,  alignItems: 'center',flexDirection:'row',justifyContent:'space-around'},
+  cameraBtn:{
+    borderWidth: 1,
+    borderColor: COLORS.dropDownBg,
+    paddingVertical: 15,
+    width:  '35%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    backgroundColor: COLORS.dropDownBg,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  btnTxt:{
+    fontFamily: FONTS.urbanistMedium,
+    color: COLORS.black,
+    marginTop: verticalScale(8),
+  },
 };

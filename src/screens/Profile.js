@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   COLORS,
@@ -22,6 +22,8 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import AndroidBackHandler from '../components/BackHandler';
+import { CaptureImage, ChooseImage, ImageUploadModal } from '../components/CommonFunctionalities';
+
 
 const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
@@ -38,6 +40,7 @@ const Profile = props => {
   const [profileData, setProfileDetails] = useState({});
   const [attendanceData, setAttendanceData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
+  const [imagePicker,setImagePicker]=useState({visible:false,uploadType:'',path:'',name:''});
 
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
@@ -124,6 +127,22 @@ const Profile = props => {
     }
   };
 
+ 
+// # Upload Type 
+const uploadType=async(type)=>{
+
+  const result = type==='C' ? await CaptureImage() : await ChooseImage();
+
+  if(typeof result === 'object' && Object.keys(result).length > 0){
+    console.log("result IF");
+    setImagePicker({visible:false,path:result?.path,name:result?.name,uploadType:''})
+    // API Call to send data
+  }
+  else{ 
+    setImagePicker({visible:false,uploadType:'',path:'',name:''})
+  }
+}
+
   return (
     <View style={MyStyles.contentCont}>
       <LinearGradient
@@ -134,7 +153,7 @@ const Profile = props => {
           titleName={screenNames.profile}
         />
         {/* // # User Image */}
-        <View style={styles.usrImgCont}>
+        <Pressable disabled={shimmer?.primary} onPress={()=>setImagePicker((prev)=>({...prev,visible:true}))}  style={styles.usrImgCont}>
           {shimmer?.primary ? (
             <ImageShimmer
               width={horizontalScale(104)}
@@ -149,7 +168,7 @@ const Profile = props => {
               style={styles.usrImg}
             />
           )}
-        </View>
+        </Pressable>
         {/* // # User Name */}
         {shimmer?.primary ? (
           <TitleShimmer
@@ -247,6 +266,9 @@ const Profile = props => {
           paymentHistory={paymentData}
         />
       ) : null}
+
+      {/* // @ Pick Image upload */}
+      <ImageUploadModal visible={imagePicker?.visible} uploadType={uploadType} closeModal={()=>setImagePicker({uploadType:'',visible:false,path:''})} />
     </View>
   );
 };
