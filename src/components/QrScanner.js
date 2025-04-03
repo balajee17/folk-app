@@ -39,8 +39,14 @@ const QrScanner = props => {
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
+
+
     return AndroidBackHandler.removerHandler();
+
+
   }, []);
+
+ 
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -66,7 +72,8 @@ const QrScanner = props => {
           activeEventTab: 1,
         }));
         toastMsg(message, 'success');
-        navigation.navigate(screenNames.drawerNavigation);
+        await setGlobalState((prev)=>({...prev,reloadEventList:'Y',activeEventTab:1}));
+        navigation.goBack();
       } else {
         toastMsg(message, 'warning');
       }

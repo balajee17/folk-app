@@ -46,7 +46,7 @@ const AttendanceHistory = ({shimmer, attendanceHistory}) => {
           {/* // # Event Image */}
           <Image
             source={{
-              uri: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1740649285~exp=1740652885~hmac=e3b71acbedc8749e46bba369cb9356231a0aecdaea4f8b197ef34c7cb2fc929b&w=740',
+              uri: item?.EVENT_IMAGE,
             }}
             style={styles.eventImg}
           />

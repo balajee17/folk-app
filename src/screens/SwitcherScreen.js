@@ -52,6 +52,7 @@ const SwitcherScreen = ({navigation, route}) => {
   const [exitAppModal, setExitAppModal] = useState(false);
   const [reloadEventVal, setReloadEventVal] = useState(reloadEventList);
 
+
   const toastMsg = (msg, type) => {
     toast.show(msg, {
       type,
@@ -143,8 +144,11 @@ const SwitcherScreen = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      reloadEventVal === 'Y' &&
+      console.log('FOCUS_EVENT',reloadEventList,activeEventTab);
+      (reloadEventVal === 'Y') &&
         (setEventList({upcoming: [], registered: []}), getUpcomingList());
+
+      reloadEventList ==='Y' && activeEventTab === 1 && getRegisteredList()
     }, [reloadEventVal]),
   );
 
@@ -255,6 +259,8 @@ const SwitcherScreen = ({navigation, route}) => {
       toastMsg('', 'error');
     }
   };
+
+  console.log('reloadEventList',reloadEventList);
 
   return (
     <Container>

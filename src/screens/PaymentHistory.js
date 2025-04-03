@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
 import React from 'react';
 import {
   COLORS,
@@ -59,7 +59,8 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
       </View>
     </View>
   ) : (
-    paymentHistory?.map((item, index) => (
+    <ScrollView contentContainerStyle={{paddingBottom:'3%'}}>
+    {paymentHistory?.map((item, index) => (
       <TouchableOpacity
         key={index}
         onPress={() => navigateTo(screenNames.paymentDetails, item?.PAYMENT_ID)}
@@ -106,12 +107,19 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
                   : 'exclamation-circle'
               }
               size={moderateScale(20)}
-              color={COLORS.moss}
+              color={
+                item?.TRANSACTION_STATUS === 'S'
+                  ? COLORS.successPB
+                  : item?.TRANSACTION_STATUS === 'F'
+                  ? COLORS.errorPB
+                  : COLORS.warningPB
+              }
             />
           </View>
         </View>
       </TouchableOpacity>
-    ))
+    ))}
+      </ScrollView>
   );
 };
 

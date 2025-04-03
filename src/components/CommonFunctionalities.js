@@ -185,8 +185,9 @@ export const GetPaymentStatus = async (profileId, orderId) => {
     const fileName = path.substring(path.lastIndexOf('/') + 1);
 
    const imageData ={
-    path: result?.data,
-      name: fileName,
+    base64: result?.data,
+    name: fileName,
+    path:result?.path,
     };
     return imageData;
     
@@ -205,8 +206,9 @@ export const GetPaymentStatus = async (profileId, orderId) => {
     const fileName = path.substring(path.lastIndexOf('/') + 1);
 
    const imageData ={
-      path: result?.data,
+      base64: result?.data,
       name: fileName,
+      path:result?.path,
     };
     console.log('imageData',imageData);
     return imageData;

@@ -28,25 +28,24 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import { CaptureImage, ChooseImage, ImageUploadModal } from '../components/CommonFunctionalities';
 
-const EditProfile = ({navigation,route}) => {
+const EditProfile = ({navigation}) => {
   const {globalState,setGlobalState} = useAppContext();
-
-  const {userData} = route?.params;
+  const {profileId}=globalState;
 
   const [loader, setLoader] = useState(false);
   const [profileDetails, setProfileDetails] = useState({
-    country: {label:'',value:''},
+    country:  '',
     city: '',
-    state: {label:'',value:''},
+    state: '',
     address: '',
     highestQualification: '',
-    occupation: {label:'',value:''},
+    occupation: '',
     designation: '',
-    livingStatus: {label:'',value:''},
-    maritalStatus: {label:'',value:''},
+    livingStatus: '',
+    maritalStatus: '',
     passportPhoto:''
   });
-  const [imagePicker, setImagePicker] = useState({visible:false,path:''});
+  const [imagePicker, setImagePicker] = useState(false);
   const [dropdownData, setDropdownData] = useState(
     {
       country: [],
@@ -69,15 +68,21 @@ const EditProfile = ({navigation,route}) => {
   }, []);
 
   // # Get Profile & Dropdown Data
-  const getProfileDetails = async () => {
+  const getProfileDetails = async (countryId) => {
     try {
-      const response = await API.getProfileDropdown();
+      const params=countryId?{countryId}:{}
+      const response = await API.getProfileDropdown(params);
 
       console.log('get Profile Dropdown_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
+       if(countryId){ 
+        setDropdownData((prev)=>({...prev,state:data?.dropdown?.state}));
+      }
+      else{
         setDropdownData(data?.dropdown);
         setProfileDetails(data?.profileDetails);
+      }
       } else {
         toastMsg(message, 'warning');
       }
@@ -94,15 +99,16 @@ const EditProfile = ({navigation,route}) => {
     try {
       setLoader(true);
       const params = {
-        country:profileDetails?.country?.value,
+        profileId:profileId,
+        country:profileDetails?.country,
         city: profileDetails?.city,
-        state:profileDetails?.state?.value,
+        state:profileDetails?.state,
         address: profileDetails?.address,
         highestQualification: profileDetails?.highestQualification,
-        occupation:profileDetails?.occupation?.value,
+        occupation:profileDetails?.occupation,
         designation: profileDetails?.designation,
-        livingStatus:profileDetails?.livingStatus?.value,
-        maritalStatus:profileDetails?.maritalStatus?.value,
+        livingStatus:profileDetails?.livingStatus,
+        maritalStatus:profileDetails?.maritalStatus,
         passportPhoto:profileDetails?.passportPhoto
       };
       const response = await API.sendEditProfileDetails(params);
@@ -110,7 +116,9 @@ const EditProfile = ({navigation,route}) => {
       console.log('Edit Profile_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-        setProfileDetails(data);
+        toastMsg(message, 'success');
+        setProfileDetails(data?.profileDetails);
+        setDropdownData(data?.dropdown)
         await setGlobalState((prev)=>({...prev,reloadProfile:'Y'}));
       } else {
         toastMsg(message, 'warning');
@@ -120,27 +128,6 @@ const EditProfile = ({navigation,route}) => {
       toastMsg('', 'error');
       setLoader(false);
       console.log('ERR-Edit Profile-screen', err);
-    }
-  };
-
-  const getStateList = async () => {
-    try {
-      setLoader(true);
-      const params = profileDetails;
-      const response = await API.getStateLists(params);
-
-      console.log('state List response', response?.data);
-      const {data, successCode, message} = response?.data;
-      if (successCode === 1) {
-        setDropdownData(prev => ({...prev, state: data}));
-      } else {
-        toastMsg(message, 'warning');
-      }
-      setLoader(false);
-    } catch (err) {
-      toastMsg('', 'error');
-      setLoader(false);
-      console.log('ERR-state List-screen', err);
     }
   };
 
@@ -157,10 +144,12 @@ const EditProfile = ({navigation,route}) => {
     const result = type==='C' ? await CaptureImage() : await ChooseImage();
   
     if(typeof result === 'object' && Object.keys(result).length > 0){
-      setImagePicker({visible:false,path:result?.path});
+      setImagePicker(false);
+      setProfileDetails((prev)=>({...prev,passportPhoto:result?.path}));
     }
     else{ 
-      setImagePicker({visible:false,path:''});
+      setImagePicker(false);
+      toastMsg('', 'error');
     }
   }
 
@@ -185,7 +174,7 @@ const EditProfile = ({navigation,route}) => {
               handleChange('country', item);
               setDropdownData(prev => ({...prev, state: []}));
               handleChange('state', '');
-              getStateList();
+              getProfileDetails(item?.value);
             }}
             cntnrStyle={styles.dropdownCont}
             renderRightIcon={() => (
@@ -319,7 +308,7 @@ const EditProfile = ({navigation,route}) => {
           />
 
           {/* // # Passport size photo */}
-<View style={styles.passportCont}>
+          <View style={styles.passportCont}>
           {!!profileDetails?.passportPhoto?
           <>
           <Image
@@ -328,19 +317,19 @@ const EditProfile = ({navigation,route}) => {
               uri: profileDetails?.passportPhoto,
             }}
           />
-          <TouchableOpacity onPress={()=>setImagePicker((prev)=>({...prev,visible:true}))} activeOpacity={0.8} style={styles.changeBtn}>
+          <TouchableOpacity onPress={()=>setImagePicker(true)} activeOpacity={0.8} style={styles.changeBtn}>
             <Text style={styles.submitTxt}>Change</Text>
           </TouchableOpacity>
           </>
            :
-          <TouchableOpacity  onPress={()=>setImagePicker((prev)=>({...prev,visible:true}))} activeOpacity={0.8} style={styles.addPhotoBtn}>
+          <TouchableOpacity  onPress={()=>setImagePicker(true)} activeOpacity={0.8} style={styles.addPhotoBtn}>
             <MaterialCommunityIcons name='plus' color={COLORS.osloGrey} size={moderateScale(25)} />
             <Text style={styles.addPhototTxt}>Upload Passport size photo</Text>
           </TouchableOpacity>
           }
           </View>
 
-       {/* // # Submit Button */}
+          {/* // # Submit Button */}
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => sendEditProfile()}
@@ -350,7 +339,7 @@ const EditProfile = ({navigation,route}) => {
         </ScrollView>
 
         {/* // @ Pick Image upload */}
-        <ImageUploadModal visible={imagePicker?.visible} uploadType={uploadType} closeModal={()=>setImagePicker((prev)=>({...prev,visible:false}))} />
+        <ImageUploadModal visible={imagePicker} uploadType={uploadType} closeModal={()=>setImagePicker(false)} />
       </SafeAreaView>
     </Container>
   );

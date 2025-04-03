@@ -83,8 +83,8 @@ const Splash = ({navigation}) => {
       }
       navigation.replace(screenNames.drawerNavigation);
     } catch (error) {
-      navigation.replace(screenNames.drawerNavigation);
       console.log('ERROR_FCM_Update', error);
+      navigation.replace(screenNames.drawerNavigation);
     }
   };
 

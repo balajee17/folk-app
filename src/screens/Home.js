@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -180,6 +180,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
     const UPDATES = data?.updates;
     const TITLE = data?.title;
     const icnLink = data?.icon;
+
     return (
       <>
         <View
@@ -245,14 +246,15 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 cards={UPDATES}
                 containerStyle={styles.swiperContainer}
                 cardStyle={styles.swiperCard}
-                renderCard={card => {
+                renderCard={(card) => {
+
                   return (
                     <ImageBackground
                       key={card?.id}
                       source={{uri: card?.link}}
                       style={styles.quotesImg}>
                       {/* // # Share & Download Button  */}
-                      <View style={styles.shareDwnldCont}>
+                <View style={styles.shareDwnldCont}>
                         <TouchableOpacity
                           onPress={async () => {
                             const result = await RedirectURL(
@@ -293,9 +295,9 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 onSwiped={cardIndex => {
                   console.log(cardIndex);
                 }}
-                onSwipedAll={() => {
-                  console.log('onSwipedAll');
-                }}
+                // onSwipedAll={() => {
+                //   console.log('onSwipedAll');
+                // }}
                 cardIndex={0}
                 backgroundColor={'#0000'}
                 animateCardOpacity
@@ -355,7 +357,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
           UPDATES?.length > 0 &&
           UPDATES?.map((updateItem, updateIndex) => {
             return (
-              <>
+              <View key={updateIndex}>
                 {!!updateItem?.link && (
                   <View key={updateItem?.id} style={[styles.quotesImgCont]}>
                     <Image
@@ -407,7 +409,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                     </LinearGradient>
                   </View>
                 )}
-              </>
+              </View>
             );
           })}
 
@@ -535,7 +537,6 @@ const styles = StyleSheet.create({
   dailyDarshanCont: {
     width: '100%',
   },
-
   textHstryIcon: {
     width: '100%',
     flexDirection: 'row',

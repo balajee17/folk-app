@@ -256,7 +256,7 @@ const PaymentDetails = ({navigation, route}) => {
                     />
                   </View>
                 ))
-            : paymentDetails?.amountDetails?.map((item, index) => (
+            :Array.isArray(paymentDetails?.amountDetails) && paymentDetails?.amountDetails?.map((item, index) => (
                 <View style={styles.txidCopyCont}>
                   <Text
                     numberOfLines={1}

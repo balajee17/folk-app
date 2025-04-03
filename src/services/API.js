@@ -14,7 +14,7 @@ export const API = {
   checkFCMId(data) {
     const getFCM_URL = baseURL + '/check-fcm';
     const requestData = {accessKey: Access_Key, ...data};
-    console.log('URL get OTPURL Data ', getFCM_URL, ' data ', requestData);
+    console.log('CHECK FCM ID ', getFCM_URL, ' data ', requestData);
     return axios.post(getFCM_URL, requestData);
   },
   // # Get OTP

@@ -158,6 +158,7 @@ const uploadType=async(type)=>{
   }
   else{ 
     setImagePicker(false);
+    toastMsg('','error');
   }
 }
 
@@ -167,14 +168,15 @@ const changeProfilePhoto=async(imageData)=>{
    setLoader(true);
     const params = {
       profileId: profileId,
-      imgPath:imageData?.path,
-      imgName:imageData?.name
+      profilePhoto:imageData?.base64,
     };
     const response = await API.sendEditProfileDetails(params);
-    console.log('response_profile_photo', response?.data?.data);
-    const {data, successCode, message} = response?.data;
+    console.log('response_profile_photo', response?.data);
+    const {profileDetails, successCode, message} = response?.data;
+
     if (successCode === 1) {
-      setGlobalState((prev)=>({...prev,photo:data}));
+      toastMsg(message, 'success');
+       setGlobalState((prev)=>({...prev,photo:profileDetails?.profilePhoto}));
     } else {
       toastMsg(message, 'warning');
     }
@@ -185,6 +187,8 @@ const changeProfilePhoto=async(imageData)=>{
     console.log('ERR-Photo', err);
   }
 }
+
+console.log('globalState?.photo',globalState?.photo)
 
   return (
     <View style={MyStyles.contentCont}>
@@ -208,7 +212,7 @@ const changeProfilePhoto=async(imageData)=>{
           ) : (
             <Image
               source={{
-                uri: profileData?.primaryDetails?.Profile_image,
+                uri: globalState?.photo,
               }}
               style={styles.usrImg}
             />
