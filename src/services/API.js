@@ -195,9 +195,9 @@ export const API = {
     return axios.post(notifyListURL, requestData);
   },
   // # getProfileDropdown
-  getProfileDropdown() {
+  getProfileDropdown(data) {
     const profileDropdownURL = baseURL + '/edit-profile-dropdown';
-    const requestData = {accessKey: Access_Key};
+    const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL profile Dropdown URL Data ',
       profileDropdownURL,
@@ -210,7 +210,7 @@ export const API = {
   //# sendEditProfileDetails
   sendEditProfileDetails(data) {
     const editProfileURL = baseURL + '/update-profile';
-    const requestData = {accessKey: Access_Key,...data};
+    const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL Edit Profile  URL Data ',
       editProfileURL,

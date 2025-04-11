@@ -28,4 +28,7 @@ export let screenNames = {
   noNetwork: 'No Network',
   editProfile: 'Edit Profile',
   folkMerchant: 'FOLK Merchandise',
+  habitsSadhana: 'Habits Sadhana',
+  newChallenge: 'New Challenge',
+  completedChallenge: 'Completed Challenges',
 };

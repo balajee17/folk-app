@@ -26,6 +26,14 @@
       "sha1": "8a4ace9392d06bcb7f8ea2f5169b07e4c383a90d"
     },
     {
+      "path": "src/assets/fonts/Satoshi-Bold.otf",
+      "sha1": "57a9e1c24984708865f7d0c31a03773912fb975f"
+    },
+    {
+      "path": "src/assets/fonts/Satoshi-Medium.otf",
+      "sha1": "704faccb5fff19f25c0b914d42d135ab75794a24"
+    },
+    {
       "path": "src/assets/fonts/Urbanist-Bold.ttf",
       "sha1": "5393e451665e344701f6f250898895ca98dabdbc"
     },

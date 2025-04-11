@@ -55,6 +55,12 @@ const CustomDrawer = ({navigation, route}) => {
       whiteIcon: getImage.merchantWhite,
       blackIcon: getImage.merchantBlack,
     },
+    {
+      id: 'D6',
+      screenName: screenNames.habitsSadhana,
+      whiteIcon: getImage.merchantWhite,
+      blackIcon: getImage.merchantBlack,
+    },
   ];
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();

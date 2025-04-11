@@ -952,7 +952,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.midGrey,
   },
   AddCpnCountTxt: {
-    fontFamily: FONTS.interMedium,
+    fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.xxl + SIZES.xxl,
     color: COLORS.black,
     marginHorizontal: '4%',

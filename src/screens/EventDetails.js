@@ -159,7 +159,8 @@ const EventDetails = props => {
         isPaidEvent: eventDetails?.is_paid_event,
         pgName: 'cashFree',
         pgMode: 'Online',
-        paidAmount: eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
+        paidAmount:
+          eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
         name: globalState?.userName,
         mobileNumber: globalState?.mobileNumber,
       };
@@ -269,15 +270,6 @@ const EventDetails = props => {
                   titleName={screenNames.eventDetails}
                 />
               </View>
-
-              {/* <LinearGradient
-              colors={[
-                COLORS.transparent,
-                COLORS.transparent,
-                'rgba(0,0,0,0.8)',
-              ]}
-              style={styles.imageOverlay}
-            /> */}
             </ImageBackground>
           ) : (
             <View style={[styles.bgImg, {backgroundColor: COLORS.diesel}]} />
@@ -387,55 +379,56 @@ const EventDetails = props => {
                 eventDetails?.Event_mode === 'F' ? 'Location' : 'Online Link',
               )}
             {!shimmer && eventDetails?.Event_space && (
-              <View style={styles.locationCont}>
-                <Ionicons
-                  style={styles.locationIcn}
-                  name={
-                    eventDetails?.Event_mode === 'F'
-                      ? 'location-sharp'
-                      : 'videocam'
-                  }
-                  size={moderateScale(25)}
-                  color={
-                    eventDetails?.Event_mode === 'F'
-                      ? COLORS.watermelon
-                      : COLORS.midGrey
-                  }
-                />
-                <TouchableOpacity
-                  disabled={eventDetails?.Event_mode === 'F'}
-                  style={{width: '85%'}}
-                  activeOpacity={0.6}
-                  onPress={async () => {
-                    const result = await RedirectURL(eventDetails?.Event_space);
-                    if (!!result?.type) {
-                      toastMsg(result?.message, result?.type);
-                    }
-                  }}>
-                  <Text
-                    style={[
-                      styles.descripTxt,
-                      styles.locationTxt,
-                      {
-                        color:
-                          eventDetails?.Event_mode === 'F'
-                            ? COLORS.midGrey
-                            : COLORS.dodger,
-                        textDecorationLine:
-                          eventDetails?.Event_mode === 'O'
-                            ? 'underline'
-                            : 'none',
-                      },
-                    ]}>
-                    {eventDetails?.Event_space}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <>
+                {eventDetails?.Event_mode === 'F' ? (
+                  <View style={styles.locationCont}>
+                    <Ionicons
+                      style={styles.locationIcn}
+                      name={'location-sharp'}
+                      size={moderateScale(25)}
+                      color={COLORS.watermelon}
+                    />
+                    <View style={{width: '85%'}}>
+                      <Text
+                        style={[
+                          styles.descripTxt,
+                          styles.locationTxt,
+                          {
+                            color: COLORS.midGrey,
+                          },
+                        ]}>
+                        {eventDetails?.Event_space}
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={async () => {
+                      const result = await RedirectURL(
+                        eventDetails?.Event_space,
+                      );
+                      if (!!result?.type) {
+                        toastMsg(result?.message, result?.type);
+                      }
+                    }}
+                    style={styles.joinButton}>
+                    <Ionicons
+                      name={'videocam'}
+                      size={moderateScale(25)}
+                      color={COLORS.white}
+                    />
+
+                    <Text style={styles.joinTxt}>Join Now</Text>
+                  </TouchableOpacity>
+                )}
+              </>
             )}
 
             {/* // # Discount Code */}
             {eventDetails?.is_paid_event === 'Y' &&
               screen === 'Upcoming' &&
+              eventDetails?.is_discount_applicable === 'Y' &&
               !shimmer && (
                 <View
                   style={[
@@ -614,7 +607,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: moderateScale(30),
     borderTopRightRadius: moderateScale(30),
     overflow: 'hidden',
-    marginTop: '-8%',
     padding: '4%',
   },
   imageOverlay: {
@@ -718,4 +710,21 @@ const styles = StyleSheet.create({
     width: '60%',
     alignSelf: 'flex-end',
   }),
+  joinButton: {
+    width: horizontalScale(120),
+    backgroundColor: COLORS.infoPB,
+    height: horizontalScale(35),
+    marginTop: '2%',
+    alignSelf: 'center',
+    borderRadius: moderateScale(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    paddingHorizontal: '2%',
+  },
+  joinTxt: {
+    color: COLORS.white,
+    fontFamily: FONTS.LufgaBold,
+    fontSize: SIZES.l,
+  },
 });

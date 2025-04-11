@@ -39,7 +39,8 @@ const CustomHeader = ({
     titleName === screenNames.yfhForm ||
     titleName === screenNames.accommodation ||
     titleName === screenNames.folkMerchant ||
-    titleName === screenNames.contribution;
+    titleName === screenNames.contribution ||
+    titleName === screenNames.habitsSadhana;
 
   const bgColor =
     titleName === screenNames.eventDetails ||
@@ -57,7 +58,8 @@ const CustomHeader = ({
     titleName === screenNames.home ||
     titleName === screenNames.profile ||
     titleName === screenNames.connectUs ||
-    titleName === screenNames.coupons;
+    titleName === screenNames.coupons ||
+    titleName === screenNames.habitsSadhana;
 
   const removeTitle =
     titleName !== screenNames.eventDetails &&

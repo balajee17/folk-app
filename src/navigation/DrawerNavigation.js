@@ -9,6 +9,7 @@ import YFHForm from '../screens/YFHForm';
 import Accommodation from '../screens/Accommodation';
 import Contribution from '../screens/Contribution';
 import FolkMerchant from '../screens/FolkMerchant';
+import HabitsSadhana from '../screens/HabitsSadhana';
 
 const Drawer = createDrawerNavigator();
 
@@ -35,6 +36,10 @@ const DrawerNavigation = () => {
       />
       <Drawer.Screen name={screenNames.folkMerchant} component={FolkMerchant} />
       <Drawer.Screen name={screenNames.contribution} component={Contribution} />
+      <Drawer.Screen
+        name={screenNames.habitsSadhana}
+        component={HabitsSadhana}
+      />
     </Drawer.Navigator>
   );
 };

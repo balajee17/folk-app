@@ -24,6 +24,8 @@ import Splash from '../screens/Splash';
 import PAYMENT from '../components/PAYMENT';
 import WheelColor from '../components/WheelColor';
 import EditProfile from '../screens/EditProfile';
+import AddChallenge from '../screens/AddChallenge';
+import CompletedChallenge from '../screens/CompletedChallenge';
 
 const Stack = createStackNavigator();
 
@@ -116,6 +118,18 @@ const StackNavigation = () => {
         <Stack.Screen name={screenNames.scanner} component={QrScanner} />
         {/* // @ Courses */}
         <Stack.Screen name={screenNames.courses} component={Courses} />
+
+        {/* // @ Add Challenge */}
+        <Stack.Screen
+          name={screenNames.newChallenge}
+          component={AddChallenge}
+        />
+
+        {/* // @ Completed Challenge */}
+        <Stack.Screen
+          name={screenNames.completedChallenge}
+          component={CompletedChallenge}
+        />
 
         {/* // @ No Network */}
         <Stack.Screen name={screenNames.noNetwork} component={NoNetwork} />

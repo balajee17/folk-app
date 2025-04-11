@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Image,
   ImageBackground,
   SafeAreaView,
   ScrollView,
@@ -8,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
@@ -38,18 +39,23 @@ import AndroidBackHandler from '../components/BackHandler';
 import Swiper from 'react-native-deck-swiper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import {ShareLink} from '../components/CommonFunctionalities';
+import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
 
 const Quotes = props => {
   const [quotesData, setQuotesData] = useState([]);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  // const [newData, setNewData] = useState(quotesData);
-  const [shimmer, setShimmer] = useState(false);
+  const [shimmer, setShimmer] = useState(true);
+  const [refresh, setRefresh] = useState(false);
+  const imageLoadMap = useRef({});
 
-  const animatedValue = useSharedValue(0);
+  const handleImageLoad = cardIndex => {
+    if (!imageLoadMap.current[cardIndex]) {
+      imageLoadMap.current[cardIndex] = true;
+      setRefresh(prev => !prev);
+    }
+  };
+
   const {navigation, route} = props;
-  // const {title} = route?.params;
   const toast = useToast();
   const toastMsg = (msg, type) => {
     toast.show(msg, {
@@ -135,63 +141,66 @@ const Quotes = props => {
                         cards={item?.images}
                         containerStyle={styles.swiperContainer}
                         cardStyle={styles.swiperCard}
-                        renderCard={card => {
+                        renderCard={(card, cardIndex) => {
+                          const isLoaded = imageLoadMap.current[cardIndex];
                           return (
-                            <ImageBackground
-                              source={{uri: card}}
-                              style={styles.quotesImg}>
+                            <View
+                              key={cardIndex}
+                              style={{
+                                width: horizontalScale(340),
+                              }}>
+                              <Image
+                                source={{uri: card}}
+                                style={styles.quotesImg}
+                                onLoadEnd={() => handleImageLoad(cardIndex)}
+                              />
                               {/* // # Share & Download Button  */}
-                              <View style={styles.shareDwnldCont}>
-                                <TouchableOpacity
-                                  onPress={async () => {
-                                    const result = await RedirectURL(
-                                      item?.session_link,
-                                    );
-                                    if (!!result?.type) {
-                                      toastMsg(result?.message, result?.type);
-                                    }
-                                  }}
-                                  style={styles.quotesBtns}
-                                  activeOpacity={0.6}>
-                                  <Feather
-                                    name="download"
-                                    size={moderateScale(30)}
-                                    color={COLORS.white}
-                                  />
-                                </TouchableOpacity>
+                              {isLoaded && (
+                                <View style={styles.shareDwnldCont}>
+                                  <TouchableOpacity
+                                    onPress={async () => {
+                                      const result = await RedirectURL(card);
+                                      if (!!result?.type) {
+                                        toastMsg(result?.message, result?.type);
+                                      }
+                                    }}
+                                    style={styles.quotesBtns}
+                                    activeOpacity={0.6}>
+                                    <Feather
+                                      name="download"
+                                      size={moderateScale(30)}
+                                      color={COLORS.white}
+                                    />
+                                  </TouchableOpacity>
 
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    const result = ShareLink(item?.link);
-                                    if (!!result?.type) {
-                                      toastMsg(result?.message, result?.type);
-                                    }
-                                  }}
-                                  style={styles.quotesBtns}
-                                  activeOpacity={0.6}>
-                                  <MaterialCommunityIcons
-                                    name="share"
-                                    size={moderateScale(30)}
-                                    color={COLORS.white}
-                                  />
-                                </TouchableOpacity>
-                              </View>
-                            </ImageBackground>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      const result = ShareLink(card);
+                                      if (!!result?.type) {
+                                        toastMsg(result?.message, result?.type);
+                                      }
+                                    }}
+                                    style={styles.quotesBtns}
+                                    activeOpacity={0.6}>
+                                    <MaterialCommunityIcons
+                                      name="share"
+                                      size={moderateScale(30)}
+                                      color={COLORS.white}
+                                    />
+                                  </TouchableOpacity>
+                                </View>
+                              )}
+                            </View>
                           );
                         }}
-                        onSwiped={cardIndex => {
-                          console.log(cardIndex);
-                        }}
-                        onSwipedAll={() => {
-                          console.log('onSwipedAll');
-                        }}
                         cardIndex={0}
-                        backgroundColor={'#0000'}
+                        verticalSwipe={false}
+                        backgroundColor={COLORS.transparent}
                         animateCardOpacity
                         disableBottomSwipe
                         disableTopSwipe
                         stackSeparation={-20}
-                        stackScale={6}
+                        stackScale={5}
                         horizontalSwipe
                         infinite
                         stackSize={3}
@@ -216,42 +225,41 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   quotesCont: {
-    height: horizontalScale(350),
+    height: horizontalScale(450),
     width: windowWidth,
   },
   swiperContainer: {
     width: windowWidth,
-    height: horizontalScale(300),
+    height: horizontalScale(450),
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },
   swiperCard: {
-    width: horizontalScale(300),
-    height: horizontalScale(300),
+    width: horizontalScale(340),
+    height: horizontalScale(400),
     alignSelf: 'center',
     borderRadius: moderateScale(10),
     overflow: 'hidden',
     marginTop: '-6%',
-    marginLeft: '5%',
+    backgroundColor: COLORS.dropDownBg,
   },
   quotesImg: {
-    width: horizontalScale(300),
-    height: horizontalScale(300),
+    width: horizontalScale(340),
+    height: horizontalScale(350),
   },
   shareDwnldCont: {
-    position: 'absolute',
-    bottom: horizontalScale(10),
-    width: '50%',
+    width: '35%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    height: verticalScale(50),
   },
   quotesBtns: {
     backgroundColor: COLORS.shareBtn,
-    width: horizontalScale(45),
-    height: horizontalScale(45),
+    width: horizontalScale(40),
+    height: horizontalScale(40),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(30),

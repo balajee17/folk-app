@@ -103,20 +103,22 @@ const SwitcherScreen = ({navigation, route}) => {
       (btTab === 'B2' &&
         eventTabIndex === 0 &&
         activeEventTab !== 1 &&
-        !checkUpComingData) ||
-      reloadEventList === 'Y'
+        !checkUpComingData)
+      //    ||
+      // reloadEventList === 'Y'
     ) {
-      setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
+      // setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
       getUpcomingList();
     }
 
     if (
       (btTab === 'B2' &&
         !checkRegisteredData &&
-        (activeEventTab === 1 || eventTabIndex === 1)) ||
-      reloadEventList === 'Y'
+        (activeEventTab === 1 || eventTabIndex === 1)) 
+      //   ||
+      // reloadEventList === 'Y'
     ) {
-      setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
+      // setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
       getRegisteredList();
     }
 
@@ -144,11 +146,11 @@ const SwitcherScreen = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('FOCUS_EVENT',reloadEventList,activeEventTab);
-      (reloadEventVal === 'Y') &&
-        (setEventList({upcoming: [], registered: []}), getUpcomingList());
+      
+      reloadEventVal === 'Y' &&
+        (setGlobalState(prev => ({...prev, reloadEventList: 'N'})),setEventList({upcoming: [], registered: []}), getUpcomingList());
 
-      reloadEventList ==='Y' && activeEventTab === 1 && getRegisteredList()
+      reloadEventList ==='Y' && activeEventTab === 1 && (setGlobalState(prev => ({...prev, reloadEventList: 'N'})),setEventList({upcoming: [], registered: []}),getRegisteredList())
     }, [reloadEventVal]),
   );
 

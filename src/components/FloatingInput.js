@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.urbanistSemiBold,
   }),
   txtInptStyle: disabled => ({
-    marginStart: '3%',
     fontFamily: FONTS.urbanistRegular,
     width: '80%',
     color: disabled ? COLORS.dolphin : COLORS.black,
@@ -204,7 +203,6 @@ const styles = StyleSheet.create({
   dropdownStyle: {
     width: '100%',
     marginStart: 0,
-    paddingHorizontal: '4%',
     paddingRight: '6%',
     height: verticalScale(58),
   },

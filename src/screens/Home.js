@@ -36,7 +36,6 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useAppContext} from '../../App';
 import LinearGradientBg from '../components/LinearGradientBg';
 import {useToast} from 'react-native-toast-notifications';
-import {CustomPopup} from '../components/BackHandler';
 import Swiper from 'react-native-deck-swiper';
 import Feather from 'react-native-vector-icons/Feather';
 import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
@@ -50,6 +49,15 @@ const Home = ({apiData, shimmer, refreshData}) => {
   const [youtubeAudio] = useState(true);
 
   const isFocused = useIsFocused();
+  const [refresh, setRefresh] = useState(false);
+  const imageLoadMap = useRef({});
+
+  const handleImageLoad = cardId => {
+    if (!imageLoadMap.current[cardId]) {
+      imageLoadMap.current[cardId] = true;
+      setRefresh(prev => !prev);
+    }
+  };
 
   useEffect(() => {
     if (isFocused) {
@@ -246,65 +254,66 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 cards={UPDATES}
                 containerStyle={styles.swiperContainer}
                 cardStyle={styles.swiperCard}
-                renderCard={(card) => {
-
+                renderCard={(card, cardIndex) => {
+                  const isLoaded = imageLoadMap.current[card?.id];
                   return (
-                    <ImageBackground
+                    <View
                       key={card?.id}
-                      source={{uri: card?.link}}
-                      style={styles.quotesImg}>
+                      style={{
+                        width: horizontalScale(340),
+                      }}>
+                      <Image
+                        source={{uri: card?.link}}
+                        style={styles.quotesImg}
+                        onLoadEnd={() => handleImageLoad(card?.id)}
+                      />
                       {/* // # Share & Download Button  */}
-                <View style={styles.shareDwnldCont}>
-                        <TouchableOpacity
-                          onPress={async () => {
-                            const result = await RedirectURL(
-                              item?.session_link,
-                            );
-                            if (!!result?.type) {
-                              toastMsg(result?.message, result?.type);
-                            }
-                          }}
-                          style={styles.quotesBtns}
-                          activeOpacity={0.6}>
-                          <Feather
-                            name="download"
-                            size={moderateScale(30)}
-                            color={COLORS.white}
-                          />
-                        </TouchableOpacity>
+                      {isLoaded && (
+                        <View style={styles.shareDwnldCont}>
+                          <TouchableOpacity
+                            onPress={async () => {
+                              const result = await RedirectURL(card?.link);
+                              if (!!result?.type) {
+                                toastMsg(result?.message, result?.type);
+                              }
+                            }}
+                            style={styles.quotesBtns}
+                            activeOpacity={0.6}>
+                            <Feather
+                              name="download"
+                              size={moderateScale(25)}
+                              color={COLORS.white}
+                            />
+                          </TouchableOpacity>
 
-                        <TouchableOpacity
-                          onPress={() => {
-                            const result = ShareLink(item?.link);
-                            if (!!result?.type) {
-                              toastMsg(result?.message, result?.type);
-                            }
-                          }}
-                          style={styles.quotesBtns}
-                          activeOpacity={0.6}>
-                          <MaterialCommunityIcons
-                            name="share"
-                            size={moderateScale(30)}
-                            color={COLORS.white}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </ImageBackground>
+                          <TouchableOpacity
+                            onPress={() => {
+                              const result = ShareLink(card?.link);
+                              if (!!result?.type) {
+                                toastMsg(result?.message, result?.type);
+                              }
+                            }}
+                            style={styles.quotesBtns}
+                            activeOpacity={0.6}>
+                            <MaterialCommunityIcons
+                              name="share"
+                              size={moderateScale(25)}
+                              color={COLORS.white}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                    </View>
                   );
                 }}
-                onSwiped={cardIndex => {
-                  console.log(cardIndex);
-                }}
-                // onSwipedAll={() => {
-                //   console.log('onSwipedAll');
-                // }}
                 cardIndex={0}
-                backgroundColor={'#0000'}
+                backgroundColor={COLORS.transparent}
                 animateCardOpacity
                 disableBottomSwipe
                 disableTopSwipe
+                verticalSwipe={false}
                 stackSeparation={-20}
-                stackScale={6}
+                stackScale={5}
                 horizontalSwipe
                 infinite
                 stackSize={3}
@@ -574,42 +583,41 @@ const styles = StyleSheet.create({
   },
   shimmerCont: {width: '70%', marginTop: verticalScale(15)},
   quotesCont: {
-    height: horizontalScale(330),
+    height: horizontalScale(450),
     width: windowWidth,
   },
   swiperContainer: {
     width: windowWidth,
-    height: horizontalScale(350),
+    height: horizontalScale(450),
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },
   swiperCard: {
-    width: horizontalScale(300),
-    height: horizontalScale(300),
+    width: horizontalScale(340),
+    height: horizontalScale(400),
     alignSelf: 'center',
     borderRadius: moderateScale(10),
     overflow: 'hidden',
     marginTop: '-6%',
-    marginLeft: '5%',
+    backgroundColor: COLORS.dropDownBg,
   },
   quotesImg: {
-    width: horizontalScale(300),
-    height: horizontalScale(300),
+    width: horizontalScale(340),
+    height: horizontalScale(350),
   },
   shareDwnldCont: {
-    position: 'absolute',
-    bottom: horizontalScale(10),
-    width: '50%',
+    width: '35%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    height: verticalScale(50),
   },
   quotesBtns: {
     backgroundColor: COLORS.shareBtn,
-    width: horizontalScale(45),
-    height: horizontalScale(45),
+    width: horizontalScale(40),
+    height: horizontalScale(40),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(30),

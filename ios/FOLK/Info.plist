@@ -26,7 +26,11 @@
 	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>itms-apps</string>
+		<string>phonepe</string>
+		<string>tez</string>
+		<string>paytmmp</string>
+		<string>bhim</string>
+		<string>credpay</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -49,6 +53,8 @@
 		<string>Poppins-Regular.ttf</string>
 		<string>YsabeauInfant-Regular.ttf</string>
 		<string>LufgaBold.ttf</string>
+		<string>Satoshi-Bold.otf</string>
+		<string>Satoshi-Medium.otf</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
@@ -69,15 +75,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>LSApplicationCategoryType</key>
-<string></string>
-<key>LSApplicationQueriesSchemes</key>
-<array>
-<string>phonepe</string>
-<string>tez</string>
-<string>paytmmp</string>
-<string>bhim</string>
-<string>credpay</string>
-</array>
+	<string/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

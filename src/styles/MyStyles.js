@@ -117,6 +117,8 @@ export let COLORS = {
   halfTransparent: 'rgba(0, 0, 0, 0.5)',
   loginBtn: 'rgba(136, 177, 96, 1)',
   shareBtn: 'rgba(0, 0, 0, 0.71)',
+  whiteHalfTrans: 'rgba(255, 255, 255, 0.2)',
+  borderColor: 'rgba(0, 0, 0, 0.03)',
 };
 
 // @ FONTS
@@ -126,10 +128,7 @@ export let FONTS = {
   urbanistSemiBold: 'Urbanist-SemiBold',
   urbanistMedium: 'Urbanist-Medium',
   urbanistRegular: 'Urbanist-Regular',
-  aladinRegular: 'Aladin-Regular',
-  interMedium: 'Inter-Medium',
   ysabeauInfantBold: 'YsabeauInfant-Bold',
-  interBold: 'InterBold',
   poppinsSemiBold: 'Poppins-SemiBold',
   poppinsRegular: 'Poppins-Regular',
   ysabeauInfantRegular: 'YsabeauInfant-Regular',
@@ -182,12 +181,12 @@ export let MyStyles = {
     width: '100%',
   },
   paddingHor10: {paddingHorizontal: moderateScale(10)},
-  updateTitle: {
-    fontSize: SIZES.xxxl,
-    textAlign: 'center',
-    color: COLORS.golden,
-    fontFamily: FONTS.aladinRegular,
-  },
+  // updateTitle: {
+  //   fontSize: SIZES.xxxl,
+  //   textAlign: 'center',
+  //   color: COLORS.golden,
+  //   fontFamily: FONTS.aladinRegular,
+  // },
   gradient: {
     borderRadius: moderateScale(15),
   },
@@ -356,18 +355,18 @@ export let MyStyles = {
   },
 
   // # Image Upload Modal Styles
-  modal:{
+  modal: {
     height: '100%',
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
-  container:{
+  container: {
     backgroundColor: COLORS.white,
     padding: '4%',
     borderTopLeftRadius: moderateScale(25),
-    borderTopRightRadius: moderateScale(25),          
+    borderTopRightRadius: moderateScale(25),
     width: screenWidth,
     justifyContent: 'space-around',
   },
@@ -378,18 +377,23 @@ export let MyStyles = {
     alignSelf: 'flex-end',
     justifyContent: 'center',
   },
-  modalTitle:{
+  modalTitle: {
     fontFamily: FONTS.urbanistBold,
     fontSize: SIZES.subTitle,
     color: COLORS.black,
     textAlign: 'center',
   },
-  uploadTypeCont:{marginVertical: screenHeight * 0.04,  alignItems: 'center',flexDirection:'row',justifyContent:'space-around'},
-  cameraBtn:{
+  uploadTypeCont: {
+    marginVertical: screenHeight * 0.04,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  cameraBtn: {
     borderWidth: 1,
     borderColor: COLORS.dropDownBg,
     paddingVertical: 15,
-    width:  '35%',
+    width: '35%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
@@ -403,7 +407,7 @@ export let MyStyles = {
     shadowRadius: 2.22,
     elevation: 3,
   },
-  btnTxt:{
+  btnTxt: {
     fontFamily: FONTS.urbanistMedium,
     color: COLORS.black,
     marginTop: verticalScale(8),

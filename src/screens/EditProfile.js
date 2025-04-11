@@ -26,35 +26,40 @@ import FloatingInput from '../components/FloatingInput';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
-import { CaptureImage, ChooseImage, ImageUploadModal } from '../components/CommonFunctionalities';
+import {
+  CaptureImage,
+  ChooseImage,
+  ImageUploadModal,
+} from '../components/CommonFunctionalities';
+import AndroidBackHandler from '../components/BackHandler';
 
-const EditProfile = ({navigation}) => {
-  const {globalState,setGlobalState} = useAppContext();
-  const {profileId}=globalState;
+const EditProfile = props => {
+  const {globalState, setGlobalState} = useAppContext();
+  const {profileId} = globalState;
 
-  const [loader, setLoader] = useState(false);
+  const {navigation} = props;
+  const [loader, setLoader] = useState(true);
   const [profileDetails, setProfileDetails] = useState({
-    country:  '',
+    country: {},
     city: '',
-    state: '',
+    state: {},
     address: '',
     highestQualification: '',
-    occupation: '',
+    occupation: {},
     designation: '',
-    livingStatus: '',
-    maritalStatus: '',
-    passportPhoto:''
+    livingStatus: {},
+    maritalStatus: {},
+    passportPhoto: '',
+    passportPhotoBase64: '',
   });
   const [imagePicker, setImagePicker] = useState(false);
-  const [dropdownData, setDropdownData] = useState(
-    {
-      country: [],
-      state: [],
-      livingStatus: [],
-      maritalStatus: [],
-      occupation: [],
-    }
-  );
+  const [dropdownData, setDropdownData] = useState({
+    country: [],
+    state: [],
+    livingStatus: [],
+    maritalStatus: [],
+    occupation: [],
+  });
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -64,25 +69,29 @@ const EditProfile = ({navigation}) => {
   };
 
   useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
     getProfileDetails();
+    return AndroidBackHandler.removerHandler();
   }, []);
 
   // # Get Profile & Dropdown Data
-  const getProfileDetails = async (countryId) => {
+  const getProfileDetails = async countryId => {
     try {
-      const params=countryId?{countryId}:{}
+      const params = countryId
+        ? {profileId: profileId, countryId}
+        : {profileId: profileId};
       const response = await API.getProfileDropdown(params);
 
       console.log('get Profile Dropdown_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-       if(countryId){ 
-        setDropdownData((prev)=>({...prev,state:data?.dropdown?.state}));
-      }
-      else{
-        setDropdownData(data?.dropdown);
-        setProfileDetails(data?.profileDetails);
-      }
+        if (countryId) {
+          setDropdownData(prev => ({...prev, state: data?.dropdown?.state}));
+        } else {
+          setDropdownData(data?.dropdown);
+          setProfileDetails(data?.profileDetails);
+        }
       } else {
         toastMsg(message, 'warning');
       }
@@ -99,17 +108,17 @@ const EditProfile = ({navigation}) => {
     try {
       setLoader(true);
       const params = {
-        profileId:profileId,
-        country:profileDetails?.country,
+        profileId: profileId,
+        country: profileDetails?.country?.value,
         city: profileDetails?.city,
-        state:profileDetails?.state,
+        state: profileDetails?.state?.value,
         address: profileDetails?.address,
         highestQualification: profileDetails?.highestQualification,
-        occupation:profileDetails?.occupation,
+        occupation: profileDetails?.occupation?.value,
         designation: profileDetails?.designation,
-        livingStatus:profileDetails?.livingStatus,
-        maritalStatus:profileDetails?.maritalStatus,
-        passportPhoto:profileDetails?.passportPhoto
+        livingStatus: profileDetails?.livingStatus?.value,
+        maritalStatus: profileDetails?.maritalStatus?.value,
+        passportPhoto: profileDetails?.passportPhotoBase64,
       };
       const response = await API.sendEditProfileDetails(params);
 
@@ -118,8 +127,8 @@ const EditProfile = ({navigation}) => {
       if (successCode === 1) {
         toastMsg(message, 'success');
         setProfileDetails(data?.profileDetails);
-        setDropdownData(data?.dropdown)
-        await setGlobalState((prev)=>({...prev,reloadProfile:'Y'}));
+        // setDropdownData(data?.dropdown);
+        await setGlobalState(prev => ({...prev, reloadProfile: 'Y'}));
       } else {
         toastMsg(message, 'warning');
       }
@@ -138,20 +147,22 @@ const EditProfile = ({navigation}) => {
     }));
   };
 
-  // # Upload Type 
-  const uploadType=async(type)=>{
-  
-    const result = type==='C' ? await CaptureImage() : await ChooseImage();
-  
-    if(typeof result === 'object' && Object.keys(result).length > 0){
+  // # Upload Type
+  const uploadType = async type => {
+    const result = type === 'C' ? await CaptureImage() : await ChooseImage();
+
+    if (typeof result === 'object' && Object.keys(result).length > 0) {
       setImagePicker(false);
-      setProfileDetails((prev)=>({...prev,passportPhoto:result?.path}));
-    }
-    else{ 
+      setProfileDetails(prev => ({
+        ...prev,
+        passportPhoto: result?.path,
+        passportPhotoBase64: result?.base64,
+      }));
+    } else {
       setImagePicker(false);
       toastMsg('', 'error');
     }
-  }
+  };
 
   return (
     <Container>
@@ -171,10 +182,13 @@ const EditProfile = ({navigation}) => {
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.country}
             onChange={item => {
-              handleChange('country', item);
-              setDropdownData(prev => ({...prev, state: []}));
-              handleChange('state', '');
-              getProfileDetails(item?.value);
+              if (item?.value !== profileDetails?.country?.value) {
+                handleChange('country', item);
+                setDropdownData(prev => ({...prev, state: []}));
+                handleChange('state', '');
+                setLoader(true);
+                getProfileDetails(item?.value);
+              }
             }}
             cntnrStyle={styles.dropdownCont}
             renderRightIcon={() => (
@@ -210,8 +224,8 @@ const EditProfile = ({navigation}) => {
             label={'City'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.city}
-            onChange={item => {
-              handleChange('state', item);
+            onChangeText={item => {
+              handleChange('city', item);
             }}
             cntnrStyle={styles.dropdownCont}
           />
@@ -221,7 +235,7 @@ const EditProfile = ({navigation}) => {
             label={'Address'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.address}
-            onChange={item => {
+            onChangeText={item => {
               handleChange('address', item);
             }}
             cntnrStyle={styles.dropdownCont}
@@ -270,7 +284,7 @@ const EditProfile = ({navigation}) => {
             label={'Highest Qualification'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.highestQualification}
-            onChange={item => {
+            onChangeText={item => {
               handleChange('highestQualification', item);
             }}
             cntnrStyle={styles.dropdownCont}
@@ -301,7 +315,7 @@ const EditProfile = ({navigation}) => {
             label={'Designation'}
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileDetails?.designation}
-            onChange={item => {
+            onChangeText={item => {
               handleChange('designation', item);
             }}
             cntnrStyle={styles.dropdownCont}
@@ -309,24 +323,36 @@ const EditProfile = ({navigation}) => {
 
           {/* // # Passport size photo */}
           <View style={styles.passportCont}>
-          {!!profileDetails?.passportPhoto?
-          <>
-          <Image
-            style={styles.passportImg}
-            source={{
-              uri: profileDetails?.passportPhoto,
-            }}
-          />
-          <TouchableOpacity onPress={()=>setImagePicker(true)} activeOpacity={0.8} style={styles.changeBtn}>
-            <Text style={styles.submitTxt}>Change</Text>
-          </TouchableOpacity>
-          </>
-           :
-          <TouchableOpacity  onPress={()=>setImagePicker(true)} activeOpacity={0.8} style={styles.addPhotoBtn}>
-            <MaterialCommunityIcons name='plus' color={COLORS.osloGrey} size={moderateScale(25)} />
-            <Text style={styles.addPhototTxt}>Upload Passport size photo</Text>
-          </TouchableOpacity>
-          }
+            {!!profileDetails?.passportPhoto ? (
+              <>
+                <Image
+                  style={styles.passportImg}
+                  source={{
+                    uri: profileDetails?.passportPhoto,
+                  }}
+                />
+                <TouchableOpacity
+                  onPress={() => setImagePicker(true)}
+                  activeOpacity={0.8}
+                  style={styles.changeBtn}>
+                  <Text style={styles.submitTxt}>Change</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <TouchableOpacity
+                onPress={() => setImagePicker(true)}
+                activeOpacity={0.8}
+                style={styles.addPhotoBtn}>
+                <MaterialCommunityIcons
+                  name="plus"
+                  color={COLORS.osloGrey}
+                  size={moderateScale(25)}
+                />
+                <Text style={styles.addPhototTxt}>
+                  Upload Passport size photo
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
 
           {/* // # Submit Button */}
@@ -339,7 +365,11 @@ const EditProfile = ({navigation}) => {
         </ScrollView>
 
         {/* // @ Pick Image upload */}
-        <ImageUploadModal visible={imagePicker} uploadType={uploadType} closeModal={()=>setImagePicker(false)} />
+        <ImageUploadModal
+          visible={imagePicker}
+          uploadType={uploadType}
+          closeModal={() => setImagePicker(false)}
+        />
       </SafeAreaView>
     </Container>
   );
@@ -377,21 +407,45 @@ const styles = StyleSheet.create({
     fontSize: SIZES.l,
     color: COLORS.white,
   },
-  passportCont:{  
-    marginTop: "5%",
+  passportCont: {
+    marginTop: '5%',
     backgroundColor: COLORS.dropDownBg,
-    width: "90%",
+    width: '90%',
     borderRadius: moderateScale(10),
-    alignSelf:'center',
-    justifyContent:'center',alignItems:'center',
-    padding: "4%"
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '4%',
   },
-  passportImg:{
+  passportImg: {
     width: horizontalScale(200),
     height: horizontalScale(200),
     borderRadius: moderateScale(20),
   },
-  changeBtn:{backgroundColor:COLORS.atlantis,width:horizontalScale(70),height:horizontalScale(30),borderRadius:moderateScale(6),alignItems:'center',justifyContent:'center',marginTop:'10%'},
-  addPhotoBtn:{width:horizontalScale(100),height:horizontalScale(100),borderRadius:moderateScale(6), borderWidth:1,borderStyle:'dashed',borderColor:COLORS.osloGrey,justifyContent:'center',alignItems:'center'},
-  addPhototTxt:{fontFamily:FONTS.urbanistRegular,fontSize:SIZES.s,color:COLORS.osloGrey,marginTop:'10%',textAlign:'center'}
+  changeBtn: {
+    backgroundColor: COLORS.atlantis,
+    width: horizontalScale(70),
+    height: horizontalScale(30),
+    borderRadius: moderateScale(6),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '10%',
+  },
+  addPhotoBtn: {
+    width: horizontalScale(100),
+    height: horizontalScale(100),
+    borderRadius: moderateScale(6),
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: COLORS.osloGrey,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addPhototTxt: {
+    fontFamily: FONTS.urbanistRegular,
+    fontSize: SIZES.s,
+    color: COLORS.osloGrey,
+    marginTop: '10%',
+    textAlign: 'center',
+  },
 });
