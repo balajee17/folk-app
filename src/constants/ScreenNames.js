@@ -31,4 +31,5 @@ export let screenNames = {
   habitsSadhana: 'Habits Sadhana',
   newChallenge: 'New Challenge',
   completedChallenge: 'Completed Challenges',
+  sadhanaCalendar: 'Sadhana',
 };

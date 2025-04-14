@@ -169,6 +169,10 @@ const HabitsSadhana = ({navigation}) => {
               {section.data.map(item => (
                 <TouchableOpacity
                   activeOpacity={0.8}
+                  onPress={() => {
+                    section?.id === 1 &&
+                      navigateScreen(screenNames.sadhanaCalendar);
+                  }}
                   style={[styles.quotesBox, styles.sadhanaChallCards]}>
                   <Image
                     source={{

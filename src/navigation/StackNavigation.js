@@ -26,6 +26,7 @@ import WheelColor from '../components/WheelColor';
 import EditProfile from '../screens/EditProfile';
 import AddChallenge from '../screens/AddChallenge';
 import CompletedChallenge from '../screens/CompletedChallenge';
+import SadhanaCalendar from '../screens/SadhanaCalendar';
 
 const Stack = createStackNavigator();
 
@@ -129,6 +130,12 @@ const StackNavigation = () => {
         <Stack.Screen
           name={screenNames.completedChallenge}
           component={CompletedChallenge}
+        />
+
+        {/* // @ Sadhana Calendar */}
+        <Stack.Screen
+          name={screenNames.sadhanaCalendar}
+          component={SadhanaCalendar}
         />
 
         {/* // @ No Network */}

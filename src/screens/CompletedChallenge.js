@@ -16,13 +16,12 @@ import {
   moderateScale,
   MyStyles,
   SIZES,
+  verticalScale,
 } from '../styles/MyStyles';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
-import {getImage} from '../utils/ImagePath';
-import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
-import WaveSkia from '../components/WaveSkia';
+import ChallengeCompletedCard from '../components/ChallengeCompletedCard';
 
 const CompletedChallenge = props => {
   const {globalState, setGlobalState} = useAppContext();
@@ -33,14 +32,48 @@ const CompletedChallenge = props => {
       title: 'Service - Volunteer',
       image:
         'https://static.vecteezy.com/system/resources/previews/004/449/833/non_2x/volunteers-2d-isolated-illustration-contributing-to-humanitarian-aid-smiling-man-and-woman-social-service-worker-flat-characters-on-cartoon-background-charity-work-colourful-scene-vector.jpg',
-      percentage: '60%',
+      percentage: 30,
+      color: '#C4331F',
     },
     {
       id: 4,
-      title: 'Service - Volunteer 2',
+      title: 'Puja Services',
       image:
-        'https://static.vecteezy.com/system/resources/previews/004/449/833/non_2x/volunteers-2d-isolated-illustration-contributing-to-humanitarian-aid-smiling-man-and-woman-social-service-worker-flat-characters-on-cartoon-background-charity-work-colourful-scene-vector.jpg',
-      percentage: '100%',
+        'https://png.pngtree.com/png-clipart/20230124/ourmid/pngtree-pooja-plate-and-kalash-with-flowers-sweets-png-image_6568931.png',
+      percentage: 60,
+      color: '#FEB600',
+    },
+    {
+      id: 5,
+      title: 'Homam',
+      image:
+        'https://www.shutterstock.com/image-vector/rishis-doing-homam-cartoon-illustration-260nw-2514756875.jpg',
+      percentage: 40,
+      color: '#FC7D14',
+    },
+    {
+      id: 6,
+      title: 'Bhajan',
+      image:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbhL3tKJVGHNEwaUtwd6YiDhOSHU0eheVVuQ&s',
+      percentage: 100,
+      color: '#FD6D00',
+    },
+    {
+      id: 7,
+      title: 'Sankalpam',
+      image:
+        'https://c0.klipartz.com/pngpicture/766/158/gratis-png-sociedad-internacional-para-la-conciencia-de-krishna-libro-de-febrero-de-noviembre-krishna-thumbnail.png',
+      percentage: 80,
+      color: '#F4D6A8',
+    },
+    {
+      id: 8,
+      title: 'Annadanam',
+      image:
+        'https://lightup-temples.s3.ap-south-1.amazonaws.com/wp-content/uploads/Annadanam.png',
+      percentage: 10,
+      color: '#F9C999',
     },
   ]);
 
@@ -61,28 +94,17 @@ const CompletedChallenge = props => {
         />
         {/* // # Contents */}
         <View style={MyStyles.contentCont}>
-          {challengesList.map(item => (
-            <View style={[styles.quotesBox, styles.sadhanaChallCards]}>
-              <WaveSkia percentage={item?.percentage} />
-              <Image
-                source={{
-                  uri: item?.image,
-                }}
-                style={styles.cardIcon}
+          {challengesList.map(item => {
+            return (
+              <ChallengeCompletedCard
+                key={item?.id}
+                title={item?.title}
+                image={item?.image}
+                fillPercentage={item?.percentage}
+                color={item?.color}
               />
-              <View style={styles.titleBtnCont}>
-                <Text
-                  style={[
-                    styles.subTitleTxt,
-                    {marginTop: '3%', width: '100%'},
-                  ]}>
-                  {item?.title}
-                </Text>
-
-                <Text style={styles.challengePercent}>{item?.percentage}</Text>
-              </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </SafeAreaView>
     </Container>
@@ -91,66 +113,4 @@ const CompletedChallenge = props => {
 
 export default CompletedChallenge;
 
-const styles = StyleSheet.create({
-  quotesBox: {
-    shadowColor: COLORS.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    backgroundColor: COLORS.white,
-    elevation: 5,
-  },
-  sadhanaChallCards: {
-    marginTop: '5%',
-    borderRadius: moderateScale(10),
-    width: '90%',
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    overflow: 'hidden',
-  },
-  cardIcon: {
-    width: horizontalScale(80),
-    height: horizontalScale(80),
-  },
-  titleBtnCont: {
-    width: '74%',
-    justifyContent: 'space-between',
-    padding: '1%',
-  },
-  subTitleTxt: {
-    fontSize: SIZES.xl,
-    fontFamily: FONTS.urbanistBold,
-    color: COLORS.black,
-    width: '50%',
-  },
-  addBtn: {
-    backgroundColor: COLORS.atlantis,
-    width: horizontalScale(55),
-    height: horizontalScale(25),
-    borderRadius: moderateScale(12),
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: '2%',
-    alignSelf: 'flex-end',
-  },
-  addTxt: {
-    fontSize: SIZES.m,
-    fontFamily: FONTS.urbanistBold,
-    color: COLORS.white,
-  },
-  challengePercent: {
-    width: horizontalScale(50),
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    position: 'absolute',
-    bottom: '5%',
-    right: '2%',
-    fontFamily: FONTS.urbanistBold,
-    fontSize: SIZES.xl,
-    color: COLORS.black,
-  },
-});
+const styles = StyleSheet.create({});
