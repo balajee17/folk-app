@@ -44,17 +44,13 @@
 		<string>Urbanist-Bold.ttf</string>
 		<string>Urbanist-Medium.ttf</string>
 		<string>Urbanist-SemiBold.ttf</string>
-		<string>Aladin-Regular.ttf</string>
-		<string>Inter-Medium.ttf</string>
 		<string>YsabeauInfant-Bold.ttf</string>
 		<string>Urbanist-Regular.ttf</string>
-		<string>InterBold.ttf</string>
 		<string>Poppins-SemiBold.ttf</string>
 		<string>Poppins-Regular.ttf</string>
 		<string>YsabeauInfant-Regular.ttf</string>
 		<string>LufgaBold.ttf</string>
-		<string>Satoshi-Bold.otf</string>
-		<string>Satoshi-Medium.otf</string>
+		<string>Poppins-Bold.ttf</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>

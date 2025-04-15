@@ -115,6 +115,7 @@ export let COLORS = {
   infoPB: '#3B82F6',
   purple: '#7F85E6',
   halfTransparent: 'rgba(0, 0, 0, 0.5)',
+  blackOpacity01: 'rgba(0, 0, 0, 0.1)',
   loginBtn: 'rgba(136, 177, 96, 1)',
   shareBtn: 'rgba(0, 0, 0, 0.71)',
   whiteHalfTrans: 'rgba(255, 255, 255, 0.2)',
@@ -133,6 +134,7 @@ export let FONTS = {
   poppinsRegular: 'Poppins-Regular',
   ysabeauInfantRegular: 'YsabeauInfant-Regular',
   LufgaBold: 'LufgaBold',
+  poppinsBold: 'Poppins-Bold',
 };
 
 // @ MyStyles

@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -64,7 +65,7 @@ const CompletedChallenge = props => {
       title: 'Sankalpam',
       image:
         'https://c0.klipartz.com/pngpicture/766/158/gratis-png-sociedad-internacional-para-la-conciencia-de-krishna-libro-de-febrero-de-noviembre-krishna-thumbnail.png',
-      percentage: 80,
+      percentage: 85,
       color: '#F4D6A8',
     },
     {
@@ -72,12 +73,13 @@ const CompletedChallenge = props => {
       title: 'Annadanam',
       image:
         'https://lightup-temples.s3.ap-south-1.amazonaws.com/wp-content/uploads/Annadanam.png',
-      percentage: 10,
+      percentage: 25,
       color: '#F9C999',
     },
   ]);
 
   const {navigation} = props;
+
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
 
@@ -94,8 +96,11 @@ const CompletedChallenge = props => {
         />
         {/* // # Contents */}
         <View style={MyStyles.contentCont}>
-          {challengesList.map(item => {
-            return (
+          <FlatList
+            data={challengesList}
+            contentContainerStyle={{paddingBottom: '5%'}}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item}) => (
               <ChallengeCompletedCard
                 key={item?.id}
                 title={item?.title}
@@ -103,8 +108,8 @@ const CompletedChallenge = props => {
                 fillPercentage={item?.percentage}
                 color={item?.color}
               />
-            );
-          })}
+            )}
+          />
         </View>
       </SafeAreaView>
     </Container>

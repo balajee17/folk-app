@@ -1,4 +1,12 @@
-import {Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   COLORS,
@@ -22,15 +30,19 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import AndroidBackHandler from '../components/BackHandler';
-import { CaptureImage, ChooseImage, ImageUploadModal } from '../components/CommonFunctionalities';
+import {
+  CaptureImage,
+  ChooseImage,
+  ImageUploadModal,
+} from '../components/CommonFunctionalities';
 import Spinner from '../components/Spinner';
-import { useFocusEffect } from '@react-navigation/native';
-
+import {useFocusEffect} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId,reloadProfile} = globalState;
+  const {profileId, reloadProfile} = globalState;
   const [activeTab, setActiveTab] = useState(1);
   const {navigation} = props;
   const [shimmer, setShimmer] = useState({
@@ -43,9 +55,8 @@ const Profile = props => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [imagePicker,setImagePicker]=useState(false);
-  const [reloadProfileVal,setReloadProfileVal]=useState(reloadProfile);
-
+  const [imagePicker, setImagePicker] = useState(false);
+  const [reloadProfileVal, setReloadProfileVal] = useState(reloadProfile);
 
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
@@ -67,17 +78,17 @@ const Profile = props => {
     return AndroidBackHandler.removerHandler();
   }, []);
 
-   useFocusEffect(
-      useCallback(() => {
-        reloadProfileVal === 'Y' && reloadScreen();
-      }, [reloadProfileVal]),
-    );
-  
-    const reloadScreen = async () => {
-      await setGlobalState(prev => ({...prev, reloadProfile: 'N'}));
-      activeTab!==1 && setActiveTab(1);
-      getUserData(1);
-    };
+  useFocusEffect(
+    useCallback(() => {
+      reloadProfileVal === 'Y' && reloadScreen();
+    }, [reloadProfileVal]),
+  );
+
+  const reloadScreen = async () => {
+    await setGlobalState(prev => ({...prev, reloadProfile: 'N'}));
+    activeTab !== 1 && setActiveTab(1);
+    getUserData(1);
+  };
 
   const checkProfileExist =
     typeof profileData === 'object' && Object.keys(profileData)?.length > 0;
@@ -144,51 +155,59 @@ const Profile = props => {
     }
   };
 
- 
-// # Upload Type 
-const uploadType=async(type)=>{
+  // # Upload Type
+  const uploadType = async type => {
+    const result = type === 'C' ? await CaptureImage() : await ChooseImage();
 
-  const result = type==='C' ? await CaptureImage() : await ChooseImage();
+    if (typeof result === 'object' && Object.keys(result).length > 0) {
+      console.log('result IF');
+      setImagePicker(false);
 
-  if(typeof result === 'object' && Object.keys(result).length > 0){
-    console.log("result IF");
-    setImagePicker(false);
-
-    changeProfilePhoto(result);
-  }
-  else{ 
-    setImagePicker(false);
-    toastMsg('','error');
-  }
-}
-
-// # Change Photo API
-const changeProfilePhoto=async(imageData)=>{
-  try {
-   setLoader(true);
-    const params = {
-      profileId: profileId,
-      profilePhoto:imageData?.base64,
-    };
-    const response = await API.sendEditProfileDetails(params);
-    console.log('response_profile_photo', response?.data);
-    const {profileDetails, successCode, message} = response?.data;
-
-    if (successCode === 1) {
-      toastMsg(message, 'success');
-       setGlobalState((prev)=>({...prev,photo:profileDetails?.profilePhoto}));
+      changeProfilePhoto(result);
     } else {
-      toastMsg(message, 'warning');
+      setImagePicker(false);
     }
-    setLoader(false);
-  } catch (err) {
-    setLoader(false);
-    toastMsg('', 'error');
-    console.log('ERR-Photo', err);
-  }
-}
+  };
 
-console.log('globalState?.photo',globalState?.photo)
+  // # Change Photo API
+  const changeProfilePhoto = async imageData => {
+    try {
+      setLoader(true);
+      const params = {
+        profileId: profileId,
+        profilePhoto: imageData?.base64,
+      };
+      const response = await API.sendEditProfileDetails(params);
+      console.log('response_profile_photo', response?.data);
+      const {profileDetails, successCode, message} = response?.data;
+
+      if (successCode === 1) {
+        toastMsg(message, 'success');
+        setGlobalState(prev => ({
+          ...prev,
+          photo: profileDetails?.profilePhoto,
+        }));
+        const existingData = await AsyncStorage.getItem('userDetails');
+        const parsedData = JSON.parse(existingData);
+
+        const userUpdatedData = {
+          ...parsedData,
+          photo: profileDetails?.profilePhoto,
+        };
+        await AsyncStorage.setItem(
+          'userDetails',
+          JSON.stringify(userUpdatedData),
+        );
+      } else {
+        toastMsg(message, 'warning');
+      }
+      setLoader(false);
+    } catch (err) {
+      setLoader(false);
+      toastMsg('', 'error');
+      console.log('ERR-Photo', err);
+    }
+  };
 
   return (
     <View style={MyStyles.contentCont}>
@@ -202,7 +221,10 @@ console.log('globalState?.photo',globalState?.photo)
 
         <Spinner spinnerVisible={loader} />
         {/* // # User Image */}
-        <Pressable disabled={shimmer?.primary} onPress={()=>setImagePicker(true)}  style={styles.usrImgCont}>
+        <Pressable
+          disabled={shimmer?.primary}
+          onPress={() => setImagePicker(true)}
+          style={styles.usrImgCont}>
           {shimmer?.primary ? (
             <ImageShimmer
               width={horizontalScale(104)}
@@ -317,7 +339,11 @@ console.log('globalState?.photo',globalState?.photo)
       ) : null}
 
       {/* // @ Pick Image upload */}
-      <ImageUploadModal visible={imagePicker} uploadType={uploadType} closeModal={()=>setImagePicker(false)} />
+      <ImageUploadModal
+        visible={imagePicker}
+        uploadType={uploadType}
+        closeModal={() => setImagePicker(false)}
+      />
     </View>
   );
 };

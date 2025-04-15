@@ -94,6 +94,7 @@ const CustomDrawer = ({navigation, route}) => {
       folkId: '',
       userName: '',
       mobileNumber: '',
+      photo: '',
     });
     await AsyncStorage.clear();
     navigation.replace(screenNames.login);

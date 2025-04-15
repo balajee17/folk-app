@@ -32,21 +32,21 @@ const ChallengeCompletedCard = ({title, image, fillPercentage, color}) => {
     };
   });
 
-  const height90 = verticalScale(90);
+  const height80 = verticalScale(80);
   const titleAnimatedStyle = useAnimatedStyle(() => {
     const colorVal = interpolateColor(
       fillHeight.value,
-      [0, height90],
+      [0, height80],
       [COLORS.black, COLORS.white],
     );
     return {color: colorVal};
   });
 
-  const height30 = verticalScale(30);
+  const height25 = verticalScale(25);
   const percentAnimatedStyle = useAnimatedStyle(() => {
     const colorVal = interpolateColor(
       fillHeight.value,
-      [0, height30],
+      [0, height25],
       [COLORS.black, COLORS.white],
     );
     return {color: colorVal};
@@ -65,14 +65,14 @@ const ChallengeCompletedCard = ({title, image, fillPercentage, color}) => {
           numberOfLines={2}
           style={[
             styles.subTitleTxt,
-            {marginTop: '3%', width: '100%'},
-            titleAnimatedStyle,
+            {marginTop: '5%', width: '100%'},
+            fillPercentage >= 80 && titleAnimatedStyle,
           ]}>
           {title}
         </Animated.Text>
 
         <Animated.Text style={[styles.challengePercent, percentAnimatedStyle]}>
-          {fillPercentage}
+          {fillPercentage}%
         </Animated.Text>
       </View>
     </View>
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.urbanistBold,
     color: COLORS.black,
     width: '50%',
+    lineHeight: 25,
   },
   addBtn: {
     backgroundColor: COLORS.atlantis,
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
     bottom: '5%',
     right: '2%',
     fontFamily: FONTS.urbanistBold,
-    fontSize: SIZES.xl,
+    fontSize: SIZES.xxl,
     color: COLORS.black,
   },
 });
