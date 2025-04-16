@@ -401,7 +401,8 @@ const EventDetails = props => {
                       </Text>
                     </View>
                   </View>
-                ) : (
+                ) : eventDetails?.Is_registered === 'Y' &&
+                  eventDetails?.Event_mode === 'O' ? (
                   <TouchableOpacity
                     activeOpacity={0.6}
                     onPress={async () => {
@@ -421,6 +422,8 @@ const EventDetails = props => {
 
                     <Text style={styles.joinTxt}>Join Now</Text>
                   </TouchableOpacity>
+                ) : (
+                  <></>
                 )}
               </>
             )}

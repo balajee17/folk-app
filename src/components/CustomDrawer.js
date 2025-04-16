@@ -121,7 +121,7 @@ const CustomDrawer = ({navigation, route}) => {
             onPress={() => {
               navigateTo(screenNames.profile);
             }}
-            activeOpacity={0.6}
+            activeOpacity={0.8}
             style={styles.profImgCont}>
             <Image
               source={{
@@ -130,12 +130,17 @@ const CustomDrawer = ({navigation, route}) => {
               style={styles.profImg}
             />
           </TouchableOpacity>
-          <View style={styles.profileTextCont}>
+          <TouchableOpacity
+            onPress={() => {
+              navigateTo(screenNames.profile);
+            }}
+            activeOpacity={0.8}
+            style={[styles.profileTextCont]}>
             <Text style={styles.profName}>{userName}</Text>
             <Text style={[styles.profName, styles.mailTxt]}>
               FOLK ID : {folkId}
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
 

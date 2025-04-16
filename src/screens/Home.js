@@ -252,7 +252,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
             <View style={styles.quotesCont}>
               <Swiper
                 cards={UPDATES}
-                containerStyle={styles.swiperContainer}
+                // containerStyle={styles.swiperContainer}
                 cardStyle={styles.swiperCard}
                 renderCard={(card, cardIndex) => {
                   const isLoaded = imageLoadMap.current[card?.id];
@@ -260,7 +260,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                     <View
                       key={card?.id}
                       style={{
-                        width: horizontalScale(340),
+                        width: horizontalScale(290),
                       }}>
                       <Image
                         source={{uri: card?.link}}
@@ -468,12 +468,6 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 borderRadius: moderateScale(15),
               }}
               play={playVideo}
-              onReady={() => {
-                // setShimmer(prev => ({...prev, video: false}));
-              }}
-              onError={() => {
-                // setShimmer(prev => ({...prev, video: false}));
-              }}
               mute={youtubeAudio}
               videoId={UPDATES[0]?.code}
               onChangeState={onStateChange}
@@ -583,31 +577,33 @@ const styles = StyleSheet.create({
   },
   shimmerCont: {width: '70%', marginTop: verticalScale(15)},
   quotesCont: {
-    height: horizontalScale(450),
+    height: horizontalScale(345),
     width: windowWidth,
   },
   swiperContainer: {
     width: windowWidth,
-    height: horizontalScale(450),
-    alignSelf: 'center',
+    height: horizontalScale(300),
     justifyContent: 'center',
     alignItems: 'center',
   },
   swiperCard: {
-    width: horizontalScale(340),
-    height: horizontalScale(400),
+    width: horizontalScale(290),
+    height: horizontalScale(300),
     alignSelf: 'center',
     borderRadius: moderateScale(10),
-    overflow: 'hidden',
     marginTop: '-6%',
+    marginLeft: '6.5%',
     backgroundColor: COLORS.dropDownBg,
   },
   quotesImg: {
-    width: horizontalScale(340),
-    height: horizontalScale(350),
+    width: horizontalScale(290),
+    height: horizontalScale(250),
+    resizeMode: 'stretch',
+    borderTopRightRadius: moderateScale(10),
+    borderTopLeftRadius: moderateScale(10),
   },
   shareDwnldCont: {
-    width: '35%',
+    width: '40%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -615,7 +611,7 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
   },
   quotesBtns: {
-    backgroundColor: COLORS.shareBtn,
+    backgroundColor: COLORS.header,
     width: horizontalScale(40),
     height: horizontalScale(40),
     alignItems: 'center',

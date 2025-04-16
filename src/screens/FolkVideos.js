@@ -35,7 +35,7 @@ import AndroidBackHandler from '../components/BackHandler';
 const FolkVideos = props => {
   const [videoControl, setVideoControl] = useState({
     playVideo: true,
-    muteAudio: false,
+    muteAudio: true,
   });
   const [playingVideo, setPlayingVideo] = useState({});
   const [shimmer, setShimmer] = useState({video: true, text: true});
