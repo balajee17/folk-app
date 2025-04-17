@@ -258,6 +258,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                   key={index}
                   style={styles.socialMediaBtn}
                   onPress={async () => {
+                    console.log('item?.URL', item?.URL);
                     const result = await RedirectURL(item?.URL);
                     if (!!result?.type) {
                       toastMsg(result?.message, result?.type);

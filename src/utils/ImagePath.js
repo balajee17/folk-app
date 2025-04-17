@@ -13,7 +13,6 @@ export const getImage = {
   accountActive: require('../assets/images/accountActive.png'),
   scanner: require('../assets/images/scanner.png'),
   comingSoon: require('../assets/images/comingSoon.png'),
-  success: require('../assets/images/success.png'),
   noData: require('../assets/images/noData.gif'),
   homeWhite: require('../assets/images/homeWhite.png'),
   homeBlack: require('../assets/images/homeBlack.png'),

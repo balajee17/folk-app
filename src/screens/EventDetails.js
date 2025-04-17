@@ -157,10 +157,11 @@ const EventDetails = props => {
         eventId: eventId,
         offer_code: coupon?.applied ? coupon?.code : '',
         isPaidEvent: eventDetails?.is_paid_event,
-        pgName: 'cashFree',
+        // pgName: 'cashFree',
         pgMode: 'Online',
         paidAmount:
-          eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.value : 0,
+          eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.amount : 0,
+
         name: globalState?.userName,
         mobileNumber: globalState?.mobileNumber,
       };
@@ -174,15 +175,19 @@ const EventDetails = props => {
       }
 
       if (eventDetails?.is_paid_event === 'N') {
-        resetValues();
         toastMsg(message, 'success');
+        await setGlobalState(prev => ({
+          ...prev,
+          reloadEventList: 'Y',
+        }));
+        resetValues();
         setLoader(false);
+
         return getEventDetails();
       }
 
-      const orderId = 'order_105263592urDHAcG67Ch3S8YfUVRSfK49pU';
-      const paymentSessionId =
-        'session_RoeLNsZJ_ft1NLDBNuhdb70GYL9N92uMkmO_gwXNlOS6t5o-XuWoNc0dkjQipNN-__V0U1Fa1kKVfJ4gZm9iWUTgn53zM-qyA56r4lc0vhCS9QEnWEtgHQUsBwpaymentpayment';
+      const orderId = data?.orderId;
+      const paymentSessionId = data?.paymentSessionId;
 
       if (!paymentSessionId || !orderId) {
         setLoader(false);
@@ -212,18 +217,18 @@ const EventDetails = props => {
     console.log('paymentStatusRes', paymentStatusRes);
     setLoader(false);
     navigation.navigate(screenNames.paymentDetails, {
-      // paymentStatus: paymentStatusRes,
-      paymentStatus: {
-        amountDetails: [{label: 'Total Amount', value: '110.15'}],
-        TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
-        BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
-        STATUS: 'Payment Success',
-        EVENT_NAME: 'Cash Free Payment Gateway',
-        PURPOSE: 'Cash Free Testing',
-        TOTAL_AMOUNT: '110.15',
-        STATUS_IMAGE:
-          'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
-      },
+      paymentStatus: paymentStatusRes,
+      // paymentStatus: {
+      //   amountDetails: [{label: 'Total Amount', value: '110.15'}],
+      //   TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
+      //   BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
+      //   STATUS: 'Payment Success',
+      //   EVENT_NAME: 'Cash Free Payment Gateway',
+      //   PURPOSE: 'Cash Free Testing',
+      //   TOTAL_AMOUNT: '110.15',
+      //   STATUS_IMAGE:
+      //     'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
+      // },
       screenFrom: screenNames.eventDetails,
     });
   };
@@ -246,6 +251,8 @@ const EventDetails = props => {
         applied: false,
       });
   };
+
+  console.log('reloadEventList123', reloadEventList);
 
   return (
     <>
@@ -419,7 +426,6 @@ const EventDetails = props => {
                       size={moderateScale(25)}
                       color={COLORS.white}
                     />
-
                     <Text style={styles.joinTxt}>Join Now</Text>
                   </TouchableOpacity>
                 ) : (

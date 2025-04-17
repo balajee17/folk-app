@@ -50,8 +50,6 @@ const SwitcherScreen = ({navigation, route}) => {
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
   const [connectDetails, setConnectDetails] = useState({});
   const [exitAppModal, setExitAppModal] = useState(false);
-  const [reloadEventVal, setReloadEventVal] = useState(reloadEventList);
-
 
   const toastMsg = (msg, type) => {
     toast.show(msg, {
@@ -100,25 +98,19 @@ const SwitcherScreen = ({navigation, route}) => {
     }
 
     if (
-      (btTab === 'B2' &&
-        eventTabIndex === 0 &&
-        activeEventTab !== 1 &&
-        !checkUpComingData)
-      //    ||
-      // reloadEventList === 'Y'
+      btTab === 'B2' &&
+      eventTabIndex === 0 &&
+      activeEventTab !== 1 &&
+      !checkUpComingData
     ) {
-      // setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
       getUpcomingList();
     }
 
     if (
-      (btTab === 'B2' &&
-        !checkRegisteredData &&
-        (activeEventTab === 1 || eventTabIndex === 1)) 
-      //   ||
-      // reloadEventList === 'Y'
+      btTab === 'B2' &&
+      !checkRegisteredData &&
+      (activeEventTab === 1 || eventTabIndex === 1)
     ) {
-      // setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
       getRegisteredList();
     }
 
@@ -146,12 +138,19 @@ const SwitcherScreen = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      
-      reloadEventVal === 'Y' &&
-        (setGlobalState(prev => ({...prev, reloadEventList: 'N'})),setEventList({upcoming: [], registered: []}), getUpcomingList());
+      console.log('reloadEventList', reloadEventList, globalState);
 
-      reloadEventList ==='Y' && activeEventTab === 1 && (setGlobalState(prev => ({...prev, reloadEventList: 'N'})),setEventList({upcoming: [], registered: []}),getRegisteredList())
-    }, [reloadEventVal]),
+      if (reloadEventList === 'Y') {
+        setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
+        setEventList({upcoming: [], registered: []});
+
+        if (activeEventTab === 1) {
+          getRegisteredList();
+        } else {
+          getUpcomingList();
+        }
+      }
+    }, [reloadEventList]), // ✅ now responds to latest values
   );
 
   const handleOkay = () => {
@@ -261,8 +260,6 @@ const SwitcherScreen = ({navigation, route}) => {
       toastMsg('', 'error');
     }
   };
-
-  console.log('reloadEventList',reloadEventList);
 
   return (
     <Container>

@@ -164,6 +164,8 @@ const EditProfile = props => {
     }
   };
 
+  console.log('profileDetails', dropdownData);
+
   return (
     <Container>
       <SafeAreaView style={MyStyles.flex1}>

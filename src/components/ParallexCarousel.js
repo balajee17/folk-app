@@ -18,7 +18,7 @@ import ParallexPaginationDots from './ParallexPaginationDots';
 
 const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
-const ITEM_HEIGHT = verticalScale(200);
+const ITEM_HEIGHT = verticalScale(400);
 
 const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
   const scrollX = useSharedValue(0);
@@ -231,7 +231,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
                     height: '100%',
                     borderRadius: moderateScale(15),
                     overflow: 'hidden',
-                    resizeMode: 'cover',
+                    resizeMode: 'stretch',
                   }}
                   source={{uri: item?.link}}
                 />

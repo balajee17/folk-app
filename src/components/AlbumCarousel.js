@@ -37,8 +37,8 @@ import {useToast} from 'react-native-toast-notifications';
 import {RedirectURL, ShareLink} from './CommonFunctionalities';
 
 const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
-  const WIDTH = windowWidth * 0.75;
-  const HEIGHT = WIDTH * 1.58;
+  const WIDTH = windowWidth * 0.9;
+  const HEIGHT = WIDTH * 1.3;
   const imagesData = selectedItem?.images;
 
   const scrollX = useSharedValue(activeIndex);
@@ -146,7 +146,7 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                   style={{
                     width: WIDTH,
                     height: HEIGHT,
-                    resizeMode: 'cover',
+                    resizeMode: 'stretch',
                     borderRadius: 16,
                   }}
                 />

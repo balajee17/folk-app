@@ -345,14 +345,14 @@ export let MyStyles = {
     alignItems: 'center',
   },
   announceIcn: {
-    width: horizontalScale(35),
-    height: horizontalScale(35),
+    width: '100%',
+    height: verticalScale(50),
     marginRight: '5%',
   },
   announceTxt: {
     fontSize: SIZES.xl,
     color: COLORS.white,
-    fontFamily: FONTS.urbanistSemiBold,
+    fontFamily: FONTS.urbanistBold,
     width: '80%',
   },
 

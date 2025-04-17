@@ -45,15 +45,6 @@ const Quotes = props => {
   const [quotesData, setQuotesData] = useState([]);
 
   const [shimmer, setShimmer] = useState(true);
-  const [refresh, setRefresh] = useState(false);
-  const imageLoadMap = useRef({});
-
-  const handleImageLoad = cardIndex => {
-    if (!imageLoadMap.current[cardIndex]) {
-      imageLoadMap.current[cardIndex] = true;
-      setRefresh(prev => !prev);
-    }
-  };
 
   const {navigation, route} = props;
   const toast = useToast();
@@ -142,54 +133,50 @@ const Quotes = props => {
                         containerStyle={styles.swiperContainer}
                         cardStyle={styles.swiperCard}
                         renderCard={(card, cardIndex) => {
-                          const isLoaded = imageLoadMap.current[cardIndex];
                           return (
                             <View
                               key={cardIndex}
                               style={{
-                                width: horizontalScale(340),
+                                width: horizontalScale(290),
                               }}>
                               <Image
                                 source={{uri: card}}
                                 style={styles.quotesImg}
-                                onLoadEnd={() => handleImageLoad(cardIndex)}
                               />
                               {/* // # Share & Download Button  */}
-                              {isLoaded && (
-                                <View style={styles.shareDwnldCont}>
-                                  <TouchableOpacity
-                                    onPress={async () => {
-                                      const result = await RedirectURL(card);
-                                      if (!!result?.type) {
-                                        toastMsg(result?.message, result?.type);
-                                      }
-                                    }}
-                                    style={styles.quotesBtns}
-                                    activeOpacity={0.6}>
-                                    <Feather
-                                      name="download"
-                                      size={moderateScale(30)}
-                                      color={COLORS.white}
-                                    />
-                                  </TouchableOpacity>
+                              <View style={styles.shareDwnldCont}>
+                                <TouchableOpacity
+                                  onPress={async () => {
+                                    const result = await RedirectURL(card);
+                                    if (!!result?.type) {
+                                      toastMsg(result?.message, result?.type);
+                                    }
+                                  }}
+                                  style={styles.quotesBtns}
+                                  activeOpacity={0.6}>
+                                  <Feather
+                                    name="download"
+                                    size={moderateScale(30)}
+                                    color={COLORS.white}
+                                  />
+                                </TouchableOpacity>
 
-                                  <TouchableOpacity
-                                    onPress={() => {
-                                      const result = ShareLink(card);
-                                      if (!!result?.type) {
-                                        toastMsg(result?.message, result?.type);
-                                      }
-                                    }}
-                                    style={styles.quotesBtns}
-                                    activeOpacity={0.6}>
-                                    <MaterialCommunityIcons
-                                      name="share"
-                                      size={moderateScale(30)}
-                                      color={COLORS.white}
-                                    />
-                                  </TouchableOpacity>
-                                </View>
-                              )}
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    const result = ShareLink(card);
+                                    if (!!result?.type) {
+                                      toastMsg(result?.message, result?.type);
+                                    }
+                                  }}
+                                  style={styles.quotesBtns}
+                                  activeOpacity={0.6}>
+                                  <MaterialCommunityIcons
+                                    name="share"
+                                    size={moderateScale(30)}
+                                    color={COLORS.white}
+                                  />
+                                </TouchableOpacity>
+                              </View>
                             </View>
                           );
                         }}
@@ -225,31 +212,34 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   quotesCont: {
-    height: horizontalScale(450),
+    height: horizontalScale(345),
     width: windowWidth,
   },
   swiperContainer: {
     width: windowWidth,
-    height: horizontalScale(450),
+    height: horizontalScale(300),
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },
   swiperCard: {
-    width: horizontalScale(340),
-    height: horizontalScale(400),
+    width: horizontalScale(290),
+    height: horizontalScale(300),
     alignSelf: 'center',
     borderRadius: moderateScale(10),
-    overflow: 'hidden',
     marginTop: '-6%',
+    marginLeft: '6.5%',
     backgroundColor: COLORS.dropDownBg,
   },
   quotesImg: {
-    width: horizontalScale(340),
-    height: horizontalScale(350),
+    width: horizontalScale(290),
+    height: horizontalScale(250),
+    resizeMode: 'stretch',
+    borderTopRightRadius: moderateScale(10),
+    borderTopLeftRadius: moderateScale(10),
   },
   shareDwnldCont: {
-    width: '35%',
+    width: '40%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -257,7 +247,7 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
   },
   quotesBtns: {
-    backgroundColor: COLORS.shareBtn,
+    backgroundColor: COLORS.header,
     width: horizontalScale(40),
     height: horizontalScale(40),
     alignItems: 'center',

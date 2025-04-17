@@ -2,6 +2,7 @@ import {
   BackHandler,
   Image,
   ImageBackground,
+  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -39,6 +40,7 @@ import {useToast} from 'react-native-toast-notifications';
 import Swiper from 'react-native-deck-swiper';
 import Feather from 'react-native-vector-icons/Feather';
 import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const Home = ({apiData, shimmer, refreshData}) => {
   const {setGlobalState} = useAppContext();
@@ -49,15 +51,6 @@ const Home = ({apiData, shimmer, refreshData}) => {
   const [youtubeAudio] = useState(true);
 
   const isFocused = useIsFocused();
-  const [refresh, setRefresh] = useState(false);
-  const imageLoadMap = useRef({});
-
-  const handleImageLoad = cardId => {
-    if (!imageLoadMap.current[cardId]) {
-      imageLoadMap.current[cardId] = true;
-      setRefresh(prev => !prev);
-    }
-  };
 
   useEffect(() => {
     if (isFocused) {
@@ -121,6 +114,12 @@ const Home = ({apiData, shimmer, refreshData}) => {
         />
       </TouchableOpacity>
     );
+  };
+
+  // # Copy Text to Clipboard
+  const copyToClipboard = textToCopy => {
+    Clipboard.setString(textToCopy);
+    toastMsg(`Message copied to clipboard.`);
   };
 
   // @ Daily Darshana - Carousel
@@ -232,7 +231,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
 
         {shimmer ? (
           <ImageShimmer
-            width={'95%'}
+            width={horizontalScale(290)}
             height={verticalScale(300)}
             borderRadius={moderateScale(15)}
             marginTop={verticalScale(12)}
@@ -252,10 +251,8 @@ const Home = ({apiData, shimmer, refreshData}) => {
             <View style={styles.quotesCont}>
               <Swiper
                 cards={UPDATES}
-                // containerStyle={styles.swiperContainer}
                 cardStyle={styles.swiperCard}
                 renderCard={(card, cardIndex) => {
-                  const isLoaded = imageLoadMap.current[card?.id];
                   return (
                     <View
                       key={card?.id}
@@ -265,44 +262,41 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       <Image
                         source={{uri: card?.link}}
                         style={styles.quotesImg}
-                        onLoadEnd={() => handleImageLoad(card?.id)}
                       />
                       {/* // # Share & Download Button  */}
-                      {isLoaded && (
-                        <View style={styles.shareDwnldCont}>
-                          <TouchableOpacity
-                            onPress={async () => {
-                              const result = await RedirectURL(card?.link);
-                              if (!!result?.type) {
-                                toastMsg(result?.message, result?.type);
-                              }
-                            }}
-                            style={styles.quotesBtns}
-                            activeOpacity={0.6}>
-                            <Feather
-                              name="download"
-                              size={moderateScale(25)}
-                              color={COLORS.white}
-                            />
-                          </TouchableOpacity>
+                      <View style={styles.shareDwnldCont}>
+                        <TouchableOpacity
+                          onPress={async () => {
+                            const result = await RedirectURL(card?.link);
+                            if (!!result?.type) {
+                              toastMsg(result?.message, result?.type);
+                            }
+                          }}
+                          style={styles.quotesBtns}
+                          activeOpacity={0.6}>
+                          <Feather
+                            name="download"
+                            size={moderateScale(25)}
+                            color={COLORS.white}
+                          />
+                        </TouchableOpacity>
 
-                          <TouchableOpacity
-                            onPress={() => {
-                              const result = ShareLink(card?.link);
-                              if (!!result?.type) {
-                                toastMsg(result?.message, result?.type);
-                              }
-                            }}
-                            style={styles.quotesBtns}
-                            activeOpacity={0.6}>
-                            <MaterialCommunityIcons
-                              name="share"
-                              size={moderateScale(25)}
-                              color={COLORS.white}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      )}
+                        <TouchableOpacity
+                          onPress={() => {
+                            const result = ShareLink(card?.link);
+                            if (!!result?.type) {
+                              toastMsg(result?.message, result?.type);
+                            }
+                          }}
+                          style={styles.quotesBtns}
+                          activeOpacity={0.6}>
+                          <MaterialCommunityIcons
+                            name="share"
+                            size={moderateScale(25)}
+                            color={COLORS.white}
+                          />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   );
                 }}
@@ -375,10 +369,53 @@ const Home = ({apiData, shimmer, refreshData}) => {
                         uri: updateItem?.link,
                       }}
                     />
+                    {/*  // # Share Btn */}
+                    <TouchableOpacity
+                      onPress={() => {
+                        const result = ShareLink(updateItem?.link);
+                        if (!!result?.type) {
+                          toastMsg(result?.message, result?.type);
+                        }
+                      }}
+                      style={styles.shareBtn}
+                      activeOpacity={0.6}>
+                      <MaterialCommunityIcons
+                        name="share"
+                        size={moderateScale(25)}
+                        color={COLORS.white}
+                      />
+                    </TouchableOpacity>
                   </View>
                 )}
-                {updateItem?.text && (
+                {updateItem?.link && updateItem?.text ? (
                   <View
+                    key={updateItem?.id}
+                    style={[
+                      MyStyles.updatesTextCont,
+                      MyStyles.paddingHor10,
+                      {
+                        marginTop: '2%',
+                      },
+                    ]}>
+                    <Text style={[MyStyles.announceTxt, {color: COLORS.black}]}>
+                      {updateItem?.title}
+                    </Text>
+
+                    <Text
+                      style={[
+                        MyStyles.updateTxt,
+                        {marginTop: '2%', color: COLORS.black},
+                      ]}>
+                      {updateItem?.text}
+                    </Text>
+                  </View>
+                ) : updateItem?.text ? (
+                  <Pressable
+                    onLongPress={() => {
+                      copyToClipboard(
+                        `${updateItem?.title}\n${updateItem?.text}`,
+                      );
+                    }}
                     key={updateItem?.id}
                     style={[
                       MyStyles.updatesTextCont,
@@ -399,24 +436,37 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       <View
                         style={{
                           padding: moderateScale(10),
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}>
-                        <View style={MyStyles.announceIcnTxtCont}>
+                        <View
+                          style={[
+                            MyStyles.announceIcnTxtCont,
+                            {
+                              width: '17%',
+                            },
+                          ]}>
                           <Image
                             source={{
                               uri: updateItem?.icon,
                             }}
                             style={MyStyles.announceIcn}
                           />
+                        </View>
+                        <View style={{width: '80%'}}>
                           <Text style={[MyStyles.announceTxt]}>
                             {updateItem?.title}
                           </Text>
+                          <Text style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
+                            {updateItem?.text}
+                          </Text>
                         </View>
-                        <Text style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
-                          {updateItem?.text}
-                        </Text>
                       </View>
                     </LinearGradient>
-                  </View>
+                  </Pressable>
+                ) : (
+                  <></>
                 )}
               </View>
             );
@@ -617,5 +667,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(30),
+  },
+  shareBtn: {
+    backgroundColor: COLORS.backBg,
+    width: horizontalScale(35),
+    height: horizontalScale(35),
+    borderRadius: moderateScale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: '4%',
+    right: '7%',
   },
 });
