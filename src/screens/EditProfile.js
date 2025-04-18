@@ -39,7 +39,7 @@ const EditProfile = props => {
 
   const {navigation} = props;
   const [loader, setLoader] = useState(true);
-  const [profileDetails, setProfileDetails] = useState({
+  const [profileData, setProfileData] = useState({
     country: {},
     city: '',
     state: {},
@@ -90,7 +90,7 @@ const EditProfile = props => {
           setDropdownData(prev => ({...prev, state: data?.dropdown?.state}));
         } else {
           setDropdownData(data?.dropdown);
-          setProfileDetails(data?.profileDetails);
+          setProfileData(data?.profileDetails);
         }
       } else {
         toastMsg(message, 'warning');
@@ -107,27 +107,41 @@ const EditProfile = props => {
   const sendEditProfile = async () => {
     try {
       setLoader(true);
+      console.log('profileData', profileData);
+      const {
+        country,
+        city,
+        state,
+        address,
+        highestQualification,
+        occupation,
+        designation,
+        livingStatus,
+        maritalStatus,
+        passportPhotoBase64,
+      } = profileData;
       const params = {
         profileId: profileId,
-        country: profileDetails?.country?.value,
-        city: profileDetails?.city,
-        state: profileDetails?.state?.value,
-        address: profileDetails?.address,
-        highestQualification: profileDetails?.highestQualification,
-        occupation: profileDetails?.occupation?.value,
-        designation: profileDetails?.designation,
-        livingStatus: profileDetails?.livingStatus?.value,
-        maritalStatus: profileDetails?.maritalStatus?.value,
-        passportPhoto: profileDetails?.passportPhotoBase64,
+        country: country?.value ? country?.value : null,
+        city: city ? city : null,
+        state: state?.value ? state?.value : null,
+        address: address ? address : null,
+        highestQualification: highestQualification
+          ? highestQualification
+          : null,
+        occupation: occupation?.value ? occupation?.value : null,
+        designation: designation ? designation : null,
+        livingStatus: livingStatus?.value ? livingStatus?.value : null,
+        maritalStatus: maritalStatus?.value ? maritalStatus?.value : null,
+        passportPhoto: passportPhotoBase64 ? passportPhotoBase64 : null,
       };
       const response = await API.sendEditProfileDetails(params);
 
       console.log('Edit Profile_response', response?.data);
-      const {data, successCode, message} = response?.data;
+      const {profileDetails, successCode, message} = response?.data;
       if (successCode === 1) {
         toastMsg(message, 'success');
-        setProfileDetails(data?.profileDetails);
-        // setDropdownData(data?.dropdown);
+        setProfileData(profileDetails);
         await setGlobalState(prev => ({...prev, reloadProfile: 'Y'}));
       } else {
         toastMsg(message, 'warning');
@@ -141,7 +155,7 @@ const EditProfile = props => {
   };
 
   const handleChange = (key, value) => {
-    setProfileDetails(prevState => ({
+    setProfileData(prevState => ({
       ...prevState,
       [key]: value,
     }));
@@ -153,7 +167,7 @@ const EditProfile = props => {
 
     if (typeof result === 'object' && Object.keys(result).length > 0) {
       setImagePicker(false);
-      setProfileDetails(prev => ({
+      setProfileData(prev => ({
         ...prev,
         passportPhoto: result?.path,
         passportPhotoBase64: result?.base64,
@@ -163,8 +177,6 @@ const EditProfile = props => {
       toastMsg('', 'error');
     }
   };
-
-  console.log('profileDetails', dropdownData);
 
   return (
     <Container>
@@ -182,9 +194,9 @@ const EditProfile = props => {
             data={dropdownData?.country}
             label={'Country'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.country}
+            value={profileData?.country}
             onChange={item => {
-              if (item?.value !== profileDetails?.country?.value) {
+              if (item?.value !== profileData?.country?.value) {
                 handleChange('country', item);
                 setDropdownData(prev => ({...prev, state: []}));
                 handleChange('state', '');
@@ -207,7 +219,7 @@ const EditProfile = props => {
             data={dropdownData?.state}
             label={'State'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.state}
+            value={profileData?.state}
             onChange={item => {
               handleChange('state', item);
             }}
@@ -225,7 +237,7 @@ const EditProfile = props => {
           <FloatingInput
             label={'City'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.city}
+            value={profileData?.city}
             onChangeText={item => {
               handleChange('city', item);
             }}
@@ -236,7 +248,7 @@ const EditProfile = props => {
           <FloatingInput
             label={'Address'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.address}
+            value={profileData?.address}
             onChangeText={item => {
               handleChange('address', item);
             }}
@@ -248,7 +260,7 @@ const EditProfile = props => {
             data={dropdownData?.livingStatus}
             label={'Living Status'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.livingStatus}
+            value={profileData?.livingStatus}
             onChange={item => {
               handleChange('livingStatus', item);
             }}
@@ -267,7 +279,7 @@ const EditProfile = props => {
             data={dropdownData?.maritalStatus}
             label={'Marital Status'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.maritalStatus}
+            value={profileData?.maritalStatus}
             onChange={item => {
               handleChange('maritalStatus', item);
             }}
@@ -285,7 +297,7 @@ const EditProfile = props => {
           <FloatingInput
             label={'Highest Qualification'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.highestQualification}
+            value={profileData?.highestQualification}
             onChangeText={item => {
               handleChange('highestQualification', item);
             }}
@@ -298,7 +310,7 @@ const EditProfile = props => {
             data={dropdownData?.occupation}
             label={'Occupation'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.occupation}
+            value={profileData?.occupation}
             onChange={item => {
               handleChange('occupation', item);
             }}
@@ -316,8 +328,9 @@ const EditProfile = props => {
           <FloatingInput
             label={'Designation'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileDetails?.designation}
+            value={profileData?.designation}
             onChangeText={item => {
+              console.log('item', item);
               handleChange('designation', item);
             }}
             cntnrStyle={styles.dropdownCont}
@@ -325,12 +338,12 @@ const EditProfile = props => {
 
           {/* // # Passport size photo */}
           <View style={styles.passportCont}>
-            {!!profileDetails?.passportPhoto ? (
+            {!!profileData?.passportPhoto ? (
               <>
                 <Image
                   style={styles.passportImg}
                   source={{
-                    uri: profileDetails?.passportPhoto,
+                    uri: profileData?.passportPhoto,
                   }}
                 />
                 <TouchableOpacity

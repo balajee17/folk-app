@@ -3,7 +3,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  Touchable,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -14,7 +13,6 @@ import {
   horizontalScale,
   moderateScale,
   SIZES,
-  verticalScale,
 } from '../styles/MyStyles';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
@@ -22,7 +20,9 @@ import {screenNames} from '../constants/ScreenNames';
 
 const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
   return (
-    <ScrollView contentContainerStyle={styles.scrollCntStyle}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.scrollCntStyle}>
       {/* // # Title and Edit Btn Container */}
       <View style={styles.titleEditCont}>
         {shimmer ? (
@@ -45,7 +45,9 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate(screenNames.editProfile,{userData:profileDetails});
+                navigation.navigate(screenNames.editProfile, {
+                  userData: profileDetails,
+                });
               }}
               activeOpacity={0.8}
               style={styles.editIcnBtn}>

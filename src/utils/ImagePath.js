@@ -30,4 +30,7 @@ export const getImage = {
   folkGIF: require('../assets/images/folkGIF.gif'),
   noNetwork: require('../assets/images/noNetwork.gif'),
   alert: require('../assets/images/alert.png'),
+  sadhanaWhite: require('../assets/images/sadhanaWhite.png'),
+  sadhanaBlack: require('../assets/images/sadhanaBlack.png'),
+  folkSplash: require('../assets/images/folk_splash.png'),
 };

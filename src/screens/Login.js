@@ -62,7 +62,6 @@ const Login = ({navigation}) => {
   // # Back Handler
   useEffect(() => {
     const backAction = () => {
-      console.log('first');
       if (showOtp) {
         setShowOtp(false);
         setOtp('');

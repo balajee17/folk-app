@@ -28,7 +28,11 @@ import {useToast} from 'react-native-toast-notifications';
 import {API} from '../services/API';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useAppContext} from '../../App';
-import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
+import {
+  CopyToClipboard,
+  RedirectURL,
+  toastThrottle,
+} from '../components/CommonFunctionalities';
 import {getImage} from '../utils/ImagePath';
 
 const ConnectUs = ({apiData, shimmer}) => {
@@ -36,11 +40,6 @@ const ConnectUs = ({apiData, shimmer}) => {
   const toastMsg = toastThrottle((msg, type) => {
     toast.show(msg, {type});
   }, 3400);
-
-  const copyToClipboard = (item, textToCopy) => {
-    Clipboard.setString(textToCopy);
-    toastMsg(`${item} copied to clipboard.`);
-  };
 
   return (
     <ScrollView
@@ -125,7 +124,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                 {apiData?.guideDetails?.MOBILE && (
                   <TouchableOpacity
                     onPress={() =>
-                      copyToClipboard(
+                      CopyToClipboard(
                         'Mobile number',
                         apiData?.guideDetails?.MOBILE,
                       )
@@ -146,7 +145,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                 {apiData?.guideDetails?.MAIL && (
                   <TouchableOpacity
                     onPress={() =>
-                      copyToClipboard('Email', apiData?.guideDetails?.MAIL)
+                      CopyToClipboard('Email', apiData?.guideDetails?.MAIL)
                     }
                     activeOpacity={0.6}>
                     <MaterialIcons

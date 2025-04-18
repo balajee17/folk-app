@@ -92,7 +92,7 @@ const Splash = ({navigation}) => {
     return new Promise(resolve => {
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 2000, // Adjust animation duration as needed
+        duration: 3000, // Adjust animation duration as needed
         useNativeDriver: true,
       }).start(() => resolve());
     });
@@ -103,7 +103,7 @@ const Splash = ({navigation}) => {
       <View style={[MyStyles.flex1, styles.mainContainer]}>
         <Animated.Image
           resizeMode="stretch"
-          source={getImage.folk}
+          source={getImage.folkSplash}
           style={[styles.logoImg, {opacity: fadeAnim}]}
         />
       </View>

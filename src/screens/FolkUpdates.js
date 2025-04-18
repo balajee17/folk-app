@@ -1,10 +1,12 @@
 import {
   FlatList,
   Image,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -25,6 +27,8 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
 import AndroidBackHandler from '../components/BackHandler';
+import {CopyToClipboard, ShareLink} from '../components/CommonFunctionalities';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const FolkUpdates = props => {
   const [shimmer, setShimmer] = useState(true);
@@ -105,6 +109,9 @@ const FolkUpdates = props => {
               data={folkUpdates}
               keyExtractor={(_, index) => index}
               showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: '5%',
+              }}
               renderItem={({item, index}) => {
                 return (
                   <>
@@ -116,35 +123,81 @@ const FolkUpdates = props => {
                       {item?.day}
                     </Text>
 
-                    {item?.updates?.map((image, index) => {
+                    {item?.updates?.map((updateItem, updateIndex) => {
                       return (
-                        <>
-                          {!!image?.link && (
+                        <View key={updateIndex}>
+                          {!!updateItem?.link && (
                             <View
-                              style={[
-                                styles.imageContainer,
-                                {marginTop: index !== 0 ? '5%' : 0},
-                              ]}
-                              key={image?.id}>
+                              key={updateItem?.id}
+                              style={[styles.quotesImgCont]}>
                               <Image
                                 style={MyStyles.quotesImg}
                                 source={{
-                                  uri: image?.link,
+                                  uri: updateItem?.link,
                                 }}
                               />
+                              {/*  // # Share Btn */}
+                              <TouchableOpacity
+                                onPress={() => {
+                                  const result = ShareLink(updateItem?.link);
+                                  if (!!result?.type) {
+                                    toastMsg(result?.message, result?.type);
+                                  }
+                                }}
+                                style={MyStyles.shareBtn}
+                                activeOpacity={0.6}>
+                                <MaterialCommunityIcons
+                                  name="share"
+                                  size={moderateScale(25)}
+                                  color={COLORS.white}
+                                />
+                              </TouchableOpacity>
                             </View>
                           )}
-
-                          {!!image?.text && (
+                          {updateItem?.link && updateItem?.text ? (
                             <View
+                              key={updateItem?.id}
                               style={[
                                 MyStyles.updatesTextCont,
+                                MyStyles.paddingHor10,
                                 {
-                                  marginTop: !!image?.link
+                                  marginTop: '2%',
+                                },
+                              ]}>
+                              <Text
+                                style={[
+                                  MyStyles.announceTxt,
+                                  {color: COLORS.black},
+                                ]}>
+                                {updateItem?.title}
+                              </Text>
+
+                              <Text
+                                style={[
+                                  MyStyles.updateTxt,
+                                  {marginTop: '2%', color: COLORS.black},
+                                ]}>
+                                {updateItem?.text}
+                              </Text>
+                            </View>
+                          ) : updateItem?.text ? (
+                            <Pressable
+                              onLongPress={() => {
+                                CopyToClipboard(
+                                  'Message',
+                                  `${updateItem?.title}\n${updateItem?.text}`,
+                                );
+                              }}
+                              key={updateItem?.id}
+                              style={[
+                                MyStyles.updatesTextCont,
+                                MyStyles.paddingHor10,
+                                {
+                                  marginTop: !!updateItem?.link
                                     ? '2%'
                                     : index !== 0
                                     ? '5%'
-                                    : 0,
+                                    : '1%',
                                 },
                               ]}>
                               <LinearGradient
@@ -152,26 +205,46 @@ const FolkUpdates = props => {
                                 end={{x: 1, y: 1}}
                                 colors={['#353a5f', '#9ebaf3']}
                                 style={[MyStyles.gradient]}>
-                                <View style={{padding: moderateScale(10)}}>
-                                  <View style={MyStyles.announceIcnTxtCont}>
+                                <View
+                                  style={{
+                                    padding: moderateScale(10),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                  }}>
+                                  <View
+                                    style={[
+                                      MyStyles.announceIcnTxtCont,
+                                      {
+                                        width: '17%',
+                                      },
+                                    ]}>
                                     <Image
                                       source={{
-                                        uri: image?.icon,
+                                        uri: updateItem?.icon,
                                       }}
                                       style={MyStyles.announceIcn}
                                     />
+                                  </View>
+                                  <View style={{width: '80%'}}>
                                     <Text style={[MyStyles.announceTxt]}>
-                                      {image?.title}
+                                      {updateItem?.title}
+                                    </Text>
+                                    <Text
+                                      style={[
+                                        MyStyles.updateTxt,
+                                        {marginTop: '2%'},
+                                      ]}>
+                                      {updateItem?.text}
                                     </Text>
                                   </View>
-                                  <Text style={MyStyles.updateTxt}>
-                                    {image?.text}
-                                  </Text>
                                 </View>
                               </LinearGradient>
-                            </View>
+                            </Pressable>
+                          ) : (
+                            <></>
                           )}
-                        </>
+                        </View>
                       );
                     })}
                   </>

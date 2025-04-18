@@ -56,7 +56,6 @@ const Profile = props => {
   const [paymentData, setPaymentData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [imagePicker, setImagePicker] = useState(false);
-  const [reloadProfileVal, setReloadProfileVal] = useState(reloadProfile);
 
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
@@ -80,8 +79,8 @@ const Profile = props => {
 
   useFocusEffect(
     useCallback(() => {
-      reloadProfileVal === 'Y' && reloadScreen();
-    }, [reloadProfileVal]),
+      reloadProfile === 'Y' && reloadScreen();
+    }, [reloadProfile]),
   );
 
   const reloadScreen = async () => {

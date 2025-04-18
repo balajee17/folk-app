@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {
   COLORS,
@@ -35,38 +35,42 @@ const AttendanceHistory = ({shimmer, attendanceHistory}) => {
       />
     </View>
   ) : (
-    attendanceHistory?.map((item, index) => (
-      <View
-        key={index}
-        style={[
-          styles.attendanceCard,
-          shimmer && {backgroundColor: COLORS.charcoal},
-        ]}>
-        <View style={styles.evtImgNameCont}>
-          {/* // # Event Image */}
-          <Image
-            source={{
-              uri: item?.EVENT_IMAGE,
-            }}
-            style={styles.eventImg}
-          />
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{paddingBottom: '3%'}}>
+      {attendanceHistory?.map((item, index) => (
+        <View
+          key={index}
+          style={[
+            styles.attendanceCard,
+            shimmer && {backgroundColor: COLORS.charcoal},
+          ]}>
+          <View style={styles.evtImgNameCont}>
+            {/* // # Event Image */}
+            <Image
+              source={{
+                uri: item?.EVENT_IMAGE,
+              }}
+              style={styles.eventImg}
+            />
 
-          {/* // # Event Name & Event Description */}
-          <View style={styles.nameDescrpCont}>
-            <Text numberOfLines={2} style={styles.eventName}>
-              {item?.EVENT_NAME}
-            </Text>
-            <Text numberOfLines={2} style={styles.descripTxt}>
-              {item?.DESCRIPTION}
-            </Text>
+            {/* // # Event Name & Event Description */}
+            <View style={styles.nameDescrpCont}>
+              <Text numberOfLines={2} style={styles.eventName}>
+                {item?.EVENT_NAME}
+              </Text>
+              <Text numberOfLines={2} style={styles.descripTxt}>
+                {item?.DESCRIPTION}
+              </Text>
+            </View>
           </View>
+          {/*  // # Date  */}
+          <Text numberOfLines={2} style={[styles.descripTxt, styles.dateTxt]}>
+            {item?.ATT_DATE}
+          </Text>
         </View>
-        {/*  // # Date  */}
-        <Text numberOfLines={2} style={[styles.descripTxt, styles.dateTxt]}>
-          {item?.ATT_DATE}
-        </Text>
-      </View>
-    ))
+      ))}
+    </ScrollView>
   );
 };
 

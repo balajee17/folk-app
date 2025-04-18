@@ -150,7 +150,7 @@ const SwitcherScreen = ({navigation, route}) => {
           getUpcomingList();
         }
       }
-    }, [reloadEventList]), // ✅ now responds to latest values
+    }, [reloadEventList]),
   );
 
   const handleOkay = () => {

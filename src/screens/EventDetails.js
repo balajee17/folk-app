@@ -157,7 +157,6 @@ const EventDetails = props => {
         eventId: eventId,
         offer_code: coupon?.applied ? coupon?.code : '',
         isPaidEvent: eventDetails?.is_paid_event,
-        // pgName: 'cashFree',
         pgMode: 'Online',
         paidAmount:
           eventDetails?.is_paid_event === 'Y' ? amountToPay?.[0]?.amount : 0,
@@ -383,7 +382,11 @@ const EventDetails = props => {
             {!shimmer &&
               eventDetails?.Event_space &&
               renderSubTitle(
-                eventDetails?.Event_mode === 'F' ? 'Location' : 'Online Link',
+                eventDetails?.Event_mode === 'F'
+                  ? 'Location'
+                  : eventDetails?.Is_registered === 'Y'
+                  ? 'Online Link'
+                  : null,
               )}
             {!shimmer && eventDetails?.Event_space && (
               <>

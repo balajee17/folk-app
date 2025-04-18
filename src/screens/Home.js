@@ -39,7 +39,11 @@ import LinearGradientBg from '../components/LinearGradientBg';
 import {useToast} from 'react-native-toast-notifications';
 import Swiper from 'react-native-deck-swiper';
 import Feather from 'react-native-vector-icons/Feather';
-import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
+import {
+  CopyToClipboard,
+  RedirectURL,
+  ShareLink,
+} from '../components/CommonFunctionalities';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 const Home = ({apiData, shimmer, refreshData}) => {
@@ -114,12 +118,6 @@ const Home = ({apiData, shimmer, refreshData}) => {
         />
       </TouchableOpacity>
     );
-  };
-
-  // # Copy Text to Clipboard
-  const copyToClipboard = textToCopy => {
-    Clipboard.setString(textToCopy);
-    toastMsg(`Message copied to clipboard.`);
   };
 
   // @ Daily Darshana - Carousel
@@ -377,7 +375,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                           toastMsg(result?.message, result?.type);
                         }
                       }}
-                      style={styles.shareBtn}
+                      style={MyStyles.shareBtn}
                       activeOpacity={0.6}>
                       <MaterialCommunityIcons
                         name="share"
@@ -412,7 +410,8 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 ) : updateItem?.text ? (
                   <Pressable
                     onLongPress={() => {
-                      copyToClipboard(
+                      CopyToClipboard(
+                        'Message',
                         `${updateItem?.title}\n${updateItem?.text}`,
                       );
                     }}
@@ -667,16 +666,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(30),
-  },
-  shareBtn: {
-    backgroundColor: COLORS.backBg,
-    width: horizontalScale(35),
-    height: horizontalScale(35),
-    borderRadius: moderateScale(30),
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: '4%',
-    right: '7%',
   },
 });

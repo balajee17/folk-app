@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import React from 'react';
 import {
   COLORS,
@@ -59,67 +66,73 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
       </View>
     </View>
   ) : (
-    <ScrollView contentContainerStyle={{paddingBottom:'3%'}}>
-    {paymentHistory?.map((item, index) => (
-      <TouchableOpacity
-        key={index}
-        onPress={() => navigateTo(screenNames.paymentDetails, item?.PAYMENT_ID)}
-        activeOpacity={0.8}
-        style={[styles.attendanceCard]}>
-        <View style={styles.evtImgNameCont}>
-          {/* // # First Letter of Event Name */}
-          <View style={styles.eventImg}>
-            <Text style={styles.eventFrstLetter}>
-              {item?.PURPOSE?.charAt(0)}
-            </Text>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{paddingBottom: '3%'}}>
+      {paymentHistory?.map((item, index) => (
+        <TouchableOpacity
+          key={index}
+          onPress={() =>
+            navigateTo(screenNames.paymentDetails, item?.PAYMENT_ID)
+          }
+          activeOpacity={0.8}
+          style={[styles.attendanceCard]}>
+          <View style={styles.evtImgNameCont}>
+            {/* // # First Letter of Event Name */}
+            <View style={styles.eventImg}>
+              <Text style={styles.eventFrstLetter}>
+                {item?.PURPOSE?.charAt(0)}
+              </Text>
+            </View>
+            {/* // # Transaction ID & Event Name */}
+            <View style={styles.idEvntNameCont}>
+              <Text numberOfLines={1} style={[styles.txid, {width: '100%'}]}>
+                TXID : {item?.TRANSACTION_ID}
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={[styles.eventName, {width: '100%'}]}>
+                {item?.PURPOSE}
+              </Text>
+            </View>
+            {/*  // # Amount */}
+            <Text style={styles.amtTxt}>{item?.TOTAL_AMOUNT}</Text>
           </View>
-          {/* // # Transaction ID & Event Name */}
-          <View style={styles.idEvntNameCont}>
-            <Text numberOfLines={1} style={[styles.txid, {width: '100%'}]}>
-              TXID : {item?.TRANSACTION_ID}
-            </Text>
-            <Text numberOfLines={1} style={[styles.eventName, {width: '100%'}]}>
-              {item?.PURPOSE}
-            </Text>
+          {/*  // # Date & status  */}
+          <View style={styles.dateStatusCont}>
+            <View style={[styles.dateTimeCont, {width: '40%'}]}>
+              <Text style={styles.dateTxt}>{item?.TRANSACTION_DATE}</Text>
+              <View style={styles.dot} />
+              <Text style={styles.dateTxt}>{item?.TRANSACTION_TIME}</Text>
+            </View>
+            <View style={[styles.dateTimeCont, {width: '30%'}]}>
+              <Text
+                numberOfLines={1}
+                style={[styles.eventName, styles.statusTxt]}>
+                {item?.STATUS}
+              </Text>
+              <FontAwesome
+                name={
+                  item?.TRANSACTION_STATUS === 'S'
+                    ? 'check-circle'
+                    : item?.TRANSACTION_STATUS === 'F'
+                    ? 'times-circle'
+                    : 'exclamation-circle'
+                }
+                size={moderateScale(20)}
+                color={
+                  item?.TRANSACTION_STATUS === 'S'
+                    ? COLORS.successPB
+                    : item?.TRANSACTION_STATUS === 'F'
+                    ? COLORS.errorPB
+                    : COLORS.warningPB
+                }
+              />
+            </View>
           </View>
-          {/*  // # Amount */}
-          <Text style={styles.amtTxt}>{item?.TOTAL_AMOUNT}</Text>
-        </View>
-        {/*  // # Date & status  */}
-        <View style={styles.dateStatusCont}>
-          <View style={[styles.dateTimeCont, {width: '40%'}]}>
-            <Text style={styles.dateTxt}>{item?.TRANSACTION_DATE}</Text>
-            <View style={styles.dot} />
-            <Text style={styles.dateTxt}>{item?.TRANSACTION_TIME}</Text>
-          </View>
-          <View style={[styles.dateTimeCont, {width: '30%'}]}>
-            <Text
-              numberOfLines={1}
-              style={[styles.eventName, styles.statusTxt]}>
-              {item?.STATUS}
-            </Text>
-            <FontAwesome
-              name={
-                item?.TRANSACTION_STATUS === 'S'
-                  ? 'check-circle'
-                  : item?.TRANSACTION_STATUS === 'F'
-                  ? 'times-circle'
-                  : 'exclamation-circle'
-              }
-              size={moderateScale(20)}
-              color={
-                item?.TRANSACTION_STATUS === 'S'
-                  ? COLORS.successPB
-                  : item?.TRANSACTION_STATUS === 'F'
-                  ? COLORS.errorPB
-                  : COLORS.warningPB
-              }
-            />
-          </View>
-        </View>
-      </TouchableOpacity>
-    ))}
-      </ScrollView>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
   );
 };
 

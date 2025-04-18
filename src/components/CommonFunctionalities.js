@@ -31,6 +31,7 @@ import {
 } from '../styles/MyStyles';
 import ImagePicker from 'react-native-image-crop-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 // @ Redirect Link
 export const RedirectURL = async (url, app = '') => {
@@ -166,7 +167,7 @@ export const GetPaymentStatus = async (profileId, orderId) => {
       profileId,
       orderId,
     };
-    const response = await API.getPaymentStatus(params);
+    const response = await API.getPaymentDetails(params);
 
     const {data, successCode, message} = response?.data;
     console.log('Payment_status_response', data?.message);
@@ -233,6 +234,7 @@ export const CaptureImage = async () => {
   }
 };
 
+// # Image Upload option
 export const ImageUploadModal = ({visible, closeModal, uploadType}) => {
   return (
     <Modal visible={visible} transparent animationType={'slide'}>
@@ -275,4 +277,10 @@ export const ImageUploadModal = ({visible, closeModal, uploadType}) => {
       </Pressable>
     </Modal>
   );
+};
+
+// # Copy Text to Clipboard
+export const CopyToClipboard = (message, textToCopy) => {
+  Clipboard.setString(textToCopy);
+  toastMsg(`${message} copied to clipboard.`);
 };

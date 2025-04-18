@@ -66,7 +66,7 @@ export const CustomPopup = ({visible, onOkay, onCancel}) => {
               activeOpacity={0.7}
               style={{
                 ...styles.button,
-                backgroundColor: COLORS.header,
+                backgroundColor: COLORS.charcoal,
               }}
               onPress={onCancel}>
               <Text style={[styles.textStyle]}>No</Text>

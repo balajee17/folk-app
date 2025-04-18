@@ -40,12 +40,12 @@ import {
 import AndroidBackHandler from '../components/BackHandler';
 import FloatingInput from '../components/FloatingInput';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import FlipCardCoupon from '../components/FlipCardCoupon';
 
 const Coupons = props => {
   const {globalState, setGlobalState} = useAppContext();
 
   const {profileId, reloadCoupon} = globalState;
-  const dateTime = ['Date', 'Time'];
   const {route, navigation} = props;
   const {eventId} = route?.params;
 
@@ -63,7 +63,6 @@ const Coupons = props => {
   });
   const [requestReason, setRequestReason] = useState('');
   const [selCoupon, setSelCoupon] = useState(requestCoupon);
-  const [qrCode, setQrCode] = useState({show: false, link: ''});
   const [loader, setLoader] = useState(true);
   const [couponData, setCouponData] = useState([]);
   const [reloadCouponVal, setReloadCouponVal] = useState(reloadCoupon);
@@ -78,7 +77,6 @@ const Coupons = props => {
   );
 
   const reloadScreen = async () => {
-    console.log('RELOAD');
     await setGlobalState(prev => ({...prev, reloadCoupon: 'N'}));
     getCouponsList();
   };
@@ -334,18 +332,18 @@ const Coupons = props => {
     setDefaultStates();
 
     navigation.navigate(screenNames.paymentDetails, {
-      // paymentStatus: paymentStatusRes,
-      paymentStatus: {
-        amountDetails: [{label: 'Total Amount', value: '1001.15'}],
-        TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
-        BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
-        STATUS: 'Payment Success',
-        EVENT_NAME: 'Cash Free Payment Gateway',
-        PURPOSE: 'Cash Free Testing',
-        TOTAL_AMOUNT: '110.15',
-        STATUS_IMAGE:
-          'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
-      },
+      paymentStatus: paymentStatusRes,
+      // paymentStatus: {
+      //   amountDetails: [{label: 'Total Amount', value: '1001.15'}],
+      //   TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
+      //   BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
+      //   STATUS: 'Payment Success',
+      //   EVENT_NAME: 'Cash Free Payment Gateway',
+      //   PURPOSE: 'Cash Free Testing',
+      //   TOTAL_AMOUNT: '110.15',
+      //   STATUS_IMAGE:
+      //     'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
+      // },
       screenFrom: screenNames.coupons,
     });
   };
@@ -372,168 +370,13 @@ const Coupons = props => {
           data={couponData}
           renderItem={({item, index}) => {
             return (
-              <TouchableOpacity
-                disabled={
-                  item?.requestedCoupon === 'Y' ||
-                  item?.requestStatus === 'X' ||
-                  item?.is_Availed === 'Y'
-                }
-                key={index}
-                activeOpacity={0.8}
-                onPress={() => setQrCode({show: true, link: item?.qrImage})}
-                style={[styles.couponCard]}>
-                {/* // # Left Cutout */}
-                <View style={[styles.cutout, styles.leftCutout]} />
-                {/*  //# Vertical Line */}
-                <View style={styles.verticalLine} />
-                {/* // # Right Cutout */}
-                <View style={[styles.cutout, styles.rightCutout]} />
-
-                {/* // # Left Content */}
-                <View
-                  style={[
-                    styles.leftContent(item?.bgColor),
-                    item?.is_Availed === 'Y' && {opacity: 0.5},
-                  ]}>
-                  <Text
-                    numberOfLines={2}
-                    style={[
-                      styles.couponCodeTxt,
-                      {color: item?.codeColor || COLORS.candlelight},
-                    ]}>
-                    {item?.code}
-                  </Text>
-                  <Text
-                    numberOfLines={2}
-                    style={[
-                      styles.couponCodeTxt,
-                      styles.eventName,
-                      {color: item?.titleColor || COLORS.white},
-                    ]}>
-                    {item?.title}
-                  </Text>
-
-                  <View style={styles.dtTimeContainer}>
-                    {dateTime.map((dateItem, dateIndex) => {
-                      return (
-                        <View key={dateIndex} style={{width: '45%'}}>
-                          <Text
-                            numberOfLines={1}
-                            style={[
-                              styles.labelTxt,
-                              {color: item?.labelColor || COLORS.cloud},
-                            ]}>
-                            {dateItem}
-                          </Text>
-                          <Text
-                            numberOfLines={1}
-                            style={[
-                              styles.valueTxt,
-                              {color: item?.dateColor || COLORS.white},
-                            ]}>
-                            {dateIndex === 0 ? item?.date : item?.time}
-                          </Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-
-                  {/* // # Pay Button */}
-                  {item?.requestedCoupon === 'Y' && (
-                    <TouchableOpacity
-                      disabled={
-                        item?.requestStatus === 'P' ||
-                        item?.requestStatus === 'X'
-                      }
-                      onPress={() => {
-                        if (item?.isPaid === 'Y') {
-                          console.log('COUPON_ITEM', item);
-                          setSelCoupon({
-                            open: true,
-                            type: 'P',
-                            refId: item?.refId,
-                            prasadamAmt: item?.prasadamAmt,
-                            prasadamAmtLbl: item?.prasadamAmtLabel,
-                            totalAmt:
-                              Number(item?.qty) * Number(item?.prasadamAmt),
-                            paidCount: item?.qty,
-                            paidMaxCount: item?.qty,
-                          });
-                        }
-                        if (item?.isPaid === 'N') {
-                          setSelCoupon({
-                            open: true,
-                            type: 'F',
-                            freeCount: item?.qty,
-                            freeMaxCount: item?.qty,
-                            refId: item?.refId,
-                            prasadamAmt: item?.prasadamAmt,
-                            totalAmt: 0,
-                          });
-                        }
-                      }}
-                      activeOpacity={0.8}
-                      style={[
-                        styles.payBtn,
-                        {backgroundColor: item?.btnBgColor || COLORS.golden},
-                      ]}>
-                      <Text
-                        style={[
-                          styles.btnTxt,
-                          {
-                            color: item?.btnTxtColor || COLORS.white,
-                          },
-                        ]}>
-                        {item?.requestStatus === 'X'
-                          ? 'Rejected'
-                          : item?.requestStatus === 'P'
-                          ? 'Pending'
-                          : item?.requestStatus === 'A' && item?.isPaid === 'Y'
-                          ? 'Pay Now'
-                          : 'Reedem'}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-
-                {/* // # Right Content */}
-                <View
-                  style={[
-                    styles.rightContent,
-                    item?.is_Availed === 'Y' && {opacity: 0.5},
-                  ]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      styles.eventName,
-                      styles.qtyTxt,
-                      {
-                        color: item?.dateColor || COLORS.white,
-                      },
-                    ]}>
-                    Qty
-                  </Text>
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      styles.countTxt,
-                      {color: item?.countColor || COLORS.candlelight},
-                    ]}>
-                    {item?.qty}
-                  </Text>
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      styles.valueTxt,
-                      styles.amountTxt,
-                      {
-                        color: item?.dateColor || COLORS.white,
-                      },
-                    ]}>
-                    {item?.isPaid === 'Y' ? 'Paid' : 'Free'}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              <FlipCardCoupon
+                item={item}
+                index={index}
+                setSelCoupon={value => {
+                  setSelCoupon(value);
+                }}
+              />
             );
           }}
           refreshControl={
@@ -744,27 +587,6 @@ const Coupons = props => {
           </View>
         </View>
       </Modal>
-
-      {/*  // @ Show QrCode */}
-      <Modal
-        animationType="slide"
-        onRequestClose={() => setQrCode({show: false, qrLink: ''})}
-        visible={qrCode?.show}
-        transparent>
-        <Pressable
-          onPress={() => setQrCode({show: false, qrLink: ''})}
-          style={styles.fltrModal}>
-          {/* // #  Qr Code Image */}
-          <Pressable style={styles.qrCodeContainer}>
-            <Image
-              source={{
-                uri: qrCode?.link,
-              }}
-              style={{height: '100%', width: '100%'}}
-            />
-          </Pressable>
-        </Pressable>
-      </Modal>
     </Container>
   );
 };
@@ -772,111 +594,6 @@ const Coupons = props => {
 export default Coupons;
 
 const styles = StyleSheet.create({
-  couponCard: {
-    width: '90%',
-    borderTopRightRadius: moderateScale(15),
-    borderTopLeftRadius: moderateScale(30),
-    borderBottomRightRadius: moderateScale(15),
-    borderBottomLeftRadius: moderateScale(30),
-
-    alignSelf: 'center',
-    marginTop: '5%',
-    flexDirection: 'row',
-    overflow: 'hidden',
-  },
-  cutout: {
-    position: 'absolute',
-    backgroundColor: COLORS.white, // Same as the background to create the cutout effect
-    width: horizontalScale(25),
-    height: horizontalScale(25),
-    borderRadius: moderateScale(20),
-    // overflow: 'hidden',
-    zIndex: 99,
-  },
-  leftCutout: {
-    right: horizontalScale(80), // Moves it outside
-    bottom: 0,
-    transform: [{translateY: 10}],
-  },
-  rightCutout: {
-    right: horizontalScale(80), // Moves it outside
-    top: 0,
-    transform: [{translateY: -10}],
-  },
-  verticalLine: {
-    position: 'absolute',
-    borderWidth: 0.7,
-    borderColor: COLORS.white,
-    borderStyle: 'dashed',
-    height: '90%',
-    right: horizontalScale(92),
-    zIndex: 99,
-  },
-  leftContent: bgColor => ({
-    backgroundColor: bgColor || COLORS.windowsBlue,
-    width: horizontalScale(244.5),
-  }),
-  couponCodeTxt: {
-    width: '85%',
-    textAlign: 'left',
-    alignSelf: 'center',
-    color: COLORS.candlelight,
-    fontFamily: FONTS.urbanistBold,
-    fontSize: SIZES.xl,
-    marginTop: '5%',
-  },
-  eventName: {
-    fontSize: SIZES.subTitle,
-    color: COLORS.white,
-    textAlign: 'center',
-  },
-  dtTimeContainer: {
-    marginTop: '7%',
-    marginBottom: '5%',
-    width: '85%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-  },
-  labelTxt: {
-    width: '100%',
-    color: COLORS.cloud,
-    fontFamily: FONTS.urbanistSemiBold,
-    fontSize: SIZES.m,
-  },
-  valueTxt: {
-    width: '100%',
-    marginTop: '5%',
-
-    color: COLORS.white,
-    fontFamily: FONTS.urbanistSemiBold,
-    fontSize: SIZES.xl,
-  },
-  rightContent: {
-    backgroundColor: COLORS.charcoal,
-    width: horizontalScale(95),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  qtyTxt: {
-    width: '90%',
-    textAlign: 'center',
-    fontFamily: FONTS.urbanistBold,
-  },
-  countTxt: {
-    marginTop: '2%',
-    width: '85%',
-    fontFamily: FONTS.urbanistBold,
-    color: COLORS.candlelight,
-    fontSize: SIZES.xxxl + 20,
-    textAlign: 'center',
-  },
-  amountTxt: {
-    marginTop: '2%',
-    width: '85%',
-    fontSize: SIZES.subTitle,
-    textAlign: 'center',
-  },
   fltrModal: {
     backgroundColor: COLORS.modalBg,
     flex: 1,
@@ -986,19 +703,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.midGrey,
     marginTop: '4%',
   },
-  payBtn: {
-    width: horizontalScale(70),
-    height: horizontalScale(25),
-    borderRadius: moderateScale(4),
-    marginBottom: '5%',
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnTxt: {
-    fontFamily: FONTS.urbanistSemiBold,
-    fontSize: SIZES.l,
-  },
+
   qrCodeContainer: {
     width: windowWidth * 0.85,
     height: windowWidth * 0.85,

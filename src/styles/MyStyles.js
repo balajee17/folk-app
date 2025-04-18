@@ -183,12 +183,6 @@ export let MyStyles = {
     width: '100%',
   },
   paddingHor10: {paddingHorizontal: moderateScale(10)},
-  // updateTitle: {
-  //   fontSize: SIZES.xxxl,
-  //   textAlign: 'center',
-  //   color: COLORS.golden,
-  //   fontFamily: FONTS.aladinRegular,
-  // },
   gradient: {
     borderRadius: moderateScale(15),
   },
@@ -362,7 +356,7 @@ export let MyStyles = {
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: COLORS.modalBg,
   },
   container: {
     backgroundColor: COLORS.white,
@@ -413,5 +407,16 @@ export let MyStyles = {
     fontFamily: FONTS.urbanistMedium,
     color: COLORS.black,
     marginTop: verticalScale(8),
+  },
+  shareBtn: {
+    backgroundColor: COLORS.backBg,
+    width: horizontalScale(35),
+    height: horizontalScale(35),
+    borderRadius: moderateScale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: '4%',
+    right: '7%',
   },
 };

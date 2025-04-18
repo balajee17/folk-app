@@ -179,7 +179,7 @@ export const API = {
   getPaymentDetails(data) {
     const payDetailsURL = baseURL + '/payment-details';
     const requestData = {accessKey: Access_Key, ...data};
-    console.log('URL Add Coupon Data ', payDetailsURL, ' data ', requestData);
+    console.log('URL Payment Details', payDetailsURL, ' data ', requestData);
     return axios.post(payDetailsURL, requestData);
   },
   // # NotificationList
@@ -219,18 +219,6 @@ export const API = {
     );
     return axios.post(editProfileURL, requestData);
   },
-  // # getStateLists
-  getStateLists() {
-    const stateListURL = baseURL + '/';
-    const requestData = {accessKey: Access_Key};
-    console.log(
-      'URL get State Lists  URL Data ',
-      stateListURL,
-      ' data ',
-      requestData,
-    );
-    return axios.post(stateListURL, requestData);
-  },
 
   //# removeNotification
   removeNotification(data) {
@@ -245,16 +233,11 @@ export const API = {
     return axios.post(removeNotificationURL, requestData);
   },
 
-  // # PAYMENT API
-  getPaymentStatus(data) {
-    const paymentStatusURL = baseURL + '/';
+  // # Get YFH Link
+  getYFHLink(data) {
+    const YFHLinkURL = baseURL + '/send-registration-links';
     const requestData = {accessKey: Access_Key, ...data};
-    console.log(
-      'URL payment Status URL Data ',
-      paymentStatusURL,
-      ' data ',
-      requestData,
-    );
-    return axios.post(paymentStatusURL, requestData);
+    console.log('URL YFH Link URL Data ', YFHLinkURL, ' data ', requestData);
+    return axios.post(YFHLinkURL, requestData);
   },
 };

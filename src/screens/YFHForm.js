@@ -17,18 +17,55 @@ import {getImage} from '../utils/ImagePath';
 import AndroidBackHandler from '../components/BackHandler';
 import CustomBottomTab from '../components/CustomBottomTab';
 import {useAppContext} from '../../App';
+import WebView from 'react-native-webview';
+import Spinner from '../components/Spinner';
+import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
 
 const YFHForm = props => {
-  const [formValues, setFormValues] = useState({});
-  const {setGlobalState} = useAppContext();
+  // const [formValues, setFormValues] = useState({});
+  const {globalState, setGlobalState} = useAppContext();
+  const {mobileNumber} = globalState;
+
+  const [loader, setLoader] = useState(true);
+  const [YFHLink, setYFHLink] = useState('');
 
   const {navigation} = props;
+
+  const toast = useToast();
+  const toastMsg = (msg, type) => {
+    toast.show(msg, {
+      type: type,
+    });
+  };
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
 
+    getYFHLink();
+
     return AndroidBackHandler.removerHandler();
   }, []);
+
+  // # API Get YFH Form Link
+  const getYFHLink = async () => {
+    try {
+      const response = await API.getYFHLink({mobileNumber});
+      const {link, successCode, message} = response?.data;
+      console.log('YFH_Link_res', response.data);
+      if (successCode === 1) {
+        setYFHLink(link);
+      } else {
+        setYFHLink('');
+        toastMsg(message, 'warning');
+        setLoader(false);
+      }
+    } catch (err) {
+      setLoader(false);
+      toastMsg('', 'error');
+      console.log('ERR-YFH', err);
+    }
+  };
 
   const handleChange = (key, value) => {
     setFormValues(prevState => ({
@@ -45,16 +82,25 @@ const YFHForm = props => {
           toggleDrawer={() => navigation.openDrawer()}
           titleName={screenNames.yfhForm}
         />
-        {/* // # Contents */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[
-            MyStyles.scrollView,
-            MyStyles.paddingHor10,
-            {minHeight: screenHeight},
-          ]}>
-          {/* // @ Personal Details */}
-          {/* <Text
+        <Spinner spinnerVisible={loader} />
+
+        {/* // # WebView YFH FORM */}
+        {YFHLink && (
+          <WebView
+            showsVerticalScrollIndicator={false}
+            source={{
+              uri: YFHLink,
+            }}
+            style={{
+              flex: 1,
+              marginBottom: '3%',
+            }}
+            onLoad={() => setLoader(false)}
+          />
+        )}
+
+        {/* // @ Personal Details */}
+        {/* <Text
             style={[
               MyStyles.subTitleText,
               MyStyles.marTop3Per,
@@ -63,7 +109,7 @@ const YFHForm = props => {
             Personal Details
           </Text>
           {/* // # Whatsapp */}
-          {/* <FloatingInput
+        {/* <FloatingInput
             label={'WhatsApp Number'}
             value={formValues?.whatsapp}
             onChangeText={value => handleChange('whatsapp', value)}
@@ -80,18 +126,18 @@ const YFHForm = props => {
             }}
           />
           {/* // # Communication Address */}
-          {/* <FloatingInput
+        {/* <FloatingInput
             label={'Communication Address'}
             value={formValues?.address}
             onChangeText={value => handleChange('address', value)}
           />
 
           {/* // @ Educational Details */}
-          {/* <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
+        {/* <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
             Educational Details
           </Text>
           {/* // # Highest Qualification */}
-          {/* <FloatingInput
+        {/* <FloatingInput
             type="dropdown"
             label={'Highest Qualification'}
             value={formValues?.qualification}
@@ -118,8 +164,7 @@ const YFHForm = props => {
               justifyCenter: 'center',
             }}
           /> */}
-          <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
-        </ScrollView>
+        {/* <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} /> */}
       </SafeAreaView>
 
       {/* // @ Bottom Tab */}
