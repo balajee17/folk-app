@@ -410,10 +410,15 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 ) : updateItem?.text ? (
                   <Pressable
                     onLongPress={() => {
-                      CopyToClipboard(
-                        'Message',
-                        `${updateItem?.title}\n${updateItem?.text}`,
-                      );
+                      if (
+                        CopyToClipboard(
+                          `${updateItem?.title}\n${updateItem?.text}`,
+                        )
+                      ) {
+                        toastMsg('Message copied', 'success');
+                      } else {
+                        toastMsg('Unable to copy the text', 'error');
+                      }
                     }}
                     key={updateItem?.id}
                     style={[

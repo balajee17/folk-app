@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Container from '../components/Container';
 import {COLORS, MyStyles, screenHeight} from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
@@ -21,6 +21,7 @@ import WebView from 'react-native-webview';
 import Spinner from '../components/Spinner';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
+import {useFocusEffect} from '@react-navigation/native';
 
 const YFHForm = props => {
   // const [formValues, setFormValues] = useState({});
@@ -42,19 +43,24 @@ const YFHForm = props => {
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
 
-    getYFHLink();
-
     return AndroidBackHandler.removerHandler();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getYFHLink();
+    }, []),
+  );
 
   // # API Get YFH Form Link
   const getYFHLink = async () => {
     try {
-      const response = await API.getYFHLink({mobileNumber});
+      const response = await API.getYFHLink({mobile: mobileNumber});
       const {link, successCode, message} = response?.data;
-      console.log('YFH_Link_res', response.data);
       if (successCode === 1) {
+        console.log('YFH_Link_res', !link && setLoader(false));
         setYFHLink(link);
+        !!link && setLoader(false);
       } else {
         setYFHLink('');
         toastMsg(message, 'warning');

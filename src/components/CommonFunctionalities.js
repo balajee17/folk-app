@@ -281,7 +281,10 @@ export const ImageUploadModal = ({visible, closeModal, uploadType}) => {
 };
 
 // # Copy Text to Clipboard
-export const CopyToClipboard = (message, textToCopy) => {
-  Clipboard.setString(textToCopy);
-  toastMsg(`${message} copied to clipboard.`);
+export const CopyToClipboard = textToCopy => {
+  if (textToCopy) {
+    Clipboard.setString(textToCopy);
+    return true;
+  }
+  return false;
 };

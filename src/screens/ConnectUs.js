@@ -123,12 +123,13 @@ const ConnectUs = ({apiData, shimmer}) => {
                 </Text>
                 {apiData?.guideDetails?.MOBILE && (
                   <TouchableOpacity
-                    onPress={() =>
-                      CopyToClipboard(
-                        'Mobile number',
-                        apiData?.guideDetails?.MOBILE,
-                      )
-                    }
+                    onPress={() => {
+                      if (CopyToClipboard(apiData?.guideDetails?.MOBILE)) {
+                        toastMsg('Mobile number copied', 'success');
+                      } else {
+                        toastMsg('Unable to copy the text', 'error');
+                      }
+                    }}
                     activeOpacity={0.6}>
                     <MaterialIcons
                       name="content-copy"
@@ -144,9 +145,13 @@ const ConnectUs = ({apiData, shimmer}) => {
                 </Text>
                 {apiData?.guideDetails?.MAIL && (
                   <TouchableOpacity
-                    onPress={() =>
-                      CopyToClipboard('Email', apiData?.guideDetails?.MAIL)
-                    }
+                    onPress={() => {
+                      if (CopyToClipboard(apiData?.guideDetails?.MAIL)) {
+                        toastMsg('Email copied', 'success');
+                      } else {
+                        toastMsg('Unable to copy the text', 'error');
+                      }
+                    }}
                     activeOpacity={0.6}>
                     <MaterialIcons
                       name="content-copy"

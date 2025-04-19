@@ -22,12 +22,12 @@ const CustomHeader = ({
   martop,
 }) => {
   const statusBarHeight = useStatusBarHeight();
-  const filterIcnScreens =
-    titleName === screenNames.quotes ||
-    titleName === screenNames.dailyDarshan ||
-    titleName === screenNames.updates ||
-    titleName === screenNames.folkVideos ||
-    titleName === screenNames.events;
+  const filterIcnScreens = '';
+  // titleName === screenNames.quotes ||
+  // titleName === screenNames.dailyDarshan ||
+  // titleName === screenNames.updates ||
+  // titleName === screenNames.folkVideos ||
+  // titleName === screenNames.events;
 
   const plusIcnscreens = titleName === screenNames.coupons;
 
