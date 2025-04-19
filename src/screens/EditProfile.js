@@ -40,15 +40,18 @@ const EditProfile = props => {
   const {navigation} = props;
   const [loader, setLoader] = useState(true);
   const [profileData, setProfileData] = useState({
-    country: {},
+    country: '',
     city: '',
-    state: {},
+    state: '',
     address: '',
     highestQualification: '',
-    occupation: {},
+    occupation: '',
+    organisationName: '',
     designation: '',
-    livingStatus: {},
-    maritalStatus: {},
+    instituteName: '',
+    course: '',
+    livingStatus: '',
+    maritalStatus: '',
     passportPhoto: '',
     passportPhotoBase64: '',
   });
@@ -118,22 +121,30 @@ const EditProfile = props => {
         designation,
         livingStatus,
         maritalStatus,
-        passportPhotoBase64,
+        passportPhoto,
+        instituteName,
+        course,
+        organisationName,
       } = profileData;
       const params = {
         profileId: profileId,
-        country: country?.value ? country?.value : null,
+        country: country ? country : null,
         city: city ? city : null,
-        state: state?.value ? state?.value : null,
+        state: state ? state : null,
         address: address ? address : null,
         highestQualification: highestQualification
           ? highestQualification
           : null,
-        occupation: occupation?.value ? occupation?.value : null,
-        designation: designation ? designation : null,
-        livingStatus: livingStatus?.value ? livingStatus?.value : null,
-        maritalStatus: maritalStatus?.value ? maritalStatus?.value : null,
-        passportPhoto: passportPhotoBase64 ? passportPhotoBase64 : null,
+        occupation: occupation ? occupation : null,
+        designation: occupation == 2 && !!designation ? designation : null,
+        livingStatus: livingStatus ? livingStatus : null,
+        maritalStatus: maritalStatus ? maritalStatus : null,
+        passportPhoto: passportPhoto ? passportPhoto : null,
+        instituteName:
+          occupation == 1 && !!instituteName ? instituteName : null,
+        course: occupation == 1 && !!course ? course : null,
+        organisationName:
+          occupation == 2 && !!organisationName ? organisationName : null,
       };
       const response = await API.sendEditProfileDetails(params);
 
@@ -196,8 +207,8 @@ const EditProfile = props => {
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileData?.country}
             onChange={item => {
-              if (item?.value !== profileData?.country?.value) {
-                handleChange('country', item);
+              if (item?.value !== profileData?.country) {
+                handleChange('country', item?.value);
                 setDropdownData(prev => ({...prev, state: []}));
                 handleChange('state', '');
                 setLoader(true);
@@ -221,7 +232,7 @@ const EditProfile = props => {
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileData?.state}
             onChange={item => {
-              handleChange('state', item);
+              handleChange('state', item?.value);
             }}
             cntnrStyle={styles.dropdownCont}
             renderRightIcon={() => (
@@ -262,7 +273,7 @@ const EditProfile = props => {
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileData?.livingStatus}
             onChange={item => {
-              handleChange('livingStatus', item);
+              handleChange('livingStatus', item?.value);
             }}
             cntnrStyle={styles.dropdownCont}
             renderRightIcon={() => (
@@ -281,7 +292,7 @@ const EditProfile = props => {
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileData?.maritalStatus}
             onChange={item => {
-              handleChange('maritalStatus', item);
+              handleChange('maritalStatus', item?.value);
             }}
             cntnrStyle={styles.dropdownCont}
             renderRightIcon={() => (
@@ -312,7 +323,7 @@ const EditProfile = props => {
             drpdwnContStyle={styles.dropdownCntStyle}
             value={profileData?.occupation}
             onChange={item => {
-              handleChange('occupation', item);
+              handleChange('occupation', item?.value);
             }}
             cntnrStyle={styles.dropdownCont}
             renderRightIcon={() => (
@@ -325,16 +336,57 @@ const EditProfile = props => {
           />
 
           {/* // # Designation */}
-          <FloatingInput
-            label={'Designation'}
-            drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.designation}
-            onChangeText={item => {
-              console.log('item', item);
-              handleChange('designation', item);
-            }}
-            cntnrStyle={styles.dropdownCont}
-          />
+          {profileData?.occupation == 2 && (
+            <FloatingInput
+              label={'Designation'}
+              drpdwnContStyle={styles.dropdownCntStyle}
+              value={profileData?.designation}
+              onChangeText={item => {
+                console.log('item', item);
+                handleChange('designation', item);
+              }}
+              cntnrStyle={styles.dropdownCont}
+            />
+          )}
+
+          {/* // # Organisation Name */}
+          {profileData?.occupation == 2 && (
+            <FloatingInput
+              label={'Organisation Name'}
+              drpdwnContStyle={styles.dropdownCntStyle}
+              value={profileData?.organisationName}
+              onChangeText={item => {
+                handleChange('organisationName', item);
+              }}
+              cntnrStyle={styles.dropdownCont}
+            />
+          )}
+
+          {/* // # Institute Name */}
+          {profileData?.occupation == 1 && (
+            <FloatingInput
+              label={'Institute Name'}
+              drpdwnContStyle={styles.dropdownCntStyle}
+              value={profileData?.instituteName}
+              onChangeText={item => {
+                handleChange('instituteName', item);
+              }}
+              cntnrStyle={styles.dropdownCont}
+            />
+          )}
+
+          {/* // # Course Name */}
+          {profileData?.occupation == 1 && (
+            <FloatingInput
+              label={'Course Name'}
+              drpdwnContStyle={styles.dropdownCntStyle}
+              value={profileData?.organisationName}
+              onChangeText={item => {
+                handleChange('course', item);
+              }}
+              cntnrStyle={styles.dropdownCont}
+            />
+          )}
 
           {/* // # Passport size photo */}
           <View style={styles.passportCont}>

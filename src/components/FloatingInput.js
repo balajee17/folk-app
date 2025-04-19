@@ -40,9 +40,9 @@ const FloatingInput = React.forwardRef((props, ref) => {
   const labelAnimationValue = useSharedValue(0);
 
   useEffect(() => {
-    if (value) {
+    if (value && typeof value !== 'object') {
       animateLabel('UP');
-    } else if (!focused) {
+    } else if (!focused && !!value) {
       animateLabel('DOWN');
     }
   }, [value, focused]);
@@ -67,11 +67,14 @@ const FloatingInput = React.forwardRef((props, ref) => {
     );
   });
 
+  const yValue1 = verticalScale(38);
+  const yValue2 = verticalScale(23);
+
   const textTransformY = useDerivedValue(() => {
     return interpolate(
       labelAnimationValue.value,
       [0, 1],
-      [0, screenNames.login === screen ? -38 : -23],
+      [0, screenNames.login === screen ? -yValue1 : -yValue2],
     );
   });
 

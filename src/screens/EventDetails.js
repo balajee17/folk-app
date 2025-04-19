@@ -78,7 +78,7 @@ const EventDetails = props => {
     useCallback(() => {
       console.log('EVT_DETAILS', reloadEventList);
       reloadEventList === 'Y' && getEventDetails();
-    }, []),
+    }, [reloadEventList]),
   );
 
   const checkDataExist = Object.keys(eventDetails || {})?.length > 0;
@@ -130,10 +130,12 @@ const EventDetails = props => {
       };
       const response = await API.applyCoupon(params);
 
-      const {data, successCode, message} = response?.data;
-      console.log('Apply_Coupon_response', data?.message);
+      const {amountDetails, successCode, message} = response?.data;
+      console.log('Apply_Coupon_response', response?.data);
       if (successCode === 1) {
         setCoupon(prev => ({...prev, applied: true}));
+        setAmountDetails(amountDetails);
+        toastMsg(message, 'success');
       } else {
         setCoupon(prev => ({...prev, warning: true}));
         toastMsg(message, 'warning');
@@ -148,7 +150,6 @@ const EventDetails = props => {
 
   // # API Register
   const register = async () => {
-    console.log('amountDetails', amountDetails);
     const amountToPay = amountDetails?.filter(item => item?.id == 2);
     try {
       setLoader(true);
@@ -166,8 +167,8 @@ const EventDetails = props => {
       };
       const response = await API.eventRegister(params);
 
-      const {data, successCode, message} = response?.data;
-      console.log('Register_response', data?.message);
+      const {orderId, sessionId, successCode, message} = response?.data;
+      console.log('Register_response', response?.data);
       if (successCode !== 1) {
         setLoader(false);
         return toastMsg(message, 'warning');
@@ -185,22 +186,16 @@ const EventDetails = props => {
         return getEventDetails();
       }
 
-      const orderId = data?.orderId;
-      const paymentSessionId = data?.paymentSessionId;
-
-      if (!paymentSessionId || !orderId) {
+      if (!sessionId || !orderId) {
         setLoader(false);
         return toastMsg('', 'error');
       }
 
-      const paymentGatewayRes = await CashFreePayment(
-        paymentSessionId,
-        orderId,
-      );
+      const paymentGatewayRes = await CashFreePayment(sessionId, orderId);
       console.log('paymentGatewayRes', paymentGatewayRes);
 
       if (paymentGatewayRes?.type === 'ID') {
-        await getPaymentStatusAPI(paymentGatewayRes?.orderId);
+        await getPaymentStatusAPI(paymentGatewayRes?.orderID);
       } else {
         toastMsg('', 'error');
       }
@@ -212,24 +207,25 @@ const EventDetails = props => {
   };
 
   const getPaymentStatusAPI = async orderId => {
-    const paymentStatusRes = await GetPaymentStatus(profileId, orderId);
-    console.log('paymentStatusRes', paymentStatusRes);
+    const paymentStatusRes = await GetPaymentStatus(
+      profileId,
+      orderId,
+      'Event',
+    );
+    console.log('paymentStatusRes', paymentStatusRes?.data);
     setLoader(false);
-    navigation.navigate(screenNames.paymentDetails, {
-      paymentStatus: paymentStatusRes,
-      // paymentStatus: {
-      //   amountDetails: [{label: 'Total Amount', value: '110.15'}],
-      //   TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
-      //   BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
-      //   STATUS: 'Payment Success',
-      //   EVENT_NAME: 'Cash Free Payment Gateway',
-      //   PURPOSE: 'Cash Free Testing',
-      //   TOTAL_AMOUNT: '110.15',
-      //   STATUS_IMAGE:
-      //     'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
-      // },
-      screenFrom: screenNames.eventDetails,
-    });
+    const checkObj =
+      !!paymentStatusRes?.data ||
+      (typeof paymentStatusRes?.data === 'object' &&
+        Object.keys(paymentStatusRes?.data).length > 0);
+    if (checkObj) {
+      navigation.navigate(screenNames.paymentDetails, {
+        paymentStatus: paymentStatusRes?.data,
+        screenFrom: screenNames.eventDetails,
+      });
+    } else {
+      toastMsg('', 'error');
+    }
   };
 
   const removeCoupon = () => {
@@ -250,8 +246,6 @@ const EventDetails = props => {
         applied: false,
       });
   };
-
-  console.log('reloadEventList123', reloadEventList);
 
   return (
     <>
@@ -438,7 +432,8 @@ const EventDetails = props => {
             )}
 
             {/* // # Discount Code */}
-            {eventDetails?.is_paid_event === 'Y' &&
+            {eventDetails?.Is_registered !== 'Y' &&
+              eventDetails?.is_paid_event === 'Y' &&
               screen === 'Upcoming' &&
               eventDetails?.is_discount_applicable === 'Y' &&
               !shimmer && (

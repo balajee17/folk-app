@@ -125,7 +125,7 @@ export const CashFreePayment = (payment_session_id, order_id) => {
         },
         onError(error, orderID) {
           console.log('ON_ERROR', error, 'OD_ID', orderID);
-          reject({type: 'ID', orderID});
+          reject({type: 'ID', orderID, error});
         },
       });
 
@@ -161,11 +161,12 @@ export const CashFreePayment = (payment_session_id, order_id) => {
   });
 };
 
-export const GetPaymentStatus = async (profileId, orderId) => {
+export const GetPaymentStatus = async (profileId, orderId, purpose) => {
   try {
     const params = {
       profileId,
       orderId,
+      purpose: purpose,
     };
     const response = await API.getPaymentDetails(params);
 

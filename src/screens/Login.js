@@ -261,7 +261,6 @@ const styles = StyleSheet.create({
     width: horizontalScale(320),
     height: horizontalScale(320),
     alignSelf: 'center',
-    // marginTop: statusBarHeight,
   }),
   loginTxt: {
     fontFamily: FONTS.LufgaBold,

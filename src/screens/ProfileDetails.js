@@ -91,6 +91,7 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
                   {item?.Label}
                 </Text>
                 <View style={styles.valueBox}>
+                  {/* // # id 12 is to show image (if you want to show image in list use Id 12) */}
                   {item?.Id === 12 ? (
                     <Image
                       style={{

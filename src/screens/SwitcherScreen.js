@@ -136,10 +136,9 @@ const SwitcherScreen = ({navigation, route}) => {
     }, []),
   );
 
+  // # OnFocus screen Reload
   useFocusEffect(
     useCallback(() => {
-      console.log('reloadEventList', reloadEventList, globalState);
-
       if (reloadEventList === 'Y') {
         setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
         setEventList({upcoming: [], registered: []});

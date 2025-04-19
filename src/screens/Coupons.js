@@ -65,15 +65,14 @@ const Coupons = props => {
   const [selCoupon, setSelCoupon] = useState(requestCoupon);
   const [loader, setLoader] = useState(true);
   const [couponData, setCouponData] = useState([]);
-  const [reloadCouponVal, setReloadCouponVal] = useState(reloadCoupon);
 
   const toast = useToast();
 
   useFocusEffect(
     useCallback(() => {
-      console.log('reloadCoupon', reloadCouponVal);
-      reloadCouponVal === 'Y' && reloadScreen();
-    }, [reloadCouponVal]),
+      console.log('reloadCoupon', reloadCoupon);
+      reloadCoupon === 'Y' && reloadScreen();
+    }, [reloadCoupon]),
   );
 
   const reloadScreen = async () => {
@@ -224,6 +223,7 @@ const Coupons = props => {
   };
 
   const submitCoupon = () => {
+    // # R - req, F - free, P - paid
     const TYPE =
       selCoupon?.type === 'R' ? 'R' : selCoupon?.type === 'F' ? 'F' : 'P';
     if (
@@ -246,6 +246,7 @@ const Coupons = props => {
       const TYPE = selCoupon?.type;
       !loader && setLoader(true);
       const params =
+        //  # Free Coupon
         TYPE === 'F'
           ? {
               profile_id: profileId,
@@ -263,13 +264,13 @@ const Coupons = props => {
                   : selCoupon?.refId
                   ? selCoupon?.refId
                   : null,
-              couponType: TYPE, // R - req, F - free, P - paid
+              couponType: TYPE,
               freeCount:
                 selCoupon?.freeCount > 0 ? Number(selCoupon?.freeCount) : 0,
               paidCount:
                 selCoupon?.paidCount > 0 ? Number(selCoupon?.paidCount) : 0,
               prasadamAmt: TYPE === 'P' ? Number(selCoupon?.prasadamAmt) : null,
-              totalAmount: TYPE === 'P' ? 100 : 0,
+              totalAmount: TYPE === 'P' ? Number(selCoupon?.totalAmt) : 0,
               reason: TYPE === 'R' ? requestReason : '',
             };
 
@@ -278,12 +279,16 @@ const Coupons = props => {
       console.log('SEND_Coupon_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-        toastMsg(message, 'success');
-        const paymentSessionId = data?.payment_session_id;
-        const orderId = data?.orderId;
-        TYPE === 'P'
-          ? getPaymentGateway(paymentSessionId, orderId)
-          : (setDefaultStates(), getCouponsList());
+        console.log('TYPE', TYPE);
+        if (TYPE === 'P') {
+          const paymentSessionId = data?.sessionId;
+          const orderId = data?.orderId;
+
+          getPaymentGateway(paymentSessionId, orderId);
+        } else {
+          toastMsg(message, 'success');
+          setDefaultStates(), getCouponsList();
+        }
       } else {
         toastMsg(message, 'warning');
         setLoader(false);
@@ -295,12 +300,9 @@ const Coupons = props => {
     }
   };
 
-  const getPaymentGateway = async (payment_session_id, orderId) => {
+  const getPaymentGateway = async (paymentSessionId, orderId) => {
     try {
       setLoader(true);
-      const orderId = 'order_105263592urD75HuONsZljL8Yn4DOSCecsB';
-      const paymentSessionId =
-        'session_wEZVPslq__Whn0thQGtjSfiYHF4mD-7zYF1bqRdUOvBSJo4oYzCczApoZ7qxyKXEmeQgTcGC3QfSoUWGUAMxn72EhFaKlvmFECsfillS61vJLkIAwzOeQFhCQgpaymentpayment';
 
       if (!paymentSessionId || !orderId) {
         setLoader(false);
@@ -314,38 +316,39 @@ const Coupons = props => {
       console.log('paymentGatewayRes', paymentGatewayRes);
 
       if (paymentGatewayRes?.type === 'ID') {
-        await getPaymentStatusAPI(paymentGatewayRes?.orderId);
+        await getPaymentStatusAPI(paymentGatewayRes?.orderID);
       } else {
         toastMsg('', 'error');
       }
     } catch (err) {
       setLoader(false);
-      toastMsg('', 'error');
-      console.log('ERR-Register', err);
+      toastMsg(err?.error?.message, 'error');
+      console.log('ERR-Register', err?.error?.message);
     }
   };
 
   const getPaymentStatusAPI = async orderId => {
-    const paymentStatusRes = await GetPaymentStatus(profileId, orderId);
-    console.log('paymentStatusRes', paymentStatusRes);
+    const paymentStatusRes = await GetPaymentStatus(
+      profileId,
+      orderId,
+      'Coupon',
+    );
+    console.log('paymentStatusRes', paymentStatusRes?.data);
     setLoader(false);
     setDefaultStates();
 
-    navigation.navigate(screenNames.paymentDetails, {
-      paymentStatus: paymentStatusRes,
-      // paymentStatus: {
-      //   amountDetails: [{label: 'Total Amount', value: '1001.15'}],
-      //   TRANSACTION_DATE: '26-Mar-2025 04:28 PM',
-      //   BANK_TRANSACTION_ID: '123jb1lj3hg5kjh',
-      //   STATUS: 'Payment Success',
-      //   EVENT_NAME: 'Cash Free Payment Gateway',
-      //   PURPOSE: 'Cash Free Testing',
-      //   TOTAL_AMOUNT: '110.15',
-      //   STATUS_IMAGE:
-      //     'https://gimgs2.nohat.cc/thumb/f/640/confirm-icon-payment-success--m2H7i8N4K9H7d3A0.jpg',
-      // },
-      screenFrom: screenNames.coupons,
-    });
+    const checkObj =
+      !!paymentStatusRes?.data ||
+      (typeof paymentStatusRes?.data === 'object' &&
+        Object.keys(paymentStatusRes?.data).length > 0);
+    if (checkObj) {
+      navigation.navigate(screenNames.paymentDetails, {
+        paymentStatus: paymentStatusRes?.data,
+        screenFrom: screenNames.coupons,
+      });
+    } else {
+      toastMsg('', 'error');
+    }
   };
 
   return (

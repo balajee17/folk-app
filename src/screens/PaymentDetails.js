@@ -40,16 +40,13 @@ const PaymentDetails = ({navigation, route}) => {
   const [paymentDetails, setPaymentDetails] = useState([]);
 
   useEffect(() => {
-    typeof paymentStatus === 'object' && Object.keys(paymentStatus).length > 0
+    screenFrom === screenNames.eventDetails ||
+    screenFrom === screenNames.coupons
       ? storePaymentStatus()
       : getPaymentDetails();
   }, []);
 
   const storePaymentStatus = async () => {
-    console.log(
-      'screenFrom === screenNames.coupons',
-      screenFrom === screenNames.coupons,
-    );
     setPaymentDetails(paymentStatus);
 
     await setGlobalState(prev => ({
@@ -92,20 +89,6 @@ const PaymentDetails = ({navigation, route}) => {
       <CommonStatusBar bgColor={COLORS.header} />
       <SafeAreaView style={[MyStyles.flex1, styles.mainContainer]}>
         {/* // @ Left Arrow Icon */}
-
-        {/* <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-          activeOpacity={0.6}
-          style={styles.menuIcon}>
-          <FontAwesome6
-            name="chevron-left"
-            size={moderateScale(23)}
-            color={COLORS.white}
-          />
-        </TouchableOpacity> */}
-
         <CustomHeader
           martop={
             typeof paymentStatus === 'object' &&
