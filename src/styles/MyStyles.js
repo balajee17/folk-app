@@ -340,8 +340,9 @@ export let MyStyles = {
   },
   announceIcn: {
     width: '100%',
-    height: verticalScale(50),
+    height: verticalScale(60),
     marginRight: '5%',
+    resizeMode: 'stretch',
   },
   announceTxt: {
     fontSize: SIZES.xl,

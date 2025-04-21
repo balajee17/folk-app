@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -23,48 +23,13 @@ import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
 import {useStatusBarHeight} from './StatusBarComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native';
+import {ImageShimmer, TitleShimmer} from './Shimmer';
 const CustomDrawer = ({navigation, route}) => {
-  const menuItems = [
-    {
-      id: 'DB1',
-      screenName: screenNames.home,
-      whiteIcon: getImage.homeWhite,
-      blackIcon: getImage.homeBlack,
-    },
-    {
-      id: 'D2',
-      screenName: screenNames.yfhForm,
-      whiteIcon: getImage.formWhite,
-      blackIcon: getImage.formBlack,
-    },
-    {
-      id: 'D3',
-      screenName: screenNames.accommodation,
-      whiteIcon: getImage.accommodationWhite,
-      blackIcon: getImage.accommodationBlack,
-    },
-    {
-      id: 'D4',
-      screenName: screenNames.contribution,
-      whiteIcon: getImage.donateWhite,
-      blackIcon: getImage.donateBlack,
-    },
-    {
-      id: 'D5',
-      screenName: screenNames.folkMerchant,
-      whiteIcon: getImage.merchantWhite,
-      blackIcon: getImage.merchantBlack,
-    },
-    {
-      id: 'D6',
-      screenName: screenNames.habitsSadhana,
-      whiteIcon: getImage.sadhanaWhite,
-      blackIcon: getImage.sadhanaBlack,
-    },
-  ];
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
-  const {current, folkId, userName, photo} = globalState;
+  const {current, folkId, userName, photo, menuItems, menuSpinner} =
+    globalState;
   const {closeDrawer} = navigation;
 
   // # Navigate Sreen
@@ -95,10 +60,14 @@ const CustomDrawer = ({navigation, route}) => {
       userName: '',
       mobileNumber: '',
       photo: '',
+      menuItems: [],
+      menuSpinner: true,
     });
     await AsyncStorage.clear();
     navigation.replace(screenNames.login);
   };
+
+  console.log('menuItems', menuItems);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -137,45 +106,70 @@ const CustomDrawer = ({navigation, route}) => {
             activeOpacity={0.8}
             style={[styles.profileTextCont]}>
             <Text style={styles.profName}>{userName}</Text>
-            <Text style={[styles.profName, styles.mailTxt]}>
-              FOLK ID : {folkId}
-            </Text>
+            {!!folkId && (
+              <Text style={[styles.profName, styles.mailTxt]}>
+                FOLK ID : {folkId}
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
 
       {/* // @ Menu Items */}
-      {menuItems.map((item, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[
-            styles.menuItemBtn,
-            {
-              backgroundColor:
-                current === item?.id ? COLORS.windowsBlue : COLORS.white,
-            },
-          ]}
-          onPress={() => {
-            navigateScreen(item?.id, item?.screenName);
-          }}
-          activeOpacity={0.6}>
-          <View style={styles.iconCont}>
-            <Image
-              style={styles.menuImg}
-              source={current === item?.id ? item?.whiteIcon : item?.blackIcon}
-            />
-          </View>
-          <Text
+      {menuItems?.length > 0 &&
+        menuItems?.map((item, index) => (
+          <TouchableOpacity
+            key={index}
             style={[
-              styles.itemTxt,
+              styles.menuItemBtn,
               {
-                color: current === item?.id ? COLORS.white : COLORS.gunsmoke,
+                backgroundColor:
+                  current === item?.id ? COLORS.windowsBlue : COLORS.white,
               },
-            ]}>
-            {item?.screenName}
-          </Text>
-        </TouchableOpacity>
-      ))}
+            ]}
+            onPress={() => {
+              navigateScreen(item?.id, item?.screenName);
+            }}
+            activeOpacity={0.6}>
+            <View style={styles.iconCont}>
+              <Image
+                style={styles.menuImg}
+                source={
+                  current === item?.id ? item?.whiteIcon : item?.blackIcon
+                }
+              />
+            </View>
+            <Text
+              style={[
+                styles.itemTxt,
+                {
+                  color: current === item?.id ? COLORS.white : COLORS.gunsmoke,
+                },
+              ]}>
+              {item?.title}
+            </Text>
+          </TouchableOpacity>
+        ))}
+
+      {menuSpinner &&
+        Array(3)
+          .fill(3)
+          .map((_, index) => (
+            <View key={index} style={styles.shimmerCont}>
+              <ImageShimmer
+                width={horizontalScale(35)}
+                borderRadius={moderateScale(20)}
+                height={horizontalScale(35)}
+              />
+              <TitleShimmer
+                width={horizontalScale(200)}
+                borderRadius={moderateScale(20)}
+                height={horizontalScale(25)}
+                marginTop={0}
+                marginLeft={'8%'}
+              />
+            </View>
+          ))}
 
       {/* // @ Logout Btn */}
       <View style={styles.logoutCont}>
@@ -307,5 +301,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '90%',
     textAlign: 'right',
+  },
+  shimmerCont: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: '3%',
+    paddingHorizontal: '5%',
+    marginTop: '4%',
   },
 });

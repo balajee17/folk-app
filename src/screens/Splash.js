@@ -45,17 +45,14 @@ const Splash = ({navigation}) => {
 
   const updateFcm = async userData => {
     try {
-      await setGlobalState({
-        current: 'DB1',
-        btTab: 'DB1',
+      await setGlobalState(prev => ({
+        ...prev,
         profileId: userData?.profileId,
-        activeEventTab: 0,
-        isConnected: true,
         folkId: userData?.folkId,
         userName: userData?.name,
         mobileNumber: userData?.mobile,
         photo: userData?.photo,
-      });
+      }));
       const {
         getAppVersion,
         getDeviceId,

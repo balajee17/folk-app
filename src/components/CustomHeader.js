@@ -13,6 +13,8 @@ import {screenNames} from '../constants/ScreenNames';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
 import {useStatusBarHeight} from './StatusBarComponent';
+import {useAppContext} from '../../App';
+import {API} from '../services/API';
 
 const CustomHeader = ({
   toggleDrawer,
@@ -21,6 +23,8 @@ const CustomHeader = ({
   rightIcnAction,
   martop,
 }) => {
+  const {setGlobalState, globalState} = useAppContext();
+  const {mobileNumber, folkId, menuItems} = globalState;
   const statusBarHeight = useStatusBarHeight();
   const filterIcnScreens = '';
   // titleName === screenNames.quotes ||
@@ -66,6 +70,102 @@ const CustomHeader = ({
     titleName !== screenNames.connectUs &&
     titleName !== screenNames.paymentDetails;
 
+  const drawerControl = async () => {
+    //  toggleDrawer();
+    // (!folkId || menuItems?.length===0) && getMenuItems();
+
+    await setGlobalState(prev => ({...prev, menuItems: [], menuSpinner: true}));
+    toggleDrawer();
+    setTimeout(
+      async () =>
+        await setGlobalState(prev => ({
+          ...prev,
+          menuItems: [
+            {
+              id: 'DB1',
+              screenName: 'Home',
+              whiteIcon: getImage.homeWhite,
+              blackIcon: getImage.homeBlack,
+              title: 'Home',
+            },
+            {
+              id: 'D2',
+              screenName: 'YFH',
+              whiteIcon: getImage.formWhite,
+              blackIcon: getImage.formBlack,
+              title: 'YFH',
+            },
+
+            {
+              id: 'D3',
+              screenName: 'Accommodation',
+              whiteIcon: getImage.accommodationWhite,
+              blackIcon: getImage.accommodationBlack,
+              title: 'Accommodation',
+            },
+            {
+              id: 'D4',
+              screenName: 'Contribution',
+              whiteIcon: getImage.donateWhite,
+              blackIcon: getImage.donateBlack,
+              title: 'Contribution',
+            },
+            {
+              id: 'D5',
+              screenName: 'FOLK Merchandise',
+              whiteIcon: getImage.merchantWhite,
+              blackIcon: getImage.merchantBlack,
+              title: 'FOLK Merchandise',
+            },
+            {
+              id: 'D6',
+              screenName: 'Habits Sadhana',
+              whiteIcon: getImage.sadhanaWhite,
+              blackIcon: getImage.sadhanaBlack,
+              title: 'Habits Sadhana',
+            },
+          ],
+          menuSpinner: false,
+        })),
+      2000,
+    );
+  };
+
+  const getMenuItems = async () => {
+    try {
+      await setGlobalState(prev => ({
+        ...prev,
+        menuItems: [],
+        menuSpinner: true,
+      }));
+      const params = {mobile: mobileNumber};
+      const response = await API.getMenuList(params);
+      const {data, successCode, message} = response?.data;
+      if (successCode === 1) {
+        const menu = await setGlobalState(prev => ({
+          ...prev,
+          menuItems: data,
+          menuSpinner: false,
+        }));
+      } else {
+        await setGlobalState(prev => ({
+          ...prev,
+          menuItems: [],
+          menuSpinner: false,
+        }));
+        toastMsg(message, 'warning');
+      }
+    } catch (err) {
+      await setGlobalState(prev => ({
+        ...prev,
+        menuItems: [],
+        menuSpinner: false,
+      }));
+      toastMsg('', 'error');
+      console.log('Menu List Err', err);
+    }
+  };
+
   return (
     <View
       style={[
@@ -74,7 +174,7 @@ const CustomHeader = ({
       ]}>
       <TouchableOpacity // Left Icon
         onPress={() => {
-          drawerScreens ? toggleDrawer() : goBack();
+          drawerScreens ? drawerControl() : goBack();
         }}
         activeOpacity={0.6}
         style={[
@@ -108,8 +208,8 @@ const CustomHeader = ({
           />
         )}
       </TouchableOpacity>
-      {/* Title */}
 
+      {/* Title */}
       {folkTitle ? (
         <Image
           style={styles.folkImg}

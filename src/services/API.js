@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const Access_Key = '856!@nHKRKkbngsppnsg@856';
 
-const deploymentURL = 2; // 1 for Test || 2 for Live
+const deploymentURL = 1; // 1 for Test || 2 for Live
 
 const baseURL =
   deploymentURL == 1
@@ -37,6 +37,13 @@ export const API = {
     const requestData = {accessKey: Access_Key, ...data};
     console.log('URL Home Screen Data ', getHomeDataURL, ' data ', requestData);
     return axios.post(getHomeDataURL, requestData);
+  },
+  // # Get Dynamic Menu List
+  getMenuList(data) {
+    const menuList = baseURL + '/menu-list';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('URL Menu List Data ', menuList, ' data ', requestData);
+    return axios.post(menuList, requestData);
   },
   // # History Screen API's
   getDarshanHistroy() {

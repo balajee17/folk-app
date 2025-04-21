@@ -121,10 +121,10 @@ const EditProfile = props => {
         designation,
         livingStatus,
         maritalStatus,
-        passportPhoto,
         instituteName,
         course,
         organisationName,
+        passportPhotoBase64,
       } = profileData;
       const params = {
         profileId: profileId,
@@ -139,7 +139,7 @@ const EditProfile = props => {
         designation: occupation == 2 && !!designation ? designation : null,
         livingStatus: livingStatus ? livingStatus : null,
         maritalStatus: maritalStatus ? maritalStatus : null,
-        passportPhoto: passportPhoto ? passportPhoto : null,
+        passportPhoto: passportPhotoBase64 ? passportPhotoBase64 : null,
         instituteName:
           occupation == 1 && !!instituteName ? instituteName : null,
         course: occupation == 1 && !!course ? course : null,
@@ -185,7 +185,6 @@ const EditProfile = props => {
       }));
     } else {
       setImagePicker(false);
-      toastMsg('', 'error');
     }
   };
 
