@@ -13,8 +13,24 @@ PODS:
   - CFNetworkSDK (2.0.15)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.75.4)
+  - Firebase/CoreOnly (11.11.0):
+    - FirebaseCore (~> 11.11.0)
+  - FirebaseCore (11.11.0):
+    - FirebaseCoreInternal (~> 11.11.0)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/Logger (~> 8.0)
+  - FirebaseCoreInternal (11.11.0):
+    - "GoogleUtilities/NSData+zlib (~> 8.0)"
   - fmt (9.1.0)
   - glog (0.3.5)
+  - GoogleUtilities/Environment (8.0.2):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (8.0.2):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - "GoogleUtilities/NSData+zlib (8.0.2)":
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (8.0.2)
   - hermes-engine (0.75.4):
     - hermes-engine/Pre-built (= 0.75.4)
   - hermes-engine/Pre-built (0.75.4)
@@ -52,9 +68,6 @@ PODS:
     - FBLazyVector (= 0.75.4)
     - RCTRequired (= 0.75.4)
     - React-Core (= 0.75.4)
-  - RCTYouTube (2.0.2):
-    - React
-    - YoutubePlayer-in-WKWebView (~> 0.3.1)
   - React (0.75.4):
     - React-Core (= 0.75.4)
     - React-Core/DevSupport (= 0.75.4)
@@ -1276,6 +1289,8 @@ PODS:
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
+  - react-native-notifications (5.1.0):
+    - React-Core
   - react-native-pager-view (6.7.0):
     - DoubleConversion
     - glog
@@ -1611,6 +1626,9 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
+  - RNFBApp (21.14.0):
+    - Firebase/CoreOnly (= 11.11.0)
+    - React-Core
   - RNGestureHandler (2.21.2):
     - DoubleConversion
     - glog
@@ -1773,6 +1791,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSVG (15.11.2):
+    - React-Core
   - RNVectorIcons (10.2.0):
     - DoubleConversion
     - glog
@@ -1803,7 +1823,6 @@ PODS:
   - SocketRocket (0.7.0)
   - TOCropViewController (2.7.4)
   - Yoga (0.0.0)
-  - YoutubePlayer-in-WKWebView (0.3.11)
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
@@ -1818,7 +1837,6 @@ DEPENDENCIES:
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
   - RCTRequired (from `../node_modules/react-native/Libraries/Required`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
-  - RCTYouTube (from `../node_modules/react-native-youtube`)
   - React (from `../node_modules/react-native/`)
   - React-callinvoker (from `../node_modules/react-native/ReactCommon/callinvoker`)
   - React-Core (from `../node_modules/react-native/`)
@@ -1848,6 +1866,7 @@ DEPENDENCIES:
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-cashfree-pg-sdk (from `../node_modules/react-native-cashfree-pg-sdk`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -1882,12 +1901,14 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
+  - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNShare (from `../node_modules/react-native-share`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1898,12 +1919,15 @@ SPEC REPOS:
     - CashfreePGCoreSDK
     - CashfreePGUISDK
     - CFNetworkSDK
+    - Firebase
+    - FirebaseCore
+    - FirebaseCoreInternal
+    - GoogleUtilities
     - libwebp
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
     - TOCropViewController
-    - YoutubePlayer-in-WKWebView
 
 EXTERNAL SOURCES:
   boost:
@@ -1929,8 +1953,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Required"
   RCTTypeSafety:
     :path: "../node_modules/react-native/Libraries/TypeSafety"
-  RCTYouTube:
-    :path: "../node_modules/react-native-youtube"
   React:
     :path: "../node_modules/react-native/"
   React-callinvoker:
@@ -1987,6 +2009,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-cashfree-pg-sdk"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-notifications:
+    :path: "../node_modules/react-native-notifications"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
@@ -2055,6 +2079,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
+  RNFBApp:
+    :path: "../node_modules/@react-native-firebase/app"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
@@ -2067,6 +2093,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNShare:
     :path: "../node_modules/react-native-share"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -2082,91 +2110,96 @@ SPEC CHECKSUMS:
   CFNetworkSDK: a77f15830ba0de6957abdafd82e61b7453705f7f
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 430e10366de01d1e3d57374500b1b150fe482e6d
+  Firebase: 6a8f201c61eda24e98f1ce2b44b1b9c2caf525cc
+  FirebaseCore: 2321536f9c423b1f857e047a82b8a42abc6d9e2c
+  FirebaseCoreInternal: 31ee350d87b30a9349e907f84bf49ef8e6791e5a
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
+  GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   hermes-engine: ea92f60f37dba025e293cbe4b4a548fd26b610a0
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   RCT-Folly: 4464f4d875961fce86008d45f4ecf6cef6de0740
   RCTDeprecation: 726d24248aeab6d7180dac71a936bbca6a994ed1
   RCTRequired: a94e7febda6db0345d207e854323c37e3a31d93b
   RCTTypeSafety: 28e24a6e44f5cbf912c66dde6ab7e07d1059a205
-  RCTYouTube: a1d9be28b352354e617593fc593fd226f29a7943
   React: c2830fa483b0334bda284e46a8579ebbe0c5447e
   React-callinvoker: 4aecde929540c26b841a4493f70ebf6016691eb8
   React-Core: 32a581847d74ce9b5f51d9d11a4e4d132ad61553
   React-CoreModules: f53e0674e1747fa41c83bc970e82add97b14ad87
   React-cxxreact: 86f3b1692081fd954a0cb27cc90d14674645b64b
-  React-debug: 3d21f69d8def0656f8b8ec25c0f05954f4d862c5
-  React-defaultsnativemodule: 2ed121c5a1edeab09cff382b8d9b538260f07848
-  React-domnativemodule: 4393dd5dd7e13dbe42e69ebc791064a616990f91
-  React-Fabric: cbf38ceefb1ac6236897abdb538130228e126695
-  React-FabricComponents: dd4b01c4a60920d8dc15f3b5594c6fe9e7648a38
-  React-FabricImage: 8b13aedfbd20f349b9b3314baf993c71c02995d9
-  React-featureflags: ee1abd6f71555604a36cda6476e3c502ca9a48e5
-  React-featureflagsnativemodule: 87b58caf3cd8eca1e53179453789def019af2a65
-  React-graphics: f5c4cf3abc5aa083e28fe7a866bd95fb3bbbc1e0
+  React-debug: 7e346b6eeacd2ee1118a0ee7d39f613b428b4be8
+  React-defaultsnativemodule: 5ab6844adce01f0e52671eaa6d806e2214bbfc44
+  React-domnativemodule: 448609757e37684cf407cda13d1f6c47deec44cf
+  React-Fabric: bfef5f9db01f81b73eed5a58fe1e46949c0c665e
+  React-FabricComponents: 4e845f93a35050a7c0f9dac7805caa62552be939
+  React-FabricImage: 3478af0ed02c8728680b23f2dd890e59069856ea
+  React-featureflags: 4c45b3c06f9a124d2598aff495bfc59470f40597
+  React-featureflagsnativemodule: 1c482a7ea0e69330cc59895192a73a2f6f737c33
+  React-graphics: eb61d404819486a2d9335c043a967a0c4b8ca743
   React-hermes: cad69ee9a53870cc38e5386889aa7ea81c75b6a1
-  React-idlecallbacksnativemodule: 445390be0f533797ace18c419eb57110dbfe90d6
-  React-ImageManager: cb78d7a24f45f8f9a5a1640b52fce4c9f637f98d
-  React-jserrorhandler: dfe9b96e99a93d4f4858bad66d5bc4813a87a21a
+  React-idlecallbacksnativemodule: 1e3f0212792ace82cc6f3b91f53f5d034f533acc
+  React-ImageManager: 6652c4cc3de260b5269d58277de383cacd53a234
+  React-jserrorhandler: 552c5fcd2ee64307c568734b965ea082e1be25cf
   React-jsi: bc1f6073e203fb540edd6d26f926ad041809b443
   React-jsiexecutor: 1e8fc70dd9614c3e9d5c3c876b2ea3cd1d931ee4
-  React-jsinspector: 7544a20e9beac390f1b65d9f0040d97cd55dc198
-  React-jsitracing: cac972ccc097db399df8044e49add8e5b25cb34a
+  React-jsinspector: 11cf0ade960351b76217a16e31418b9d7f881513
+  React-jsitracing: e512a1023a25de831b51be1c773caa6036125a44
   React-logger: 80d87daf2f98bf95ab668b79062c1e0c3f0c2f8a
-  React-Mapbuffer: acffb35a53a5f474ede09f082ac609b41aafab2e
-  React-microtasksnativemodule: 71ca9282bce93b319218d75362c0d646b376eb43
+  React-Mapbuffer: b2642edd9be75d51ead8cda109c986665eae09cf
+  React-microtasksnativemodule: 94f7e35c4984282f04f946fb1be1d008aff4bdf0
   react-native-camera: 079d80421f0572d6b4e836908114d614d0adb553
   react-native-cashfree-pg-sdk: 89ef37a78627eecdd3980e36126c868cf0942592
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
-  react-native-pager-view: f9310646f5ec893563c90ec053918ded7a0bc229
+  react-native-notifications: 3bafa1237ae8a47569a84801f17d80242fe9f6a5
+  react-native-pager-view: 1b70e63833fef9845f895d5ca0bad88cb4267938
   react-native-safe-area-context: 314537f8fca6fe2c06bd53fc8905efa9e6aaaf59
-  react-native-webview: f38fd87322055d2ce09058cf19f50f708fb174da
-  React-nativeconfig: 8c83d992b9cc7d75b5abe262069eaeea4349f794
-  React-NativeModulesApple: 97f606f09fd9840b3868333984d6a0e7bcc425b5
+  react-native-webview: 0800a3cbc2f8e8f3aeea977dcf25c86a99b99a70
+  React-nativeconfig: 31072ab0146e643594f6959c7f970a04b6c9ddd0
+  React-NativeModulesApple: 356d0eb7e3b79603e9d611cd3bac658a998c71db
   React-perflogger: 59e1a3182dca2cee7b9f1f7aab204018d46d1914
-  React-performancetimeline: 3e3f5c5576fe1cc2dd5fcfb1ae2046d5dceda3d7
+  React-performancetimeline: 2bf8625ff44f482cba84e48e4ab21dee405d68cd
   React-RCTActionSheet: d80e68d3baa163e4012a47c1f42ddd8bcd9672cc
   React-RCTAnimation: 051f0781709c5ed80ba8aa2b421dfb1d72a03162
   React-RCTAppDelegate: 106d225d076988b06aa4834e68d1ab754f40cacf
   React-RCTBlob: 895eaf8bca2e76ee1c95b479235c6ccebe586fc6
-  React-RCTFabric: 8d01df202ee9e933f9b5dd44b72ec89a7ac6ee01
+  React-RCTFabric: 1d736a1f539ae72dcefd473f964f532a0e658309
   React-RCTImage: b73149c0cd54b641dba2d6250aaf168fee784d9f
   React-RCTLinking: 23e519712285427e50372fbc6e0265d422abf462
   React-RCTNetwork: a5d06d122588031989115f293654b13353753630
   React-RCTSettings: 87d03b5d94e6eadd1e8c1d16a62f790751aafb55
   React-RCTText: 75e9dd39684f4bcd1836134ac2348efaca7437b3
   React-RCTVibration: 033c161fe875e6fa096d0d9733c2e2501682e3d4
-  React-rendererconsistency: f620c6e003e3c4593e6349d8242b8aeb3d4633f0
-  React-rendererdebug: 5be7b834677b2a7a263f4d2545f0d4966cafad82
-  React-rncore: c22bd84cc2f38947f0414fab6646db22ff4f80cd
-  React-RuntimeApple: 71160e6c02efa07d198b84ef5c3a52a7d9d0399d
-  React-RuntimeCore: f88f79ec995c12af56a265d7505c7630733d9d82
+  React-rendererconsistency: 35cef4bc4724194c544b6e5e2bd9b3f7aff52082
+  React-rendererdebug: 4e801e9f8d16d21877565dca2845a2e56202b8c6
+  React-rncore: 2c7c94d6e92db0850549223eb2fa8272e0942ac2
+  React-RuntimeApple: ff845be41902d053f1348541a647e669a2f509f4
+  React-RuntimeCore: 8b30ac97af1bdd5d2622ee2a75becf1e552b89c7
   React-runtimeexecutor: ea90d8e3a9e0f4326939858dafc6ab17c031a5d3
-  React-RuntimeHermes: 49f86328914021f50fd5a5b9756685f5f6d8b4da
-  React-runtimescheduler: fed70991b942c6df752a59a22081e45fc811b11c
-  React-utils: 02526ea15628a768b8db9517b6017a1785c734d2
-  ReactCodegen: 8b5341ecb61898b8bd40a73ebc443c6bf2d14423
-  ReactCommon: 36d48f542b4010786d6b2bcee615fe5f906b7105
+  React-RuntimeHermes: 6a5be21d1f8a603989d8734a0021c0534df23dd9
+  React-runtimescheduler: 21ad58e37e35a132f2a5ecad78e68ea7fbc8e2ba
+  React-utils: 0dbea1179726ad65a1b13470a3f3c73da98f4496
+  ReactCodegen: f961bc28110632dd4c8e8d95c1a80f5344022cd2
+  ReactCommon: 23eed247b5c8e57b59a823ce209353883da61dd2
   RNCAsyncStorage: c91d753ede6dc21862c4922cd13f98f7cfde578e
   RNCClipboard: e1d17c9d093d8129ef50b39b63a17a0e8ccd0ade
-  RNCMaskedView: e2e87cbd6366581943892b44176e7976ff988dfd
+  RNCMaskedView: 972c098900ec45a5684a6785a7af405e8b0fc1e1
   RNDeviceInfo: d863506092aef7e7af3a1c350c913d867d795047
   RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
-  RNGestureHandler: 5b24d10761754ad271b714e536c457fd89b17c54
+  RNFBApp: a448037d2df74af9d374a0b765be12ff1e844dc0
+  RNGestureHandler: fc04a2ca677e1d661d94716ef96a441aa98d6c68
   RNImageCropPicker: b0afedeefd8655254a15c34103718455fde6ce59
   RNPermissions: eb235349b0c4ea6171bca8efb8446f5bf12f24a6
-  RNReanimated: fea25bf524c62b2e7167edef63a398ca16a157fd
-  RNScreens: e21c8d32fe97737ecc30f1f21e7b6f69f341a1f5
-  RNShare: 381ed02f6c0dc42b8c24bb5a1e5df0ee5fd91354
-  RNVectorIcons: 182892e7d1a2f27b52d3c627eca5d2665a22ee28
+  RNReanimated: 6a154e630ecc4c87c287f6eeda201f06b01428ba
+  RNScreens: f770034511e60c71feee26f9f50a6e1cc617ef9e
+  RNShare: a731da75fed4354ed5c1824037093c5dddfa035a
+  RNSVG: 7d403633772d39f695b8a1ccb64db8499e807dac
+  RNVectorIcons: 55221459225ae0fe7a5ab6b029378c79f1a82d8f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
-  Yoga: 055f92ad73f8c8600a93f0e25ac0b2344c3b07e6
-  YoutubePlayer-in-WKWebView: 2c3aa1d5ad8dded9f95ef12033af5dd8e55864b7
+  Yoga: b05994d1933f507b0a28ceaa4fdb968dc18da178
 
-PODFILE CHECKSUM: 6a2a99e4342f40e242f8c4344dfea309270c073b
+PODFILE CHECKSUM: 9adafb183fd656777ae590cb3dfa3a878e8042cc
 
 COCOAPODS: 1.16.2

@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.folk",
+  "applicationId": "in.folknet",
   "variantName": "release",
   "elements": [
     {

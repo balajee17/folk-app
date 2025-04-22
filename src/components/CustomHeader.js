@@ -186,7 +186,7 @@ const CustomHeader = ({
                 : titleName === screenNames.eventDetails
                 ? COLORS.halfTransparent
                 : titleName === screenNames.paymentDetails
-                ? '#F1F1F1'
+                ? COLORS.white
                 : COLORS.transparent,
           },
         ]}>
