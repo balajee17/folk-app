@@ -45,7 +45,8 @@ const CustomDrawer = ({navigation, route}) => {
           navigateTo(screenNames.switcherScreen, route?.params))
         : null;
     } else {
-      setGlobalState(prev => ({...prev, current: id})), navigateTo(screenName);
+      setGlobalState(prev => ({...prev, current: id})),
+        navigateTo(screenName, {titleName: screenName});
     }
   };
 
@@ -67,8 +68,6 @@ const CustomDrawer = ({navigation, route}) => {
     navigation.replace(screenNames.login);
   };
 
-  console.log('menuItems', menuItems);
-
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* // @ Profile Info */}
@@ -76,11 +75,7 @@ const CustomDrawer = ({navigation, route}) => {
       <View style={styles.header(statusBarHeight)}>
         {/* // # FOLK Logo */}
         <Image
-          style={{
-            width: horizontalScale(60),
-            height: horizontalScale(60),
-            alignSelf: 'center',
-          }}
+          style={styles.folkLogo}
           source={getImage.folk}
           resizeMode="contain"
         />
@@ -194,6 +189,11 @@ const CustomDrawer = ({navigation, route}) => {
 export default CustomDrawer;
 
 const styles = StyleSheet.create({
+  folkLogo: {
+    width: horizontalScale(60),
+    height: horizontalScale(60),
+    alignSelf: 'center',
+  },
   header: statusBarHeight => ({
     backgroundColor: COLORS.header,
     padding: '5%',

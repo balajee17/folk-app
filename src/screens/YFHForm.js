@@ -31,7 +31,7 @@ const YFHForm = props => {
   const [loader, setLoader] = useState(true);
   const [YFHLink, setYFHLink] = useState('');
 
-  const {navigation} = props;
+  const {navigation, route} = props;
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -86,7 +86,7 @@ const YFHForm = props => {
         {/* // # Header */}
         <CustomHeader
           toggleDrawer={() => navigation.openDrawer()}
-          titleName={screenNames.yfhForm}
+          titleName={route?.params?.titleName}
         />
         <Spinner spinnerVisible={loader} />
 

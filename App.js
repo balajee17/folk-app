@@ -14,6 +14,14 @@ import {ToastProvider, useToast} from 'react-native-toast-notifications';
 import ToastMessage from './src/components/ToastMessage';
 import NetInfo from '@react-native-community/netinfo';
 import NoNetwork from './src/components/NoNetwork';
+import {
+  backgroundNotificationHandler,
+  checkNotificationPermission,
+  foreGroundNotificationHandler,
+  getFcmId,
+  getInitialNotification,
+  getOnNotification,
+} from './src/components/FCM';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
@@ -43,6 +51,15 @@ const App = () => {
       setGlobalState(prev => ({...prev, isConnected: state.isConnected}));
     });
     // checkAppUpdates();
+
+    // @ Push Notifications
+    getFcmId();
+    checkNotificationPermission();
+    backgroundNotificationHandler();
+    foreGroundNotificationHandler();
+    getInitialNotification();
+    // getOnNotification();
+
     return () => unsubscribe();
   }, []);
 

@@ -1,4 +1,4 @@
-package in.folknet
+package `in`.folknet
 import android.os.Bundle;
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
