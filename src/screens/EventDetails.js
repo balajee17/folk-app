@@ -201,7 +201,7 @@ const EventDetails = props => {
       }
     } catch (err) {
       setLoader(false);
-      toastMsg('', 'error');
+      toastMsg(err?.error?.message, 'error');
       console.log('ERR-Register', err);
     }
   };
@@ -374,15 +374,16 @@ const EventDetails = props => {
 
             {/* // # Location */}
             {!shimmer &&
-              eventDetails?.Event_space &&
+              !!eventDetails?.Event_space &&
               renderSubTitle(
                 eventDetails?.Event_mode === 'F'
                   ? 'Location'
-                  : eventDetails?.Is_registered === 'Y'
+                  : eventDetails?.Is_registered === 'Y' &&
+                    eventDetails?.Event_mode === 'O'
                   ? 'Online Link'
                   : null,
               )}
-            {!shimmer && eventDetails?.Event_space && (
+            {!shimmer && !!eventDetails?.Event_space && (
               <>
                 {eventDetails?.Event_mode === 'F' ? (
                   <View style={styles.locationCont}>

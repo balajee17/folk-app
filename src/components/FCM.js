@@ -1,6 +1,7 @@
 import messaging, {firebase} from '@react-native-firebase/messaging';
 import notifee, {
   AndroidImportance,
+  AndroidStyle,
   AuthorizationStatus,
   EventType,
 } from '@notifee/react-native';
@@ -19,6 +20,7 @@ export const getFcmId = async () => {
 
   Platform.OS === 'android' &&
     (await firebase.messaging().registerDeviceForRemoteMessages());
+
   // asyncStorageFcmId && (await Store.dispatch(setFCMID(asyncStorageFcmId)));
   !asyncStorageFcmId &&
     messaging()
@@ -58,21 +60,14 @@ export const checkNotificationPermission = async () => {
   }
 };
 
-export const backgroundNotificationHandler = () => {
+export const backgroundNotificationHandler = async () => {
   console.log('Message  background!');
 
   const unsubscribe = firebase
     .messaging()
     .setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
-      Alert.alert('Title', 'This is the message', [
-        {
-          text: remoteMessage,
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ]);
+
       displayNotification(remoteMessage);
     });
   notifee.onBackgroundEvent(async ({type, detail}) => {
@@ -135,22 +130,23 @@ export const foreGroundNotificationHandler = () => {
 
 const displayNotification = async remoteMessage => {
   try {
-    console.log('RM_MESS', remoteMessage);
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
-      id: CHANNEL_ID,
+      id: 'sound',
       name: CHANNEL_NAME,
       importance: AndroidImportance.HIGH,
+      sound: 'hare_krishna',
     });
 
     await notifee.displayNotification({
-      title: remoteMessage?.notification?.title,
-      body: remoteMessage?.notification?.body,
+      title: remoteMessage?.data?.title,
+      body: remoteMessage?.data?.body,
       data: {redirectScreenName: remoteMessage},
 
       android: {
         channelId,
         ongoing: true,
+        sound: 'hare_krishna',
 
         // smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
         //  # pressAction is needed if you want the notification to open the app when pressed
@@ -161,6 +157,24 @@ const displayNotification = async remoteMessage => {
           // mainComponent: remoteMessage.data.click_action,
           // launchActivity: 'com.yourapp.MainActivity',
         },
+
+        style: {
+          type: AndroidStyle.BIGPICTURE,
+          picture:
+            remoteMessage?.data?.image ||
+            require('../assets/images/folkIcn.png'),
+        },
+      },
+
+      ios: {
+        attachments: [
+          {
+            url:
+              remoteMessage?.data?.image ||
+              require('../assets/images/folkIcn.png'),
+          },
+        ],
+        sound: 'hare_krishna.mp3',
       },
 
       importance: AndroidImportance.HIGH,

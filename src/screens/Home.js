@@ -82,9 +82,16 @@ const Home = ({apiData, shimmer, refreshData}) => {
   };
 
   // # Section Title
-  const RenderSecTitle = (title, color, icnLink) => {
+  const RenderSecTitle = (title, color, icnLink, navigateTo) => {
     return (
-      <View style={[{flexDirection: 'row'}]}>
+      <TouchableOpacity
+        onPress={() => {
+          navigateScreen(navigateTo, {
+            title: title,
+          });
+        }}
+        activeOpacity={0.8}
+        style={[{flexDirection: 'row'}]}>
         <Image
           style={styles.titleImg}
           source={{uri: icnLink}}
@@ -96,7 +103,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
           style={[MyStyles.subTitleText, styles.secTitle, {color: color}]}>
           {title}
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -155,12 +162,13 @@ const Home = ({apiData, shimmer, refreshData}) => {
                     TITLE,
                     index > 0 ? COLORS.gableGreen : COLORS.white,
                     icnLink,
+                    screenNames.dailyDarshan,
                   )}
-                  {RenderHistoryIcon(
+                  {/* {RenderHistoryIcon(
                     TITLE,
                     screenNames.dailyDarshan,
                     index > 0 ? COLORS.gableGreen : COLORS.white,
-                  )}
+                  )} */}
                 </>
               )
             )}
@@ -216,12 +224,13 @@ const Home = ({apiData, shimmer, refreshData}) => {
                   TITLE,
                   index === 0 ? COLORS.white : COLORS.gableGreen,
                   icnLink,
+                  screenNames.quotes,
                 )}
-                {RenderHistoryIcon(
+                {/* {RenderHistoryIcon(
                   TITLE,
                   screenNames.quotes,
                   index === 0 ? COLORS.white : COLORS.gableGreen,
-                )}
+                )} */}
               </>
             )
           )}
@@ -255,7 +264,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                     <View
                       key={card?.id}
                       style={{
-                        width: horizontalScale(290),
+                        width: windowWidth * 0.95,
                       }}>
                       <Image
                         source={{uri: card?.link}}
@@ -343,13 +352,14 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 TITLE,
                 index === 0 ? COLORS.white : COLORS.gableGreen,
                 icnLink,
+                screenNames.updates,
               )}
-              {section !== 5 &&
+              {/* {section !== 5 &&
                 RenderHistoryIcon(
                   TITLE,
                   screenNames.updates,
                   index === 0 ? COLORS.white : COLORS.gableGreen,
-                )}
+                )} */}
             </>
           )}
         </View>
@@ -503,12 +513,13 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 TITLE,
                 index === 0 ? COLORS.white : COLORS.gableGreen,
                 icnLink,
+                screenNames.folkVideos,
               )}
-              {RenderHistoryIcon(
+              {/* {RenderHistoryIcon(
                 TITLE,
                 screenNames.folkVideos,
                 index === 0 ? COLORS.white : COLORS.gableGreen,
-              )}
+              )} */}
             </>
           )}
         </View>
@@ -565,6 +576,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
         }
         contentContainerStyle={{
           paddingBottom: shimmer ? 0 : verticalScale(220),
+          flexGrow: 1,
         }}>
         <View style={MyStyles.contentCont}>
           <LinearGradientBg />
@@ -632,25 +644,25 @@ const styles = StyleSheet.create({
   shimmerCont: {width: '70%', marginTop: verticalScale(15)},
   quotesCont: {
     height: horizontalScale(345),
-    width: windowWidth,
+    width: windowWidth * 0.95,
+    alignSelf: 'center',
   },
   swiperContainer: {
-    width: windowWidth,
+    width: windowWidth * 0.95,
     height: horizontalScale(300),
     justifyContent: 'center',
     alignItems: 'center',
   },
   swiperCard: {
-    width: horizontalScale(290),
+    width: windowWidth * 0.95,
     height: horizontalScale(300),
-    alignSelf: 'center',
     borderRadius: moderateScale(10),
     marginTop: '-6%',
-    marginLeft: '6.5%',
+    marginLeft: '-5%',
     backgroundColor: COLORS.dropDownBg,
   },
   quotesImg: {
-    width: horizontalScale(290),
+    width: windowWidth * 0.95,
     height: horizontalScale(250),
     resizeMode: 'stretch',
     borderTopRightRadius: moderateScale(10),
@@ -665,7 +677,7 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
   },
   quotesBtns: {
-    backgroundColor: COLORS.header,
+    backgroundColor: COLORS.modalBg,
     width: horizontalScale(40),
     height: horizontalScale(40),
     alignItems: 'center',

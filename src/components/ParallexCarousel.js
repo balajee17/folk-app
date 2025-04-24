@@ -10,6 +10,7 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
+  interpolateColor,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -18,7 +19,10 @@ import ParallexPaginationDots from './ParallexPaginationDots';
 
 const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
+// const ITEM_WIDTH = windowWidth - OFF_SET * 2;
+
 const ITEM_HEIGHT = verticalScale(400);
+const Border_Radius = moderateScale(15);
 
 const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
   const scrollX = useSharedValue(0);
@@ -46,8 +50,8 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
     )
       return;
 
-    const totalSteps = 80; // Number of steps for smooth scrolling
-    const intervalDuration = 3000; // Time between auto-scrolls
+    const totalSteps = 150; // Increased for smoother animation
+    const intervalDuration = 4000; // Increased for slower overall pace
 
     const smoothScroll = (startOffset, endOffset) => {
       let step = 0;
@@ -55,7 +59,6 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
       const scrollStep = () => {
         step++;
         if (step > totalSteps) {
-          // Ensure final scroll position is precise
           scrollRef?.current?.scrollTo({x: endOffset, animated: true});
           return;
         }
@@ -63,8 +66,8 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
         const increment = (endOffset - startOffset) / totalSteps;
         const currentOffset = startOffset + increment * step;
 
-        scrollRef?.current?.scrollTo({x: currentOffset, animated: true});
-        requestAnimationFrame(scrollStep); // Recursive call
+        scrollRef?.current?.scrollTo({x: currentOffset, animated: false});
+        requestAnimationFrame(scrollStep);
       };
 
       requestAnimationFrame(scrollStep);
@@ -72,21 +75,18 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
 
     autoScrollInterval.current = setInterval(() => {
       const currentOffset = currentIndex.current * ITEM_WIDTH;
-      currentIndex.current = (currentIndex.current + 1) % carouselItems?.length; // Cycle through items
+      currentIndex.current = (currentIndex.current + 1) % carouselItems?.length;
       const nextOffset = currentIndex.current * ITEM_WIDTH;
 
-      // Smooth scroll to the next item
       smoothScroll(currentOffset, nextOffset);
     }, intervalDuration);
 
-    // Clear interval on unmount or manual scrolling
     return () => {
       if (autoScrollInterval.current) {
         clearInterval(autoScrollInterval.current);
       }
     };
   };
-
   // # Stop Auto Scroll
   const stopAutoScroll = () => {
     if (autoScrollInterval.current) {
@@ -175,7 +175,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
             const translate = interpolate(
               scrollX.value,
               inputRange,
-              [0.97, 0.97, 0.97],
+              [0.97, 0.85, 0.97],
               {
                 extrapolate: Extrapolation.CLAMP,
               },
@@ -196,10 +196,32 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
             };
           });
 
+          const overlayStyle = useAnimatedStyle(() => {
+            const overlayOpacity = interpolate(
+              scrollX.value,
+              inputRange,
+              [0.85, 0, 0.85],
+              {
+                extrapolate: Extrapolation.CLAMP,
+              },
+            );
+
+            return {
+              backgroundColor: COLORS.halfTransparent,
+              opacity: overlayOpacity,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderRadius: Border_Radius,
+            };
+          });
+
           const translateImgStyle = useAnimatedStyle(() => {
             const translate = interpolate(scrollX.value, inputRange, [
               -ITEM_WIDTH * 0.2,
-              0.97,
+              0.87,
               ITEM_WIDTH * 0.4,
             ]);
 
@@ -221,6 +243,7 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
                   height: ITEM_HEIGHT,
                   overflow: 'hidden',
                   shadowColor: COLORS.white,
+                  marginTop: '1%',
                 },
                 translateStyle,
               ]}>
@@ -231,10 +254,13 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
                     height: '100%',
                     borderRadius: moderateScale(15),
                     overflow: 'hidden',
-                    resizeMode: 'stretch',
+                    resizeMode: 'cover',
                   }}
-                  source={{uri: item?.link}}
+                  source={{
+                    uri: item?.link,
+                  }}
                 />
+                <Animated.View style={overlayStyle} />
               </Animated.View>
             </Animated.View>
           );

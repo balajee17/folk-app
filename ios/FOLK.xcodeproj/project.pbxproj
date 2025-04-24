@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* FOLKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FOLKTests.m */; };
 		018E85E52DB7741200DE7606 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 018E85E42DB7741200DE7606 /* GoogleService-Info.plist */; };
+		01F310832DBA14460021940E /* flute.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 01F310822DBA14460021940E /* flute.mp3 */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -44,6 +45,7 @@
 		00E356F21AD99517003FC87E /* FOLKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOLKTests.m; sourceTree = "<group>"; };
 		018E85E42DB7741200DE7606 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		018E85E62DB7781100DE7606 /* FOLK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FOLK.entitlements; path = FOLK/FOLK.entitlements; sourceTree = "<group>"; };
+		01F310822DBA14460021940E /* flute.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = flute.mp3; sourceTree = "<group>"; };
 		1040EFD61C8546A382DBD980 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* FOLK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FOLK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = FOLK/AppDelegate.h; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				08D8932DA69140429BA95D63 /* Resources */,
+				01F310822DBA14460021940E /* flute.mp3 */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				D4F9EC43D32D43FDB0E269C6 /* YsabeauInfant-Bold.ttf in Resources */,
 				3DB7394E31FB45519D79368B /* Urbanist-Regular.ttf in Resources */,
 				CE0ABEFFEAEC4D6F8129DAA3 /* Poppins-SemiBold.ttf in Resources */,
+				01F310832DBA14460021940E /* flute.mp3 in Resources */,
 				DBC355A6CD7D4D69A6C16E4E /* Poppins-Regular.ttf in Resources */,
 				C1BDF71A497346C081A081A2 /* YsabeauInfant-Regular.ttf in Resources */,
 				85E4EE0296064767B340CEEB /* LufgaBold.ttf in Resources */,
@@ -679,7 +683,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -763,7 +770,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

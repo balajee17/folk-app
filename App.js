@@ -58,7 +58,7 @@ const App = () => {
     backgroundNotificationHandler();
     foreGroundNotificationHandler();
     getInitialNotification();
-    // getOnNotification();
+    getOnNotification();
 
     return () => unsubscribe();
   }, []);
