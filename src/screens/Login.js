@@ -143,10 +143,10 @@ const Login = ({navigation}) => {
           setLoader(false);
         } else {
           setLoader(false);
-          console.log('data12345', response?.data);
           const {id, photo, name, folkId, mobile} = response?.data?.profile;
           const userDetails = {profileId: id, photo, name, folkId, mobile};
-          await setGlobalState({
+          await setGlobalState(prev => ({
+            ...prev,
             current: 'DB1',
             btTab: 'DB1',
             profileId: id,
@@ -156,7 +156,7 @@ const Login = ({navigation}) => {
             userName: name,
             mobileNumber: mobile,
             photo: photo,
-          });
+          }));
           await AsyncStorage.setItem(
             'userDetails',
             JSON.stringify(userDetails),
@@ -185,6 +185,11 @@ const Login = ({navigation}) => {
             visible={exitAppModal}
             onOkay={() => handleOkay()}
             onCancel={() => handleCancel()}
+            content={{
+              title: 'Exit App ?',
+              text: 'Are you sure you want to exit?',
+              buttonName: 'Exit',
+            }}
           />
 
           {/* // @ FOLK GIF */}

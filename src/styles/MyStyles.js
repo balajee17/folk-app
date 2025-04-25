@@ -120,6 +120,7 @@ export let COLORS = {
   shareBtn: 'rgba(0, 0, 0, 0.71)',
   whiteHalfTrans: 'rgba(255, 255, 255, 0.2)',
   borderColor: 'rgba(0, 0, 0, 0.03)',
+  logoutColor: '#F8512B',
 };
 
 // @ FONTS
@@ -176,7 +177,7 @@ export let MyStyles = {
   },
   updateTxt: {
     fontSize: SIZES.l,
-    color: COLORS.white,
+    color: COLORS.black,
     fontFamily: FONTS.urbanistMedium,
     marginTop: '2%',
     lineHeight: 20,
@@ -346,7 +347,7 @@ export let MyStyles = {
   },
   announceTxt: {
     fontSize: SIZES.xl,
-    color: COLORS.white,
+    color: COLORS.black,
     fontFamily: FONTS.urbanistBold,
     width: '80%',
   },

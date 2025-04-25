@@ -1,5 +1,6 @@
 import {
   Image,
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -13,6 +14,7 @@ import {
   horizontalScale,
   moderateScale,
   MyStyles,
+  screenWidth,
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
@@ -25,12 +27,15 @@ import {useStatusBarHeight} from './StatusBarComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import {ImageShimmer, TitleShimmer} from './Shimmer';
+import {CustomPopup} from './BackHandler';
+
 const CustomDrawer = ({navigation, route}) => {
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
   const {current, folkId, userName, photo, menuItems, menuSpinner} =
     globalState;
   const {closeDrawer} = navigation;
+  const [showLogout, setShowLogout] = useState(false);
 
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
@@ -51,6 +56,7 @@ const CustomDrawer = ({navigation, route}) => {
   };
 
   const logout = async () => {
+    setShowLogout(false);
     await setGlobalState({
       current: 'DB1',
       btTab: 'DB1',
@@ -71,7 +77,6 @@ const CustomDrawer = ({navigation, route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* // @ Profile Info */}
-
       <View style={styles.header(statusBarHeight)}>
         {/* // # FOLK Logo */}
         <Image
@@ -110,6 +115,18 @@ const CustomDrawer = ({navigation, route}) => {
         </View>
       </View>
 
+      {/* // @ Logout Modal */}
+      <CustomPopup
+        visible={showLogout}
+        onOkay={() => logout()}
+        onCancel={() => setShowLogout(false)}
+        content={{
+          title: 'Log Out?',
+          text: 'Are you sure you want to LogOut?',
+          buttonName: 'Log Out',
+        }}
+      />
+
       {/* // @ Menu Items */}
       {menuItems?.length > 0 &&
         menuItems?.map((item, index) => (
@@ -129,9 +146,9 @@ const CustomDrawer = ({navigation, route}) => {
             <View style={styles.iconCont}>
               <Image
                 style={styles.menuImg}
-                source={
-                  current === item?.id ? item?.whiteIcon : item?.blackIcon
-                }
+                source={{
+                  uri: current === item?.id ? item?.whiteIcon : item?.blackIcon,
+                }}
               />
             </View>
             <Text
@@ -170,7 +187,7 @@ const CustomDrawer = ({navigation, route}) => {
       <View style={styles.logoutCont}>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => logout()}
+          onPress={() => setShowLogout(true)}
           style={styles.logoutBtn}>
           <MaterialCommunityIcons
             name="logout"

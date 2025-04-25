@@ -34,7 +34,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Clipboard from '@react-native-clipboard/clipboard';
 
 // @ Redirect Link
-export const RedirectURL = async (url, app = '') => {
+export const RedirectURL = async (url, app = '', message) => {
   try {
     if (!url) {
       const message =
@@ -54,7 +54,7 @@ export const RedirectURL = async (url, app = '') => {
       app === 'phone'
         ? `tel:${url}`
         : app === 'whatsapp'
-        ? `whatsapp://send?text=hello&phone=${url}`
+        ? `whatsapp://send?text=${message}&phone=${url}`
         : url;
     await Linking.openURL(link).catch(err => {
       showToast = true;
@@ -161,12 +161,20 @@ export const CashFreePayment = (payment_session_id, order_id) => {
   });
 };
 
-export const GetPaymentStatus = async (profileId, orderId, purpose) => {
+export const GetPaymentStatus = async (
+  profileId,
+  orderId,
+  purpose,
+  couponReqId,
+  couponCount,
+) => {
   try {
     const params = {
       profileId,
       orderId,
-      purpose: purpose,
+      purpose,
+      couponReqId,
+      couponCount,
     };
     const response = await API.getPaymentDetails(params);
 

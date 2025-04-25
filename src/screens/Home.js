@@ -85,6 +85,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
   const RenderSecTitle = (title, color, icnLink, navigateTo) => {
     return (
       <TouchableOpacity
+        disabled={navigateTo === 'N'}
         onPress={() => {
           navigateScreen(navigateTo, {
             title: title,
@@ -177,7 +178,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
             <ParallexShimmer />
           ) : (
             UPDATES?.length > 0 && (
-              <ParallexCarousel carouselItems={UPDATES} autoScroll />
+              <ParallexCarousel carouselItems={UPDATES} autoScroll={true} />
             )
           )}
         </View>
@@ -352,7 +353,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 TITLE,
                 index === 0 ? COLORS.white : COLORS.gableGreen,
                 icnLink,
-                screenNames.updates,
+                section == 5 ? 'N' : screenNames.updates,
               )}
               {/* {section !== 5 &&
                 RenderHistoryIcon(
@@ -405,15 +406,11 @@ const Home = ({apiData, shimmer, refreshData}) => {
                         marginTop: '2%',
                       },
                     ]}>
-                    <Text style={[MyStyles.announceTxt, {color: COLORS.black}]}>
+                    <Text style={[MyStyles.announceTxt]}>
                       {updateItem?.title}
                     </Text>
 
-                    <Text
-                      style={[
-                        MyStyles.updateTxt,
-                        {marginTop: '2%', color: COLORS.black},
-                      ]}>
+                    <Text style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
                       {updateItem?.text}
                     </Text>
                   </View>
@@ -442,42 +439,36 @@ const Home = ({apiData, shimmer, refreshData}) => {
                           : '1%',
                       },
                     ]}>
-                    <LinearGradient
+                    {/* <LinearGradient
                       start={{x: 0.3, y: 0}}
                       end={{x: 1, y: 1}}
                       colors={['#353a5f', '#9ebaf3']}
-                      style={[MyStyles.gradient]}>
+                      style={[MyStyles.gradient]}> */}
+                    <View style={styles.noticeCard}>
                       <View
-                        style={{
-                          padding: moderateScale(10),
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View
-                          style={[
-                            MyStyles.announceIcnTxtCont,
-                            {
-                              width: '17%',
-                            },
-                          ]}>
-                          <Image
-                            source={{
-                              uri: updateItem?.icon,
-                            }}
-                            style={MyStyles.announceIcn}
-                          />
-                        </View>
-                        <View style={{width: '80%'}}>
-                          <Text style={[MyStyles.announceTxt]}>
-                            {updateItem?.title}
-                          </Text>
-                          <Text style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
-                            {updateItem?.text}
-                          </Text>
-                        </View>
+                        style={[
+                          MyStyles.announceIcnTxtCont,
+                          {
+                            width: '17%',
+                          },
+                        ]}>
+                        <Image
+                          source={{
+                            uri: updateItem?.icon,
+                          }}
+                          style={MyStyles.announceIcn}
+                        />
                       </View>
-                    </LinearGradient>
+                      <View style={{width: '80%'}}>
+                        <Text style={[MyStyles.announceTxt]}>
+                          {updateItem?.title}
+                        </Text>
+                        <Text style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
+                          {updateItem?.text}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* </LinearGradient> */}
                   </Pressable>
                 ) : (
                   <></>
@@ -683,5 +674,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(30),
+  },
+  noticeCard: {
+    padding: moderateScale(10),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.dropDownBg,
+    borderRadius: moderateScale(15),
+    shadowColor: COLORS.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

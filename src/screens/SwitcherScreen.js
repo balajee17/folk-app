@@ -279,6 +279,11 @@ const SwitcherScreen = ({navigation, route}) => {
           visible={exitAppModal}
           onOkay={() => handleOkay()}
           onCancel={() => handleCancel()}
+          content={{
+            title: 'Exit App?',
+            text: 'Are you sure you want to exit?',
+            buttonName: 'Exit',
+          }}
         />
         {/* // # Contents */}
         {btTab === 'DB1' ? (

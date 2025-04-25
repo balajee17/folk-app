@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, useWindowDimensions, View} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {
   COLORS,
@@ -19,7 +19,6 @@ import ParallexPaginationDots from './ParallexPaginationDots';
 
 const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
-// const ITEM_WIDTH = windowWidth - OFF_SET * 2;
 
 const ITEM_HEIGHT = verticalScale(400);
 const Border_Radius = moderateScale(15);
@@ -50,8 +49,8 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
     )
       return;
 
-    const totalSteps = 150; // Increased for smoother animation
-    const intervalDuration = 4000; // Increased for slower overall pace
+    const totalSteps = 100; // Increased for smoother animation
+    const intervalDuration = 6000; // Increased for slower overall pace
 
     const smoothScroll = (startOffset, endOffset) => {
       let step = 0;
@@ -243,7 +242,6 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
                   height: ITEM_HEIGHT,
                   overflow: 'hidden',
                   shadowColor: COLORS.white,
-                  marginTop: '1%',
                 },
                 translateStyle,
               ]}>

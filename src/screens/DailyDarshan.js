@@ -70,7 +70,7 @@ const DailyDarshan = props => {
     } catch (err) {
       setDarshanData([]);
       toastMsg('', 'error');
-      setLoader(false);
+      setShimmer(false);
       console.log('ERR-Darshan-screen', err);
     }
   };

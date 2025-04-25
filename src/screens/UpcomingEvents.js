@@ -11,14 +11,16 @@ import React from 'react';
 import {
   COLORS,
   FONTS,
+  horizontalScale,
+  moderateScale,
   MyStyles,
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
 import {screenNames} from '../constants/ScreenNames';
 import {EventShimmer} from '../components/Shimmer';
-import moment from 'moment';
 import NoDataFound from '../components/NoDataFound';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
   // # Navigate Sreen
@@ -61,6 +63,17 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                       </Text>
                     </View>
                   </View>
+
+                  {item?.isLive === 'Y' && (
+                    <View style={styles.liveCont}>
+                      <MaterialCommunityIcons
+                        name="access-point"
+                        size={horizontalScale(13)}
+                        color={COLORS.white}
+                      />
+                      <Text style={styles.liveTxt}>LIVE</Text>
+                    </View>
+                  )}
 
                   {/* // # Content Container */}
                   <View style={MyStyles.boxContentContainer}>
@@ -144,5 +157,23 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.urbanistRegular,
     fontSize: SIZES.m,
     color: COLORS.white,
+  },
+  liveCont: {
+    width: horizontalScale(45),
+    borderRadius: moderateScale(2),
+    position: 'absolute',
+    bottom: verticalScale(115),
+    alignSelf: 'flex-end',
+    right: '5%',
+    backgroundColor: 'red',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  liveTxt: {
+    fontFamily: FONTS.poppinsSemiBold,
+    fontSize: SIZES.m,
+    color: COLORS.white,
+    top: '4%',
   },
 });

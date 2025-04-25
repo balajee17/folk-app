@@ -71,63 +71,12 @@ const CustomHeader = ({
     titleName !== screenNames.paymentDetails;
 
   const drawerControl = async () => {
-    //  toggleDrawer();
-    // (!folkId || menuItems?.length===0) && getMenuItems();
-
-    await setGlobalState(prev => ({...prev, menuItems: [], menuSpinner: true}));
     toggleDrawer();
-    setTimeout(
-      async () =>
-        await setGlobalState(prev => ({
-          ...prev,
-          menuItems: [
-            {
-              id: 'DB1',
-              screenName: 'Home',
-              whiteIcon: getImage.homeWhite,
-              blackIcon: getImage.homeBlack,
-              title: 'Home',
-            },
-            {
-              id: 'D2',
-              screenName: 'YFH',
-              whiteIcon: getImage.formWhite,
-              blackIcon: getImage.formBlack,
-              title: 'YFH',
-            },
-
-            {
-              id: 'D3',
-              screenName: 'Accommodation',
-              whiteIcon: getImage.accommodationWhite,
-              blackIcon: getImage.accommodationBlack,
-              title: 'Accommodation',
-            },
-            {
-              id: 'D4',
-              screenName: 'Contribution',
-              whiteIcon: getImage.donateWhite,
-              blackIcon: getImage.donateBlack,
-              title: 'Contribution',
-            },
-            {
-              id: 'D5',
-              screenName: 'FOLK Merchandise',
-              whiteIcon: getImage.merchantWhite,
-              blackIcon: getImage.merchantBlack,
-              title: 'FOLK Merchandise',
-            },
-            {
-              id: 'D6',
-              screenName: 'Habits Sadhana',
-              whiteIcon: getImage.sadhanaWhite,
-              blackIcon: getImage.sadhanaBlack,
-              title: 'Habits Sadhana',
-            },
-          ],
-          menuSpinner: false,
-        })),
-      2000,
+    (!folkId || menuItems?.length === 0) && getMenuItems();
+    console.log(
+      '!folkId || menuItems?.length === 0',
+      !folkId,
+      menuItems?.length,
     );
   };
 
@@ -140,11 +89,11 @@ const CustomHeader = ({
       }));
       const params = {mobile: mobileNumber};
       const response = await API.getMenuList(params);
-      const {data, successCode, message} = response?.data;
+      const {menu, successCode, message} = response?.data;
       if (successCode === 1) {
-        const menu = await setGlobalState(prev => ({
+        await setGlobalState(prev => ({
           ...prev,
-          menuItems: data,
+          menuItems: menu,
           menuSpinner: false,
         }));
       } else {

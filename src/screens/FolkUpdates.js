@@ -164,19 +164,12 @@ const FolkUpdates = props => {
                                   marginTop: '2%',
                                 },
                               ]}>
-                              <Text
-                                style={[
-                                  MyStyles.announceTxt,
-                                  {color: COLORS.black},
-                                ]}>
+                              <Text style={[MyStyles.announceTxt]}>
                                 {updateItem?.title}
                               </Text>
 
                               <Text
-                                style={[
-                                  MyStyles.updateTxt,
-                                  {marginTop: '2%', color: COLORS.black},
-                                ]}>
+                                style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
                                 {updateItem?.text}
                               </Text>
                             </View>

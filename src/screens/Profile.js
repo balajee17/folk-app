@@ -60,7 +60,7 @@ const Profile = props => {
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
     {id: 2, tabName: 'Attendance', icon: 'calendar-outline'},
-    {id: 3, tabName: 'Payment', icon: 'receipt-outline'},
+    {id: 3, tabName: 'Payments', icon: 'receipt-outline'},
   ];
 
   const toast = useToast();

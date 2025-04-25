@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
   },
   quotesBtns: {
-    backgroundColor: COLORS.header,
+    backgroundColor: COLORS.modalBg,
     width: horizontalScale(40),
     height: horizontalScale(40),
     alignItems: 'center',

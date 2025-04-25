@@ -385,7 +385,7 @@ const EventDetails = props => {
               )}
             {!shimmer && !!eventDetails?.Event_space && (
               <>
-                {eventDetails?.Event_mode === 'F' ? (
+                {eventDetails?.Event_mode !== 'F' ? (
                   <View style={styles.locationCont}>
                     <Ionicons
                       style={styles.locationIcn}
@@ -406,26 +406,32 @@ const EventDetails = props => {
                       </Text>
                     </View>
                   </View>
-                ) : eventDetails?.Is_registered === 'Y' &&
-                  eventDetails?.Event_mode === 'O' ? (
-                  <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={async () => {
-                      const result = await RedirectURL(
-                        eventDetails?.Event_space,
-                      );
-                      if (!!result?.type) {
-                        toastMsg(result?.message, result?.type);
-                      }
-                    }}
-                    style={styles.joinButton}>
-                    <Ionicons
-                      name={'videocam'}
-                      size={moderateScale(25)}
-                      color={COLORS.white}
-                    />
-                    <Text style={styles.joinTxt}>Join Now</Text>
-                  </TouchableOpacity>
+                ) : eventDetails?.Is_registered !== 'Y' &&
+                  eventDetails?.Event_mode !== 'O' ? (
+                  <LinearGradient
+                    style={styles.joinGradient}
+                    start={{x: 0, y: 1}}
+                    end={{x: 1, y: 0}}
+                    colors={['#9289C2', '#9E7DBB', '#AE6CAD']}>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      onPress={async () => {
+                        const result = await RedirectURL(
+                          eventDetails?.Event_space,
+                        );
+                        if (!!result?.type) {
+                          toastMsg(result?.message, result?.type);
+                        }
+                      }}
+                      style={styles.joinButton}>
+                      <Ionicons
+                        name={'videocam'}
+                        size={moderateScale(25)}
+                        color={COLORS.white}
+                      />
+                      <Text style={styles.joinTxt}>Join Now</Text>
+                    </TouchableOpacity>
+                  </LinearGradient>
                 ) : (
                   <></>
                 )}
@@ -719,12 +725,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   }),
   joinButton: {
-    width: horizontalScale(120),
-    backgroundColor: COLORS.infoPB,
-    height: horizontalScale(35),
-    marginTop: '2%',
-    alignSelf: 'center',
-    borderRadius: moderateScale(30),
+    width: '100%',
+    height: '100%',
+
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -734,5 +737,12 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontFamily: FONTS.LufgaBold,
     fontSize: SIZES.l,
+  },
+  joinGradient: {
+    width: horizontalScale(120),
+    height: horizontalScale(35),
+    alignSelf: 'center',
+    borderRadius: moderateScale(30),
+    marginTop: '2%',
   },
 });

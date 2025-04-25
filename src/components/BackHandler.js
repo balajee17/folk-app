@@ -9,9 +9,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {COLORS, FONTS, MyStyles, screenWidth, SIZES} from '../styles/MyStyles';
-import {getImage} from '../utils/ImagePath';
-import {toastThrottle} from './CommonFunctionalities';
+import {
+  COLORS,
+  FONTS,
+  horizontalScale,
+  moderateScale,
+  MyStyles,
+  screenWidth,
+  SIZES,
+} from '../styles/MyStyles';
 
 let AndroidBackHandler = {
   // Control Back Handler i.e go back to pervious page
@@ -44,32 +50,27 @@ let AndroidBackHandler = {
 
 export default AndroidBackHandler;
 
-export const CustomPopup = ({visible, onOkay, onCancel}) => {
+export const CustomPopup = ({visible, onOkay, onCancel, content}) => {
   return (
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Image
-            source={getImage.alert}
-            resizeMode="stretch"
-            style={{width: 40, height: 40}}
-          />
-          <Text style={styles.modalText}>Do you want to exit App?</Text>
+          <Text style={styles.cntTitle}>{content?.title}</Text>
+          <Text style={styles.modalText}>{content?.text}</Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={{...styles.button, backgroundColor: COLORS.errorPB}}
-              onPress={onOkay}>
-              <Text style={styles.textStyle}>Yes</Text>
+              style={[styles.button, {backgroundColor: COLORS.logoutColor}]}
+              onPress={() => onOkay()}>
+              <Text style={styles.textStyle}>{content?.buttonName}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={{
-                ...styles.button,
-                backgroundColor: COLORS.charcoal,
-              }}
-              onPress={onCancel}>
-              <Text style={[styles.textStyle]}>No</Text>
+              style={styles.button}
+              onPress={() => onCancel()}>
+              <Text style={[styles.textStyle, {color: COLORS.osloGrey}]}>
+                Cancel
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -88,44 +89,40 @@ const styles = StyleSheet.create({
   modalView: {
     borderRadius: 15,
     padding: '5%',
-    alignItems: 'center',
     width: screenWidth * 0.85,
     backgroundColor: COLORS.white,
     // ...MyStyles.boxShadow,
   },
   modalText: {
-    textAlign: 'center',
-    fontFamily: FONTS.urbanistSemiBold,
+    fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.xl,
     color: COLORS.black,
-    marginTop: '3%',
+    marginTop: '6%',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    marginBottom: '5%',
   },
   button: {
-    borderRadius: 6,
-    width: 80,
-    height: 35,
+    borderRadius: moderateScale(12),
+    width: horizontalScale(110),
+    height: horizontalScale(40),
     marginTop: '10%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-
-    elevation: 3,
+    backgroundColor: COLORS.transparent,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 0.5,
+    borderColor: COLORS.osloGrey,
   },
   textStyle: {
     color: COLORS.white,
     fontFamily: FONTS.urbanistMedium,
     textAlign: 'center',
+  },
+  cntTitle: {
+    color: COLORS.black,
+    fontFamily: FONTS.urbanistBold,
+    fontSize: SIZES.xxl,
   },
 });

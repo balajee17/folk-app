@@ -157,7 +157,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
       <LinearGradient
         colors={['rgba(0,0,0,0.2)', 'transparent']}
         style={styles.shadow}
-        start={{x: 0, y: 1.8}} // Gradient direction
+        start={{x: 0, y: 1.8}}
         end={{x: 0, y: 0}}
       />
     </View>

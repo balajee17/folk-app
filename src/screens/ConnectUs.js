@@ -187,6 +187,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                     const result = await RedirectURL(
                       apiData?.guideDetails?.WHATSAPP,
                       'whatsapp',
+                      apiData?.guideDetails?.WHATSAPP_Message,
                     );
                     if (!!result?.type) {
                       toastMsg(result?.message, result?.type);

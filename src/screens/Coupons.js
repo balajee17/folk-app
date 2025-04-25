@@ -91,7 +91,7 @@ const Coupons = props => {
   }, []);
 
   const setDefaultStates = () => {
-    setCouponData([]);
+    // setCouponData([]);
     setSelCoupon({
       open: false,
       type: 'R',
@@ -328,10 +328,14 @@ const Coupons = props => {
   };
 
   const getPaymentStatusAPI = async orderId => {
+    const couponReqId = selCoupon?.refId;
+    const couponCount = selCoupon?.paidCount;
     const paymentStatusRes = await GetPaymentStatus(
       profileId,
       orderId,
       'Coupon',
+      couponReqId,
+      couponCount,
     );
     console.log('paymentStatusRes', paymentStatusRes?.data);
     setLoader(false);

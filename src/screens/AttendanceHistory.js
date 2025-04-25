@@ -106,9 +106,10 @@ const styles = StyleSheet.create({
     marginTop: '1%',
   },
   dateTxt: {
-    width: '30%',
+    width: '50%',
     marginTop: 0,
     textAlign: 'right',
     alignSelf: 'flex-end',
+    fontSize: SIZES.m,
   },
 });
