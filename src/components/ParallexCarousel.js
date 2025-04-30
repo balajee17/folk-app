@@ -1,5 +1,5 @@
-import {Image, StyleSheet, useWindowDimensions, View} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
   horizontalScale,
@@ -10,12 +10,12 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
-  interpolateColor,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import ParallexPaginationDots from './ParallexPaginationDots';
+import ImageViewer from './ImageViewer';
 
 const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
@@ -23,12 +23,14 @@ const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
 const ITEM_HEIGHT = verticalScale(400);
 const Border_Radius = moderateScale(15);
 
-const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
+const ParallexCarousel = ({carouselItems, autoScroll}) => {
   const scrollX = useSharedValue(0);
   const scrollRef = useRef(null);
   const currentIndex = useRef(0);
   const autoScrollInterval = useRef(null);
   const isAutoScrolling = useRef(true);
+
+  const [imageViewer, setImageViewer] = useState({url: '', visible: false});
 
   useEffect(() => {
     if (autoScroll) {
@@ -134,36 +136,11 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
             stopAutoScroll();
           }
         }}
-        //   if (scrollRef.current) {
-        //     scrollRef.current.scrollTo({
-        //       x: currentIndex.current * ITEM_WIDTH,
-        //       animated: false,
-        //     });
-        //   }
-        // }}
         onTouchEnd={() => {
           if (autoScroll) {
             startAutoScroll();
           }
-        }}
-        // onMomentumScrollEnd={event => {
-        //   const offsetX = event.nativeEvent.contentOffset.x;
-        //   const index = Math.round(offsetX / ITEM_WIDTH);
-        //   currentIndex.current = index;
-
-        //   if (scrollRef.current) {
-        //     scrollRef.current.scrollTo({
-        //       x: currentIndex.current * ITEM_WIDTH,
-        //       animated: true,
-        //     });
-        //   }
-
-        //   if (autoScroll) {
-        //     isAutoScrolling.current = true;
-        //     startAutoScroll();
-        //   }
-        // }}
-      >
+        }}>
         {carouselItems?.map((item, index) => {
           const inputRange = [
             (index - 1) * ITEM_WIDTH,
@@ -245,28 +222,47 @@ const ParallexCarousel = ({carouselItems, autoScroll = false}) => {
                 },
                 translateStyle,
               ]}>
-              <Animated.View style={[translateImgStyle]}>
-                <Image
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: moderateScale(15),
-                    overflow: 'hidden',
-                    resizeMode: 'cover',
-                  }}
-                  source={{
-                    uri: item?.link,
-                  }}
-                />
-                <Animated.View style={overlayStyle} />
-              </Animated.View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  stopAutoScroll();
+                  isAutoScrolling.current = false;
+                  setImageViewer({url: item?.link, visible: true});
+                }}>
+                <Animated.View style={[translateImgStyle]}>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: moderateScale(15),
+                      overflow: 'hidden',
+                      resizeMode: 'cover',
+                    }}
+                    source={{
+                      uri: item?.link,
+                    }}
+                  />
+                  <Animated.View style={overlayStyle} />
+                </Animated.View>
+              </TouchableOpacity>
             </Animated.View>
           );
         })}
       </Animated.ScrollView>
       {/* // # PAGINATION DOTS */}
-
       <ParallexPaginationDots carouselItems={carouselItems} scrollX={scrollX} />
+
+      {/* // # IMAGE VIEWER */}
+      {imageViewer?.visible && (
+        <ImageViewer
+          imageURL={imageViewer?.url}
+          closeImage={() => {
+            setImageViewer({url: '', visible: false});
+            isAutoScrolling.current = true;
+            startAutoScroll();
+          }}
+        />
+      )}
     </View>
   );
 };

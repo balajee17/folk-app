@@ -99,6 +99,7 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
                         height: horizontalScale(250),
                         borderRadius: moderateScale(20),
                         alignSelf: 'center',
+                        resizeMode: 'stretch',
                       }}
                       source={{
                         uri: item?.Value,

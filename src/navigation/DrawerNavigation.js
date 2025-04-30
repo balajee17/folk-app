@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import CustomDrawer from '../components/CustomDrawer';
 import {screenNames} from '../constants/ScreenNames';
@@ -18,7 +18,7 @@ const DrawerNavigation = () => {
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
-        swipeEnabled: true,
+        swipeEnabled: false,
         drawerStyle: {
           borderTopRightRadius: moderateScale(20),
           borderBottomRightRadius: moderateScale(20),

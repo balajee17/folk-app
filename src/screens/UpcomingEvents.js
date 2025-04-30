@@ -42,13 +42,21 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                   style={[MyStyles.card, {marginTop: index == 0 ? '2%' : '5%'}]}
                   key={item?.id}>
                   {/* // # Card image */}
-                  <Image
-                    style={MyStyles.cdImage}
-                    resizeMode="stretch"
-                    source={{
-                      uri: item?.image,
-                    }}
-                  />
+                  <View
+                    style={{
+                      borderRadius: moderateScale(20),
+                      overflow: 'hidden',
+                    }}>
+                    <Image
+                      style={{
+                        aspectRatio: 1 / 0.4,
+                        borderRadius: moderateScale(20),
+                      }}
+                      source={{
+                        uri: item?.image,
+                      }}
+                    />
+                  </View>
 
                   {/* // # Date Mode Container */}
                   <View style={MyStyles.dateModeCont}>
@@ -68,7 +76,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                     <View style={styles.liveCont}>
                       <MaterialCommunityIcons
                         name="access-point"
-                        size={horizontalScale(13)}
+                        size={horizontalScale(12)}
                         color={COLORS.white}
                       />
                       <Text style={styles.liveTxt}>LIVE</Text>
@@ -159,20 +167,21 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   liveCont: {
-    width: horizontalScale(45),
-    borderRadius: moderateScale(2),
+    width: horizontalScale(40),
+    borderRadius: moderateScale(3),
     position: 'absolute',
-    bottom: verticalScale(115),
+    bottom: '50%',
     alignSelf: 'flex-end',
-    right: '5%',
+    right: '8%',
     backgroundColor: 'red',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+    paddingHorizontal: '1%',
   },
   liveTxt: {
     fontFamily: FONTS.poppinsSemiBold,
-    fontSize: SIZES.m,
+    fontSize: SIZES.s,
     color: COLORS.white,
     top: '4%',
   },

@@ -261,7 +261,6 @@ const EventDetails = props => {
               source={{
                 uri: eventDetails?.Image,
               }}
-              resizeMode="stretch"
               style={styles.bgImg}>
               {/* // # Header */}
               <View style={{marginTop: statusBarHeight}}>
@@ -567,7 +566,7 @@ export default EventDetails;
 const styles = StyleSheet.create({
   bgImg: {
     width: '100%',
-    height: verticalScale(320),
+    aspectRatio: 1 / 0.8,
   },
   header: statusHeight => ({
     padding: moderateScale(15),

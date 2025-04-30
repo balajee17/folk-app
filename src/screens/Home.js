@@ -1,7 +1,5 @@
 import {
-  BackHandler,
   Image,
-  ImageBackground,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -10,18 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   COLORS,
-  FONTS,
   horizontalScale,
   moderateScale,
   MyStyles,
-  SIZES,
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
-import LinearGradient from 'react-native-linear-gradient';
 import {screenNames} from '../constants/ScreenNames';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ParallexCarousel from '../components/ParallexCarousel';
@@ -44,7 +39,6 @@ import {
   RedirectURL,
   ShareLink,
 } from '../components/CommonFunctionalities';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 const Home = ({apiData, shimmer, refreshData}) => {
   const {setGlobalState} = useAppContext();
@@ -178,7 +172,10 @@ const Home = ({apiData, shimmer, refreshData}) => {
             <ParallexShimmer />
           ) : (
             UPDATES?.length > 0 && (
-              <ParallexCarousel carouselItems={UPDATES} autoScroll={true} />
+              <ParallexCarousel
+                carouselItems={UPDATES}
+                autoScroll={UPDATES?.length < 8}
+              />
             )
           )}
         </View>
@@ -559,27 +556,32 @@ const Home = ({apiData, shimmer, refreshData}) => {
 
   return (
     <>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        overScrollMode="never"
-        refreshControl={
-          <RefreshControl refreshing={false} onRefresh={() => refreshData()} />
-        }
-        contentContainerStyle={{
-          paddingBottom: shimmer ? 0 : verticalScale(220),
-          flexGrow: 1,
-        }}>
-        <View style={MyStyles.contentCont}>
-          <LinearGradientBg />
-          {apiData?.map((item, index) => {
-            if (shimmer || apiData?.length > 0) {
-              return renderItemsInOrder(item, index);
-            } else {
-              return null;
-            }
-          })}
-        </View>
-      </ScrollView>
+      {
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          overScrollMode="never"
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => refreshData()}
+            />
+          }
+          contentContainerStyle={{
+            paddingBottom: shimmer ? 0 : verticalScale(220),
+            flexGrow: 1,
+          }}>
+          <View style={MyStyles.contentCont}>
+            <LinearGradientBg />
+            {apiData?.map((item, index) => {
+              if (shimmer || apiData?.length > 0) {
+                return renderItemsInOrder(item, index);
+              } else {
+                return null;
+              }
+            })}
+          </View>
+        </ScrollView>
+      }
     </>
   );
 };
