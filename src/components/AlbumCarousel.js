@@ -35,6 +35,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useToast} from 'react-native-toast-notifications';
 import {RedirectURL, ShareLink} from './CommonFunctionalities';
+import {DownloadImage} from './FileDownloader';
 
 const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
   const WIDTH = windowWidth * 0.9;
@@ -159,11 +160,10 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                   }}>
                   <TouchableOpacity
                     onPress={async () => {
-                      const result = await RedirectURL(item?.link);
-
-                      if (!!result?.type) {
-                        toastMsg(result?.message, result?.type);
-                      }
+                      DownloadImage({
+                        link: item?.link,
+                        name: 'FOLK_Downloaded',
+                      });
                     }}
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.3)',

@@ -49,6 +49,8 @@
 	<string>FOLK app needs camera permission</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+<string>FOLK need access to save images.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Urbanist-Bold.ttf</string>
