@@ -82,7 +82,7 @@ const YFHForm = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
+      <SafeAreaView style={[MyStyles.flex1, {paddingBottom: '12%'}]}>
         {/* // # Header */}
         <CustomHeader
           toggleDrawer={() => navigation.openDrawer()}

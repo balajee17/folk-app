@@ -3,7 +3,7 @@ import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, moderateScale, verticalScale} from '../styles/MyStyles';
 
-const LinearGradientBg = () => {
+const LinearGradientBg = ({height}) => {
   return (
     <LinearGradient
       colors={[
@@ -13,7 +13,7 @@ const LinearGradientBg = () => {
         'rgba(65, 110, 189, 0.1)',
         '#0000',
       ]}
-      style={styles.gradient}
+      style={styles.gradient(height)}
       start={{x: 0.5, y: 0}}
       end={{x: 0.5, y: 1}}
     />
@@ -23,9 +23,9 @@ const LinearGradientBg = () => {
 export default LinearGradientBg;
 
 const styles = StyleSheet.create({
-  gradient: {
+  gradient: height => ({
     width: '100%',
-    height: verticalScale(350),
+    height: height || verticalScale(350),
     shadowColor: '#3B82F6',
     shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.9,
@@ -34,5 +34,5 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-  },
+  }),
 });

@@ -1,6 +1,7 @@
 import {
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,41 +22,130 @@ import {screenNames} from '../constants/ScreenNames';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
+import CircularProgress from '../components/CircularProgress';
+import IonIcons from 'react-native-vector-icons/Ionicons';
+import Svg, {Circle} from 'react-native-svg';
 
 const SadhanaCalendar = props => {
   const {navigation} = props;
 
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(moment(new Date()));
+
+  const size = horizontalScale(30);
+  const strokeWidth = horizontalScale(4);
+  const radius = (size - strokeWidth) / 2;
+  const cx = size / 2;
+  const cy = size / 2;
+  const circumference = 2 * Math.PI * radius;
+
+  // 50% example - you can tweak this part
+  const percentage = 50; // change to any value
+  const fillStroke = (percentage / 100) * circumference;
 
   const DAYS = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
   const calendarList = [
-    {day: '1', sadhanaDate: '1-Apr-2025', progress: 50},
-    {day: '2', sadhanaDate: '2-Apr-2025', progress: 25},
-    {day: '3', sadhanaDate: '3-Apr-2025', progress: 100},
+    {
+      day: '1',
+      sadhanaDate: '01-May-2025',
+      percentage: 50,
+      circleColor: '#EAECDC',
+      progressColor: '#B1C63C',
+    },
+    {
+      day: '2',
+      sadhanaDate: '02-May-2025',
+      percentage: 25,
+      circleColor: '#EAECDC',
+      progressColor: '#B1C63C',
+    },
+    {
+      day: '3',
+      sadhanaDate: '03-May-2025',
+      percentage: 100,
+      circleColor: '#EAECDC',
+      progressColor: '#B1C63C',
+    },
+    {
+      day: '11',
+      sadhanaDate: '11-May-2025',
+      percentage: 100,
+      circleColor: '#EAECDC',
+      progressColor: '#DAC056',
+    },
+    {
+      day: '15',
+      sadhanaDate: '15-May-2025',
+      percentage: 0,
+      circleColor: '#EAECDC',
+      progressColor: '#B1C63C',
+    },
   ];
 
+  // # Navigate Sreen
+  const navigateTo = (screen, params) => {
+    navigation.navigate(screen, params);
+  };
+
   const renderDay = date => {
-    const dayData =
+    const sadhanaData =
       (Array.isArray(calendarList) &&
-        calendarList.find(
-          day =>
-            day.sadhanaDate === moment(date.dateString).format('DD-MMM-YYYY'),
-        )) ||
+        calendarList.find(day => {
+          return (
+            day.sadhanaDate === moment(date.dateString).format('DD-MMM-YYYY')
+          );
+        })) ||
       {};
-    console.log('dayData', dayData);
     return (
-      <View style={{backgroundColor: 'pink'}}>
-        <Text
-          style={{
-            fontSize: SIZES.m,
-            color: COLORS.black,
-            fontFamily: FONTS.urbanistSemiBold,
-          }}>
-          {dayData?.day}
-        </Text>
-      </View>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={() =>
+          navigateTo(screenNames.sadhanaRegularize, {
+            titleName: moment(date.dateString).format('DD-MMM-YYYY'),
+          })
+        }
+        style={styles.calendarDayCont}>
+        <Text style={styles.dayTxt}>{date.day}</Text>
+        {Number(sadhanaData?.percentage) == 100 ? (
+          <View style={styles.perCircleCont(sadhanaData?.progressColor)}>
+            <IonIcons
+              name="checkmark"
+              size={horizontalScale(30) * 0.5}
+              color={COLORS.white}
+              style={{
+                alignSelf: 'center',
+              }}
+            />
+          </View>
+        ) : (
+          <CircularProgress
+            percentage={sadhanaData?.percentage}
+            circleColor={sadhanaData?.circleColor}
+            progressColor={sadhanaData?.progressColor}
+          />
+        )}
+      </TouchableOpacity>
     );
+  };
+
+  const changeMonth = value => {
+    if (value === -1) {
+      // decrement
+      setCurrentDate(prev => moment(prev).subtract(1, 'months'));
+    } else {
+      // increment
+      setCurrentDate(prev => {
+        const newDate = moment(prev).add(value, 'months');
+        const now = moment();
+
+        // Prevent navigating to future months
+        if (newDate.isAfter(now, 'month')) {
+          return prev;
+        }
+
+        return newDate;
+      });
+    }
   };
 
   return (
@@ -71,10 +161,31 @@ const SadhanaCalendar = props => {
           {/* // @ Sadhana Icons */}
           <View style={styles.sadhanaIcnCont}>
             <View style={styles.icnTxtCont}>
-              <Image
-                style={styles.iconStyle}
-                source={require('../assets/images/50PerCircle.png')}
-              />
+              <Svg width={size} height={size}>
+                {/* Full base circle (background color) */}
+                <Circle
+                  cx={cx}
+                  cy={cy}
+                  r={radius}
+                  stroke="#EAECDC"
+                  strokeWidth={strokeWidth}
+                  fill="none"
+                />
+                {/* Foreground arc (partial fill) */}
+                <Circle
+                  cx={cx}
+                  cy={cy}
+                  r={radius}
+                  stroke="#B1C63C"
+                  strokeWidth={strokeWidth}
+                  strokeDasharray={`${fillStroke}, ${circumference}`}
+                  strokeLinecap="round"
+                  fill="none"
+                  rotation="-90"
+                  originX={cx}
+                  originY={cy}
+                />
+              </Svg>
               <Text style={styles.percentageTxt}>50%</Text>
             </View>
 
@@ -100,12 +211,14 @@ const SadhanaCalendar = props => {
           </View>
 
           {/* // @ Calendar */}
-          <View style={styles.calendarContainer}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.calendarContainer}>
             <Calendar
               style={styles.calendar}
-              maxDate={new Date()}
-              key={currentDate}
-              current={currentDate}
+              maxDate={moment().format('YYYY-MM-DD')}
+              key={currentDate.format('YYYY-MM')}
+              current={currentDate.format('YYYY-MM-DD')}
               customHeader={() => {
                 return (
                   <>
@@ -113,7 +226,7 @@ const SadhanaCalendar = props => {
                     <View style={styles.calHead}>
                       {/* // # Left Arrow */}
                       <TouchableOpacity
-                        // onPress={() => addMonth(-1)}
+                        onPress={() => changeMonth(-1)}
                         style={styles.calArrowBtn}
                         activeOpacity={0.6}>
                         <MaterialCommunityIcons
@@ -133,7 +246,7 @@ const SadhanaCalendar = props => {
                       </View>
                       {/* // # Right Arrow */}
                       <TouchableOpacity
-                        // onPress={() => addMonth(1)}
+                        onPress={() => changeMonth(1)}
                         style={styles.calArrowBtn}
                         activeOpacity={0.6}>
                         <MaterialCommunityIcons
@@ -159,27 +272,13 @@ const SadhanaCalendar = props => {
                 );
               }}
               hideArrows={true}
-              theme={
-                {
-                  // indicatorColor: color.deepRose,
-                  // arrowColor: color.deepRose,
-                  // todayTextColor: color.deepRose,
-                  // textDayStyle: {
-                  //   fontFamily: fontFamily.ReemKufiBold,
-                  // },
-                  // monthTextColor: color.white,
-                  // agendaDayTextColor: color.black,
-                }
-              }
-              // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday.
               firstDay={1}
-              // Do not show days of other months in month page. Default = false
               hideExtraDays={true}
               dayComponent={({date}) => renderDay(date)}
               enableSwipeMonths={true}
-              // onMonthChange={this.onMonthChange}
+              // onMonthChange={onMonthChange}
             />
-          </View>
+          </ScrollView>
         </View>
       </SafeAreaView>
     </Container>
@@ -254,11 +353,34 @@ const styles = StyleSheet.create({
   dayNameCont: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   dayNameTxt: {
     fontFamily: FONTS.poppinsBold,
     fontSize: SIZES.s,
     color: COLORS.gunsmoke,
+    width: '14%',
+    textAlign: 'center',
   },
+  calendarDayCont: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: '80%',
+  },
+  dayTxt: {
+    fontSize: SIZES.m,
+    color: COLORS.black,
+    fontFamily: FONTS.urbanistSemiBold,
+  },
+  perCircleCont: bgColor => ({
+    width: horizontalScale(30),
+    height: horizontalScale(30),
+    borderRadius: moderateScale(30),
+    backgroundColor: bgColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '10%',
+  }),
 });

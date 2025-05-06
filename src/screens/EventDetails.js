@@ -384,7 +384,7 @@ const EventDetails = props => {
               )}
             {!shimmer && !!eventDetails?.Event_space && (
               <>
-                {eventDetails?.Event_mode !== 'F' ? (
+                {eventDetails?.Event_mode === 'F' ? (
                   <View style={styles.locationCont}>
                     <Ionicons
                       style={styles.locationIcn}
@@ -405,8 +405,8 @@ const EventDetails = props => {
                       </Text>
                     </View>
                   </View>
-                ) : eventDetails?.Is_registered !== 'Y' &&
-                  eventDetails?.Event_mode !== 'O' ? (
+                ) : eventDetails?.Is_registered === 'Y' &&
+                  eventDetails?.Event_mode === 'O' ? (
                   <LinearGradient
                     style={styles.joinGradient}
                     start={{x: 0, y: 1}}

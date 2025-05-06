@@ -42,7 +42,7 @@ const CustomDrawer = ({navigation, route}) => {
     navigation.navigate(screen, params);
   };
 
-  const navigateScreen = (id, screenName) => {
+  const navigateScreen = (id, screenName, title) => {
     closeDrawer();
     if (id === 'DB1') {
       current !== 'DB1'
@@ -51,7 +51,7 @@ const CustomDrawer = ({navigation, route}) => {
         : null;
     } else {
       setGlobalState(prev => ({...prev, current: id})),
-        navigateTo(screenName, {titleName: screenName});
+        navigateTo(screenName, {titleName: title});
     }
   };
 
@@ -140,7 +140,7 @@ const CustomDrawer = ({navigation, route}) => {
               },
             ]}
             onPress={() => {
-              navigateScreen(item?.id, item?.screenName);
+              navigateScreen(item?.id, item?.screenName, item?.title);
             }}
             activeOpacity={0.6}>
             <View style={styles.iconCont}>

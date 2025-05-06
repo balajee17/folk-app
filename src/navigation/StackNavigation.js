@@ -27,6 +27,7 @@ import EditProfile from '../screens/EditProfile';
 import AddChallenge from '../screens/AddChallenge';
 import CompletedChallenge from '../screens/CompletedChallenge';
 import SadhanaCalendar from '../screens/SadhanaCalendar';
+import SadhanaRegularize from '../screens/SadhanaRegularize';
 
 const Stack = createStackNavigator();
 
@@ -136,6 +137,12 @@ const StackNavigation = () => {
         <Stack.Screen
           name={screenNames.sadhanaCalendar}
           component={SadhanaCalendar}
+        />
+
+        {/* // @ Sadhana Regularize */}
+        <Stack.Screen
+          name={screenNames.sadhanaRegularize}
+          component={SadhanaRegularize}
         />
 
         {/* // @ No Network */}

@@ -44,42 +44,42 @@ const HabitsSadhana = ({navigation}) => {
         },
       ],
     },
-    {
-      id: 2,
-      title: 'Active Challenges',
-      data: [
-        {
-          id: 3,
-          title: 'Service - Volunteer',
-          image:
-            'https://static.vecteezy.com/system/resources/previews/004/449/833/non_2x/volunteers-2d-isolated-illustration-contributing-to-humanitarian-aid-smiling-man-and-woman-social-service-worker-flat-characters-on-cartoon-background-charity-work-colourful-scene-vector.jpg',
-        },
-        {
-          id: 4,
-          title: 'Habits - Illuminate',
-          image:
-            'https://www.shutterstock.com/image-vector/make-choice-concept-businessman-walking-260nw-2321958589.jpg',
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: '3B Habits',
-      data: [
-        {
-          id: 5,
-          title: 'Service - Volunteer',
-          image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjuJh19j8ciq8D6E4EMVjxCsa5IYoJoU1TSfx763sxJLAUHQ1F6bn9E2iEr6wMx7lWz3w&usqp=ANd9GcSjuJh19j8ciq8D6E4EMVjxCsa5IYoJoU1TSfx763sxJLAUHQ1F6bn9E2iEr6wMx7lWz3w',
-        },
-        {
-          id: 6,
-          title: 'Reading Books',
-          image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHc7GCnD0XHwZwImIPdjyTnslxpBK57zpqXQ&s',
-        },
-      ],
-    },
+    // {
+    //   id: 2,
+    //   title: 'Active Challenges',
+    //   data: [
+    //     {
+    //       id: 3,
+    //       title: 'Service - Volunteer',
+    //       image:
+    //         'https://static.vecteezy.com/system/resources/previews/004/449/833/non_2x/volunteers-2d-isolated-illustration-contributing-to-humanitarian-aid-smiling-man-and-woman-social-service-worker-flat-characters-on-cartoon-background-charity-work-colourful-scene-vector.jpg',
+    //     },
+    //     {
+    //       id: 4,
+    //       title: 'Habits - Illuminate',
+    //       image:
+    //         'https://www.shutterstock.com/image-vector/make-choice-concept-businessman-walking-260nw-2321958589.jpg',
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 3,
+    //   title: '3B Habits',
+    //   data: [
+    //     {
+    //       id: 5,
+    //       title: 'Service - Volunteer',
+    //       image:
+    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjuJh19j8ciq8D6E4EMVjxCsa5IYoJoU1TSfx763sxJLAUHQ1F6bn9E2iEr6wMx7lWz3w&usqp=ANd9GcSjuJh19j8ciq8D6E4EMVjxCsa5IYoJoU1TSfx763sxJLAUHQ1F6bn9E2iEr6wMx7lWz3w',
+    //     },
+    //     {
+    //       id: 6,
+    //       title: 'Reading Books',
+    //       image:
+    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHc7GCnD0XHwZwImIPdjyTnslxpBK57zpqXQ&s',
+    //     },
+    //   ],
+    // },
   ];
 
   // # Navigate Screen

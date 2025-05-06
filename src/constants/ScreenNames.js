@@ -32,4 +32,5 @@ export let screenNames = {
   newChallenge: 'New Challenge',
   completedChallenge: 'Completed Challenges',
   sadhanaCalendar: 'Sadhana',
+  sadhanaRegularize: 'Sadhana Regularize',
 };
