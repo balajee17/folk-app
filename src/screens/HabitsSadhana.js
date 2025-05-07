@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomHeader from '../components/CustomHeader';
 import Container from '../components/Container';
 import {screenNames} from '../constants/ScreenNames';
@@ -24,12 +24,54 @@ import {useAppContext} from '../../App';
 import LinearGradientBg from '../components/LinearGradientBg';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
+import {toastThrottle} from '../components/CommonFunctionalities';
+import AndroidBackHandler from '../components/BackHandler';
+import Spinner from '../components/Spinner';
 
-const HabitsSadhana = ({navigation}) => {
+const HabitsSadhana = props => {
   const {globalState, setGlobalState} = useAppContext();
 
-  const userName = 'Hello,\nSunder Govinda Dasa';
-  const greetUser = 'Good Morning';
+  const {profileId} = globalState;
+  const {navigation} = props;
+  const [userDetails, setUserDetails] = useState({});
+  const [spinner, setSpinner] = useState(false);
+
+  const toast = useToast();
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
+
+  useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
+    getHabitsSadhanaDetails();
+
+    return AndroidBackHandler.removerHandler();
+  }, []);
+
+  // # Get Habits Sadhana Details
+  const getHabitsSadhanaDetails = async () => {
+    try {
+      const params = {
+        profileId,
+      };
+      const response = await API.getHabitsSadhana(params);
+
+      const {data, successCode, message} = response?.data;
+      console.log('Habits Sadhana_response', data?.message);
+      if (successCode === 1) {
+      } else {
+        toastMsg(message, 'info');
+      }
+      setSpinner(false);
+    } catch (err) {
+      setSpinner(false);
+      console.log('ERR-HabitsSadhana', err);
+      toastMsg('', 'error');
+    }
+  };
 
   const sections = [
     {
@@ -96,6 +138,8 @@ const HabitsSadhana = ({navigation}) => {
         goBack={() => navigation.goBack()}
       />
       <SafeAreaView style={[MyStyles.flex1]}>
+        <Spinner spinnerVisible={spinner} />
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
@@ -107,12 +151,12 @@ const HabitsSadhana = ({navigation}) => {
           <View style={styles.userDetailsBox}>
             <Image
               source={{
-                uri: 'https://img.freepik.com/free-photo/smiling-young-businessman-holding-takeaway-coffee-cup-hand_23-2148176167.jpg',
+                uri: userDetails?.userImage,
               }}
               style={styles.userImg}
             />
-            <Text style={styles.userNameTxt}>{userName}</Text>
-            <Text style={styles.greetUserTxt}>{greetUser}</Text>
+            <Text style={styles.userNameTxt}>{userDetails?.userName}</Text>
+            <Text style={styles.greetUserTxt}>{userDetails?.greetUser}</Text>
 
             <View style={styles.quotesBox}>
               <LinearGradient
@@ -124,11 +168,8 @@ const HabitsSadhana = ({navigation}) => {
                   'rgba(65, 110, 189, 0.1)',
                   '#0000',
                 ]}>
-                <Text style={styles.quotesTxt}>
-                  “ Habits that help you improve your mental health and
-                  wellbeing ”
-                </Text>
-                <Text style={styles.quotesByTxt}>Unknown</Text>
+                <Text style={styles.quotesTxt}>{userDetails?.quote}</Text>
+                <Text style={styles.quotesByTxt}> {userDetails?.quoteBy}</Text>
               </LinearGradient>
             </View>
           </View>

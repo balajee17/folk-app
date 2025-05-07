@@ -247,4 +247,28 @@ export const API = {
     console.log('URL YFH Link URL Data ', YFHLinkURL, ' data ', requestData);
     return axios.post(YFHLinkURL, requestData);
   },
+
+  // # Habits & Sadhana
+  getHabitsSadhana(data) {
+    const habitsSadhanaURL = baseURL + '';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL habits Sadhana URL Data ',
+      habitsSadhanaURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(habitsSadhanaURL, requestData);
+  },
+  getSadhanaDetails(data) {
+    const SadhanaDetailsURL = baseURL + '';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Sadhana URL Data ',
+      SadhanaDetailsURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(SadhanaDetailsURL, requestData);
+  },
 };

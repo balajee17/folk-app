@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
@@ -25,11 +25,142 @@ import moment from 'moment';
 import CircularProgress from '../components/CircularProgress';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Svg, {Circle} from 'react-native-svg';
+import AndroidBackHandler from '../components/BackHandler';
+import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
+import {toastThrottle} from '../components/CommonFunctionalities';
+import {useAppContext} from '../../App';
+import Spinner from '../components/Spinner';
 
 const SadhanaCalendar = props => {
   const {navigation} = props;
+  const {globalState, setGlobalState} = useAppContext();
+
+  const {profileId} = globalState;
+
+  const toast = useToast();
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
 
   const [currentDate, setCurrentDate] = useState(moment(new Date()));
+  const [spinner, setSpinner] = useState(false);
+
+  const [calendarList, setCalendarList] = useState({
+    iconData: {
+      circleColor: '#EAECDC',
+      progessColor: '#B1C63C',
+      progess100: '#DAC056',
+      progressCompleted: '',
+    },
+    monthData: [
+      {
+        day: '1',
+        sadhanaDate: '01-May-2025',
+        percentage: 50,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '2',
+        sadhanaDate: '02-May-2025',
+        percentage: 25,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '3',
+        sadhanaDate: '03-May-2025',
+        percentage: 100,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '4',
+        sadhanaDate: '04-May-2025',
+        percentage: 10,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '5',
+        sadhanaDate: '05-May-2025',
+        percentage: 30,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '6',
+        sadhanaDate: '06-May-2025',
+        percentage: 50,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '7',
+        sadhanaDate: '07-May-2025',
+        percentage: 10,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '8',
+        sadhanaDate: '08-May-2025',
+        percentage: 25,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '9',
+        sadhanaDate: '09-May-2025',
+        percentage: 10,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '10',
+        sadhanaDate: '10-May-2025',
+        percentage: 40,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '11',
+        sadhanaDate: '11-May-2025',
+        percentage: 100,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '12',
+        sadhanaDate: '12-May-2025',
+        percentage: 90,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '13',
+        sadhanaDate: '13-May-2025',
+        percentage: 100,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+      {
+        day: '14',
+        sadhanaDate: '14-May-2025',
+        percentage: 0,
+        circleColor: '#EAECDC',
+        progressColor: '#DAC056',
+      },
+      {
+        day: '15',
+        sadhanaDate: '15-May-2025',
+        percentage: 0,
+        circleColor: '#EAECDC',
+        progressColor: '#B1C63C',
+      },
+    ],
+  });
 
   const size = horizontalScale(30);
   const strokeWidth = horizontalScale(4);
@@ -44,43 +175,38 @@ const SadhanaCalendar = props => {
 
   const DAYS = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
-  const calendarList = [
-    {
-      day: '1',
-      sadhanaDate: '01-May-2025',
-      percentage: 50,
-      circleColor: '#EAECDC',
-      progressColor: '#B1C63C',
-    },
-    {
-      day: '2',
-      sadhanaDate: '02-May-2025',
-      percentage: 25,
-      circleColor: '#EAECDC',
-      progressColor: '#B1C63C',
-    },
-    {
-      day: '3',
-      sadhanaDate: '03-May-2025',
-      percentage: 100,
-      circleColor: '#EAECDC',
-      progressColor: '#B1C63C',
-    },
-    {
-      day: '11',
-      sadhanaDate: '11-May-2025',
-      percentage: 100,
-      circleColor: '#EAECDC',
-      progressColor: '#DAC056',
-    },
-    {
-      day: '15',
-      sadhanaDate: '15-May-2025',
-      percentage: 0,
-      circleColor: '#EAECDC',
-      progressColor: '#B1C63C',
-    },
-  ];
+  useEffect(() => {
+    AndroidBackHandler.setHandler(props);
+
+    getSadhanaDetails();
+
+    return AndroidBackHandler.removerHandler();
+  }, [currentDate]);
+
+  // # Get Sadhana Details
+  const getSadhanaDetails = async () => {
+    try {
+      const params = {
+        profileId,
+        month: moment(currentDate).format('MMM'),
+        year: moment(currentDate).format('YYYY'),
+      };
+      const response = await API.getSadhanaDetails(params);
+
+      const {data, successCode, message} = response?.data;
+      console.log('Sadhana_response', data?.message);
+      if (successCode === 1) {
+        setCalendarList(data);
+      } else {
+        toastMsg(message, 'info');
+      }
+      setSpinner(false);
+    } catch (err) {
+      setSpinner(false);
+      console.log('ERR-Sadhana', err);
+      toastMsg('', 'error');
+    }
+  };
 
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
@@ -99,11 +225,15 @@ const SadhanaCalendar = props => {
     return (
       <TouchableOpacity
         activeOpacity={0.6}
-        onPress={() =>
-          navigateTo(screenNames.sadhanaRegularize, {
-            titleName: moment(date.dateString).format('DD-MMM-YYYY'),
-          })
-        }
+        onPress={() => {
+          if (!!sadhanaData?.sadhanaDate) {
+            navigateTo(screenNames.sadhanaRegularize, {
+              selectedDate: moment(date.dateString).format('DD-MMM-YYYY'),
+              sadhanaData: calendarList,
+            });
+          } else {
+          }
+        }}
         style={styles.calendarDayCont}>
         <Text style={styles.dayTxt}>{date.day}</Text>
         {Number(sadhanaData?.percentage) == 100 ? (
@@ -151,6 +281,8 @@ const SadhanaCalendar = props => {
   return (
     <Container>
       <SafeAreaView style={MyStyles.flex1}>
+        <Spinner spinnerVisible={spinner} />
+
         {/* // # Header */}
         <CustomHeader
           goBack={() => navigation.goBack()}

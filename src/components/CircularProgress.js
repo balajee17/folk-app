@@ -11,8 +11,13 @@ import {horizontalScale} from '../styles/MyStyles';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const CircularProgress = ({percentage = 0, circleColor, progressColor}) => {
-  const size = horizontalScale(30);
+const CircularProgress = ({
+  percentage = 0,
+  circleColor,
+  progressColor,
+  circleSize,
+}) => {
+  const size = circleSize ? circleSize : horizontalScale(30);
   const strokeWidth = horizontalScale(4);
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
