@@ -40,9 +40,13 @@ import Swiper from 'react-native-deck-swiper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
+import {useAppContext} from '../../App';
 
 const Quotes = props => {
   const [quotesData, setQuotesData] = useState([]);
+
+  const {globalState} = useAppContext();
+  const {announcementCardColor} = globalState;
 
   const [shimmer, setShimmer] = useState(true);
 
@@ -131,7 +135,7 @@ const Quotes = props => {
                       <Swiper
                         cards={item?.images}
                         containerStyle={styles.swiperContainer}
-                        cardStyle={styles.swiperCard}
+                        cardStyle={styles.swiperCard(announcementCardColor)}
                         renderCard={(card, cardIndex) => {
                           return (
                             <View
@@ -222,15 +226,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  swiperCard: {
+  swiperCard: bgColor => ({
     width: horizontalScale(290),
     height: horizontalScale(300),
     alignSelf: 'center',
     borderRadius: moderateScale(10),
     marginTop: '-6%',
     marginLeft: '6.5%',
-    backgroundColor: COLORS.dropDownBg,
-  },
+    backgroundColor: bgColor || COLORS.announcementCard,
+  }),
   quotesImg: {
     width: horizontalScale(290),
     height: horizontalScale(250),
@@ -247,7 +251,7 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
   },
   quotesBtns: {
-    backgroundColor: COLORS.modalBg,
+    backgroundColor: COLORS.whiteGlassy,
     width: horizontalScale(40),
     height: horizontalScale(40),
     alignItems: 'center',

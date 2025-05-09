@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
@@ -19,10 +19,13 @@ import {
   windowWidth,
 } from '../styles/MyStyles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {useAppContext} from '../../App';
 
 const NotificationCard = ({item, index, swipedNotify}) => {
+  const {globalState} = useAppContext();
+  const {cardColor} = globalState;
   const Margin_Top = verticalScale(15);
-  const HEIGHT = verticalScale(120);
+  const HEIGHT = verticalScale(110);
 
   const translateX = useSharedValue(0);
   const Translate_X_Threshold = -windowWidth * 0.3;
@@ -79,13 +82,16 @@ const NotificationCard = ({item, index, swipedNotify}) => {
       </Animated.View>
       <GestureDetector key={index} gesture={panGesture}>
         <Animated.View
-          style={[styles.notifyCard, cardAnimate]}
+          style={[styles.notifyCard(cardColor), cardAnimate]}
           key={item?.NOT_ID}>
           <View>
             {/* // #  icon title container */}
             <View style={styles.titleIconCont}>
               <View style={styles.circleIcon}>
-                <Text style={styles.iconLetter}>{item?.TITLE.charAt(0)}</Text>
+                <Image
+                  style={{width: '100%', height: '100%'}}
+                  source={{uri: item?.ICON}}
+                />
               </View>
 
               <Text numberOfLines={2} style={styles.titleTxt}>
@@ -123,26 +129,29 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  notifyCard: {
-    backgroundColor: COLORS.chromeWhite,
+  notifyCard: bgColor => ({
+    backgroundColor: bgColor || COLORS.card,
     width: '95%',
     padding: '3%',
     alignSelf: 'center',
     justifyContent: 'space-between',
     height: '100%',
     borderRadius: moderateScale(20),
-  },
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  }),
   titleIconCont: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   circleIcon: {
-    width: horizontalScale(25),
-    height: horizontalScale(25),
+    width: horizontalScale(30),
+    height: horizontalScale(30),
     borderRadius: moderateScale(20),
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.gunsmoke,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   iconLetter: {
     fontFamily: FONTS.urbanistBold,
@@ -159,18 +168,18 @@ const styles = StyleSheet.create({
   descrpTxt: {
     fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.l,
-    color: COLORS.midGrey,
+    color: COLORS.textLabel,
     width: '100%',
-    marginTop: '2%',
+    marginTop: '1%',
   },
   dateTimeCont: {
     justifyContent: 'space-between',
-    marginTop: '4%',
+    // marginTop: '2%',
   },
   dateTxt: {
     fontFamily: FONTS.urbanistSemiBold,
     fontSize: SIZES.s,
-    color: COLORS.midGrey,
+    color: COLORS.textLabel,
     width: '25%',
   },
 

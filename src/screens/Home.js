@@ -41,7 +41,9 @@ import {
 } from '../components/CommonFunctionalities';
 
 const Home = ({apiData, shimmer, refreshData}) => {
-  const {setGlobalState} = useAppContext();
+  const {globalState, setGlobalState} = useAppContext();
+
+  const {announcementCardColor} = globalState;
 
   const navigation = useNavigation();
 
@@ -155,7 +157,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 <>
                   {RenderSecTitle(
                     TITLE,
-                    index > 0 ? COLORS.gableGreen : COLORS.white,
+                    index > 0 ? COLORS.black : COLORS.white,
                     icnLink,
                     screenNames.dailyDarshan,
                   )}
@@ -220,7 +222,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
               <>
                 {RenderSecTitle(
                   TITLE,
-                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                  index === 0 ? COLORS.white : COLORS.black,
                   icnLink,
                   screenNames.quotes,
                 )}
@@ -256,7 +258,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
             <View style={styles.quotesCont}>
               <Swiper
                 cards={UPDATES}
-                cardStyle={styles.swiperCard}
+                cardStyle={styles.swiperCard(announcementCardColor)}
                 renderCard={(card, cardIndex) => {
                   return (
                     <View
@@ -348,7 +350,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
             <>
               {RenderSecTitle(
                 TITLE,
-                index === 0 ? COLORS.white : COLORS.gableGreen,
+                index === 0 ? COLORS.white : COLORS.black,
                 icnLink,
                 section == 5 ? 'N' : screenNames.updates,
               )}
@@ -441,7 +443,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       end={{x: 1, y: 1}}
                       colors={['#353a5f', '#9ebaf3']}
                       style={[MyStyles.gradient]}> */}
-                    <View style={styles.noticeCard}>
+                    <View style={MyStyles.noticeCard(announcementCardColor)}>
                       <View
                         style={[
                           MyStyles.announceIcnTxtCont,
@@ -499,7 +501,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
             <>
               {RenderSecTitle(
                 TITLE,
-                index === 0 ? COLORS.white : COLORS.gableGreen,
+                index === 0 ? COLORS.white : COLORS.black,
                 icnLink,
                 screenNames.folkVideos,
               )}
@@ -631,7 +633,7 @@ const styles = StyleSheet.create({
   horizontalLine: {
     height: verticalScale(0.5),
     width: '100%',
-    backgroundColor: COLORS.highLightColor,
+    backgroundColor: COLORS.border,
     marginVertical: verticalScale(30),
   },
   shimmerCont: {width: '70%', marginTop: verticalScale(15)},
@@ -646,14 +648,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  swiperCard: {
+  swiperCard: bgColor => ({
     width: windowWidth * 0.95,
     height: horizontalScale(300),
     borderRadius: moderateScale(10),
     marginTop: '-6%',
     marginLeft: '-5%',
-    backgroundColor: COLORS.dropDownBg,
-  },
+    backgroundColor: bgColor || COLORS.announcementCard,
+  }),
   quotesImg: {
     width: windowWidth * 0.95,
     height: horizontalScale(250),
@@ -670,27 +672,11 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
   },
   quotesBtns: {
-    backgroundColor: COLORS.modalBg,
+    backgroundColor: COLORS.whiteGlassy,
     width: horizontalScale(40),
     height: horizontalScale(40),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(30),
-  },
-  noticeCard: {
-    padding: moderateScale(10),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: COLORS.dropDownBg,
-    borderRadius: moderateScale(15),
-    shadowColor: COLORS.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
 });

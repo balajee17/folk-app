@@ -15,11 +15,9 @@ import {
   COLORS,
   moderateScale,
   MyStyles,
-  SIZES,
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
-import {screenNames} from '../constants/ScreenNames';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomHeader from '../components/CustomHeader';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
@@ -29,11 +27,14 @@ import NoDataFound from '../components/NoDataFound';
 import AndroidBackHandler from '../components/BackHandler';
 import {CopyToClipboard, ShareLink} from '../components/CommonFunctionalities';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useAppContext} from '../../App';
 
 const FolkUpdates = props => {
   const [shimmer, setShimmer] = useState(true);
   const [folkUpdates, setFolkUpdates] = useState([]);
   const {navigation, route} = props;
+  const {globalState} = useAppContext();
+  const {announcementCardColor} = globalState;
 
   const {title} = route?.params;
   const toast = useToast();
@@ -189,7 +190,6 @@ const FolkUpdates = props => {
                               key={updateItem?.id}
                               style={[
                                 MyStyles.updatesTextCont,
-                                MyStyles.paddingHor10,
                                 {
                                   marginTop: !!updateItem?.link
                                     ? '2%'
@@ -198,46 +198,37 @@ const FolkUpdates = props => {
                                     : '1%',
                                 },
                               ]}>
-                              <LinearGradient
-                                start={{x: 0.3, y: 0}}
-                                end={{x: 1, y: 1}}
-                                colors={['#353a5f', '#9ebaf3']}
-                                style={[MyStyles.gradient]}>
+                              <View
+                                style={MyStyles.noticeCard(
+                                  announcementCardColor,
+                                )}>
                                 <View
-                                  style={{
-                                    padding: moderateScale(10),
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                  }}>
-                                  <View
-                                    style={[
-                                      MyStyles.announceIcnTxtCont,
-                                      {
-                                        width: '17%',
-                                      },
-                                    ]}>
-                                    <Image
-                                      source={{
-                                        uri: updateItem?.icon,
-                                      }}
-                                      style={MyStyles.announceIcn}
-                                    />
-                                  </View>
-                                  <View style={{width: '80%'}}>
-                                    <Text style={[MyStyles.announceTxt]}>
-                                      {updateItem?.title}
-                                    </Text>
-                                    <Text
-                                      style={[
-                                        MyStyles.updateTxt,
-                                        {marginTop: '2%'},
-                                      ]}>
-                                      {updateItem?.text}
-                                    </Text>
-                                  </View>
+                                  style={[
+                                    MyStyles.announceIcnTxtCont,
+                                    {
+                                      width: '17%',
+                                    },
+                                  ]}>
+                                  <Image
+                                    source={{
+                                      uri: updateItem?.icon,
+                                    }}
+                                    style={MyStyles.announceIcn}
+                                  />
                                 </View>
-                              </LinearGradient>
+                                <View style={{width: '80%'}}>
+                                  <Text style={[MyStyles.announceTxt]}>
+                                    {updateItem?.title}
+                                  </Text>
+                                  <Text
+                                    style={[
+                                      MyStyles.updateTxt,
+                                      {marginTop: '2%'},
+                                    ]}>
+                                    {updateItem?.text}
+                                  </Text>
+                                </View>
+                              </View>
                             </Pressable>
                           ) : (
                             <></>

@@ -1,5 +1,4 @@
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -7,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
@@ -16,6 +15,7 @@ import {
   moderateScale,
   MyStyles,
   SIZES,
+  verticalScale,
 } from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
@@ -31,10 +31,11 @@ import {useToast} from 'react-native-toast-notifications';
 import {toastThrottle} from '../components/CommonFunctionalities';
 import {useAppContext} from '../../App';
 import Spinner from '../components/Spinner';
+import {useFocusEffect} from '@react-navigation/native';
 
 const SadhanaCalendar = props => {
-  const {navigation} = props;
-  const {globalState, setGlobalState} = useAppContext();
+  const {navigation, route} = props;
+  const {globalState} = useAppContext();
 
   const {profileId} = globalState;
 
@@ -44,123 +45,9 @@ const SadhanaCalendar = props => {
   }, 3400);
 
   const [currentDate, setCurrentDate] = useState(moment(new Date()));
-  const [spinner, setSpinner] = useState(false);
+  const [spinner, setSpinner] = useState(true);
 
-  const [calendarList, setCalendarList] = useState({
-    iconData: {
-      circleColor: '#EAECDC',
-      progessColor: '#B1C63C',
-      progess100: '#DAC056',
-      progressCompleted: '',
-    },
-    monthData: [
-      {
-        day: '1',
-        sadhanaDate: '01-May-2025',
-        percentage: 50,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '2',
-        sadhanaDate: '02-May-2025',
-        percentage: 25,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '3',
-        sadhanaDate: '03-May-2025',
-        percentage: 100,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '4',
-        sadhanaDate: '04-May-2025',
-        percentage: 10,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '5',
-        sadhanaDate: '05-May-2025',
-        percentage: 30,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '6',
-        sadhanaDate: '06-May-2025',
-        percentage: 50,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '7',
-        sadhanaDate: '07-May-2025',
-        percentage: 10,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '8',
-        sadhanaDate: '08-May-2025',
-        percentage: 25,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '9',
-        sadhanaDate: '09-May-2025',
-        percentage: 10,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '10',
-        sadhanaDate: '10-May-2025',
-        percentage: 40,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '11',
-        sadhanaDate: '11-May-2025',
-        percentage: 100,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '12',
-        sadhanaDate: '12-May-2025',
-        percentage: 90,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '13',
-        sadhanaDate: '13-May-2025',
-        percentage: 100,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-      {
-        day: '14',
-        sadhanaDate: '14-May-2025',
-        percentage: 0,
-        circleColor: '#EAECDC',
-        progressColor: '#DAC056',
-      },
-      {
-        day: '15',
-        sadhanaDate: '15-May-2025',
-        percentage: 0,
-        circleColor: '#EAECDC',
-        progressColor: '#B1C63C',
-      },
-    ],
-  });
+  const [sadhanaData, setSadhanaData] = useState({});
 
   const size = horizontalScale(30);
   const strokeWidth = horizontalScale(4);
@@ -169,18 +56,25 @@ const SadhanaCalendar = props => {
   const cy = size / 2;
   const circumference = 2 * Math.PI * radius;
 
-  // 50% example - you can tweak this part
-  const percentage = 50; // change to any value
-  const fillStroke = (percentage / 100) * circumference;
-
   const DAYS = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.reloadSadhana === 'Y') {
+        getSadhanaDetails();
+        navigation.setParams({reloadSadhana: 'N'});
+      }
+    }, [currentDate]),
+  );
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
 
     getSadhanaDetails();
 
-    return AndroidBackHandler.removerHandler();
+    return () => {
+      AndroidBackHandler.removerHandler();
+    };
   }, [currentDate]);
 
   // # Get Sadhana Details
@@ -188,15 +82,15 @@ const SadhanaCalendar = props => {
     try {
       const params = {
         profileId,
-        month: moment(currentDate).format('MMM'),
-        year: moment(currentDate).format('YYYY'),
+        sadhanaMonth: moment(currentDate).format('MMM'),
+        sadhanaYear: moment(currentDate).format('YYYY'),
       };
       const response = await API.getSadhanaDetails(params);
 
       const {data, successCode, message} = response?.data;
-      console.log('Sadhana_response', data?.message);
+      console.log('Sadhana_response', data);
       if (successCode === 1) {
-        setCalendarList(data);
+        setSadhanaData(data);
       } else {
         toastMsg(message, 'info');
       }
@@ -214,9 +108,9 @@ const SadhanaCalendar = props => {
   };
 
   const renderDay = date => {
-    const sadhanaData =
-      (Array.isArray(calendarList) &&
-        calendarList.find(day => {
+    const sadhanaCalendar =
+      (Array.isArray(sadhanaData?.sadhanaCalendar) &&
+        sadhanaData?.sadhanaCalendar?.find(day => {
           return (
             day.sadhanaDate === moment(date.dateString).format('DD-MMM-YYYY')
           );
@@ -226,18 +120,18 @@ const SadhanaCalendar = props => {
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={() => {
-          if (!!sadhanaData?.sadhanaDate) {
+          if (!!sadhanaCalendar?.sadhanaDate) {
             navigateTo(screenNames.sadhanaRegularize, {
-              selectedDate: moment(date.dateString).format('DD-MMM-YYYY'),
-              sadhanaData: calendarList,
+              selSadhanaDate: moment(date.dateString).format('DD-MMM-YYYY'),
+              sadhanaData: sadhanaData?.sadhanaCalendar,
             });
           } else {
           }
         }}
         style={styles.calendarDayCont}>
         <Text style={styles.dayTxt}>{date.day}</Text>
-        {Number(sadhanaData?.percentage) == 100 ? (
-          <View style={styles.perCircleCont(sadhanaData?.progressColor)}>
+        {Number(sadhanaCalendar?.percentage) >= 100 ? (
+          <View style={styles.perCircleCont(sadhanaCalendar?.progressColor)}>
             <IonIcons
               name="checkmark"
               size={horizontalScale(30) * 0.5}
@@ -249,9 +143,9 @@ const SadhanaCalendar = props => {
           </View>
         ) : (
           <CircularProgress
-            percentage={sadhanaData?.percentage}
-            circleColor={sadhanaData?.circleColor}
-            progressColor={sadhanaData?.progressColor}
+            percentage={sadhanaCalendar?.percentage}
+            circleColor={sadhanaCalendar?.circleColor}
+            progressColor={sadhanaCalendar?.progressColor}
           />
         )}
       </TouchableOpacity>
@@ -290,62 +184,64 @@ const SadhanaCalendar = props => {
         />
         {/* // # Contents */}
         <View style={MyStyles.contentCont}>
-          {/* // @ Sadhana Icons */}
-          <View style={styles.sadhanaIcnCont}>
-            <View style={styles.icnTxtCont}>
-              <Svg width={size} height={size}>
-                {/* Full base circle (background color) */}
-                <Circle
-                  cx={cx}
-                  cy={cy}
-                  r={radius}
-                  stroke="#EAECDC"
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                />
-                {/* Foreground arc (partial fill) */}
-                <Circle
-                  cx={cx}
-                  cy={cy}
-                  r={radius}
-                  stroke="#B1C63C"
-                  strokeWidth={strokeWidth}
-                  strokeDasharray={`${fillStroke}, ${circumference}`}
-                  strokeLinecap="round"
-                  fill="none"
-                  rotation="-90"
-                  originX={cx}
-                  originY={cy}
-                />
-              </Svg>
-              <Text style={styles.percentageTxt}>50%</Text>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* // @ Sadhana Icons */}
+            <View style={styles.sadhanaIcnCont}>
+              {sadhanaData?.iconData?.map((item, index) => {
+                const fillStroke = (item?.percentage / 100) * circumference;
+                return (
+                  <View key={index}>
+                    {item?.percentage < 100 && (
+                      <View style={styles.icnTxtCont}>
+                        <Svg width={size} height={size}>
+                          {/* Full base circle (background color) */}
+                          <Circle
+                            cx={cx}
+                            cy={cy}
+                            r={radius}
+                            stroke={item?.circleColor}
+                            strokeWidth={strokeWidth}
+                            fill="none"
+                          />
+                          {/* Foreground arc (partial fill) */}
+                          <Circle
+                            cx={cx}
+                            cy={cy}
+                            r={radius}
+                            stroke={item?.progressColor}
+                            strokeWidth={strokeWidth}
+                            strokeDasharray={`${fillStroke}, ${circumference}`}
+                            strokeLinecap="round"
+                            fill="none"
+                            rotation="-90"
+                            originX={cx}
+                            originY={cy}
+                          />
+                        </Svg>
+                        <Text style={styles.percentageTxt}>{item?.text}</Text>
+                      </View>
+                    )}
+
+                    {item?.percentage >= 100 && (
+                      <View style={styles.icnTxtCont}>
+                        <MaterialCommunityIcons
+                          style={[
+                            styles.iconStyle,
+                            {backgroundColor: item?.progressColor},
+                          ]}
+                          name="check"
+                          size={moderateScale(23)}
+                          color={COLORS.white}
+                        />
+                        <Text style={styles.percentageTxt}>{item?.text}</Text>
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
             </View>
 
-            <View style={styles.icnTxtCont}>
-              <MaterialCommunityIcons
-                style={[styles.iconStyle, {backgroundColor: COLORS.atlantis}]}
-                name="check"
-                size={moderateScale(23)}
-                color={COLORS.white}
-              />
-              <Text style={styles.percentageTxt}>100%</Text>
-            </View>
-
-            <View style={styles.icnTxtCont}>
-              <MaterialCommunityIcons
-                style={[styles.iconStyle, {backgroundColor: COLORS.golden}]}
-                name="check"
-                size={moderateScale(23)}
-                color={COLORS.white}
-              />
-              <Text style={styles.percentageTxt}>Full Completed</Text>
-            </View>
-          </View>
-
-          {/* // @ Calendar */}
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={styles.calendarContainer}>
+            {/* // @ Calendar */}
             <Calendar
               style={styles.calendar}
               maxDate={moment().format('YYYY-MM-DD')}
@@ -408,7 +304,6 @@ const SadhanaCalendar = props => {
               hideExtraDays={true}
               dayComponent={({date}) => renderDay(date)}
               enableSwipeMonths={true}
-              // onMonthChange={onMonthChange}
             />
           </ScrollView>
         </View>
@@ -421,14 +316,20 @@ export default SadhanaCalendar;
 
 const styles = StyleSheet.create({
   sadhanaIcnCont: {
-    marginTop: '4%',
-    width: '90%',
+    marginTop: '2%',
+    width: '100%',
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    minHeight: verticalScale(60),
   },
-  icnTxtCont: {alignItems: 'center'},
+  icnTxtCont: {
+    marginTop: '10%',
+    alignItems: 'center',
+    width: horizontalScale(100),
+  },
   iconStyle: {
     width: horizontalScale(30),
     height: horizontalScale(30),
@@ -442,12 +343,11 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: SIZES.m,
   },
-  calendarContainer: {
-    marginTop: '5%',
-  },
+
   calendar: {
     width: '95%',
     alignSelf: 'center',
+    marginTop: '10%',
   },
   calHead: {
     flexDirection: 'row',

@@ -15,6 +15,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useStatusBarHeight} from './StatusBarComponent';
 import {useAppContext} from '../../App';
 import {API} from '../services/API';
+import {useToast} from 'react-native-toast-notifications';
+import {toastThrottle} from './CommonFunctionalities';
 
 const CustomHeader = ({
   toggleDrawer,
@@ -32,6 +34,11 @@ const CustomHeader = ({
   // titleName === screenNames.updates ||
   // titleName === screenNames.folkVideos ||
   // titleName === screenNames.events;
+
+  const toast = useToast();
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
 
   const plusIcnscreens = titleName === screenNames.coupons;
 

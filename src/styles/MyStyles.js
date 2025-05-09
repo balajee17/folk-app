@@ -67,7 +67,6 @@ export const percentageToPixel = percentage => {
 export let COLORS = {
   white: '#FFF',
   black: '#000',
-  transparent: '#0000',
   charcoal: '#484C52',
   dolphin: '#5C5D6C',
   mirage: '#1C1D26',
@@ -79,7 +78,7 @@ export let COLORS = {
   midGrey: '#626262',
   gunsmoke: '#888786',
   windowsBlue: '#308AAF',
-  whiteSmoke: '#f1ebeb80',
+
   davyGrey: 'rgba(69, 90, 100, 0.08)',
   inputBg: 'rgba(234, 236, 220, 1)',
   highLightColor: '#D1D1D1',
@@ -96,7 +95,7 @@ export let COLORS = {
   whatsapp: '#19D06C',
   dodger: '#358AE0',
   link: '#00d2ff',
-  backBg: 'rgba(234, 236, 220, 0.14)',
+
   silver: '#CECECE',
   moss: '#729F4D',
   scannerBg: '#111',
@@ -104,6 +103,23 @@ export let COLORS = {
   // New COLORS
   header: '#416EBD',
   shimmerBg: '#B0B0B0',
+
+  purple: '#7F85E6',
+  halfTransparent: 'rgba(0, 0, 0, 0.5)',
+  blackOpacity01: 'rgba(0, 0, 0, 0.1)',
+
+  shareBtn: 'rgba(0, 0, 0, 0.71)',
+  borderColor: 'rgba(0, 0, 0, 0.03)',
+  logoutColor: '#F8512B',
+
+  // # FINAL Color theme Dynamic
+  header: '#4571BF',
+  bottomTab: '#E0C24A',
+  button: '#B1C63C',
+  card: '#F8F8F8',
+  eventCard: '#40414F',
+  announcementCard: '#2D3B60',
+
   // # Toast COLORS
   successBg: '#E2FEE5',
   successPB: '#2DD640',
@@ -113,14 +129,20 @@ export let COLORS = {
   errorPB: '#E63434',
   infoBg: '#DBEAFE',
   infoPB: '#3B82F6',
-  purple: '#7F85E6',
-  halfTransparent: 'rgba(0, 0, 0, 0.5)',
-  blackOpacity01: 'rgba(0, 0, 0, 0.1)',
-  loginBtn: 'rgba(136, 177, 96, 1)',
-  shareBtn: 'rgba(0, 0, 0, 0.71)',
-  whiteHalfTrans: 'rgba(255, 255, 255, 0.2)',
-  borderColor: 'rgba(0, 0, 0, 0.03)',
-  logoutColor: '#F8512B',
+
+  // # other color
+  black: '#000',
+  white: '#fff',
+  border: '#DBDBDB',
+  btIcon: '#4A4A4A',
+  backBg: 'rgba(234, 236, 220, 0.14)',
+  loginBtn: '#88B160',
+  whiteSmoke: '#f1ebeb80',
+  gunsmoke: '#888786',
+  shadow: 'rgba(0,0,0,0.2)',
+  transparent: '#0000',
+  whiteGlassy: 'rgba(255, 255, 255, 0.2)',
+  textLabel: '#5D5D5D',
 };
 
 // @ FONTS
@@ -177,7 +199,7 @@ export let MyStyles = {
   },
   updateTxt: {
     fontSize: SIZES.l,
-    color: COLORS.black,
+    color: COLORS.white,
     fontFamily: FONTS.urbanistMedium,
     marginTop: '2%',
     lineHeight: 20,
@@ -346,8 +368,8 @@ export let MyStyles = {
     resizeMode: 'stretch',
   },
   announceTxt: {
-    fontSize: SIZES.xl,
-    color: COLORS.black,
+    fontSize: SIZES.subTitle,
+    color: COLORS.white,
     fontFamily: FONTS.urbanistBold,
     width: '80%',
   },
@@ -421,4 +443,20 @@ export let MyStyles = {
     bottom: '4%',
     right: '7%',
   },
+  noticeCard: bgColor => ({
+    padding: moderateScale(10),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: bgColor || COLORS.announcementCard,
+    borderRadius: moderateScale(15),
+    shadowColor: COLORS.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  }),
 };

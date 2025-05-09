@@ -22,6 +22,7 @@ import {
   getInitialNotification,
   getOnNotification,
 } from './src/components/FCM';
+import {COLORS} from './src/styles/MyStyles';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
@@ -42,6 +43,13 @@ const App = () => {
     reloadProfile: 'N',
     menuItems: [],
     menuSpinner: true,
+    // Dynamic color themes
+    headerColor: '#4571BF',
+    bottomTabColor: '#E0C24A',
+    buttonColor: '#B1C63C',
+    cardColor: '#F8F8F8',
+    eventCardColor: '#40414F',
+    announcementCardColor: '#2D3B60',
   });
 
   useEffect(() => {

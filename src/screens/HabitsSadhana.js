@@ -36,7 +36,7 @@ const HabitsSadhana = props => {
   const {profileId} = globalState;
   const {navigation} = props;
   const [userDetails, setUserDetails] = useState({});
-  const [spinner, setSpinner] = useState(false);
+  const [spinner, setSpinner] = useState(true);
 
   const toast = useToast();
   const toastMsg = toastThrottle((msg, type) => {
@@ -62,7 +62,9 @@ const HabitsSadhana = props => {
       const {data, successCode, message} = response?.data;
       console.log('Habits Sadhana_response', data?.message);
       if (successCode === 1) {
+        setUserDetails(data);
       } else {
+        setUserDetails({});
         toastMsg(message, 'info');
       }
       setSpinner(false);
@@ -175,11 +177,11 @@ const HabitsSadhana = props => {
           </View>
 
           {/* // @ Sadhana Card */}
-          {sections?.map(section => (
+          {userDetails?.cardsSection?.map((item, index) => (
             <>
-              <View style={styles.cardTitleCont}>
-                <Text style={styles.subTitleTxt}>{section?.title}</Text>
-                {section?.id !== 1 && (
+              <View key={index} style={styles.cardTitleCont}>
+                <Text style={styles.subTitleTxt}>{item?.section}</Text>
+                {/* {section?.id !== 1 && (
                   <View style={styles.rightBtnsCont}>
                     <View style={styles.histIconCont}>
                       <MaterialCommunityIcons
@@ -204,20 +206,19 @@ const HabitsSadhana = props => {
                       </TouchableOpacity>
                     </View>
                   </View>
-                )}
+                )} */}
               </View>
 
-              {section.data.map(item => (
+              {item?.cards.map((card, cardIndex) => (
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    section?.id === 1 &&
-                      navigateScreen(screenNames.sadhanaCalendar);
+                    navigateScreen(card?.screenName);
                   }}
                   style={[styles.quotesBox, styles.sadhanaChallCards]}>
                   <Image
                     source={{
-                      uri: item?.image,
+                      uri: card?.icon,
                     }}
                     style={styles.cardIcon}
                   />
@@ -226,14 +227,14 @@ const HabitsSadhana = props => {
                       styles.subTitleTxt,
                       {marginTop: '3%', width: '74%'},
                     ]}>
-                    {item?.title}
+                    {card?.title}
                   </Text>
 
-                  {section?.id !== 1 && (
+                  {/* {card?.id !== 1 && (
                     <Text style={styles.challengePercent}>
                       {item?.percentage}
                     </Text>
-                  )}
+                  )} */}
                 </TouchableOpacity>
               ))}
             </>

@@ -1,5 +1,8 @@
 import {
   Image,
+  Keyboard,
+  Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -27,23 +30,43 @@ import CircularProgress from '../components/CircularProgress';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
+import {API} from '../services/API';
+import Spinner from '../components/Spinner';
+import {useToast} from 'react-native-toast-notifications';
+import {useAppContext} from '../../App';
+import {toastThrottle} from '../components/CommonFunctionalities';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const ITEM_WIDTH = horizontalScale(40);
 
-const SadhanaRegularize = ({navigation, route}) => {
-  const {sadhanaData = [], selectedDate = ''} = route?.params;
+const SadhanaRegularize = props => {
+  const {sadhanaData = [], selSadhanaDate = ''} = props?.route?.params;
+  const {navigation} = props;
+
+  const {globalState, setGlobalState} = useAppContext();
+
+  const {profileId} = globalState;
 
   const [regularizeData, setRegularizeData] = useState({});
   const [selectedIndex, setSelectedIndex] = useState(1);
-  const [currentDate, setCurrentDate] = useState(selectedDate);
+  const [selectedDate, setSelectedDate] = useState(selSadhanaDate);
+  const [regularizeFields, setRegularizeFields] = useState([]);
+  const [calendarList, setCalendarList] = useState(sadhanaData);
+  const [spinner, setSpinner] = useState(true);
+  const [timePicker, setTimePicker] = useState({visible: false, selItem: {}});
 
   const scrollRef = useRef(null);
+
+  const toast = useToast();
+  const toastMsg = toastThrottle((msg, type) => {
+    toast.show(msg, {type});
+  }, 3400);
 
   useEffect(() => {
     const getSelectDateIndex =
       Array.isArray(sadhanaData) &&
       sadhanaData.findIndex(day => {
-        return day?.sadhanaDate === currentDate;
+        return day?.sadhanaDate === selectedDate;
       });
 
     setSelectedIndex(getSelectDateIndex >= 0 ? getSelectDateIndex : 0);
@@ -56,36 +79,69 @@ const SadhanaRegularize = ({navigation, route}) => {
     }
   }, []);
 
-  const regularizeFields = [
-    {
-      label: 'Enter rounds',
-      id: 1,
-      fieldName: 'Chanting',
-      key: 'rounds',
-    },
-    {
-      label: 'Enter minutes',
-      id: 2,
-      fieldName: 'Reading',
-      key: 'reading',
-    },
-    {
-      label: 'Enter time',
-      id: 3,
-      fieldName: 'Wake up time',
-      key: 'wakeupTime',
-    },
-    {
-      label: 'Enter time',
-      id: 4,
-      fieldName: 'Bed time',
-      key: 'bedTime',
-    },
-  ];
+  useEffect(() => {
+    getRegularizeFields();
+  }, [selectedDate]);
+
+  // # Get Regularize Fields
+  const getRegularizeFields = async () => {
+    try {
+      !spinner && setSpinner(true);
+      const params = {
+        profileId,
+        sadhanaDate: selectedDate,
+      };
+      const response = await API.getRegularizeFields(params);
+
+      const {data, successCode, message} = response?.data;
+      console.log('Regularize_response', data);
+      if (successCode === 1) {
+        setRegularizeFields(data?.regularizeFields);
+      } else {
+        toastMsg(message, 'info');
+        setRegularizeFields([]);
+      }
+      setSpinner(false);
+    } catch (err) {
+      setSpinner(false);
+      setRegularizeFields([]);
+      console.log('ERR-Regularize', err);
+      toastMsg('', 'error');
+    }
+  };
+
+  // # Update Sadhana Details
+  const updateSadhanaDetails = async () => {
+    try {
+      setSpinner(true);
+      const params = {
+        profileId,
+        sadhanaDate: selectedDate,
+        sadhanaFields: regularizeData,
+      };
+      const response = await API.updateSadhanaDetails(params);
+
+      console.log('Update_Sadhana_response', response?.data);
+      const {successCode, message} = response?.data;
+      if (successCode === 1) {
+        setRegularizeFields(data?.regularizeFields);
+        setCalendarList(data?.sadhanaCalendar);
+      } else {
+        toastMsg(message, 'info');
+      }
+      navigation.setParams({reloadSadhana: 'Y'});
+      setSpinner(false);
+    } catch (err) {
+      setSpinner(false);
+      console.log('ERR-Update_Sadhana', err);
+      toastMsg('', 'error');
+    }
+  };
 
   const onPressedDate = (index, item) => {
+    setRegularizeData({});
     setSelectedIndex(index);
-    setCurrentDate(item?.day);
+    setSelectedDate(item?.sadhanaDate);
     if (scrollRef.current && index >= 0) {
       const scrollToX = ITEM_WIDTH * index - windowWidth / 2;
       scrollRef.current.scrollTo({
@@ -111,7 +167,7 @@ const SadhanaRegularize = ({navigation, route}) => {
         sadhanaData.filter(day => {
           return (
             day?.sadhanaDate ===
-            moment(currentDate, 'DD-MMM-YYYY')
+            moment(selectedDate, 'DD-MMM-YYYY')
               .subtract(1, 'day')
               .format('DD-MMM-YYYY')
           );
@@ -127,7 +183,7 @@ const SadhanaRegularize = ({navigation, route}) => {
         sadhanaData.filter(day => {
           return (
             day?.sadhanaDate ===
-            moment(currentDate, 'DD-MMM-YYYY')
+            moment(selectedDate, 'DD-MMM-YYYY')
               .add(1, 'day')
               .format('DD-MMM-YYYY')
           );
@@ -138,6 +194,30 @@ const SadhanaRegularize = ({navigation, route}) => {
     }
   };
 
+  const checkDataExists = () => {
+    if (Object.keys(regularizeData)?.length === 0) {
+      toastMsg('Please fill in at least one field.', 'info');
+      return false;
+    }
+
+    updateSadhanaDetails();
+  };
+
+  const getTimeAsDate = timeStr => {
+    const [time, modifier] = timeStr?.split(' ');
+    let [hours, minutes] = time?.split(':').map(Number);
+
+    if (modifier === 'PM' && hours < 12) hours += 12;
+    if (modifier === 'AM' && hours === 12) hours = 0;
+
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0);
+    console.log('date', date);
+    return date;
+  };
+
   return (
     <Container>
       <CustomHeader
@@ -145,6 +225,7 @@ const SadhanaRegularize = ({navigation, route}) => {
         goBack={() => navigation.goBack()}
       />
       <SafeAreaView style={[MyStyles.flex1]}>
+        <Spinner spinnerVisible={spinner} />
         <LinearGradientBg height={verticalScale(250)} />
 
         {/* // @ Date Selection */}
@@ -154,8 +235,8 @@ const SadhanaRegularize = ({navigation, route}) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.scrollViewContent}>
-            {Array.isArray(sadhanaData) &&
-              sadhanaData?.map((item, index) => {
+            {Array.isArray(calendarList) &&
+              calendarList?.map((item, index) => {
                 const isSelected = index === selectedIndex;
 
                 const animatedStyle = useAnimatedStyle(() => {
@@ -237,30 +318,66 @@ const SadhanaRegularize = ({navigation, route}) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles.regFields}>
-          {regularizeFields.map((item, index) => (
-            <View style={styles.fieldCont} key={index}>
-              <View style={styles.iconFieldNameCont}>
-                <Image
-                  source={require('../assets/images/chantImg.png')}
-                  style={styles.iconStyles}
-                />
-                <Text style={styles.fieldName}>{item?.fieldName}</Text>
+          {Array.isArray(regularizeFields) &&
+            regularizeFields?.map((item, index) => (
+              <View style={styles.fieldCont} key={index}>
+                <View style={styles.iconFieldNameCont}>
+                  <Image
+                    source={{uri: item?.sadhanaIcon}}
+                    style={styles.iconStyles}
+                  />
+                  <Text style={styles.fieldName}>{item?.sadhana}</Text>
+                </View>
+                <Pressable
+                  onPress={() => {
+                    if (item?.inputType === 'C') {
+                      const timeValue = !!item?.sadhanaVal
+                        ? getTimeAsDate(item?.sadhanaVal)
+                        : '';
+                      setTimePicker({visible: true, time: timeValue});
+                    }
+                  }}>
+                  <FloatingInput
+                    label={item?.placeHolder}
+                    editable={item?.inputType !== 'C'}
+                    keyboardType="default"
+                    drpdwnContStyle={styles.dropdownCntStyle}
+                    value={regularizeData[item?.sadhana] || item?.sadhanaVal}
+                    onChangeText={val => handleChange(item?.sadhana, val)}
+                    cntnrStyle={styles.dropdownCont}
+                  />
+                </Pressable>
               </View>
-              <FloatingInput
-                label={item?.label}
-                drpdwnContStyle={styles.dropdownCntStyle}
-                value={regularizeData[item?.key] || ''}
-                onChangeText={val => handleChange(item?.key, val, index)}
-                cntnrStyle={styles.dropdownCont}
-              />
-            </View>
-          ))}
+            ))}
 
-          {/* Update Button */}
-          <TouchableOpacity activeOpacity={0.8} style={styles.updateBtn}>
-            <Text style={styles.updateTxt}>Update</Text>
-          </TouchableOpacity>
+          {/* // @ Update Button */}
+          {Array.isArray(regularizeFields) && regularizeFields?.length > 0 && (
+            <TouchableOpacity
+              onPress={() => checkDataExists()}
+              activeOpacity={0.8}
+              style={styles.updateBtn}>
+              <Text style={styles.updateTxt}>Update</Text>
+            </TouchableOpacity>
+          )}
         </ScrollView>
+
+        {/* // # Time Picker */}
+        {timePicker?.visible && (
+          <DateTimePicker
+            mode="time"
+            accentColor={COLORS.header}
+            value={timePicker?.time}
+            onChange={(event, selectedTime) => {
+              console.log('sel_Time', selectedTime);
+              handleChange(
+                item?.sadhana,
+                moment(selectedTime).format('hh:mm a'),
+              );
+            }}
+            textColor={COLORS.black}
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          />
+        )}
       </SafeAreaView>
     </Container>
   );
@@ -272,6 +389,7 @@ const styles = StyleSheet.create({
   dateSelectCont: {
     width: '100%',
     alignSelf: 'center',
+    minHeight: verticalScale(100),
   },
   regFields: {
     flex: 1,
@@ -306,13 +424,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.dropDownBg,
   },
   dropdownCont: {
-    width: '70%',
+    width: '92%',
     alignSelf: 'center',
     height: verticalScale(45),
     minHeight: verticalScale(45),
     borderRadius: moderateScale(10),
     marginTop: 0,
     backgroundColor: COLORS.dropDownBg,
+    paddingHorizontal: '2.5%',
   },
   updateBtn: {
     marginTop: '15%',

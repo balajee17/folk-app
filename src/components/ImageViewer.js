@@ -1,11 +1,8 @@
-import {Image, Modal, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {
   COLORS,
-  moderateScale,
-  screenHeight,
-  screenWidth,
   verticalScale,
   windowHeight,
   windowWidth,

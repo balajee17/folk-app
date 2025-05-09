@@ -76,7 +76,6 @@ const EventDetails = props => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('EVT_DETAILS', reloadEventList);
       reloadEventList === 'Y' && getEventDetails();
     }, [reloadEventList]),
   );

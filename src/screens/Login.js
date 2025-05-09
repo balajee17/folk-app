@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
   },
   resendTxt: {
     fontFamily: FONTS.LufgaBold,
-    color: COLORS.silver,
+    color: COLORS.border,
     fontSize: SIZES.l,
   },
 });

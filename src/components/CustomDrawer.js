@@ -32,8 +32,16 @@ import {CustomPopup} from './BackHandler';
 const CustomDrawer = ({navigation, route}) => {
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
-  const {current, folkId, userName, photo, menuItems, menuSpinner} =
-    globalState;
+  const {
+    current,
+    folkId,
+    userName,
+    photo,
+    menuItems,
+    menuSpinner,
+    buttonColor,
+    headerColor,
+  } = globalState;
   const {closeDrawer} = navigation;
   const [showLogout, setShowLogout] = useState(false);
 
@@ -77,7 +85,7 @@ const CustomDrawer = ({navigation, route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* // @ Profile Info */}
-      <View style={styles.header(statusBarHeight)}>
+      <View style={styles.header(headerColor)}>
         {/* // # FOLK Logo */}
         <Image
           style={styles.folkLogo}
@@ -135,8 +143,11 @@ const CustomDrawer = ({navigation, route}) => {
             style={[
               styles.menuItemBtn,
               {
+                marginTop: index === 0 ? '8%' : '4%',
                 backgroundColor:
-                  current === item?.id ? COLORS.windowsBlue : COLORS.white,
+                  current === item?.id
+                    ? buttonColor || COLORS.button
+                    : COLORS.white,
               },
             ]}
             onPress={() => {
@@ -188,7 +199,7 @@ const CustomDrawer = ({navigation, route}) => {
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() => setShowLogout(true)}
-          style={styles.logoutBtn}>
+          style={styles.logoutBtn(buttonColor)}>
           <MaterialCommunityIcons
             name="logout"
             size={moderateScale(25)}
@@ -211,11 +222,10 @@ const styles = StyleSheet.create({
     height: horizontalScale(60),
     alignSelf: 'center',
   },
-  header: statusBarHeight => ({
-    backgroundColor: COLORS.header,
+  header: color => ({
+    backgroundColor: color || COLORS.header,
     padding: '5%',
     borderTopRightRadius: moderateScale(20),
-    // marginTop: statusBarHeight,
   }),
   profInfoCont: {flexDirection: 'row', alignItems: 'center', marginTop: '4%'},
   profImgCont: {
@@ -238,7 +248,7 @@ const styles = StyleSheet.create({
   },
   mailTxt: {
     fontSize: SIZES.l,
-    color: COLORS.ceramic,
+    color: COLORS.whiteSmoke,
     fontFamily: FONTS.ysabeauInfantBold,
     width: '100%',
   },
@@ -249,23 +259,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
     marginTop: '4%',
     marginHorizontal: '5%',
-    borderRadius: moderateScale(15),
-  },
-  itemIcn: {
-    width: '10%',
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    borderRadius: moderateScale(12),
+    width: '80%',
   },
   itemTxt: {
-    marginLeft: '4%',
-    fontFamily: FONTS.urbanistBold,
-    fontSize: SIZES.xl,
-    color: COLORS.gunsmoke,
+    marginLeft: '7%',
+    fontFamily: FONTS.urbanistMedium,
+    fontSize: SIZES.l,
+    color: COLORS.btIcon,
     width: '80%',
   },
   iconCont: {
-    width: horizontalScale(25),
-    height: verticalScale(25),
+    width: horizontalScale(20),
+    height: verticalScale(20),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -276,7 +282,7 @@ const styles = StyleSheet.create({
   },
   logoutCont: {
     position: 'absolute',
-    bottom: '5%',
+    bottom: '7%',
     backgroundColor: COLORS.whiteSmoke,
     alignSelf: 'center',
     padding: '5%',
@@ -285,9 +291,9 @@ const styles = StyleSheet.create({
     width: horizontalScale(200),
     borderRadius: moderateScale(28),
   },
-  logoutBtn: {
+  logoutBtn: color => ({
     width: '85%',
-    backgroundColor: COLORS.windowsBlue,
+    backgroundColor: color || COLORS.button,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -303,7 +309,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-  },
+  }),
   logTxt: {
     fontFamily: FONTS.urbanistSemiBold,
     fontSize: SIZES.xl,
@@ -313,8 +319,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.l,
-    color: COLORS.gunsmoke,
-    bottom: '1%',
+    color: COLORS.btIcon,
+    bottom: '2.5%',
     alignSelf: 'center',
     width: '90%',
     textAlign: 'right',

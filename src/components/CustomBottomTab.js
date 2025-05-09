@@ -1,11 +1,9 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   COLORS,
   FONTS,
   horizontalScale,
-  moderateScale,
-  screenHeight,
   SIZES,
   verticalScale,
   windowWidth,
@@ -56,6 +54,9 @@ const ACTIVE_CIRCLE_SIZE = horizontalScale(50);
 const CustomBottomTab = ({selIcon, setSelIcon}) => {
   const translateX = useSharedValue(0);
 
+  const {globalState, setGlobalState} = useAppContext();
+  const {bottomTabColor} = globalState;
+
   const handlePress = (id, index) => {
     setSelIcon(id);
     translateX.value = withSpring(index * TAB_WIDTH, {
@@ -91,7 +92,8 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
     <View style={styles.btTabContainer}>
       {/* // @ Active Circle */}
       {selIcon !== '' && (
-        <Animated.View style={[styles.activeCircle, circleStyle]}>
+        <Animated.View
+          style={[styles.activeCircle(bottomTabColor), circleStyle]}>
           <Animated.Image
             source={
               selIcon === 'DB1'
@@ -122,7 +124,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
             color: interpolateColor(
               isActive ? 1 : 0,
               [0, 1],
-              [COLORS.charcoal, COLORS.golden],
+              [COLORS.btIcon, bottomTabColor || COLORS.bottomTab],
             ),
           }));
 
@@ -187,7 +189,7 @@ const styles = StyleSheet.create({
   },
   iconTxt: {
     fontSize: SIZES.m,
-    color: COLORS.charcoal,
+    color: COLORS.btIcon,
     fontFamily: FONTS.poppinsRegular,
     marginTop: '5%',
   },
@@ -198,8 +200,8 @@ const styles = StyleSheet.create({
     height: verticalScale(25),
     top: verticalScale(-25),
   },
-  activeCircle: {
-    backgroundColor: COLORS.golden,
+  activeCircle: color => ({
+    backgroundColor: color || COLORS.bottomTab,
     width: ACTIVE_CIRCLE_SIZE,
     height: ACTIVE_CIRCLE_SIZE,
     borderRadius: ACTIVE_CIRCLE_SIZE / 2,
@@ -220,7 +222,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.0,
 
     elevation: 1,
-  },
+  }),
   icon: {
     width: horizontalScale(25),
     height: horizontalScale(25),

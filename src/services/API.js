@@ -250,7 +250,7 @@ export const API = {
 
   // # Habits & Sadhana
   getHabitsSadhana(data) {
-    const habitsSadhanaURL = baseURL + '';
+    const habitsSadhanaURL = baseURL + '/sadhana/sadhana';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL habits Sadhana URL Data ',
@@ -261,14 +261,36 @@ export const API = {
     return axios.post(habitsSadhanaURL, requestData);
   },
   getSadhanaDetails(data) {
-    const SadhanaDetailsURL = baseURL + '';
+    const sadhanaDetailsURL = baseURL + '/sadhana/get-calendar';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL Sadhana URL Data ',
-      SadhanaDetailsURL,
+      sadhanaDetailsURL,
       ' data ',
       requestData,
     );
-    return axios.post(SadhanaDetailsURL, requestData);
+    return axios.post(sadhanaDetailsURL, requestData);
+  },
+  getRegularizeFields(data) {
+    const regularizeFieldsURL = baseURL + '/sadhana/get-sadhana-fields';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Regularize Fields URL Data ',
+      regularizeFieldsURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(regularizeFieldsURL, requestData);
+  },
+  updateSadhanaDetails(data) {
+    const updateSadhanaURL = baseURL + '/sadhana/store-sadhana';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL update Sadhana URL Data ',
+      updateSadhanaURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(updateSadhanaURL, requestData);
   },
 };
