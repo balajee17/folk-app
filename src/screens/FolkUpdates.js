@@ -18,7 +18,6 @@ import {
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
-import LinearGradient from 'react-native-linear-gradient';
 import CustomHeader from '../components/CustomHeader';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
@@ -72,178 +71,176 @@ const FolkUpdates = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
-        {/* // # Contents */}
-        <View style={MyStyles.contentContainer}>
-          {shimmer ? (
-            <>
-              <View>
-                {Array(2)
-                  .fill(2)
-                  .map(_ => {
+      {/* // # Header */}
+      <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
+      {/* // # Contents */}
+      <View style={MyStyles.contentContainer}>
+        {shimmer ? (
+          <>
+            <View>
+              {Array(2)
+                .fill(2)
+                .map(_ => {
+                  return (
+                    <>
+                      <TitleShimmer />
+                      <ImageShimmer
+                        width={'100%'}
+                        height={verticalScale(300)}
+                        borderRadius={moderateScale(15)}
+                        marginTop={verticalScale(10)}
+                        alignSelf={'center'}
+                      />
+                      <ImageShimmer
+                        width={'100%'}
+                        height={verticalScale(120)}
+                        borderRadius={moderateScale(15)}
+                        marginTop={verticalScale(10)}
+                        alignSelf={'center'}
+                      />
+                    </>
+                  );
+                })}
+            </View>
+          </>
+        ) : (
+          <FlatList
+            data={folkUpdates}
+            keyExtractor={(_, index) => index}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: '5%',
+            }}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <Text
+                    style={[
+                      MyStyles.subTitleText,
+                      {marginTop: '5%', marginBottom: '2%'},
+                    ]}>
+                    {item?.day}
+                  </Text>
+
+                  {item?.updates?.map((updateItem, updateIndex) => {
                     return (
-                      <>
-                        <TitleShimmer />
-                        <ImageShimmer
-                          width={'100%'}
-                          height={verticalScale(300)}
-                          borderRadius={moderateScale(15)}
-                          marginTop={verticalScale(10)}
-                          alignSelf={'center'}
-                        />
-                        <ImageShimmer
-                          width={'100%'}
-                          height={verticalScale(120)}
-                          borderRadius={moderateScale(15)}
-                          marginTop={verticalScale(10)}
-                          alignSelf={'center'}
-                        />
-                      </>
-                    );
-                  })}
-              </View>
-            </>
-          ) : (
-            <FlatList
-              data={folkUpdates}
-              keyExtractor={(_, index) => index}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingBottom: '5%',
-              }}
-              renderItem={({item, index}) => {
-                return (
-                  <>
-                    <Text
-                      style={[
-                        MyStyles.subTitleText,
-                        {marginTop: '5%', marginBottom: '2%'},
-                      ]}>
-                      {item?.day}
-                    </Text>
-
-                    {item?.updates?.map((updateItem, updateIndex) => {
-                      return (
-                        <View key={updateIndex}>
-                          {!!updateItem?.link && (
-                            <View
-                              key={updateItem?.id}
-                              style={[styles.quotesImgCont]}>
-                              <Image
-                                style={MyStyles.quotesImg}
-                                source={{
-                                  uri: updateItem?.link,
-                                }}
-                              />
-                              {/*  // # Share Btn */}
-                              <TouchableOpacity
-                                onPress={() => {
-                                  const result = ShareLink(updateItem?.link);
-                                  if (!!result?.type) {
-                                    toastMsg(result?.message, result?.type);
-                                  }
-                                }}
-                                style={MyStyles.shareBtn}
-                                activeOpacity={0.6}>
-                                <MaterialCommunityIcons
-                                  name="share"
-                                  size={moderateScale(25)}
-                                  color={COLORS.white}
-                                />
-                              </TouchableOpacity>
-                            </View>
-                          )}
-                          {updateItem?.link && updateItem?.text ? (
-                            <View
-                              key={updateItem?.id}
-                              style={[
-                                MyStyles.updatesTextCont,
-                                MyStyles.paddingHor10,
-                                {
-                                  marginTop: '2%',
-                                },
-                              ]}>
-                              <Text style={[MyStyles.announceTxt]}>
-                                {updateItem?.title}
-                              </Text>
-
-                              <Text
-                                style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
-                                {updateItem?.text}
-                              </Text>
-                            </View>
-                          ) : updateItem?.text ? (
-                            <Pressable
-                              onLongPress={() => {
-                                if (
-                                  CopyToClipboard(
-                                    `${updateItem?.title}\n${updateItem?.text}`,
-                                  )
-                                ) {
-                                  toastMsg('Message copied', 'success');
-                                } else {
-                                  toastMsg('Unable to copy the text', 'error');
+                      <View key={updateIndex}>
+                        {!!updateItem?.link && (
+                          <View
+                            key={updateItem?.id}
+                            style={[styles.quotesImgCont]}>
+                            <Image
+                              style={MyStyles.quotesImg}
+                              source={{
+                                uri: updateItem?.link,
+                              }}
+                            />
+                            {/*  // # Share Btn */}
+                            <TouchableOpacity
+                              onPress={() => {
+                                const result = ShareLink(updateItem?.link);
+                                if (!!result?.type) {
+                                  toastMsg(result?.message, result?.type);
                                 }
                               }}
-                              key={updateItem?.id}
-                              style={[
-                                MyStyles.updatesTextCont,
-                                {
-                                  marginTop: !!updateItem?.link
-                                    ? '2%'
-                                    : index !== 0
-                                    ? '5%'
-                                    : '1%',
-                                },
-                              ]}>
+                              style={MyStyles.shareBtn}
+                              activeOpacity={0.6}>
+                              <MaterialCommunityIcons
+                                name="share"
+                                size={moderateScale(25)}
+                                color={COLORS.white}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                        {updateItem?.link && updateItem?.text ? (
+                          <View
+                            key={updateItem?.id}
+                            style={[
+                              MyStyles.updatesTextCont,
+                              MyStyles.paddingHor10,
+                              {
+                                marginTop: '2%',
+                              },
+                            ]}>
+                            <Text style={[MyStyles.announceTxt]}>
+                              {updateItem?.title}
+                            </Text>
+
+                            <Text
+                              style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
+                              {updateItem?.text}
+                            </Text>
+                          </View>
+                        ) : updateItem?.text ? (
+                          <Pressable
+                            onLongPress={() => {
+                              if (
+                                CopyToClipboard(
+                                  `${updateItem?.title}\n${updateItem?.text}`,
+                                )
+                              ) {
+                                toastMsg('Message copied', 'success');
+                              } else {
+                                toastMsg('Unable to copy the text', 'error');
+                              }
+                            }}
+                            key={updateItem?.id}
+                            style={[
+                              MyStyles.updatesTextCont,
+                              {
+                                marginTop: !!updateItem?.link
+                                  ? '2%'
+                                  : index !== 0
+                                  ? '5%'
+                                  : '1%',
+                              },
+                            ]}>
+                            <View
+                              style={MyStyles.noticeCard(
+                                announcementCardColor,
+                              )}>
                               <View
-                                style={MyStyles.noticeCard(
-                                  announcementCardColor,
-                                )}>
-                                <View
-                                  style={[
-                                    MyStyles.announceIcnTxtCont,
-                                    {
-                                      width: '17%',
-                                    },
-                                  ]}>
-                                  <Image
-                                    source={{
-                                      uri: updateItem?.icon,
-                                    }}
-                                    style={MyStyles.announceIcn}
-                                  />
-                                </View>
-                                <View style={{width: '80%'}}>
-                                  <Text style={[MyStyles.announceTxt]}>
-                                    {updateItem?.title}
-                                  </Text>
-                                  <Text
-                                    style={[
-                                      MyStyles.updateTxt,
-                                      {marginTop: '2%'},
-                                    ]}>
-                                    {updateItem?.text}
-                                  </Text>
-                                </View>
+                                style={[
+                                  MyStyles.announceIcnTxtCont,
+                                  {
+                                    width: '17%',
+                                  },
+                                ]}>
+                                <Image
+                                  source={{
+                                    uri: updateItem?.icon,
+                                  }}
+                                  style={MyStyles.announceIcn}
+                                />
                               </View>
-                            </Pressable>
-                          ) : (
-                            <></>
-                          )}
-                        </View>
-                      );
-                    })}
-                  </>
-                );
-              }}
-              ListEmptyComponent={NoDataFound}
-            />
-          )}
-        </View>
-      </SafeAreaView>
+                              <View style={{width: '80%'}}>
+                                <Text style={[MyStyles.announceTxt]}>
+                                  {updateItem?.title}
+                                </Text>
+                                <Text
+                                  style={[
+                                    MyStyles.updateTxt,
+                                    {marginTop: '2%'},
+                                  ]}>
+                                  {updateItem?.text}
+                                </Text>
+                              </View>
+                            </View>
+                          </Pressable>
+                        ) : (
+                          <></>
+                        )}
+                      </View>
+                    );
+                  })}
+                </>
+              );
+            }}
+            ListEmptyComponent={NoDataFound}
+          />
+        )}
+      </View>
     </Container>
   );
 };

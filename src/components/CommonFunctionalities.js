@@ -145,7 +145,7 @@ export const CashFreePayment = (payment_session_id, order_id) => {
       const theme = new CFThemeBuilder()
         .setNavigationBarBackgroundColor(COLORS.header)
         .setNavigationBarTextColor('#FFFFFF')
-        .setButtonBackgroundColor(COLORS.atlantis)
+        .setButtonBackgroundColor(COLORS.button)
         .setButtonTextColor('#FFFFFF')
         .setPrimaryTextColor('#212121')
         .setSecondaryTextColor('#757575')
@@ -296,3 +296,22 @@ export const CopyToClipboard = textToCopy => {
   }
   return false;
 };
+
+// # Hex to RGBA
+export function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// # Get Gradient color
+export function getGradientColors(hex, points) {
+  return [
+    hexToRgba(hex, points?.one || 1),
+    hexToRgba(hex, points?.two || 0.9),
+    hexToRgba(hex, points?.three || 0.6),
+    hexToRgba(hex, points?.four || 0.1),
+    '#0000',
+  ];
+}

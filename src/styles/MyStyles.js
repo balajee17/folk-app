@@ -65,60 +65,14 @@ export const percentageToPixel = percentage => {
 
 // @ COLORS
 export let COLORS = {
-  white: '#FFF',
-  black: '#000',
-  charcoal: '#484C52',
-  dolphin: '#5C5D6C',
-  mirage: '#1C1D26',
-  osloGrey: '#898989',
-  paleYellow: '#F7F8E6',
-  gableGreen: '#1B2830',
-  golden: '#DAC056',
-  ceramic: '#ffffff66',
-  midGrey: '#626262',
-  gunsmoke: '#888786',
-  windowsBlue: '#308AAF',
-
-  davyGrey: 'rgba(69, 90, 100, 0.08)',
-  inputBg: 'rgba(234, 236, 220, 1)',
-  highLightColor: '#D1D1D1',
-  atlantis: '#B1C63C',
-  citrine: '#E4D721',
-  diesel: '#C8C8C8',
-  watermelon: '#FF5858',
-  chromeWhite: '#EAECDC',
-  candlelight: '#F1E624',
-  cloud: '#C2C2C2',
-  modalBg: 'rgba(0, 0, 0, 0.3)',
-  dropDownBg: '#EDEDED',
-  silkBlue: '#4A83B5',
-  whatsapp: '#19D06C',
-  dodger: '#358AE0',
-  link: '#00d2ff',
-
-  silver: '#CECECE',
-  moss: '#729F4D',
-  scannerBg: '#111',
-
-  // New COLORS
-  header: '#416EBD',
-  shimmerBg: '#B0B0B0',
-
-  purple: '#7F85E6',
-  halfTransparent: 'rgba(0, 0, 0, 0.5)',
-  blackOpacity01: 'rgba(0, 0, 0, 0.1)',
-
-  shareBtn: 'rgba(0, 0, 0, 0.71)',
-  borderColor: 'rgba(0, 0, 0, 0.03)',
-  logoutColor: '#F8512B',
-
   // # FINAL Color theme Dynamic
   header: '#4571BF',
   bottomTab: '#E0C24A',
   button: '#B1C63C',
-  card: '#F8F8F8',
+  card: '#F6F6F6',
   eventCard: '#40414F',
   announcementCard: '#2D3B60',
+  tabIndicator: '#B1C63C',
 
   // # Toast COLORS
   successBg: '#E2FEE5',
@@ -143,6 +97,23 @@ export let COLORS = {
   transparent: '#0000',
   whiteGlassy: 'rgba(255, 255, 255, 0.2)',
   textLabel: '#5D5D5D',
+  folkIdLbl: '#E6E6E6',
+  inptBg: '#F8F8F8',
+  citrine: '#E4D721',
+  windowsBlue: '#308AAF',
+  watermelon: '#FF5858',
+  modalBg: 'rgba(0, 0, 0, 0.3)',
+  whatsapp: '#19D06C',
+  link: '#00d2ff',
+  scannerBg: '#111',
+  shimmerBg: '#B0B0B0',
+  highLightColor: '#F8F8F8',
+  purple: '#7F85E6',
+  halfTransparent: 'rgba(0, 0, 0, 0.5)',
+  blackOpacity01: 'rgba(0, 0, 0, 0.1)',
+  shareBtn: 'rgba(0, 0, 0, 0.71)',
+  borderColor: 'rgba(0, 0, 0, 0.03)',
+  logoutColor: '#F8512B',
 };
 
 // @ FONTS
@@ -172,7 +143,7 @@ export let MyStyles = {
   },
   subTitleText: {
     fontSize: SIZES.subTitle,
-    color: COLORS.gableGreen,
+    color: COLORS.black,
     fontFamily: FONTS.poppinsSemiBold,
   },
   scrollView: {
@@ -240,7 +211,7 @@ export let MyStyles = {
   },
   contentCont: {backgroundColor: COLORS.white, flex: 1},
   card: {
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.card,
     width: '93%',
     alignSelf: 'center',
     padding: '2%',
@@ -312,7 +283,7 @@ export let MyStyles = {
   descripTxt: {
     fontSize: SIZES.m,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.diesel,
+    color: COLORS.border,
     width: '100%',
   },
   amtTxt: {
@@ -341,7 +312,7 @@ export let MyStyles = {
     width: horizontalScale(100),
     borderRadius: moderateScale(20),
     alignItems: 'center',
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
     justifyContent: 'center',
   },
   registerTxt: {
@@ -411,13 +382,13 @@ export let MyStyles = {
   },
   cameraBtn: {
     borderWidth: 1,
-    borderColor: COLORS.dropDownBg,
+    borderColor: COLORS.inptBg,
     paddingVertical: 15,
     width: '35%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

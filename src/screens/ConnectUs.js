@@ -55,7 +55,7 @@ const ConnectUs = ({apiData, shimmer}) => {
           <View style={{padding: '4%'}}>
             <ImageShimmer
               width={horizontalScale(150)}
-              backgroundColor={COLORS.highLightColor}
+              backgroundColor={COLORS.border}
               borderRadius={moderateScale(80)}
               height={horizontalScale(150)}
               alignSelf={'center'}
@@ -134,7 +134,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                     <MaterialIcons
                       name="content-copy"
                       size={moderateScale(20)}
-                      color={COLORS.charcoal}
+                      color={COLORS.btIcon}
                     />
                   </TouchableOpacity>
                 )}
@@ -156,7 +156,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                     <MaterialIcons
                       name="content-copy"
                       size={moderateScale(20)}
-                      color={COLORS.charcoal}
+                      color={COLORS.btIcon}
                     />
                   </TouchableOpacity>
                 )}
@@ -174,7 +174,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                     }
                   }}
                   activeOpacity={0.8}
-                  style={[styles.contactBtn, {backgroundColor: COLORS.dodger}]}>
+                  style={[styles.contactBtn, {backgroundColor: COLORS.infoPB}]}>
                   <FontAwesome
                     name="phone"
                     size={moderateScale(23)}
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: horizontalScale(150),
-    backgroundColor: COLORS.highLightColor,
+    backgroundColor: COLORS.border,
     borderRadius: moderateScale(80),
     height: horizontalScale(150),
     alignSelf: 'center',
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   emailTxt: {
     fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.xl,
-    color: COLORS.dolphin,
+    color: COLORS.textLabel,
     textAlign: 'center',
     marginTop: '1%',
     marginHorizontal: '3%',

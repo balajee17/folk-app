@@ -1,40 +1,159 @@
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import {
+  ActivityIndicator,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import ColorPicker from 'react-native-wheel-color-picker';
+import {
+  COLORS,
+  FONTS,
+  horizontalScale,
+  moderateScale,
+  MyStyles,
+  SIZES,
+} from '../styles/MyStyles';
+import {useAppContext} from '../../App';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const WheelColor = () => {
+const WheelColor = ({
+  selectedColor,
+  openColorPick,
+  closePicker,
+  userColorCode,
+}) => {
+  const {globalState} = useAppContext();
+  const {buttonColor} = globalState;
   const [currentColor, setCurrentColor] = useState('#fff');
-  console.log('currentColor', currentColor);
-  return (
-    <View style={{backgroundColor: 'pink', width: '85%', alignSelf: 'center'}}>
-      <ColorPicker
-        color={currentColor}
-        onColorChange={color => setCurrentColor(color)}
-        thumbSize={50}
-        sliderSize={30}
-        noSnap={true}
-        row={false}
-        swatchesLast={true} // Moves swatches to the end
-        swatches={true} // Enables color swatches
-        discrete={false}
-        wheelLodingIndicator={<ActivityIndicator size={40} color="blue" />}
-        sliderLodingIndicator={<ActivityIndicator size={20} color="green" />}
-      />
 
-      <View
-        style={{
-          marginTop: '90%',
-          width: 100,
-          height: 50,
-          alignSelf: 'center',
-          borderRadius: 30,
-          backgroundColor: currentColor,
-          borderWidth: 2,
-        }}></View>
-    </View>
+  useEffect(() => {
+    setCurrentColor(userColorCode);
+  }, [userColorCode]);
+
+  const chosenColor = color => {
+    setCurrentColor(color);
+  };
+
+  const saveColor = () => {
+    return selectedColor(currentColor);
+  };
+
+  return (
+    <Modal visible={openColorPick} transparent animationType={'slide'}>
+      <View style={[MyStyles.modal, {justifyContent: 'center'}]}>
+        <View style={styles.modalBox}>
+          {/* // @ Close Button */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => closePicker()}
+            style={styles.closeButton}>
+            <MaterialCommunityIcons
+              name="close"
+              size={moderateScale(23)}
+              color={COLORS.black}
+            />
+          </TouchableOpacity>
+          {/* // @ Color Picker */}
+          <View style={styles.container}>
+            <ColorPicker
+              color={currentColor}
+              onColorChange={color => chosenColor(color)}
+              thumbSize={30}
+              sliderSize={25}
+              noSnap={true}
+              row={false}
+              swatchesLast={true}
+              swatches={true}
+              discrete={false}
+              wheelLodingIndicator={
+                <ActivityIndicator size={40} color={COLORS.header} />
+              }
+              sliderLodingIndicator={
+                <ActivityIndicator size={20} color={COLORS.button} />
+              }
+            />
+          </View>
+          {/* // @ Color Code */}
+          <View style={[styles.flexD, styles.colorCodeCont]}>
+            <View style={styles.selColorBox(currentColor)} />
+            <Text style={styles.colorCode}>{currentColor}</Text>
+          </View>
+          {/* // @ Buttons */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => saveColor()}
+            style={styles.button(buttonColor)}>
+            <Text style={styles.btnTxt}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   );
 };
 
 export default WheelColor;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    minHeight: '40%',
+  },
+  modalBox: {
+    backgroundColor: COLORS.white,
+    padding: '2%',
+    alignSelf: 'center',
+    width: '85%',
+    minHeight: '63%',
+    borderRadius: moderateScale(12),
+  },
+  selColorBox: currentColor => ({
+    width: horizontalScale(30),
+    height: horizontalScale(30),
+    borderRadius: moderateScale(4),
+    backgroundColor: currentColor,
+    alignSelf: 'center',
+    borderWidth: 1,
+  }),
+  flexD: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  colorCodeCont: {
+    width: '40%',
+    alignSelf: 'center',
+    marginTop: '7%',
+  },
+  colorCode: {
+    fontFamily: FONTS.poppinsRegular,
+    fontSize: SIZES.subTitle,
+    color: COLORS.black,
+  },
+  button: buttonColor => ({
+    width: horizontalScale(100),
+    height: horizontalScale(30),
+    borderRadius: moderateScale(6),
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '10%',
+    alignSelf: 'center',
+    backgroundColor: buttonColor || COLORS.button,
+  }),
+  btnTxt: {
+    fontFamily: FONTS.poppinsSemiBold,
+    fontSize: SIZES.xl,
+    color: COLORS.white,
+  },
+  closeButton: {
+    width: horizontalScale(25),
+    height: horizontalScale(25),
+    borderRadius: moderateScale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+    // marginTop: '10%',
+    alignSelf: 'flex-end',
+  },
+});

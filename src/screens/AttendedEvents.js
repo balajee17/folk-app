@@ -12,17 +12,12 @@ import {
 import React from 'react';
 import {
   COLORS,
-  horizontalScale,
   moderateScale,
   MyStyles,
-  screenHeight,
   verticalScale,
-  windowWidth,
 } from '../styles/MyStyles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screenNames} from '../constants/ScreenNames';
 import {EventShimmer} from '../components/Shimmer';
-import moment from 'moment';
 import {
   check,
   request,
@@ -30,20 +25,21 @@ import {
   RESULTS,
   openSettings,
 } from 'react-native-permissions';
-import {getImage} from '../utils/ImagePath';
-import FastImage from 'react-native-fast-image';
 import NoDataFound from '../components/NoDataFound';
 import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
 import {useToast} from 'react-native-toast-notifications';
+import {useAppContext} from '../../App';
 
 const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
+  const {globalState} = useAppContext();
+  const {eventCardColor} = globalState;
+
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
     navigation.navigate(screen, params);
   };
 
   const checkCameraPermission = async ID => {
-    console.log('ID', ID);
     const permission =
       Platform.OS === 'ios'
         ? PERMISSIONS.IOS.CAMERA
@@ -106,7 +102,10 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                   activeOpacity={0.9}
                   style={[
                     MyStyles.card,
-                    {marginTop: index == 0 ? '2%' : '5%'},
+                    {
+                      marginTop: index == 0 ? '2%' : '5%',
+                      backgroundColor: eventCardColor || COLORS.eventCard,
+                    },
                   ]}>
                   {/* // # Card image */}
 
@@ -206,7 +205,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                           {/* <MaterialCommunityIcons
                             name="ticket-percent-outline"
                             size={moderateScale(22)}
-                            color={COLORS.charcoal}
+                            color={COLORS.btIcon}
                           /> */}
                           <Image
                             source={{
@@ -221,10 +220,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                     {(item?.is_attended === 'Y' ||
                       item?.is_registered === 'Y') && (
                       <Text
-                        style={[
-                          MyStyles.registerTxt,
-                          {color: COLORS.candlelight},
-                        ]}>
+                        style={[MyStyles.registerTxt, {color: COLORS.citrine}]}>
                         {item?.is_attended === 'Y'
                           ? 'Attended ✓✓'
                           : item?.is_registered === 'Y'

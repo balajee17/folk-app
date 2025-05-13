@@ -9,10 +9,14 @@ import {
   verticalScale,
 } from '../styles/MyStyles';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
+import {useAppContext} from '../../App';
 
 const AttendanceHistory = ({shimmer, attendanceHistory}) => {
+  const {globalState} = useAppContext();
+  const {cardColor} = globalState;
+
   return shimmer ? (
-    <View style={[styles.attendanceCard, {backgroundColor: COLORS.charcoal}]}>
+    <View style={[styles.attendanceCard, {backgroundColor: COLORS.card}]}>
       <View style={styles.evtImgNameCont}>
         {/* // # Event Image */}
         <ImageShimmer
@@ -43,7 +47,8 @@ const AttendanceHistory = ({shimmer, attendanceHistory}) => {
           key={index}
           style={[
             styles.attendanceCard,
-            shimmer && {backgroundColor: COLORS.charcoal},
+            shimmer && {backgroundColor: COLORS.btIcon},
+            {backgroundColor: cardColor || COLORS.eventCard},
           ]}>
           <View style={styles.evtImgNameCont}>
             {/* // # Event Image */}
@@ -78,7 +83,7 @@ export default AttendanceHistory;
 
 const styles = StyleSheet.create({
   attendanceCard: {
-    backgroundColor: COLORS.chromeWhite,
+    backgroundColor: COLORS.card,
     marginTop: '3%',
     width: '95%',
     borderRadius: moderateScale(20),
@@ -95,13 +100,13 @@ const styles = StyleSheet.create({
   eventName: {
     fontSize: SIZES.xl,
     fontFamily: FONTS.urbanistBold,
-    color: COLORS.charcoal,
+    color: COLORS.btIcon,
     width: '100%',
   },
   descripTxt: {
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.dolphin,
+    color: COLORS.textLabel,
     width: '100%',
     marginTop: '1%',
   },

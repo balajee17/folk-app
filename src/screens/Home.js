@@ -164,7 +164,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                   {/* {RenderHistoryIcon(
                     TITLE,
                     screenNames.dailyDarshan,
-                    index > 0 ? COLORS.gableGreen : COLORS.white,
+                    index > 0 ? COLORS.black : COLORS.white,
                   )} */}
                 </>
               )
@@ -229,7 +229,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 {/* {RenderHistoryIcon(
                   TITLE,
                   screenNames.quotes,
-                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                  index === 0 ? COLORS.white : COLORS.black,
                 )} */}
               </>
             )
@@ -358,7 +358,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 RenderHistoryIcon(
                   TITLE,
                   screenNames.updates,
-                  index === 0 ? COLORS.white : COLORS.gableGreen,
+                  index === 0 ? COLORS.white : COLORS.black,
                 )} */}
             </>
           )}
@@ -438,11 +438,6 @@ const Home = ({apiData, shimmer, refreshData}) => {
                           : '1%',
                       },
                     ]}>
-                    {/* <LinearGradient
-                      start={{x: 0.3, y: 0}}
-                      end={{x: 1, y: 1}}
-                      colors={['#353a5f', '#9ebaf3']}
-                      style={[MyStyles.gradient]}> */}
                     <View style={MyStyles.noticeCard(announcementCardColor)}>
                       <View
                         style={[
@@ -467,7 +462,6 @@ const Home = ({apiData, shimmer, refreshData}) => {
                         </Text>
                       </View>
                     </View>
-                    {/* </LinearGradient> */}
                   </Pressable>
                 ) : (
                   <></>
@@ -508,7 +502,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
               {/* {RenderHistoryIcon(
                 TITLE,
                 screenNames.folkVideos,
-                index === 0 ? COLORS.white : COLORS.gableGreen,
+                index === 0 ? COLORS.white : COLORS.black,
               )} */}
             </>
           )}

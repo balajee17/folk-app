@@ -293,4 +293,28 @@ export const API = {
     );
     return axios.post(updateSadhanaURL, requestData);
   },
+
+  // # Color Theme
+  getColorTheme(data) {
+    const colorSectionsURL = baseURL + '';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL color Sections URL Data ',
+      colorSectionsURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(colorSectionsURL, requestData);
+  },
+  updateColorTheme(data) {
+    const updateColorURL = baseURL + '';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'URL Update Color Theme URL Data ',
+      updateColorURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(updateColorURL, requestData);
+  },
 };

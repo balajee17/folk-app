@@ -1,6 +1,7 @@
 import {
   Image,
   Modal,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -23,7 +24,7 @@ import {appVersion} from '../../AppVersion.json';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
-import {useStatusBarHeight} from './StatusBarComponent';
+import {CommonStatusBar, useStatusBarHeight} from './StatusBarComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import {ImageShimmer, TitleShimmer} from './Shimmer';
@@ -41,6 +42,7 @@ const CustomDrawer = ({navigation, route}) => {
     menuSpinner,
     buttonColor,
     headerColor,
+    tabIndicatorColor,
   } = globalState;
   const {closeDrawer} = navigation;
   const [showLogout, setShowLogout] = useState(false);
@@ -65,7 +67,8 @@ const CustomDrawer = ({navigation, route}) => {
 
   const logout = async () => {
     setShowLogout(false);
-    await setGlobalState({
+    await setGlobalState(prev => ({
+      ...prev,
       current: 'DB1',
       btTab: 'DB1',
       profileId: '',
@@ -77,140 +80,148 @@ const CustomDrawer = ({navigation, route}) => {
       photo: '',
       menuItems: [],
       menuSpinner: true,
-    });
+      reloadSadhana: 'N',
+    }));
     await AsyncStorage.clear();
     navigation.replace(screenNames.login);
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      {/* // @ Profile Info */}
-      <View style={styles.header(headerColor)}>
-        {/* // # FOLK Logo */}
-        <Image
-          style={styles.folkLogo}
-          source={getImage.folk}
-          resizeMode="contain"
-        />
-        <View style={styles.profInfoCont}>
-          {/* // # Profile, Name, FOLK id */}
-          <TouchableOpacity
-            onPress={() => {
-              navigateTo(screenNames.profile);
-            }}
-            activeOpacity={0.8}
-            style={styles.profImgCont}>
-            <Image
-              source={{
-                uri: photo,
+    <>
+      <CommonStatusBar />
+      <>
+        {/* // @ Profile Info */}
+        <View style={styles.header(headerColor)}>
+          {/* // # FOLK Logo */}
+          <Image
+            style={styles.folkLogo}
+            source={getImage.folk}
+            resizeMode="contain"
+          />
+          <View style={styles.profInfoCont}>
+            {/* // # Profile, Name, FOLK id */}
+            <TouchableOpacity
+              onPress={() => {
+                navigateTo(screenNames.profile);
               }}
-              style={styles.profImg}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigateTo(screenNames.profile);
-            }}
-            activeOpacity={0.8}
-            style={[styles.profileTextCont]}>
-            <Text style={styles.profName}>{userName}</Text>
-            {!!folkId && (
-              <Text style={[styles.profName, styles.mailTxt]}>
-                FOLK ID : {folkId}
-              </Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* // @ Logout Modal */}
-      <CustomPopup
-        visible={showLogout}
-        onOkay={() => logout()}
-        onCancel={() => setShowLogout(false)}
-        content={{
-          title: 'Log Out?',
-          text: 'Are you sure you want to LogOut?',
-          buttonName: 'Log Out',
-        }}
-      />
-
-      {/* // @ Menu Items */}
-      {menuItems?.length > 0 &&
-        menuItems?.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.menuItemBtn,
-              {
-                marginTop: index === 0 ? '8%' : '4%',
-                backgroundColor:
-                  current === item?.id
-                    ? buttonColor || COLORS.button
-                    : COLORS.white,
-              },
-            ]}
-            onPress={() => {
-              navigateScreen(item?.id, item?.screenName, item?.title);
-            }}
-            activeOpacity={0.6}>
-            <View style={styles.iconCont}>
+              activeOpacity={0.8}
+              style={styles.profImgCont}>
               <Image
-                style={styles.menuImg}
                 source={{
-                  uri: current === item?.id ? item?.whiteIcon : item?.blackIcon,
+                  uri: photo,
                 }}
+                style={styles.profImg}
               />
-            </View>
-            <Text
-              style={[
-                styles.itemTxt,
-                {
-                  color: current === item?.id ? COLORS.white : COLORS.gunsmoke,
-                },
-              ]}>
-              {item?.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigateTo(screenNames.profile);
+              }}
+              activeOpacity={0.8}
+              style={[styles.profileTextCont]}>
+              <Text style={styles.profName}>{userName}</Text>
+              {!!folkId && (
+                <Text style={[styles.profName, styles.mailTxt]}>
+                  FOLK ID : {folkId}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
 
-      {menuSpinner &&
-        Array(3)
-          .fill(3)
-          .map((_, index) => (
-            <View key={index} style={styles.shimmerCont}>
-              <ImageShimmer
-                width={horizontalScale(35)}
-                borderRadius={moderateScale(20)}
-                height={horizontalScale(35)}
-              />
-              <TitleShimmer
-                width={horizontalScale(200)}
-                borderRadius={moderateScale(20)}
-                height={horizontalScale(25)}
-                marginTop={0}
-                marginLeft={'8%'}
-              />
-            </View>
+        {/* // @ Logout Modal */}
+        <CustomPopup
+          visible={showLogout}
+          onOkay={() => logout()}
+          onCancel={() => setShowLogout(false)}
+          content={{
+            title: 'Log Out?',
+            text: 'Are you sure you want to LogOut?',
+            buttonName: 'Log Out',
+          }}
+        />
+
+        {/* // @ Menu Items */}
+        {menuItems?.length > 0 &&
+          menuItems?.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.menuItemBtn,
+                {
+                  marginTop: index === 0 ? '8%' : '4%',
+                  backgroundColor:
+                    current === item?.id
+                      ? tabIndicatorColor || COLORS.button
+                      : COLORS.white,
+                },
+              ]}
+              onPress={() => {
+                navigateScreen(item?.id, item?.screenName, item?.title);
+              }}
+              activeOpacity={0.6}>
+              <View style={styles.iconCont}>
+                <Image
+                  style={styles.menuImg}
+                  source={{
+                    uri:
+                      current === item?.id ? item?.whiteIcon : item?.blackIcon,
+                  }}
+                />
+              </View>
+              <Text
+                style={[
+                  styles.itemTxt,
+                  {
+                    color:
+                      current === item?.id ? COLORS.white : COLORS.gunsmoke,
+                  },
+                ]}>
+                {item?.title}
+              </Text>
+            </TouchableOpacity>
           ))}
 
-      {/* // @ Logout Btn */}
-      <View style={styles.logoutCont}>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={() => setShowLogout(true)}
-          style={styles.logoutBtn(buttonColor)}>
-          <MaterialCommunityIcons
-            name="logout"
-            size={moderateScale(25)}
-            color={COLORS.white}
-          />
-          <Text style={styles.logTxt}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+        {menuSpinner &&
+          Array(3)
+            .fill(3)
+            .map((_, index) => (
+              <View key={index} style={styles.shimmerCont}>
+                <ImageShimmer
+                  width={horizontalScale(35)}
+                  borderRadius={moderateScale(20)}
+                  height={horizontalScale(35)}
+                />
+                <TitleShimmer
+                  width={horizontalScale(200)}
+                  borderRadius={moderateScale(20)}
+                  height={horizontalScale(25)}
+                  marginTop={0}
+                  marginLeft={'8%'}
+                />
+              </View>
+            ))}
 
-      <Text style={styles.appVersion}>App Version : {appVersion.version}</Text>
-    </SafeAreaView>
+        {/* // @ Logout Btn */}
+        <View style={styles.logoutCont}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => setShowLogout(true)}
+            style={styles.logoutBtn(buttonColor)}>
+            <MaterialCommunityIcons
+              name="logout"
+              size={moderateScale(25)}
+              color={COLORS.white}
+            />
+            <Text style={styles.logTxt}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.appVersion}>
+          App Version : {appVersion.version}
+        </Text>
+      </>
+    </>
   );
 };
 
@@ -225,7 +236,7 @@ const styles = StyleSheet.create({
   header: color => ({
     backgroundColor: color || COLORS.header,
     padding: '5%',
-    borderTopRightRadius: moderateScale(20),
+    borderTopRightRadius: Platform.OS === 'android' ? moderateScale(20) : 0,
   }),
   profInfoCont: {flexDirection: 'row', alignItems: 'center', marginTop: '4%'},
   profImgCont: {

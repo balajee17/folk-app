@@ -100,31 +100,30 @@ const Notifications = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.notifications}
+      {/* // # Header */}
+      <CustomHeader
+        goBack={() => navigation.goBack()}
+        titleName={screenNames.notifications}
+      />
+      <Spinner spinnerVisible={loader} />
+      {/* // # Contents */}
+      <View style={MyStyles.contentCont}>
+        {/* // @ Notification Card */}
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={notificationList}
+          contentContainerStyle={{paddingBottom: '5%'}}
+          renderItem={({item, index}) => {
+            return (
+              <NotificationCard
+                item={item}
+                index={index}
+                swipedNotify={swipedNotify}
+              />
+            );
+          }}
         />
-        <Spinner spinnerVisible={loader} />
-        {/* // # Contents */}
-        <View style={MyStyles.contentCont}>
-          {/* // @ Notification Card */}
-          <FlatList
-            data={notificationList}
-            contentContainerStyle={{paddingBottom: '5%'}}
-            renderItem={({item, index}) => {
-              return (
-                <NotificationCard
-                  item={item}
-                  index={index}
-                  swipedNotify={swipedNotify}
-                />
-              );
-            }}
-          />
-        </View>
-      </SafeAreaView>
+      </View>
     </Container>
   );
 };

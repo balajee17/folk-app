@@ -31,6 +31,9 @@ const Events = ({
   refreshUpcoming,
   refreshRegistered,
 }) => {
+  const {globalState} = useAppContext();
+  const {tabIndicatorColor} = globalState;
+
   const [filterValues, setFilterValues] = useState({});
   const [filterDrpDwnLst, setFilterDrpDwnLst] = useState({
     eventNames: [
@@ -70,7 +73,7 @@ const Events = ({
             style={[
               styles.tabItem,
               index === i && {
-                backgroundColor: COLORS.atlantis,
+                backgroundColor: tabIndicatorColor || COLORS.button,
                 borderRadius: moderateScale(30),
               },
             ]}>
@@ -102,7 +105,7 @@ const Events = ({
                 <MaterialCommunityIcons
                   name="close"
                   size={moderateScale(25)}
-                  color={COLORS.charcoal}
+                  color={COLORS.btIcon}
                 />
               </TouchableOpacity>
             </View>
@@ -112,7 +115,7 @@ const Events = ({
               data={filterDrpDwnLst?.eventNames}
               label={'Event Name'}
               drpdwnContStyle={{
-                backgroundColor: COLORS.dropDownBg,
+                backgroundColor: COLORS.inptBg,
                 alignSelf: 'left',
               }}
               value={filterValues?.eventName}
@@ -137,7 +140,7 @@ const Events = ({
               onChangeText={item => {
                 handleChange('eventType', item);
               }}
-              drpdwnContStyle={{backgroundColor: COLORS.dropDownBg}}
+              drpdwnContStyle={{backgroundColor: COLORS.inptBg}}
               cntnrStyle={styles.dropdownCont}
               renderRightIcon={() => (
                 <MaterialCommunityIcons
@@ -175,7 +178,7 @@ const Events = ({
               }}>
               <TouchableOpacity
                 activeOpacity={0.6}
-                style={[styles.filterBtn, {backgroundColor: COLORS.cloud}]}>
+                style={[styles.filterBtn, {backgroundColor: COLORS.border}]}>
                 <Text style={styles.filterBtnTxt}>Clear</Text>
               </TouchableOpacity>
 
@@ -253,7 +256,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: SIZES.xl,
     fontFamily: FONTS.urbanistBold,
-    color: COLORS.atlantis,
+    color: COLORS.textLabel,
   },
   activeTabText: {
     color: COLORS.white,
@@ -264,7 +267,7 @@ const styles = StyleSheet.create({
     width: horizontalScale(110),
     padding: '18%',
     borderRadius: moderateScale(20),
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
     bottom: verticalScale(-1),
   },
 
@@ -305,14 +308,14 @@ const styles = StyleSheet.create({
     height: verticalScale(48),
     marginTop: '5%',
     borderRadius: moderateScale(10),
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
   },
   filterBtn: {
     justifyContent: 'center',
     borderRadius: moderateScale(8),
     width: '35%',
     height: horizontalScale(45),
-    backgroundColor: COLORS.silkBlue,
+    backgroundColor: COLORS.windowsBlue,
   },
   filterBtnTxt: {
     fontFamily: FONTS.urbanistBold,

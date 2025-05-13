@@ -95,7 +95,7 @@ const PAYMENT = () => {
       const theme = new CFThemeBuilder()
         .setNavigationBarBackgroundColor(COLORS.header)
         .setNavigationBarTextColor('#FFFFFF')
-        .setButtonBackgroundColor(COLORS.atlantis)
+        .setButtonBackgroundColor(COLORS.button)
         .setButtonTextColor('#FFFFFF')
         .setPrimaryTextColor('#212121')
         .setSecondaryTextColor('#757575')

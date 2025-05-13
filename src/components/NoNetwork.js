@@ -27,6 +27,7 @@ import {getImage} from '../utils/ImagePath';
 import FastImage from 'react-native-fast-image';
 import AndroidBackHandler from './BackHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Container from './Container';
 
 const NoNetwork = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -69,29 +70,31 @@ const NoNetwork = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={[MyStyles.contentCont, {justifyContent: 'center'}]}>
+    <Container>
       <CommonStatusBar />
-      <FastImage
-        style={{
-          alignSelf: 'center',
-          width: horizontalScale(200),
-          height: horizontalScale(200),
-        }}
-        source={getImage.noNetwork}
-        resizeMode={FastImage.resizeMode.contain}
-      />
-      <Text style={styles.whooopsTxt}>Whooops!</Text>
-      <Text style={styles.infoTxt}>
-        We could not load the page. Try reloading the page or check your
-        internet connection.
-      </Text>
-      <TouchableOpacity
-        onPress={() => reloadApp()}
-        activeOpacity={0.8}
-        style={styles.reloadBtn}>
-        <Text style={styles.reloadTxt}>Reload</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+      <View style={[MyStyles.contentCont, {justifyContent: 'center'}]}>
+        <FastImage
+          style={{
+            alignSelf: 'center',
+            width: horizontalScale(200),
+            height: horizontalScale(200),
+          }}
+          source={getImage.noNetwork}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+        <Text style={styles.whooopsTxt}>Whooops!</Text>
+        <Text style={styles.infoTxt}>
+          We could not load the page. Try reloading the page or check your
+          internet connection.
+        </Text>
+        <TouchableOpacity
+          onPress={() => reloadApp()}
+          activeOpacity={0.8}
+          style={styles.reloadBtn}>
+          <Text style={styles.reloadTxt}>Reload</Text>
+        </TouchableOpacity>
+      </View>
+    </Container>
   );
 };
 
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
     width: '80%',
     fontSize: SIZES.l,
     fontFamily: FONTS.ysabeauInfantRegular,
-    color: COLORS.osloGrey,
+    color: COLORS.gunsmoke,
     alignSelf: 'center',
     marginTop: '3%',
   },
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     width: '70%',
     height: verticalScale(45),
     borderRadius: moderateScale(10),
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',

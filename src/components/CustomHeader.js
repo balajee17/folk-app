@@ -11,7 +11,6 @@ import {getImage} from '../utils/ImagePath';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screenNames} from '../constants/ScreenNames';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import LinearGradient from 'react-native-linear-gradient';
 import {useStatusBarHeight} from './StatusBarComponent';
 import {useAppContext} from '../../App';
 import {API} from '../services/API';
@@ -62,7 +61,6 @@ const CustomHeader = ({
 
   const noRightIcn =
     titleName === screenNames.eventDetails ||
-    titleName === screenNames.profile ||
     titleName === screenNames.connectUs;
 
   const folkTitle =
@@ -195,7 +193,13 @@ const CustomHeader = ({
           ) : (
             <MaterialCommunityIcons
               name={
-                filterIcnScreens ? 'filter' : plusIcnscreens ? 'plus' : null
+                filterIcnScreens
+                  ? 'filter'
+                  : plusIcnscreens
+                  ? 'plus'
+                  : titleName === screenNames.profile
+                  ? 'palette'
+                  : null
               }
               size={moderateScale(25)}
               color={COLORS.white}

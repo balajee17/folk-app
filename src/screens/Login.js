@@ -143,8 +143,27 @@ const Login = ({navigation}) => {
           setLoader(false);
         } else {
           setLoader(false);
-          const {id, photo, name, folkId, mobile} = response?.data?.profile;
-          const userDetails = {profileId: id, photo, name, folkId, mobile};
+          const {
+            id,
+            photo,
+            name,
+            folkId,
+            mobile,
+            header,
+            bottomTab,
+            button,
+            card,
+            eventCard,
+            announcementCard,
+            tabIndicator,
+          } = response?.data?.profile;
+          const userDetails = {
+            profileId: id,
+            photo,
+            name,
+            folkId,
+            mobile,
+          };
           await setGlobalState(prev => ({
             ...prev,
             current: 'DB1',
@@ -156,6 +175,13 @@ const Login = ({navigation}) => {
             userName: name,
             mobileNumber: mobile,
             photo: photo,
+            headerColor: header,
+            bottomTabColor: bottomTab,
+            buttonColor: button,
+            cardColor: card,
+            eventCardColor: eventCard,
+            announcementCardColor: announcementCard,
+            tabIndicatorColor: tabIndicator,
           }));
           await AsyncStorage.setItem(
             'userDetails',
@@ -268,7 +294,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   }),
   loginTxt: {
-    fontFamily: FONTS.LufgaBold,
+    fontFamily: FONTS.poppinsBold,
     fontSize: SIZES.xxxl + 5,
     color: COLORS.white,
     textAlign: 'center',
@@ -319,7 +345,7 @@ const styles = StyleSheet.create({
     marginRight: '5%',
   },
   resendTxt: {
-    fontFamily: FONTS.LufgaBold,
+    fontFamily: FONTS.poppinsBold,
     color: COLORS.border,
     fontSize: SIZES.l,
   },

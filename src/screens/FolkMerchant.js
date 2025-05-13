@@ -20,17 +20,15 @@ const FolkMerchant = props => {
   }, []);
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader
-          toggleDrawer={() => navigation.openDrawer()}
-          titleName={screenNames.folkMerchant}
-        />
-        {/* // # Contents */}
-        <View style={MyStyles.contentCont}>
-          <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
-        </View>
-      </SafeAreaView>
+      {/* // # Header */}
+      <CustomHeader
+        toggleDrawer={() => navigation.openDrawer()}
+        titleName={screenNames.folkMerchant}
+      />
+      {/* // # Contents */}
+      <View style={MyStyles.contentCont}>
+        <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} />
+      </View>
 
       {/* // @ Bottom Tab */}
       <CustomBottomTab

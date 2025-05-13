@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import CustomDrawer from '../components/CustomDrawer';
 import {screenNames} from '../constants/ScreenNames';
-import {moderateScale} from '../styles/MyStyles';
+import {COLORS, moderateScale} from '../styles/MyStyles';
 import SwitcherScreen from '../screens/SwitcherScreen';
 import YFHForm from '../screens/YFHForm';
 import Accommodation from '../screens/Accommodation';
@@ -20,8 +20,11 @@ const DrawerNavigation = () => {
         headerShown: false,
         swipeEnabled: false,
         drawerStyle: {
-          borderTopRightRadius: moderateScale(20),
-          borderBottomRightRadius: moderateScale(20),
+          borderTopRightRadius:
+            Platform.OS === 'android' ? moderateScale(20) : 0,
+          borderBottomRightRadius:
+            Platform.OS === 'android' ? moderateScale(20) : 0,
+          backgroundColor: COLORS.white,
         },
       }}
       drawerContent={props => <CustomDrawer {...props} />}>

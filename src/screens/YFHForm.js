@@ -82,31 +82,30 @@ const YFHForm = props => {
 
   return (
     <Container>
-      <SafeAreaView style={[MyStyles.flex1, {paddingBottom: '12%'}]}>
-        {/* // # Header */}
-        <CustomHeader
-          toggleDrawer={() => navigation.openDrawer()}
-          titleName={route?.params?.titleName}
+      {/* // # Header */}
+      <CustomHeader
+        toggleDrawer={() => navigation.openDrawer()}
+        titleName={route?.params?.titleName}
+      />
+      <Spinner spinnerVisible={loader} />
+
+      {/* // # WebView YFH FORM */}
+      {YFHLink && (
+        <WebView
+          showsVerticalScrollIndicator={false}
+          source={{
+            uri: YFHLink,
+          }}
+          style={{
+            flex: 1,
+            marginBottom: '3%',
+          }}
+          onLoad={() => setLoader(false)}
         />
-        <Spinner spinnerVisible={loader} />
+      )}
 
-        {/* // # WebView YFH FORM */}
-        {YFHLink && (
-          <WebView
-            showsVerticalScrollIndicator={false}
-            source={{
-              uri: YFHLink,
-            }}
-            style={{
-              flex: 1,
-              marginBottom: '3%',
-            }}
-            onLoad={() => setLoader(false)}
-          />
-        )}
-
-        {/* // @ Personal Details */}
-        {/* <Text
+      {/* // @ Personal Details */}
+      {/* <Text
             style={[
               MyStyles.subTitleText,
               MyStyles.marTop3Per,
@@ -115,14 +114,14 @@ const YFHForm = props => {
             Personal Details
           </Text>
           {/* // # Whatsapp */}
-        {/* <FloatingInput
+      {/* <FloatingInput
             label={'WhatsApp Number'}
             value={formValues?.whatsapp}
             onChangeText={value => handleChange('whatsapp', value)}
             rightIcon={
               <MaterialCommunityIcons
                 name={'whatsapp'}
-                color={COLORS.charcoal}
+                color={COLORS.btIcon}
                 size={25}
               />
             }
@@ -132,18 +131,18 @@ const YFHForm = props => {
             }}
           />
           {/* // # Communication Address */}
-        {/* <FloatingInput
+      {/* <FloatingInput
             label={'Communication Address'}
             value={formValues?.address}
             onChangeText={value => handleChange('address', value)}
           />
 
           {/* // @ Educational Details */}
-        {/* <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
+      {/* <Text style={[MyStyles.subTitleText, MyStyles.marTop3Per]}>
             Educational Details
           </Text>
           {/* // # Highest Qualification */}
-        {/* <FloatingInput
+      {/* <FloatingInput
             type="dropdown"
             label={'Highest Qualification'}
             value={formValues?.qualification}
@@ -153,7 +152,7 @@ const YFHForm = props => {
             renderRightIcon={() => (
               <MaterialCommunityIcons
                 name={'chevron-down'}
-                color={COLORS.charcoal}
+                color={COLORS.btIcon}
                 size={25}
               />
             )}
@@ -170,8 +169,7 @@ const YFHForm = props => {
               justifyCenter: 'center',
             }}
           /> */}
-        {/* <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} /> */}
-      </SafeAreaView>
+      {/* <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} /> */}
 
       {/* // @ Bottom Tab */}
       <CustomBottomTab

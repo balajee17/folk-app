@@ -140,7 +140,7 @@ export default PaymentHistory;
 
 const styles = StyleSheet.create({
   attendanceCard: {
-    backgroundColor: COLORS.chromeWhite,
+    backgroundColor: COLORS.card,
     marginTop: '3%',
     width: '95%',
     borderRadius: moderateScale(10),
@@ -154,13 +154,13 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(25),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.btIcon,
   },
   idEvntNameCont: {width: '55%'},
   txid: {
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.midGrey,
+    color: COLORS.gunsmoke,
   },
   eventName: {
     fontSize: SIZES.l,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   dateTxt: {
     fontSize: SIZES.m,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.midGrey,
+    color: COLORS.gunsmoke,
   },
   dateTimeCont: {
     flexDirection: 'row',

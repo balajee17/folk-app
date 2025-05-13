@@ -95,8 +95,9 @@ const Splash = ({navigation}) => {
     });
   };
   return (
-    <SafeAreaView style={MyStyles.flex1}>
+    <>
       <CommonStatusBar />
+
       <View style={[MyStyles.flex1, styles.mainContainer]}>
         <Animated.Image
           resizeMode="stretch"
@@ -104,7 +105,7 @@ const Splash = ({navigation}) => {
           style={[styles.logoImg, {opacity: fadeAnim}]}
         />
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 

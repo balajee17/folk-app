@@ -22,7 +22,6 @@ import {
 let AndroidBackHandler = {
   // Control Back Handler i.e go back to pervious page
   setHandler(props) {
-    console.log('Android Handler Props ', props);
     if (Platform.OS === 'android') {
       BackHandler.addEventListener('hardwareBackPress', () => {
         props.navigation.goBack();
@@ -68,7 +67,7 @@ export const CustomPopup = ({visible, onOkay, onCancel, content}) => {
               activeOpacity={0.7}
               style={styles.button}
               onPress={() => onCancel()}>
-              <Text style={[styles.textStyle, {color: COLORS.osloGrey}]}>
+              <Text style={[styles.textStyle, {color: COLORS.gunsmoke}]}>
                 Cancel
               </Text>
             </TouchableOpacity>
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 0.5,
-    borderColor: COLORS.osloGrey,
+    borderColor: COLORS.gunsmoke,
   },
   textStyle: {
     color: COLORS.white,

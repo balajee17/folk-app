@@ -2,17 +2,15 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, moderateScale, verticalScale} from '../styles/MyStyles';
+import {useAppContext} from '../../App';
+import {getGradientColors} from './CommonFunctionalities';
 
-const LinearGradientBg = ({height}) => {
+const LinearGradientBg = ({height, points}) => {
+  const {globalState} = useAppContext();
+  const getRGBColor = getGradientColors(globalState?.headerColor, points);
   return (
     <LinearGradient
-      colors={[
-        'rgba(65, 110, 189, 1)',
-        'rgba(65, 110, 189, 0.9)',
-        'rgba(65, 110, 189, 0.6)',
-        'rgba(65, 110, 189, 0.1)',
-        '#0000',
-      ]}
+      colors={getRGBColor}
       style={styles.gradient(height)}
       start={{x: 0.5, y: 0}}
       end={{x: 0.5, y: 1}}

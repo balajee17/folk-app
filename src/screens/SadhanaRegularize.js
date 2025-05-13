@@ -122,14 +122,15 @@ const SadhanaRegularize = props => {
       const response = await API.updateSadhanaDetails(params);
 
       console.log('Update_Sadhana_response', response?.data);
-      const {successCode, message} = response?.data;
+      const {data, successCode, message} = response?.data;
       if (successCode === 1) {
         setRegularizeFields(data?.regularizeFields);
         setCalendarList(data?.sadhanaCalendar);
+        setRegularizeData({});
       } else {
         toastMsg(message, 'info');
       }
-      navigation.setParams({reloadSadhana: 'Y'});
+      setGlobalState(prev => ({...prev, reloadSadhana: 'Y'}));
       setSpinner(false);
     } catch (err) {
       setSpinner(false);
@@ -224,161 +225,174 @@ const SadhanaRegularize = props => {
         titleName={selectedDate}
         goBack={() => navigation.goBack()}
       />
-      <SafeAreaView style={[MyStyles.flex1]}>
-        <Spinner spinnerVisible={spinner} />
-        <LinearGradientBg height={verticalScale(250)} />
+      <Spinner spinnerVisible={spinner} />
+      <LinearGradientBg
+        height={verticalScale(450)}
+        points={{one: 1, two: 1, three: 0.4, four: 0.1}}
+      />
 
-        {/* // @ Date Selection */}
-        <View style={styles.dateSelectCont}>
-          <ScrollView
-            ref={scrollRef}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollViewContent}>
-            {Array.isArray(calendarList) &&
-              calendarList?.map((item, index) => {
-                const isSelected = index === selectedIndex;
-
-                const animatedStyle = useAnimatedStyle(() => {
-                  return {
-                    backgroundColor: withTiming(
-                      isSelected ? COLORS.white : COLORS.modalBg,
-                      {
-                        duration: 300,
-                      },
-                    ),
-                  };
-                });
-
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    activeOpacity={0.8}
-                    onPress={() => onPressedDate(index, item)}>
-                    <Animated.View style={[styles.circle, animatedStyle]}>
-                      <Text
-                        style={[
-                          styles.dateText,
-                          {color: isSelected ? COLORS.black : COLORS.white},
-                        ]}>
-                        {item?.day}
-                      </Text>
-                      {Number(item?.percentage) == 100 ? (
-                        <View style={styles.perCircleCont(item?.progressColor)}>
-                          <IonIcons
-                            name="checkmark"
-                            size={horizontalScale(28) * 0.5}
-                            color={COLORS.white}
-                            style={{
-                              alignSelf: 'center',
-                            }}
-                          />
-                        </View>
-                      ) : (
-                        <CircularProgress
-                          percentage={item?.percentage}
-                          circleColor={item?.circleColor}
-                          progressColor={item?.progressColor}
-                          circleSize={horizontalScale(28)}
-                        />
-                      )}
-                    </Animated.View>
-                  </TouchableOpacity>
-                );
-              })}
-          </ScrollView>
-
-          {/* // # Date Changing Btns */}
-          <View style={styles.dateChangeBtnCont}>
-            <TouchableOpacity
-              onPress={() => changeDate(-1)}
-              activeOpacity={0.8}
-              style={styles.changeDtBtn}>
-              <Entypo
-                name="chevron-thin-left"
-                size={horizontalScale(15)}
-                color={COLORS.white}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => changeDate(1)}
-              activeOpacity={0.8}
-              style={styles.changeDtBtn}>
-              <Entypo
-                name="chevron-thin-right"
-                size={horizontalScale(15)}
-                color={COLORS.white}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* // @ Regularize Fields */}
+      {/* // @ Date Selection */}
+      <View style={styles.dateSelectCont}>
         <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={styles.regFields}>
-          {Array.isArray(regularizeFields) &&
-            regularizeFields?.map((item, index) => (
-              <View style={styles.fieldCont} key={index}>
-                <View style={styles.iconFieldNameCont}>
-                  <Image
-                    source={{uri: item?.sadhanaIcon}}
-                    style={styles.iconStyles}
-                  />
-                  <Text style={styles.fieldName}>{item?.sadhana}</Text>
-                </View>
-                <Pressable
-                  onPress={() => {
-                    if (item?.inputType === 'C') {
-                      const timeValue = !!item?.sadhanaVal
-                        ? getTimeAsDate(item?.sadhanaVal)
-                        : '';
-                      setTimePicker({visible: true, time: timeValue});
-                    }
-                  }}>
-                  <FloatingInput
-                    label={item?.placeHolder}
-                    editable={item?.inputType !== 'C'}
-                    keyboardType="default"
-                    drpdwnContStyle={styles.dropdownCntStyle}
-                    value={regularizeData[item?.sadhana] || item?.sadhanaVal}
-                    onChangeText={val => handleChange(item?.sadhana, val)}
-                    cntnrStyle={styles.dropdownCont}
-                  />
-                </Pressable>
-              </View>
-            ))}
+          ref={scrollRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}>
+          {Array.isArray(calendarList) &&
+            calendarList?.map((item, index) => {
+              const isSelected = index === selectedIndex;
 
-          {/* // @ Update Button */}
-          {Array.isArray(regularizeFields) && regularizeFields?.length > 0 && (
-            <TouchableOpacity
-              onPress={() => checkDataExists()}
-              activeOpacity={0.8}
-              style={styles.updateBtn}>
-              <Text style={styles.updateTxt}>Update</Text>
-            </TouchableOpacity>
-          )}
+              const animatedStyle = useAnimatedStyle(() => {
+                return {
+                  backgroundColor: withTiming(
+                    isSelected ? COLORS.white : COLORS.modalBg,
+                    {
+                      duration: 300,
+                    },
+                  ),
+                };
+              });
+
+              return (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.8}
+                  onPress={() => onPressedDate(index, item)}>
+                  <Animated.View style={[styles.circle, animatedStyle]}>
+                    <Text
+                      style={[
+                        styles.dateText,
+                        {color: isSelected ? COLORS.black : COLORS.white},
+                      ]}>
+                      {item?.day}
+                    </Text>
+                    {Number(item?.percentage) == 100 ? (
+                      <View style={styles.perCircleCont(item?.progressColor)}>
+                        <IonIcons
+                          name="checkmark"
+                          size={horizontalScale(28) * 0.5}
+                          color={COLORS.white}
+                          style={{
+                            alignSelf: 'center',
+                          }}
+                        />
+                      </View>
+                    ) : (
+                      <CircularProgress
+                        percentage={item?.percentage}
+                        circleColor={item?.circleColor}
+                        progressColor={item?.progressColor}
+                        circleSize={horizontalScale(28)}
+                      />
+                    )}
+                  </Animated.View>
+                </TouchableOpacity>
+              );
+            })}
         </ScrollView>
 
-        {/* // # Time Picker */}
-        {timePicker?.visible && (
-          <DateTimePicker
-            mode="time"
-            accentColor={COLORS.header}
-            value={timePicker?.time}
-            onChange={(event, selectedTime) => {
-              console.log('sel_Time', selectedTime);
-              handleChange(
-                item?.sadhana,
-                moment(selectedTime).format('hh:mm a'),
-              );
-            }}
-            textColor={COLORS.black}
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          />
+        {/* // # Date Changing Btns */}
+        <View style={styles.dateChangeBtnCont}>
+          <TouchableOpacity
+            onPress={() => changeDate(-1)}
+            activeOpacity={0.8}
+            style={styles.changeDtBtn}>
+            <Entypo
+              name="chevron-thin-left"
+              size={horizontalScale(15)}
+              color={COLORS.white}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => changeDate(1)}
+            activeOpacity={0.8}
+            style={styles.changeDtBtn}>
+            <Entypo
+              name="chevron-thin-right"
+              size={horizontalScale(15)}
+              color={COLORS.white}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* // @ Regularize Fields */}
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.regFields}>
+        {Array.isArray(regularizeFields) &&
+          regularizeFields?.map((item, index) => (
+            <View style={styles.fieldCont} key={index}>
+              <View style={styles.iconFieldNameCont}>
+                <Image
+                  source={{uri: item?.sadhanaIcon}}
+                  style={styles.iconStyles}
+                />
+                <Text style={styles.fieldName}>{item?.sadhana}</Text>
+              </View>
+              {console.log(
+                'regularizeData[item?.sadhana]',
+                regularizeData[item?.sadhana],
+                item?.sadhanaVal,
+              )}
+              <Pressable
+                onPress={() => {
+                  if (item?.inputType === 'C') {
+                    const timeValue = !!item?.sadhanaVal
+                      ? getTimeAsDate(item?.sadhanaVal)
+                      : '';
+                    setTimePicker({
+                      visible: true,
+                      selItem: item,
+                      time: timeValue,
+                    });
+                  }
+                }}>
+                <FloatingInput
+                  label={item?.placeHolder}
+                  editable={item?.inputType !== 'C'}
+                  keyboardType="default"
+                  drpdwnContStyle={styles.dropdownCntStyle}
+                  value={regularizeData[item?.sadhana] || item?.sadhanaVal}
+                  onChangeText={val => handleChange(item?.sadhana, val)}
+                  cntnrStyle={styles.dropdownCont}
+                  labelStyle={{color: COLORS.textLabel}}
+                  txtInptStyle={{
+                    color: COLORS.black,
+                    fontFamily: FONTS.urbanistSemiBold,
+                    fontSize: SIZES.l,
+                  }}
+                />
+              </Pressable>
+            </View>
+          ))}
+
+        {/* // @ Update Button */}
+        {Array.isArray(regularizeFields) && regularizeFields?.length > 0 && (
+          <TouchableOpacity
+            onPress={() => checkDataExists()}
+            activeOpacity={0.8}
+            style={styles.updateBtn}>
+            <Text style={styles.updateTxt}>Update</Text>
+          </TouchableOpacity>
         )}
-      </SafeAreaView>
+      </ScrollView>
+      {/* // # Time Picker */}
+      {timePicker?.visible && (
+        <DateTimePicker
+          mode="time"
+          accentColor={COLORS.header}
+          value={timePicker?.time || new Date()}
+          onChange={(event, selectedTime) => {
+            setTimePicker({visible: false});
+            handleChange(
+              timePicker?.selItem?.sadhana,
+              moment(selectedTime).format('hh:mm a'),
+            );
+          }}
+          textColor={COLORS.black}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+        />
+      )}
     </Container>
   );
 };
@@ -390,6 +404,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     minHeight: verticalScale(100),
+    marginTop: '4%',
   },
   regFields: {
     flex: 1,
@@ -421,7 +436,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dropdownCntStyle: {
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
   },
   dropdownCont: {
     width: '92%',
@@ -430,7 +445,7 @@ const styles = StyleSheet.create({
     minHeight: verticalScale(45),
     borderRadius: moderateScale(10),
     marginTop: 0,
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
     paddingHorizontal: '2.5%',
   },
   updateBtn: {
@@ -441,7 +456,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
   },
   updateTxt: {
     fontFamily: FONTS.urbanistBold,

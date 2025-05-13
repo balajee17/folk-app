@@ -48,38 +48,33 @@ const AddChallenge = props => {
   }, []);
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.newChallenge}
-        />
-        {/* // # Contents */}
-        <View style={MyStyles.contentCont}>
-          {challengesList.map(item => (
-            <View style={[styles.quotesBox, styles.sadhanaChallCards]}>
-              <Image
-                source={{
-                  uri: item?.image,
-                }}
-                style={styles.cardIcon}
-              />
-              <View style={styles.titleBtnCont}>
-                <Text
-                  style={[
-                    styles.subTitleTxt,
-                    {marginTop: '3%', width: '100%'},
-                  ]}>
-                  {item?.title}
-                </Text>
-                <TouchableOpacity activeOpacity={0.8} style={styles.addBtn}>
-                  <Text style={styles.addTxt}>Add</Text>
-                </TouchableOpacity>
-              </View>
+      {/* // # Header */}
+      <CustomHeader
+        goBack={() => navigation.goBack()}
+        titleName={screenNames.newChallenge}
+      />
+      {/* // # Contents */}
+      <View style={MyStyles.contentCont}>
+        {challengesList.map(item => (
+          <View style={[styles.quotesBox, styles.sadhanaChallCards]}>
+            <Image
+              source={{
+                uri: item?.image,
+              }}
+              style={styles.cardIcon}
+            />
+            <View style={styles.titleBtnCont}>
+              <Text
+                style={[styles.subTitleTxt, {marginTop: '3%', width: '100%'}]}>
+                {item?.title}
+              </Text>
+              <TouchableOpacity activeOpacity={0.8} style={styles.addBtn}>
+                <Text style={styles.addTxt}>Add</Text>
+              </TouchableOpacity>
             </View>
-          ))}
-        </View>
-      </SafeAreaView>
+          </View>
+        ))}
+      </View>
     </Container>
   );
 };
@@ -123,7 +118,7 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   addBtn: {
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
     width: horizontalScale(55),
     height: horizontalScale(25),
     borderRadius: moderateScale(12),

@@ -91,7 +91,6 @@ const Coupons = props => {
   }, []);
 
   const setDefaultStates = () => {
-    // setCouponData([]);
     setSelCoupon({
       open: false,
       type: 'R',
@@ -357,46 +356,44 @@ const Coupons = props => {
 
   return (
     <Container>
-      <SafeAreaView styles={[MyStyles.flex1]}>
-        {/* // # Header */}
-        <CustomHeader
-          titleName={screenNames.coupons}
-          goBack={() => navigation.goBack()}
-          rightIcnAction={() => {
-            setSelCoupon(prev => ({
-              ...prev,
-              open: true,
-            }));
-          }}
-        />
-        <Spinner spinnerVisible={loader} />
-        {/* // @ Coupon card */}
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: '40%', overflow: 'hidden'}}
-          data={couponData}
-          renderItem={({item, index}) => {
-            return (
-              <FlipCardCoupon
-                item={item}
-                index={index}
-                setSelCoupon={value => {
-                  setSelCoupon(value);
-                }}
-              />
-            );
-          }}
-          refreshControl={
-            <RefreshControl
-              refreshing={false}
-              onRefresh={() => getCouponsList()}
+      {/* // # Header */}
+      <CustomHeader
+        titleName={screenNames.coupons}
+        goBack={() => navigation.goBack()}
+        rightIcnAction={() => {
+          setSelCoupon(prev => ({
+            ...prev,
+            open: true,
+          }));
+        }}
+      />
+      <Spinner spinnerVisible={loader} />
+      {/* // @ Coupon card */}
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: '40%', overflow: 'hidden'}}
+        data={couponData}
+        renderItem={({item, index}) => {
+          return (
+            <FlipCardCoupon
+              item={item}
+              index={index}
+              setSelCoupon={value => {
+                setSelCoupon(value);
+              }}
             />
-          }
-          ListEmptyComponent={
-            !loader && <NoDataFound screen={screenNames.coupons} />
-          }
-        />
-      </SafeAreaView>
+          );
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => getCouponsList()}
+          />
+        }
+        ListEmptyComponent={
+          !loader && <NoDataFound screen={screenNames.coupons} />
+        }
+      />
 
       {/* // @ Add Coupon Modal */}
       <Modal animationType="slide" visible={selCoupon?.open} transparent>
@@ -436,7 +433,7 @@ const Coupons = props => {
                   <MaterialCommunityIcons
                     name="minus"
                     size={moderateScale(25)}
-                    color={COLORS.charcoal}
+                    color={COLORS.btIcon}
                   />
                 </TouchableOpacity>
                 <Text style={styles.AddCpnCountTxt}>
@@ -451,7 +448,7 @@ const Coupons = props => {
                   <MaterialCommunityIcons
                     name="plus"
                     size={moderateScale(25)}
-                    color={COLORS.charcoal}
+                    color={COLORS.btIcon}
                   />
                 </TouchableOpacity>
               </View>
@@ -484,7 +481,7 @@ const Coupons = props => {
                         <MaterialCommunityIcons
                           name="minus"
                           size={moderateScale(18)}
-                          color={COLORS.charcoal}
+                          color={COLORS.btIcon}
                         />
                       </TouchableOpacity>
                       <Text
@@ -503,7 +500,7 @@ const Coupons = props => {
                         <MaterialCommunityIcons
                           name="plus"
                           size={moderateScale(18)}
-                          color={COLORS.charcoal}
+                          color={COLORS.btIcon}
                         />
                       </TouchableOpacity>
                     </View>
@@ -637,19 +634,19 @@ const styles = StyleSheet.create({
   titleTxt: {
     fontFamily: FONTS.urbanistBold,
     fontSize: SIZES.xxl,
-    color: COLORS.charcoal,
+    color: COLORS.btIcon,
   },
   subTxt: {
     fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.l,
-    color: COLORS.midGrey,
+    color: COLORS.gunsmoke,
     marginTop: '2%',
   },
   horizontalLine: {
     width: '100%',
     alignSelf: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.dropDownBg,
+    borderBottomColor: COLORS.inptBg,
     marginVertical: moderateScale(10),
   },
   flexContainer: {
@@ -664,7 +661,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: COLORS.midGrey,
+    borderColor: COLORS.gunsmoke,
   },
   reqCountBtn: {
     width: horizontalScale(25),
@@ -673,7 +670,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: COLORS.midGrey,
+    borderColor: COLORS.gunsmoke,
   },
   AddCpnCountTxt: {
     fontFamily: FONTS.urbanistMedium,
@@ -691,7 +688,7 @@ const styles = StyleSheet.create({
   amtValTxt: {
     fontFamily: FONTS.urbanistSemiBold,
     fontSize: SIZES.subTitle,
-    color: COLORS.charcoal,
+    color: COLORS.btIcon,
     width: '30%',
     textAlign: 'right',
   },
@@ -707,7 +704,7 @@ const styles = StyleSheet.create({
   cancelBtn: {
     backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: COLORS.midGrey,
+    borderColor: COLORS.gunsmoke,
     marginTop: '4%',
   },
 
@@ -732,7 +729,7 @@ const styles = StyleSheet.create({
   perPersonTxt: {
     fontFamily: FONTS.urbanistRegular,
     fontSize: SIZES.s,
-    color: COLORS.dolphin,
+    color: COLORS.textLabel,
     width: '30%',
   },
   dropdownCont: {
@@ -743,10 +740,10 @@ const styles = StyleSheet.create({
     height: verticalScale(48),
     marginTop: '5%',
     borderRadius: moderateScale(10),
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
   },
   dropdownCntStyle: {
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
     alignSelf: 'left',
   },
 });

@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
     justifyContent: 'flex-end',
     alignItems: 'center',
     position: 'relative',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     lineHeight: 25,
   },
   addBtn: {
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
     width: horizontalScale(55),
     height: horizontalScale(25),
     borderRadius: moderateScale(12),

@@ -86,124 +86,122 @@ const Quotes = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.quotes}
-        />
+      {/* // # Header */}
+      <CustomHeader
+        goBack={() => navigation.goBack()}
+        titleName={screenNames.quotes}
+      />
 
-        {/* // # Contents */}
-        <View style={styles.contentCont}>
-          {shimmer ? (
-            <View>
-              {Array(3)
-                .fill(3)
-                .map(_ => {
-                  return (
-                    <>
-                      <TitleShimmer />
-                      <ImageShimmer
-                        width={'90%'}
-                        height={verticalScale(300)}
-                        borderRadius={moderateScale(15)}
-                        marginTop={verticalScale(10)}
-                        alignSelf={'center'}
-                      />
-                    </>
-                  );
-                })}
-            </View>
-          ) : (
-            <FlatList
-              data={quotesData}
-              contentContainerStyle={{flexGrow: 1}}
-              keyExtractor={item => item?.id}
-              renderItem={({item}) => {
+      {/* // # Contents */}
+      <View style={styles.contentCont}>
+        {shimmer ? (
+          <View>
+            {Array(3)
+              .fill(3)
+              .map(_ => {
                 return (
                   <>
-                    <Text
-                      style={[
-                        MyStyles.subTitleText,
-                        MyStyles.marTop3Per,
-                        {paddingHorizontal: horizontalScale(10)},
-                      ]}>
-                      {item?.day}
-                    </Text>
-
-                    <View style={styles.quotesCont}>
-                      <Swiper
-                        cards={item?.images}
-                        containerStyle={styles.swiperContainer}
-                        cardStyle={styles.swiperCard(announcementCardColor)}
-                        renderCard={(card, cardIndex) => {
-                          return (
-                            <View
-                              key={cardIndex}
-                              style={{
-                                width: horizontalScale(290),
-                              }}>
-                              <Image
-                                source={{uri: card}}
-                                style={styles.quotesImg}
-                              />
-                              {/* // # Share & Download Button  */}
-                              <View style={styles.shareDwnldCont}>
-                                <TouchableOpacity
-                                  onPress={async () => {
-                                    const result = await RedirectURL(card);
-                                    if (!!result?.type) {
-                                      toastMsg(result?.message, result?.type);
-                                    }
-                                  }}
-                                  style={styles.quotesBtns}
-                                  activeOpacity={0.6}>
-                                  <Feather
-                                    name="download"
-                                    size={moderateScale(30)}
-                                    color={COLORS.white}
-                                  />
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    const result = ShareLink(card);
-                                    if (!!result?.type) {
-                                      toastMsg(result?.message, result?.type);
-                                    }
-                                  }}
-                                  style={styles.quotesBtns}
-                                  activeOpacity={0.6}>
-                                  <MaterialCommunityIcons
-                                    name="share"
-                                    size={moderateScale(30)}
-                                    color={COLORS.white}
-                                  />
-                                </TouchableOpacity>
-                              </View>
-                            </View>
-                          );
-                        }}
-                        cardIndex={0}
-                        verticalSwipe={false}
-                        backgroundColor={COLORS.transparent}
-                        animateCardOpacity
-                        disableBottomSwipe
-                        disableTopSwipe
-                        stackSeparation={-20}
-                        stackScale={5}
-                        horizontalSwipe
-                        infinite
-                        stackSize={3}
-                      />
-                    </View>
+                    <TitleShimmer />
+                    <ImageShimmer
+                      width={'90%'}
+                      height={verticalScale(300)}
+                      borderRadius={moderateScale(15)}
+                      marginTop={verticalScale(10)}
+                      alignSelf={'center'}
+                    />
                   </>
                 );
-              }}
-            />
-          )}
-        </View>
-      </SafeAreaView>
+              })}
+          </View>
+        ) : (
+          <FlatList
+            data={quotesData}
+            contentContainerStyle={{flexGrow: 1}}
+            keyExtractor={item => item?.id}
+            renderItem={({item}) => {
+              return (
+                <>
+                  <Text
+                    style={[
+                      MyStyles.subTitleText,
+                      MyStyles.marTop3Per,
+                      {paddingHorizontal: horizontalScale(10)},
+                    ]}>
+                    {item?.day}
+                  </Text>
+
+                  <View style={styles.quotesCont}>
+                    <Swiper
+                      cards={item?.images}
+                      containerStyle={styles.swiperContainer}
+                      cardStyle={styles.swiperCard(announcementCardColor)}
+                      renderCard={(card, cardIndex) => {
+                        return (
+                          <View
+                            key={cardIndex}
+                            style={{
+                              width: horizontalScale(290),
+                            }}>
+                            <Image
+                              source={{uri: card}}
+                              style={styles.quotesImg}
+                            />
+                            {/* // # Share & Download Button  */}
+                            <View style={styles.shareDwnldCont}>
+                              <TouchableOpacity
+                                onPress={async () => {
+                                  const result = await RedirectURL(card);
+                                  if (!!result?.type) {
+                                    toastMsg(result?.message, result?.type);
+                                  }
+                                }}
+                                style={styles.quotesBtns}
+                                activeOpacity={0.6}>
+                                <Feather
+                                  name="download"
+                                  size={moderateScale(30)}
+                                  color={COLORS.white}
+                                />
+                              </TouchableOpacity>
+
+                              <TouchableOpacity
+                                onPress={() => {
+                                  const result = ShareLink(card);
+                                  if (!!result?.type) {
+                                    toastMsg(result?.message, result?.type);
+                                  }
+                                }}
+                                style={styles.quotesBtns}
+                                activeOpacity={0.6}>
+                                <MaterialCommunityIcons
+                                  name="share"
+                                  size={moderateScale(30)}
+                                  color={COLORS.white}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        );
+                      }}
+                      cardIndex={0}
+                      verticalSwipe={false}
+                      backgroundColor={COLORS.transparent}
+                      animateCardOpacity
+                      disableBottomSwipe
+                      disableTopSwipe
+                      stackSeparation={-20}
+                      stackScale={5}
+                      horizontalSwipe
+                      infinite
+                      stackSize={3}
+                    />
+                  </View>
+                </>
+              );
+            }}
+          />
+        )}
+      </View>
     </Container>
   );
 };

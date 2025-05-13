@@ -248,314 +248,312 @@ const EventDetails = props => {
 
   return (
     <>
-      <SafeAreaView style={MyStyles.contentCont}>
-        <StatusBarTransp />
-        <Spinner spinnerVisible={loader} />
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-          overScrollMode="never">
-          {!shimmer ? (
-            <ImageBackground
-              source={{
-                uri: eventDetails?.Image,
-              }}
-              style={styles.bgImg}>
-              {/* // # Header */}
-              <View style={{marginTop: statusBarHeight}}>
-                <CustomHeader
-                  goBack={() => navigation.goBack()}
-                  titleName={screenNames.eventDetails}
-                />
-              </View>
-            </ImageBackground>
-          ) : (
-            <View style={[styles.bgImg, {backgroundColor: COLORS.diesel}]} />
-          )}
-
-          {/* // @ Contents */}
-          <View style={styles.contentCont}>
-            {/* // @ Title Section */}
-            <View style={styles.titleSec}>
-              {!shimmer ? (
-                <Text style={styles.title}>{eventDetails?.Title}</Text>
-              ) : (
-                <TitleShimmer
-                  height={verticalScale(70)}
-                  width={horizontalScale(250)}
-                />
-              )}
-              {shimmer ? (
-                <TitleShimmer
-                  height={verticalScale(30)}
-                  width={horizontalScale(60)}
-                />
-              ) : !!eventDetails?.Amount ? (
-                <Text style={styles.amtTxt}>{eventDetails?.Amount}</Text>
-              ) : (
-                <></>
-              )}
+      <StatusBarTransp />
+      <Spinner spinnerVisible={loader} />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        overScrollMode="never">
+        {!shimmer ? (
+          <ImageBackground
+            source={{
+              uri: eventDetails?.Image,
+            }}
+            style={styles.bgImg}>
+            {/* // # Header */}
+            <View style={{marginTop: statusBarHeight}}>
+              <CustomHeader
+                goBack={() => navigation.goBack()}
+                titleName={screenNames.eventDetails}
+              />
             </View>
-            {/* // # Description */}
+          </ImageBackground>
+        ) : (
+          <View style={[styles.bgImg, {backgroundColor: COLORS.border}]} />
+        )}
+
+        {/* // @ Contents */}
+        <View style={styles.contentCont}>
+          {/* // @ Title Section */}
+          <View style={styles.titleSec}>
+            {!shimmer ? (
+              <Text style={styles.title}>{eventDetails?.Title}</Text>
+            ) : (
+              <TitleShimmer
+                height={verticalScale(70)}
+                width={horizontalScale(250)}
+              />
+            )}
             {shimmer ? (
               <TitleShimmer
-                height={verticalScale(25)}
-                width={horizontalScale(150)}
+                height={verticalScale(30)}
+                width={horizontalScale(60)}
               />
-            ) : eventDetails?.Description ? (
-              renderSubTitle('Description')
-            ) : (
-              <></>
-            )}
-
-            {shimmer ? (
-              <>
-                <TitleShimmer height={verticalScale(14)} width={'100%'} />
-                <TitleShimmer
-                  height={verticalScale(14)}
-                  width={horizontalScale(200)}
-                  marginBottom={verticalScale(30)}
-                />
-              </>
-            ) : eventDetails?.Description ? (
-              <Text
-                numberOfLines={expanded ? undefined : 2}
-                onTextLayout={handleTextLayout}
-                style={styles.descripTxt}>
-                {eventDetails?.Description}
-              </Text>
-            ) : (
-              <></>
-            )}
-            {showReadMore && (
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{width: '23%'}}
-                onPress={() => setExpanded(!expanded)}>
-                <Text
-                  style={[
-                    styles.descripTxt,
-                    {
-                      fontFamily: FONTS.urbanistBold,
-                      marginTop: 0,
-                      color: COLORS.black,
-                    },
-                  ]}>
-                  {expanded ? 'Read Less' : 'Read More'}
-                </Text>
-              </TouchableOpacity>
-            )}
-
-            {/* // # Guide, Category, Type etc... */}
-            {!shimmer
-              ? eventDetails?.details?.map((item, index) => {
-                  return (
-                    <View style={styles.lablValCont} key={index + 1}>
-                      <Text style={styles.labelTxt}> {item?.label}</Text>
-                      <Text style={[styles.labelTxt, styles.colon]}>:</Text>
-                      <Text style={[styles.labelTxt, styles.valTxt]}>
-                        {item?.value}
-                      </Text>
-                    </View>
-                  );
-                })
-              : Array(2)
-                  .fill(2)
-                  .map((_, index) => (
-                    <View
-                      style={[styles.lablValCont, {width: '100%'}]}
-                      key={index}>
-                      <TitleShimmer />
-                      <TitleShimmer />
-                    </View>
-                  ))}
-
-            {/* // # Location */}
-            {!shimmer &&
-              !!eventDetails?.Event_space &&
-              renderSubTitle(
-                eventDetails?.Event_mode === 'F'
-                  ? 'Location'
-                  : eventDetails?.Is_registered === 'Y' &&
-                    eventDetails?.Event_mode === 'O'
-                  ? 'Online Link'
-                  : null,
-              )}
-            {!shimmer && !!eventDetails?.Event_space && (
-              <>
-                {eventDetails?.Event_mode === 'F' ? (
-                  <View style={styles.locationCont}>
-                    <Ionicons
-                      style={styles.locationIcn}
-                      name={'location-sharp'}
-                      size={moderateScale(25)}
-                      color={COLORS.watermelon}
-                    />
-                    <View style={{width: '85%'}}>
-                      <Text
-                        style={[
-                          styles.descripTxt,
-                          styles.locationTxt,
-                          {
-                            color: COLORS.midGrey,
-                          },
-                        ]}>
-                        {eventDetails?.Event_space}
-                      </Text>
-                    </View>
-                  </View>
-                ) : eventDetails?.Is_registered === 'Y' &&
-                  eventDetails?.Event_mode === 'O' ? (
-                  <LinearGradient
-                    style={styles.joinGradient}
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    colors={['#9289C2', '#9E7DBB', '#AE6CAD']}>
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      onPress={async () => {
-                        const result = await RedirectURL(
-                          eventDetails?.Event_space,
-                        );
-                        if (!!result?.type) {
-                          toastMsg(result?.message, result?.type);
-                        }
-                      }}
-                      style={styles.joinButton}>
-                      <Ionicons
-                        name={'videocam'}
-                        size={moderateScale(25)}
-                        color={COLORS.white}
-                      />
-                      <Text style={styles.joinTxt}>Join Now</Text>
-                    </TouchableOpacity>
-                  </LinearGradient>
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
-
-            {/* // # Discount Code */}
-            {eventDetails?.Is_registered !== 'Y' &&
-              eventDetails?.is_paid_event === 'Y' &&
-              screen === 'Upcoming' &&
-              eventDetails?.is_discount_applicable === 'Y' &&
-              !shimmer && (
-                <View
-                  style={[
-                    styles.discountCont,
-                    coupon?.warning && {
-                      borderColor: COLORS.errorPB,
-                      borderWidth: 1.5,
-                    },
-                  ]}>
-                  <TextInput
-                    value={coupon?.code}
-                    onChangeText={text => {
-                      coupon?.warning || coupon?.applied
-                        ? setCoupon({
-                            code: text,
-                            warning: false,
-                            applied: false,
-                          })
-                        : setCoupon(prev => ({...prev, code: text}));
-                    }}
-                    placeholder="Enter Discount Code"
-                    placeholderTextColor={COLORS.midGrey}
-                    style={[styles.descripTxt, styles.discountTxtInpt]}
-                  />
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      coupon?.applied
-                        ? removeCoupon()
-                        : !coupon?.code
-                        ? (setCoupon(prev => ({...prev, warning: true})),
-                          toastMsg('Enter coupon code.', 'warning'))
-                        : applyCoupon();
-                    }}
-                    activeOpacity={0.8}
-                    style={[
-                      styles.applyBtn,
-                      coupon?.applied && {backgroundColor: COLORS.watermelon},
-                    ]}>
-                    <Text style={styles.applyTxt}>
-                      {coupon?.applied ? 'Remove' : 'Apply'}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-            {/* // # Amount Section */}
-            {screen === 'Upcoming' &&
-              eventDetails?.is_paid_event === 'Y' &&
-              amountDetails?.length > 0 &&
-              amountDetails?.map((item, index) => {
-                return (
-                  <View
-                    style={[styles.lablValCont, styles.amountsec(index)]}
-                    key={index}>
-                    <Text style={[styles.labelTxt, {width: '60%'}]}>
-                      {item?.label}
-                    </Text>
-                    <Text style={[styles.labelTxt, styles.colon]}>:</Text>
-                    <Text
-                      style={[
-                        styles.labelTxt,
-                        styles.valTxt,
-                        {textAlign: 'right', width: '35%'},
-                      ]}>
-                      {item?.value}
-                    </Text>
-                  </View>
-                );
-              })}
-
-            {/* // # Pay Now Btn */}
-            {shimmer ? (
-              <TitleShimmer
-                height={verticalScale(45)}
-                width={'100%'}
-                marginTop={verticalScale(80)}
-              />
-            ) : checkDataExist ? (
-              <TouchableOpacity
-                disabled={
-                  eventDetails?.Is_registered === 'Y' ||
-                  eventDetails?.Is_attended === 'Y'
-                }
-                onPress={() => {
-                  eventDetails?.Is_registered !== 'Y' &&
-                    eventDetails?.Is_attended !== 'Y' &&
-                    register();
-                }}
-                activeOpacity={0.6}
-                style={[
-                  styles.payBtn,
-                  {
-                    backgroundColor:
-                      screen === 'Upcoming'
-                        ? COLORS.windowsBlue
-                        : COLORS.atlantis,
-                  },
-                ]}>
-                <Text style={styles.payBtnTxt}>
-                  {eventDetails?.is_attended === 'Y'
-                    ? 'Attended'
-                    : eventDetails?.Is_registered === 'Y'
-                    ? 'Registered'
-                    : eventDetails?.is_paid_event === 'Y'
-                    ? 'Pay Now'
-                    : 'Register'}
-                </Text>
-              </TouchableOpacity>
+            ) : !!eventDetails?.Amount ? (
+              <Text style={styles.amtTxt}>{eventDetails?.Amount}</Text>
             ) : (
               <></>
             )}
           </View>
-        </ScrollView>
-      </SafeAreaView>
+          {/* // # Description */}
+          {shimmer ? (
+            <TitleShimmer
+              height={verticalScale(25)}
+              width={horizontalScale(150)}
+            />
+          ) : eventDetails?.Description ? (
+            renderSubTitle('Description')
+          ) : (
+            <></>
+          )}
+
+          {shimmer ? (
+            <>
+              <TitleShimmer height={verticalScale(14)} width={'100%'} />
+              <TitleShimmer
+                height={verticalScale(14)}
+                width={horizontalScale(200)}
+                marginBottom={verticalScale(30)}
+              />
+            </>
+          ) : eventDetails?.Description ? (
+            <Text
+              numberOfLines={expanded ? undefined : 2}
+              onTextLayout={handleTextLayout}
+              style={styles.descripTxt}>
+              {eventDetails?.Description}
+            </Text>
+          ) : (
+            <></>
+          )}
+          {showReadMore && (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={{width: '23%'}}
+              onPress={() => setExpanded(!expanded)}>
+              <Text
+                style={[
+                  styles.descripTxt,
+                  {
+                    fontFamily: FONTS.urbanistBold,
+                    marginTop: 0,
+                    color: COLORS.black,
+                  },
+                ]}>
+                {expanded ? 'Read Less' : 'Read More'}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {/* // # Guide, Category, Type etc... */}
+          {!shimmer
+            ? eventDetails?.details?.map((item, index) => {
+                return (
+                  <View style={styles.lablValCont} key={index + 1}>
+                    <Text style={styles.labelTxt}> {item?.label}</Text>
+                    <Text style={[styles.labelTxt, styles.colon]}>:</Text>
+                    <Text style={[styles.labelTxt, styles.valTxt]}>
+                      {item?.value}
+                    </Text>
+                  </View>
+                );
+              })
+            : Array(2)
+                .fill(2)
+                .map((_, index) => (
+                  <View
+                    style={[styles.lablValCont, {width: '100%'}]}
+                    key={index}>
+                    <TitleShimmer />
+                    <TitleShimmer />
+                  </View>
+                ))}
+
+          {/* // # Location */}
+          {!shimmer &&
+            !!eventDetails?.Event_space &&
+            renderSubTitle(
+              eventDetails?.Event_mode === 'F'
+                ? 'Location'
+                : eventDetails?.Is_registered === 'Y' &&
+                  eventDetails?.Event_mode === 'O'
+                ? 'Online Link'
+                : null,
+            )}
+          {!shimmer && !!eventDetails?.Event_space && (
+            <>
+              {eventDetails?.Event_mode === 'F' ? (
+                <View style={styles.locationCont}>
+                  <Ionicons
+                    style={styles.locationIcn}
+                    name={'location-sharp'}
+                    size={moderateScale(25)}
+                    color={COLORS.watermelon}
+                  />
+                  <View style={{width: '85%'}}>
+                    <Text
+                      style={[
+                        styles.descripTxt,
+                        styles.locationTxt,
+                        {
+                          color: COLORS.gunsmoke,
+                        },
+                      ]}>
+                      {eventDetails?.Event_space}
+                    </Text>
+                  </View>
+                </View>
+              ) : eventDetails?.Is_registered === 'Y' &&
+                eventDetails?.Event_mode === 'O' ? (
+                <LinearGradient
+                  style={styles.joinGradient}
+                  start={{x: 0, y: 1}}
+                  end={{x: 1, y: 0}}
+                  colors={['#9289C2', '#9E7DBB', '#AE6CAD']}>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={async () => {
+                      const result = await RedirectURL(
+                        eventDetails?.Event_space,
+                      );
+                      if (!!result?.type) {
+                        toastMsg(result?.message, result?.type);
+                      }
+                    }}
+                    style={styles.joinButton}>
+                    <Ionicons
+                      name={'videocam'}
+                      size={moderateScale(25)}
+                      color={COLORS.white}
+                    />
+                    <Text style={styles.joinTxt}>Join Now</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              ) : (
+                <></>
+              )}
+            </>
+          )}
+
+          {/* // # Discount Code */}
+          {eventDetails?.Is_registered !== 'Y' &&
+            eventDetails?.is_paid_event === 'Y' &&
+            screen === 'Upcoming' &&
+            eventDetails?.is_discount_applicable === 'Y' &&
+            !shimmer && (
+              <View
+                style={[
+                  styles.discountCont,
+                  coupon?.warning && {
+                    borderColor: COLORS.errorPB,
+                    borderWidth: 1.5,
+                  },
+                ]}>
+                <TextInput
+                  value={coupon?.code}
+                  onChangeText={text => {
+                    coupon?.warning || coupon?.applied
+                      ? setCoupon({
+                          code: text,
+                          warning: false,
+                          applied: false,
+                        })
+                      : setCoupon(prev => ({...prev, code: text}));
+                  }}
+                  placeholder="Enter Discount Code"
+                  placeholderTextColor={COLORS.gunsmoke}
+                  style={[styles.descripTxt, styles.discountTxtInpt]}
+                />
+
+                <TouchableOpacity
+                  onPress={() => {
+                    coupon?.applied
+                      ? removeCoupon()
+                      : !coupon?.code
+                      ? (setCoupon(prev => ({...prev, warning: true})),
+                        toastMsg('Enter coupon code.', 'warning'))
+                      : applyCoupon();
+                  }}
+                  activeOpacity={0.8}
+                  style={[
+                    styles.applyBtn,
+                    coupon?.applied && {backgroundColor: COLORS.watermelon},
+                  ]}>
+                  <Text style={styles.applyTxt}>
+                    {coupon?.applied ? 'Remove' : 'Apply'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+          {/* // # Amount Section */}
+          {screen === 'Upcoming' &&
+            eventDetails?.is_paid_event === 'Y' &&
+            amountDetails?.length > 0 &&
+            amountDetails?.map((item, index) => {
+              return (
+                <View
+                  style={[styles.lablValCont, styles.amountsec(index)]}
+                  key={index}>
+                  <Text style={[styles.labelTxt, {width: '60%'}]}>
+                    {item?.label}
+                  </Text>
+                  <Text style={[styles.labelTxt, styles.colon]}>:</Text>
+                  <Text
+                    style={[
+                      styles.labelTxt,
+                      styles.valTxt,
+                      {textAlign: 'right', width: '35%'},
+                    ]}>
+                    {item?.value}
+                  </Text>
+                </View>
+              );
+            })}
+
+          {/* // # Pay Now Btn */}
+          {shimmer ? (
+            <TitleShimmer
+              height={verticalScale(45)}
+              width={'100%'}
+              marginTop={verticalScale(80)}
+            />
+          ) : checkDataExist ? (
+            <TouchableOpacity
+              disabled={
+                eventDetails?.Is_registered === 'Y' ||
+                eventDetails?.Is_attended === 'Y'
+              }
+              onPress={() => {
+                eventDetails?.Is_registered !== 'Y' &&
+                  eventDetails?.Is_attended !== 'Y' &&
+                  register();
+              }}
+              activeOpacity={0.6}
+              style={[
+                styles.payBtn,
+                {
+                  backgroundColor:
+                    screen === 'Upcoming'
+                      ? COLORS.button
+                      : COLORS.announcementCard,
+                },
+              ]}>
+              <Text style={styles.payBtnTxt}>
+                {eventDetails?.is_attended === 'Y'
+                  ? 'Attended'
+                  : eventDetails?.Is_registered === 'Y'
+                  ? 'Registered'
+                  : eventDetails?.is_paid_event === 'Y'
+                  ? 'Pay Now'
+                  : 'Register'}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+        </View>
+      </ScrollView>
     </>
   );
 };
@@ -610,7 +608,7 @@ const styles = StyleSheet.create({
     height: verticalScale(35),
     textAlignVertical: 'center',
     borderRadius: moderateScale(30),
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
   },
   contentCont: {
     backgroundColor: COLORS.white,
@@ -635,7 +633,7 @@ const styles = StyleSheet.create({
   descripTxt: {
     fontFamily: FONTS.urbanistSemiBold,
     fontSize: SIZES.l,
-    color: COLORS.midGrey,
+    color: COLORS.gunsmoke,
     marginTop: '2%',
     width: '100%',
   },
@@ -666,7 +664,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: '2%',
-    backgroundColor: COLORS.chromeWhite,
+    backgroundColor: COLORS.card,
     padding: '2%',
     borderRadius: moderateScale(25),
   },
@@ -695,7 +693,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(20),
     width: horizontalScale(75),
     height: horizontalScale(33),
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
   },
   applyTxt: {
     fontFamily: FONTS.urbanistSemiBold,

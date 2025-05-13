@@ -31,7 +31,7 @@ const App = () => {
   const [globalState, setGlobalState] = useState({
     current: 'DB1',
     btTab: 'DB1',
-    profileId: 1,
+    profileId: '',
     activeEventTab: 0,
     isConnected: true,
     folkId: '',
@@ -43,19 +43,21 @@ const App = () => {
     reloadProfile: 'N',
     menuItems: [],
     menuSpinner: true,
+    reloadSadhana: 'N',
     // Dynamic color themes
     headerColor: '#4571BF',
     bottomTabColor: '#E0C24A',
     buttonColor: '#B1C63C',
-    cardColor: '#F8F8F8',
+    cardColor: '#F6F6F6',
     eventCardColor: '#40414F',
     announcementCardColor: '#2D3B60',
+    tabIndicatorColor: '#B1C63C',
   });
 
   useEffect(() => {
     // # Listen for real-time network changes
     const unsubscribe = NetInfo.addEventListener(state => {
-      console.log('Internet Connected:', state.isConnected);
+      // console.log('Internet Connected:', state.isConnected);
       setGlobalState(prev => ({...prev, isConnected: state.isConnected}));
     });
     // checkAppUpdates();

@@ -48,13 +48,7 @@ export const StatusBarTransp = ({screen}) => {
           translucent
         />
       ) : (
-        <View
-          style={{
-            backgroundColor: COLORS.transparent,
-            height: statusBarHeight,
-            zIndex: 999,
-          }}
-        />
+        <></>
       )}
     </>
   );

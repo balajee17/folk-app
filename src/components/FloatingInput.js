@@ -128,10 +128,10 @@ const FloatingInput = React.forwardRef((props, ref) => {
       {type === 'txtInput' ? (
         <TextInput
           ref={ref}
-          cursorColor={COLORS.atlantis}
+          cursorColor={COLORS.button}
           onFocus={onFocus}
           onBlur={onBlur}
-          selectionColor={COLORS.atlantis}
+          selectionColor={COLORS.button}
           style={[
             styles.txtInptStyle(props?.disabled),
             txtInptStyle,
@@ -148,7 +148,7 @@ const FloatingInput = React.forwardRef((props, ref) => {
           selectedTextStyle={styles.drpdwnSelTxt(props?.disabled)}
           itemTextStyle={[styles.drpdwnItemTxt]}
           containerStyle={[styles.drpdwnCont, drpdwnContStyle]}
-          activeColor={COLORS.atlantis}
+          activeColor={COLORS.button}
           placeholder=""
           data={data}
           labelField="label"
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     minHeight: verticalScale(54),
     position: 'relative',
     marginTop: '4%',
-    backgroundColor: COLORS.inputBg,
+    backgroundColor: COLORS.inptBg,
   },
   floatingTxtCntnr: {
     position: 'absolute',
@@ -191,13 +191,13 @@ const styles = StyleSheet.create({
 
   floatingText: (focused, value) => ({
     paddingStart: '2%',
-    color: focused ? COLORS.silkBlue : value ? '#000' + 8 : COLORS.black,
+    color: focused ? COLORS.windowsBlue : value ? '#000' + 8 : COLORS.black,
     fontFamily: FONTS.urbanistSemiBold,
   }),
   txtInptStyle: disabled => ({
     fontFamily: FONTS.urbanistRegular,
     width: '80%',
-    color: disabled ? COLORS.dolphin : COLORS.black,
+    color: disabled ? COLORS.textLabel : COLORS.black,
   }),
   rightIconCont: {
     width: '10%',
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   },
   drpdwnSelTxt: disabled => ({
     fontFamily: FONTS.urbanistRegular,
-    color: disabled ? COLORS.dolphin : COLORS.black,
+    color: disabled ? COLORS.textLabel : COLORS.black,
   }),
   drpdwnItemTxt: {
     color: COLORS.black,
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.urbanistRegular,
   },
   drpdwnCont: {
-    backgroundColor: COLORS.inputBg,
+    backgroundColor: COLORS.inptBg,
     borderRadius: moderateScale(14),
     overflow: 'hidden',
     maxHeight: verticalScale(200),

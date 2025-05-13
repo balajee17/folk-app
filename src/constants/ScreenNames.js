@@ -33,4 +33,5 @@ export let screenNames = {
   completedChallenge: 'Completed Challenges',
   sadhanaCalendar: 'Sadhana',
   sadhanaRegularize: 'Sadhana Regularize',
+  changeTheme: 'Change Theme',
 };

@@ -35,7 +35,7 @@ import AndroidBackHandler from '../components/BackHandler';
 
 const EditProfile = props => {
   const {globalState, setGlobalState} = useAppContext();
-  const {profileId} = globalState;
+  const {profileId, buttonColor} = globalState;
 
   const {navigation} = props;
   const [loader, setLoader] = useState(true);
@@ -190,253 +190,254 @@ const EditProfile = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.editProfile}
+      {/* // # Header */}
+      <CustomHeader
+        goBack={() => navigation.goBack()}
+        titleName={screenNames.editProfile}
+      />
+      <Spinner spinnerVisible={loader} />
+      <ScrollView contentContainerStyle={{paddingBottom: '30%'}}>
+        {/* // # Country */}
+        <FloatingInput
+          type="dropdown"
+          data={dropdownData?.country}
+          label={'Country'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.country}
+          onChange={item => {
+            if (item?.value !== profileData?.country) {
+              handleChange('country', item?.value);
+              setDropdownData(prev => ({...prev, state: []}));
+              handleChange('state', '');
+              setLoader(true);
+              getProfileDetails(item?.value);
+            }
+          }}
+          cntnrStyle={styles.dropdownCont}
+          renderRightIcon={() => (
+            <MaterialCommunityIcons
+              name={'chevron-down'}
+              color={COLORS.black}
+              size={25}
+            />
+          )}
         />
-        <Spinner spinnerVisible={loader} />
-        <ScrollView contentContainerStyle={{paddingBottom: '30%'}}>
-          {/* // # Country */}
-          <FloatingInput
-            type="dropdown"
-            data={dropdownData?.country}
-            label={'Country'}
-            drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.country}
-            onChange={item => {
-              if (item?.value !== profileData?.country) {
-                handleChange('country', item?.value);
-                setDropdownData(prev => ({...prev, state: []}));
-                handleChange('state', '');
-                setLoader(true);
-                getProfileDetails(item?.value);
-              }
-            }}
-            cntnrStyle={styles.dropdownCont}
-            renderRightIcon={() => (
-              <MaterialCommunityIcons
-                name={'chevron-down'}
-                color={COLORS.black}
-                size={25}
-              />
-            )}
-          />
-          {/* // # State */}
-          <FloatingInput
-            type="dropdown"
-            data={dropdownData?.state}
-            label={'State'}
-            drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.state}
-            onChange={item => {
-              handleChange('state', item?.value);
-            }}
-            cntnrStyle={styles.dropdownCont}
-            renderRightIcon={() => (
-              <MaterialCommunityIcons
-                name={'chevron-down'}
-                color={COLORS.black}
-                size={25}
-              />
-            )}
-          />
+        {/* // # State */}
+        <FloatingInput
+          type="dropdown"
+          data={dropdownData?.state}
+          label={'State'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.state}
+          onChange={item => {
+            handleChange('state', item?.value);
+          }}
+          cntnrStyle={styles.dropdownCont}
+          renderRightIcon={() => (
+            <MaterialCommunityIcons
+              name={'chevron-down'}
+              color={COLORS.black}
+              size={25}
+            />
+          )}
+        />
 
-          {/* // # City */}
+        {/* // # City */}
+        <FloatingInput
+          label={'City'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.city}
+          onChangeText={item => {
+            handleChange('city', item);
+          }}
+          cntnrStyle={styles.dropdownCont}
+        />
+
+        {/* // # Address */}
+        <FloatingInput
+          label={'Address'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.address}
+          onChangeText={item => {
+            handleChange('address', item);
+          }}
+          cntnrStyle={styles.dropdownCont}
+        />
+        {/* // # Living Status */}
+        <FloatingInput
+          type="dropdown"
+          data={dropdownData?.livingStatus}
+          label={'Living Status'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.livingStatus}
+          onChange={item => {
+            handleChange('livingStatus', item?.value);
+          }}
+          cntnrStyle={styles.dropdownCont}
+          renderRightIcon={() => (
+            <MaterialCommunityIcons
+              name={'chevron-down'}
+              color={COLORS.black}
+              size={25}
+            />
+          )}
+        />
+        {/* // # Marital Status */}
+        <FloatingInput
+          type="dropdown"
+          data={dropdownData?.maritalStatus}
+          label={'Marital Status'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.maritalStatus}
+          onChange={item => {
+            handleChange('maritalStatus', item?.value);
+          }}
+          cntnrStyle={styles.dropdownCont}
+          renderRightIcon={() => (
+            <MaterialCommunityIcons
+              name={'chevron-down'}
+              color={COLORS.black}
+              size={25}
+            />
+          )}
+        />
+
+        {/* // # Highest Qualification */}
+        <FloatingInput
+          label={'Highest Qualification'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.highestQualification}
+          onChangeText={item => {
+            handleChange('highestQualification', item);
+          }}
+          cntnrStyle={styles.dropdownCont}
+        />
+
+        {/* // # Occupation */}
+        <FloatingInput
+          type="dropdown"
+          data={dropdownData?.occupation}
+          label={'Occupation'}
+          drpdwnContStyle={styles.dropdownCntStyle}
+          value={profileData?.occupation}
+          onChange={item => {
+            handleChange('occupation', item?.value);
+          }}
+          cntnrStyle={styles.dropdownCont}
+          renderRightIcon={() => (
+            <MaterialCommunityIcons
+              name={'chevron-down'}
+              color={COLORS.black}
+              size={25}
+            />
+          )}
+        />
+
+        {/* // # Designation */}
+        {profileData?.occupation == 2 && (
           <FloatingInput
-            label={'City'}
+            label={'Designation'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.city}
+            value={profileData?.designation}
             onChangeText={item => {
-              handleChange('city', item);
+              console.log('item', item);
+              handleChange('designation', item);
             }}
             cntnrStyle={styles.dropdownCont}
           />
+        )}
 
-          {/* // # Address */}
+        {/* // # Organisation Name */}
+        {profileData?.occupation == 2 && (
           <FloatingInput
-            label={'Address'}
+            label={'Organisation Name'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.address}
+            value={profileData?.organisationName}
             onChangeText={item => {
-              handleChange('address', item);
+              handleChange('organisationName', item);
             }}
             cntnrStyle={styles.dropdownCont}
           />
-          {/* // # Living Status */}
-          <FloatingInput
-            type="dropdown"
-            data={dropdownData?.livingStatus}
-            label={'Living Status'}
-            drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.livingStatus}
-            onChange={item => {
-              handleChange('livingStatus', item?.value);
-            }}
-            cntnrStyle={styles.dropdownCont}
-            renderRightIcon={() => (
-              <MaterialCommunityIcons
-                name={'chevron-down'}
-                color={COLORS.black}
-                size={25}
-              />
-            )}
-          />
-          {/* // # Marital Status */}
-          <FloatingInput
-            type="dropdown"
-            data={dropdownData?.maritalStatus}
-            label={'Marital Status'}
-            drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.maritalStatus}
-            onChange={item => {
-              handleChange('maritalStatus', item?.value);
-            }}
-            cntnrStyle={styles.dropdownCont}
-            renderRightIcon={() => (
-              <MaterialCommunityIcons
-                name={'chevron-down'}
-                color={COLORS.black}
-                size={25}
-              />
-            )}
-          />
+        )}
 
-          {/* // # Highest Qualification */}
+        {/* // # Institute Name */}
+        {profileData?.occupation == 1 && (
           <FloatingInput
-            label={'Highest Qualification'}
+            label={'Institute Name'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.highestQualification}
+            value={profileData?.instituteName}
             onChangeText={item => {
-              handleChange('highestQualification', item);
+              handleChange('instituteName', item);
             }}
             cntnrStyle={styles.dropdownCont}
           />
+        )}
 
-          {/* // # Occupation */}
+        {/* // # Course Name */}
+        {profileData?.occupation == 1 && (
           <FloatingInput
-            type="dropdown"
-            data={dropdownData?.occupation}
-            label={'Occupation'}
+            label={'Course Name'}
             drpdwnContStyle={styles.dropdownCntStyle}
-            value={profileData?.occupation}
-            onChange={item => {
-              handleChange('occupation', item?.value);
+            value={profileData?.organisationName}
+            onChangeText={item => {
+              handleChange('course', item);
             }}
             cntnrStyle={styles.dropdownCont}
-            renderRightIcon={() => (
-              <MaterialCommunityIcons
-                name={'chevron-down'}
-                color={COLORS.black}
-                size={25}
-              />
-            )}
           />
+        )}
 
-          {/* // # Designation */}
-          {profileData?.occupation == 2 && (
-            <FloatingInput
-              label={'Designation'}
-              drpdwnContStyle={styles.dropdownCntStyle}
-              value={profileData?.designation}
-              onChangeText={item => {
-                console.log('item', item);
-                handleChange('designation', item);
-              }}
-              cntnrStyle={styles.dropdownCont}
-            />
-          )}
-
-          {/* // # Organisation Name */}
-          {profileData?.occupation == 2 && (
-            <FloatingInput
-              label={'Organisation Name'}
-              drpdwnContStyle={styles.dropdownCntStyle}
-              value={profileData?.organisationName}
-              onChangeText={item => {
-                handleChange('organisationName', item);
-              }}
-              cntnrStyle={styles.dropdownCont}
-            />
-          )}
-
-          {/* // # Institute Name */}
-          {profileData?.occupation == 1 && (
-            <FloatingInput
-              label={'Institute Name'}
-              drpdwnContStyle={styles.dropdownCntStyle}
-              value={profileData?.instituteName}
-              onChangeText={item => {
-                handleChange('instituteName', item);
-              }}
-              cntnrStyle={styles.dropdownCont}
-            />
-          )}
-
-          {/* // # Course Name */}
-          {profileData?.occupation == 1 && (
-            <FloatingInput
-              label={'Course Name'}
-              drpdwnContStyle={styles.dropdownCntStyle}
-              value={profileData?.organisationName}
-              onChangeText={item => {
-                handleChange('course', item);
-              }}
-              cntnrStyle={styles.dropdownCont}
-            />
-          )}
-
-          {/* // # Passport size photo */}
-          <View style={styles.passportCont}>
-            {!!profileData?.passportPhoto ? (
-              <>
-                <Image
-                  style={styles.passportImg}
-                  source={{
-                    uri: profileData?.passportPhoto,
-                  }}
-                />
-                <TouchableOpacity
-                  onPress={() => setImagePicker(true)}
-                  activeOpacity={0.8}
-                  style={styles.changeBtn}>
-                  <Text style={styles.submitTxt}>Change</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
+        {/* // # Passport size photo */}
+        <View style={styles.passportCont}>
+          {!!profileData?.passportPhoto ? (
+            <>
+              <Image
+                style={styles.passportImg}
+                source={{
+                  uri: profileData?.passportPhoto,
+                }}
+              />
               <TouchableOpacity
                 onPress={() => setImagePicker(true)}
                 activeOpacity={0.8}
-                style={styles.addPhotoBtn}>
-                <MaterialCommunityIcons
-                  name="plus"
-                  color={COLORS.osloGrey}
-                  size={moderateScale(25)}
-                />
-                <Text style={styles.addPhototTxt}>
-                  Upload Passport size photo
-                </Text>
+                style={styles.changeBtn}>
+                <Text style={styles.submitTxt}>Change</Text>
               </TouchableOpacity>
-            )}
-          </View>
+            </>
+          ) : (
+            <TouchableOpacity
+              onPress={() => setImagePicker(true)}
+              activeOpacity={0.8}
+              style={styles.addPhotoBtn}>
+              <MaterialCommunityIcons
+                name="plus"
+                color={COLORS.gunsmoke}
+                size={moderateScale(25)}
+              />
+              <Text style={styles.addPhototTxt}>
+                Upload Passport size photo
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
 
-          {/* // # Submit Button */}
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => sendEditProfile()}
-            style={styles.submitBtn}>
-            <Text style={styles.submitTxt}>Submit</Text>
-          </TouchableOpacity>
-        </ScrollView>
+        {/* // # Submit Button */}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => sendEditProfile()}
+          style={[
+            styles.submitBtn,
+            {backgroundColor: buttonColor || COLORS.button},
+          ]}>
+          <Text style={styles.submitTxt}>Submit</Text>
+        </TouchableOpacity>
+      </ScrollView>
 
-        {/* // @ Pick Image upload */}
-        <ImageUploadModal
-          visible={imagePicker}
-          uploadType={uploadType}
-          closeModal={() => setImagePicker(false)}
-        />
-      </SafeAreaView>
+      {/* // @ Pick Image upload */}
+      <ImageUploadModal
+        visible={imagePicker}
+        uploadType={uploadType}
+        closeModal={() => setImagePicker(false)}
+      />
     </Container>
   );
 };
@@ -452,10 +453,10 @@ const styles = StyleSheet.create({
     height: verticalScale(48),
     marginTop: '5%',
     borderRadius: moderateScale(10),
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
   },
   dropdownCntStyle: {
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
     alignSelf: 'left',
   },
   submitBtn: {
@@ -475,7 +476,7 @@ const styles = StyleSheet.create({
   },
   passportCont: {
     marginTop: '5%',
-    backgroundColor: COLORS.dropDownBg,
+    backgroundColor: COLORS.inptBg,
     width: '90%',
     borderRadius: moderateScale(10),
     alignSelf: 'center',
@@ -489,7 +490,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(20),
   },
   changeBtn: {
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
     width: horizontalScale(70),
     height: horizontalScale(30),
     borderRadius: moderateScale(6),
@@ -503,14 +504,14 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(6),
     borderWidth: 1,
     borderStyle: 'dashed',
-    borderColor: COLORS.osloGrey,
+    borderColor: COLORS.gunsmoke,
     justifyContent: 'center',
     alignItems: 'center',
   },
   addPhototTxt: {
     fontFamily: FONTS.urbanistRegular,
     fontSize: SIZES.s,
-    color: COLORS.osloGrey,
+    color: COLORS.gunsmoke,
     marginTop: '10%',
     textAlign: 'center',
   },

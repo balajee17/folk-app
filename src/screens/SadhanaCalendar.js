@@ -35,9 +35,9 @@ import {useFocusEffect} from '@react-navigation/native';
 
 const SadhanaCalendar = props => {
   const {navigation, route} = props;
-  const {globalState} = useAppContext();
+  const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId} = globalState;
+  const {profileId, reloadSadhana} = globalState;
 
   const toast = useToast();
   const toastMsg = toastThrottle((msg, type) => {
@@ -60,11 +60,11 @@ const SadhanaCalendar = props => {
 
   useFocusEffect(
     useCallback(() => {
-      if (route.params?.reloadSadhana === 'Y') {
+      if (reloadSadhana === 'Y') {
         getSadhanaDetails();
-        navigation.setParams({reloadSadhana: 'N'});
+        setGlobalState(prev => ({...prev, reloadSadhana: 'N'}));
       }
-    }, [currentDate]),
+    }, [currentDate, reloadSadhana]),
   );
 
   useEffect(() => {
@@ -80,6 +80,7 @@ const SadhanaCalendar = props => {
   // # Get Sadhana Details
   const getSadhanaDetails = async () => {
     try {
+      !spinner && setSpinner(true);
       const params = {
         profileId,
         sadhanaMonth: moment(currentDate).format('MMM'),
@@ -174,140 +175,138 @@ const SadhanaCalendar = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        <Spinner spinnerVisible={spinner} />
+      <Spinner spinnerVisible={spinner} />
 
-        {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.sadhanaCalendar}
-        />
-        {/* // # Contents */}
-        <View style={MyStyles.contentCont}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {/* // @ Sadhana Icons */}
-            <View style={styles.sadhanaIcnCont}>
-              {sadhanaData?.iconData?.map((item, index) => {
-                const fillStroke = (item?.percentage / 100) * circumference;
-                return (
-                  <View key={index}>
-                    {item?.percentage < 100 && (
-                      <View style={styles.icnTxtCont}>
-                        <Svg width={size} height={size}>
-                          {/* Full base circle (background color) */}
-                          <Circle
-                            cx={cx}
-                            cy={cy}
-                            r={radius}
-                            stroke={item?.circleColor}
-                            strokeWidth={strokeWidth}
-                            fill="none"
-                          />
-                          {/* Foreground arc (partial fill) */}
-                          <Circle
-                            cx={cx}
-                            cy={cy}
-                            r={radius}
-                            stroke={item?.progressColor}
-                            strokeWidth={strokeWidth}
-                            strokeDasharray={`${fillStroke}, ${circumference}`}
-                            strokeLinecap="round"
-                            fill="none"
-                            rotation="-90"
-                            originX={cx}
-                            originY={cy}
-                          />
-                        </Svg>
-                        <Text style={styles.percentageTxt}>{item?.text}</Text>
-                      </View>
-                    )}
-
-                    {item?.percentage >= 100 && (
-                      <View style={styles.icnTxtCont}>
-                        <MaterialCommunityIcons
-                          style={[
-                            styles.iconStyle,
-                            {backgroundColor: item?.progressColor},
-                          ]}
-                          name="check"
-                          size={moderateScale(23)}
-                          color={COLORS.white}
+      {/* // # Header */}
+      <CustomHeader
+        goBack={() => navigation.goBack()}
+        titleName={screenNames.sadhanaCalendar}
+      />
+      {/* // # Contents */}
+      <View style={MyStyles.contentCont}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* // @ Sadhana Icons */}
+          <View style={styles.sadhanaIcnCont}>
+            {sadhanaData?.iconData?.map((item, index) => {
+              const fillStroke = (item?.percentage / 100) * circumference;
+              return (
+                <View key={index}>
+                  {item?.percentage < 100 && (
+                    <View style={styles.icnTxtCont}>
+                      <Svg width={size} height={size}>
+                        {/* Full base circle (background color) */}
+                        <Circle
+                          cx={cx}
+                          cy={cy}
+                          r={radius}
+                          stroke={item?.circleColor}
+                          strokeWidth={strokeWidth}
+                          fill="none"
                         />
-                        <Text style={styles.percentageTxt}>{item?.text}</Text>
-                      </View>
-                    )}
+                        {/* Foreground arc (partial fill) */}
+                        <Circle
+                          cx={cx}
+                          cy={cy}
+                          r={radius}
+                          stroke={item?.progressColor}
+                          strokeWidth={strokeWidth}
+                          strokeDasharray={`${fillStroke}, ${circumference}`}
+                          strokeLinecap="round"
+                          fill="none"
+                          rotation="-90"
+                          originX={cx}
+                          originY={cy}
+                        />
+                      </Svg>
+                      <Text style={styles.percentageTxt}>{item?.text}</Text>
+                    </View>
+                  )}
+
+                  {item?.percentage >= 100 && (
+                    <View style={styles.icnTxtCont}>
+                      <MaterialCommunityIcons
+                        style={[
+                          styles.iconStyle,
+                          {backgroundColor: item?.progressColor},
+                        ]}
+                        name="check"
+                        size={moderateScale(23)}
+                        color={COLORS.white}
+                      />
+                      <Text style={styles.percentageTxt}>{item?.text}</Text>
+                    </View>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+
+          {/* // @ Calendar */}
+          <Calendar
+            style={styles.calendar}
+            maxDate={moment().format('YYYY-MM-DD')}
+            key={currentDate.format('YYYY-MM')}
+            current={currentDate.format('YYYY-MM-DD')}
+            customHeader={() => {
+              return (
+                <>
+                  {/* // # Month,Year and Arrows */}
+                  <View style={styles.calHead}>
+                    {/* // # Left Arrow */}
+                    <TouchableOpacity
+                      onPress={() => changeMonth(-1)}
+                      style={styles.calArrowBtn}
+                      activeOpacity={0.6}>
+                      <MaterialCommunityIcons
+                        name={'chevron-left'}
+                        size={25}
+                        color={COLORS.black}
+                      />
+                    </TouchableOpacity>
+                    {/* // # Month,Year */}
+                    <View style={styles.monthYearCont}>
+                      <Text style={styles.calMonthTxt}>
+                        {moment(currentDate).format('MMMM')}
+                      </Text>
+                      <Text style={styles.calYearTxt}>
+                        {moment(currentDate).format('YYYY')}
+                      </Text>
+                    </View>
+                    {/* // # Right Arrow */}
+                    <TouchableOpacity
+                      onPress={() => changeMonth(1)}
+                      style={styles.calArrowBtn}
+                      activeOpacity={0.6}>
+                      <MaterialCommunityIcons
+                        name={'chevron-right'}
+                        size={25}
+                        color={COLORS.black}
+                      />
+                    </TouchableOpacity>
                   </View>
-                );
-              })}
-            </View>
 
-            {/* // @ Calendar */}
-            <Calendar
-              style={styles.calendar}
-              maxDate={moment().format('YYYY-MM-DD')}
-              key={currentDate.format('YYYY-MM')}
-              current={currentDate.format('YYYY-MM-DD')}
-              customHeader={() => {
-                return (
-                  <>
-                    {/* // # Month,Year and Arrows */}
-                    <View style={styles.calHead}>
-                      {/* // # Left Arrow */}
-                      <TouchableOpacity
-                        onPress={() => changeMonth(-1)}
-                        style={styles.calArrowBtn}
-                        activeOpacity={0.6}>
-                        <MaterialCommunityIcons
-                          name={'chevron-left'}
-                          size={25}
-                          color={COLORS.black}
-                        />
-                      </TouchableOpacity>
-                      {/* // # Month,Year */}
-                      <View style={styles.monthYearCont}>
-                        <Text style={styles.calMonthTxt}>
-                          {moment(currentDate).format('MMMM')}
-                        </Text>
-                        <Text style={styles.calYearTxt}>
-                          {moment(currentDate).format('YYYY')}
-                        </Text>
-                      </View>
-                      {/* // # Right Arrow */}
-                      <TouchableOpacity
-                        onPress={() => changeMonth(1)}
-                        style={styles.calArrowBtn}
-                        activeOpacity={0.6}>
-                        <MaterialCommunityIcons
-                          name={'chevron-right'}
-                          size={25}
-                          color={COLORS.black}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                  {/* // # Horizontal Line */}
+                  <View style={styles.horizontalLine} />
 
-                    {/* // # Horizontal Line */}
-                    <View style={styles.horizontalLine} />
-
-                    {/* // # Days Name */}
-                    <View style={styles.dayNameCont}>
-                      {DAYS.map((day, index) => (
-                        <Text key={index} style={styles.dayNameTxt}>
-                          {day}
-                        </Text>
-                      ))}
-                    </View>
-                  </>
-                );
-              }}
-              hideArrows={true}
-              firstDay={1}
-              hideExtraDays={true}
-              dayComponent={({date}) => renderDay(date)}
-              enableSwipeMonths={true}
-            />
-          </ScrollView>
-        </View>
-      </SafeAreaView>
+                  {/* // # Days Name */}
+                  <View style={styles.dayNameCont}>
+                    {DAYS.map((day, index) => (
+                      <Text key={index} style={styles.dayNameTxt}>
+                        {day}
+                      </Text>
+                    ))}
+                  </View>
+                </>
+              );
+            }}
+            hideArrows={true}
+            firstDay={1}
+            hideExtraDays={true}
+            dayComponent={({date}) => renderDay(date)}
+            enableSwipeMonths={true}
+          />
+        </ScrollView>
+      </View>
     </Container>
   );
 };
@@ -343,7 +342,6 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: SIZES.m,
   },
-
   calendar: {
     width: '95%',
     alignSelf: 'center',

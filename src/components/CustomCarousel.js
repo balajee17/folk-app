@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(6),
     marginHorizontal: horizontalScale(4),
     width: Math.round(windowWidth * 0.02),
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.btIcon,
     height: Math.round(windowWidth * 0.02),
   },
 });

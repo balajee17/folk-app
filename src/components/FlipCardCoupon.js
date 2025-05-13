@@ -86,7 +86,7 @@ const FlipCardCoupon = ({item, index, setSelCoupon}) => {
               numberOfLines={2}
               style={[
                 styles.couponCodeTxt,
-                {color: item?.codeColor || COLORS.candlelight},
+                {color: item?.codeColor || COLORS.citrine},
               ]}>
               {item?.code}
             </Text>
@@ -109,7 +109,7 @@ const FlipCardCoupon = ({item, index, setSelCoupon}) => {
                     numberOfLines={1}
                     style={[
                       styles.labelTxt,
-                      {color: item?.labelColor || COLORS.cloud},
+                      {color: item?.labelColor || COLORS.border},
                     ]}>
                     {dateItem}
                   </Text>
@@ -160,7 +160,7 @@ const FlipCardCoupon = ({item, index, setSelCoupon}) => {
               activeOpacity={0.8}
               style={[
                 styles.payBtn,
-                {backgroundColor: item?.btnBgColor || COLORS.golden},
+                {backgroundColor: item?.btnBgColor || COLORS.bottomTab},
               ]}>
               <Text
                 style={[
@@ -202,7 +202,7 @@ const FlipCardCoupon = ({item, index, setSelCoupon}) => {
             numberOfLines={1}
             style={[
               styles.countTxt,
-              {color: item?.countColor || COLORS.candlelight},
+              {color: item?.countColor || COLORS.citrine},
             ]}>
             {item?.qty}
           </Text>
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     width: '85%',
     textAlign: 'left',
     alignSelf: 'center',
-    color: COLORS.candlelight,
+    color: COLORS.citrine,
     fontFamily: FONTS.urbanistBold,
     fontSize: SIZES.xl,
     marginTop: '5%',
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   },
   labelTxt: {
     width: '100%',
-    color: COLORS.cloud,
+    color: COLORS.border,
     fontFamily: FONTS.urbanistSemiBold,
     fontSize: SIZES.m,
   },
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     fontSize: SIZES.xl,
   },
   rightContent: {
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.btIcon,
     width: horizontalScale(95),
     alignItems: 'center',
     justifyContent: 'center',
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     width: '85%',
     fontFamily: FONTS.urbanistBold,
-    color: COLORS.candlelight,
+    color: COLORS.citrine,
     fontSize: SIZES.xxxl + 20,
     textAlign: 'center',
   },

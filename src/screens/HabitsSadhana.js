@@ -26,14 +26,17 @@ import LinearGradient from 'react-native-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
-import {toastThrottle} from '../components/CommonFunctionalities';
+import {
+  getGradientColors,
+  toastThrottle,
+} from '../components/CommonFunctionalities';
 import AndroidBackHandler from '../components/BackHandler';
 import Spinner from '../components/Spinner';
 
 const HabitsSadhana = props => {
   const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId} = globalState;
+  const {profileId, headerColor} = globalState;
   const {navigation} = props;
   const [userDetails, setUserDetails] = useState({});
   const [spinner, setSpinner] = useState(true);
@@ -139,49 +142,47 @@ const HabitsSadhana = props => {
         titleName={screenNames.habitsSadhana}
         goBack={() => navigation.goBack()}
       />
-      <SafeAreaView style={[MyStyles.flex1]}>
-        <Spinner spinnerVisible={spinner} />
+      <Spinner spinnerVisible={spinner} />
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: '40%',
-          }}>
-          <LinearGradientBg />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: '40%',
+        }}>
+        <LinearGradientBg />
 
-          {/* // @  User Details Box */}
-          <View style={styles.userDetailsBox}>
-            <Image
-              source={{
-                uri: userDetails?.userImage,
-              }}
-              style={styles.userImg}
-            />
-            <Text style={styles.userNameTxt}>{userDetails?.userName}</Text>
-            <Text style={styles.greetUserTxt}>{userDetails?.greetUser}</Text>
+        {/* // @  User Details Box */}
+        <View style={styles.userDetailsBox}>
+          <Image
+            source={{
+              uri: userDetails?.userImage,
+            }}
+            style={styles.userImg}
+          />
+          <Text style={styles.userNameTxt}>{userDetails?.userName}</Text>
+          <Text style={styles.greetUserTxt}>{userDetails?.greetUser}</Text>
 
-            <View style={styles.quotesBox}>
-              <LinearGradient
-                style={styles.quotesLGBox}
-                colors={[
-                  'rgba(65, 110, 189, 0.4)',
-                  'rgba(65, 110, 189, 0.3)',
-                  'rgba(65, 110, 189, 0.2)',
-                  'rgba(65, 110, 189, 0.1)',
-                  '#0000',
-                ]}>
-                <Text style={styles.quotesTxt}>{userDetails?.quote}</Text>
-                <Text style={styles.quotesByTxt}> {userDetails?.quoteBy}</Text>
-              </LinearGradient>
-            </View>
+          <View style={styles.quotesBox}>
+            <LinearGradient
+              style={styles.quotesLGBox}
+              colors={getGradientColors(headerColor, {
+                one: 0.4,
+                two: 0.3,
+                three: 0.2,
+                four: 0.1,
+              })}>
+              <Text style={styles.quotesTxt}>{userDetails?.quote}</Text>
+              <Text style={styles.quotesByTxt}> {userDetails?.quoteBy}</Text>
+            </LinearGradient>
           </View>
+        </View>
 
-          {/* // @ Sadhana Card */}
-          {userDetails?.cardsSection?.map((item, index) => (
-            <>
-              <View key={index} style={styles.cardTitleCont}>
-                <Text style={styles.subTitleTxt}>{item?.section}</Text>
-                {/* {section?.id !== 1 && (
+        {/* // @ Sadhana Card */}
+        {userDetails?.cardsSection?.map((item, index) => (
+          <>
+            <View key={index} style={styles.cardTitleCont}>
+              <Text style={styles.subTitleTxt}>{item?.section}</Text>
+              {/* {section?.id !== 1 && (
                   <View style={styles.rightBtnsCont}>
                     <View style={styles.histIconCont}>
                       <MaterialCommunityIcons
@@ -191,7 +192,7 @@ const HabitsSadhana = props => {
                         style={styles.historyIcn}
                         name="history"
                         size={moderateScale(20)}
-                        color={COLORS.atlantis}
+                        color={COLORS.button}
                       />
                     </View>
                     <View style={styles.addBtnCont}>
@@ -207,40 +208,36 @@ const HabitsSadhana = props => {
                     </View>
                   </View>
                 )} */}
-              </View>
+            </View>
 
-              {item?.cards.map((card, cardIndex) => (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    navigateScreen(card?.screenName);
+            {item?.cards.map((card, cardIndex) => (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigateScreen(card?.screenName);
+                }}
+                style={[styles.quotesBox, styles.sadhanaChallCards]}>
+                <Image
+                  source={{
+                    uri: card?.icon,
                   }}
-                  style={[styles.quotesBox, styles.sadhanaChallCards]}>
-                  <Image
-                    source={{
-                      uri: card?.icon,
-                    }}
-                    style={styles.cardIcon}
-                  />
-                  <Text
-                    style={[
-                      styles.subTitleTxt,
-                      {marginTop: '3%', width: '74%'},
-                    ]}>
-                    {card?.title}
-                  </Text>
+                  style={styles.cardIcon}
+                />
+                <Text
+                  style={[styles.subTitleTxt, {marginTop: '3%', width: '74%'}]}>
+                  {card?.title}
+                </Text>
 
-                  {/* {card?.id !== 1 && (
+                {/* {card?.id !== 1 && (
                     <Text style={styles.challengePercent}>
                       {item?.percentage}
                     </Text>
                   )} */}
-                </TouchableOpacity>
-              ))}
-            </>
-          ))}
-        </ScrollView>
-      </SafeAreaView>
+              </TouchableOpacity>
+            ))}
+          </>
+        ))}
+      </ScrollView>
 
       {/* // @ Bottom Tab */}
       <CustomBottomTab
@@ -309,7 +306,7 @@ const styles = StyleSheet.create({
   quotesByTxt: {
     fontSize: SIZES.s,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.midGrey,
+    color: COLORS.gunsmoke,
     width: '50%',
     alignSelf: 'flex-end',
     textAlign: 'right',
@@ -342,7 +339,7 @@ const styles = StyleSheet.create({
   },
   historyIcn: {
     borderWidth: 1,
-    borderColor: COLORS.atlantis,
+    borderColor: COLORS.button,
     borderRadius: moderateScale(40),
     padding: '6%',
     textAlign: 'center',
@@ -354,7 +351,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   addBtn: {
-    backgroundColor: COLORS.atlantis,
+    backgroundColor: COLORS.button,
     width: horizontalScale(65),
     height: horizontalScale(30),
     borderRadius: moderateScale(18),

@@ -21,8 +21,12 @@ import {screenNames} from '../constants/ScreenNames';
 import {EventShimmer} from '../components/Shimmer';
 import NoDataFound from '../components/NoDataFound';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useAppContext} from '../../App';
 
 const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
+  const {globalState} = useAppContext();
+  const {eventCardColor} = globalState;
+
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
     navigation.navigate(screen, params);
@@ -39,7 +43,13 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
               <>
                 {/*  // @ Events Card */}
                 <View
-                  style={[MyStyles.card, {marginTop: index == 0 ? '2%' : '5%'}]}
+                  style={[
+                    MyStyles.card,
+                    {
+                      marginTop: index == 0 ? '2%' : '5%',
+                      backgroundColor: eventCardColor || COLORS.eventCard,
+                    },
+                  ]}
                   key={item?.id}>
                   {/* // # Card image */}
                   <View
@@ -126,8 +136,8 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                         {
                           backgroundColor:
                             item?.availableSlot === 0
-                              ? COLORS.cloud
-                              : COLORS.atlantis,
+                              ? COLORS.border
+                              : COLORS.button,
                         },
                       ]}>
                       <Text style={MyStyles.registerTxt}>

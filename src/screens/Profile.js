@@ -1,6 +1,5 @@
 import {
   Image,
-  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -17,9 +16,7 @@ import {
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import LinearGradient from 'react-native-linear-gradient';
 import ProfileDetails from './ProfileDetails';
 import AttendanceHistory from './AttendanceHistory';
 import PaymentHistory from './PaymentHistory';
@@ -38,11 +35,13 @@ import {
 import Spinner from '../components/Spinner';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LinearGradientBg from '../components/LinearGradientBg';
+import Container from '../components/Container';
 
 const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId, reloadProfile} = globalState;
+  const {profileId, reloadProfile, tabIndicatorColor} = globalState;
   const [activeTab, setActiveTab] = useState(1);
   const {navigation} = props;
   const [shimmer, setShimmer] = useState({
@@ -209,13 +208,18 @@ const Profile = props => {
   };
 
   return (
-    <View style={MyStyles.contentCont}>
-      <LinearGradient
-        colors={[COLORS.charcoal, COLORS.dolphin, COLORS.dolphin]}>
+    <Container>
+      <View style={MyStyles.contentCont}>
+        <LinearGradientBg height={verticalScale(450)} />
         {/* // # Header */}
         <CustomHeader
           goBack={() => navigation.goBack()}
           titleName={screenNames.profile}
+          rightIcnAction={value => {
+            if (value === 1) {
+              navigation.navigate(screenNames.changeTheme);
+            }
+          }}
         />
 
         <Spinner spinnerVisible={loader} />
@@ -296,54 +300,68 @@ const Profile = props => {
                 activeOpacity={0.6}
                 style={[
                   styles.tabButton,
-                  {width: item?.id === 2 ? '33%' : '30%'},
-                  item?.id === activeTab
-                    ? {
-                        backgroundColor: COLORS.atlantis,
-                        borderRadius: moderateScale(20),
-                      }
-                    : {},
+                  {
+                    width: item?.id === 2 ? '33%' : '30%',
+
+                    backgroundColor:
+                      item?.id === activeTab
+                        ? tabIndicatorColor || COLORS.button
+                        : COLORS.white,
+                    borderRadius: moderateScale(20),
+                  },
                 ]}>
                 <Ionicons
                   name={item?.icon}
                   size={moderateScale(20)}
-                  color={COLORS.white}
+                  color={
+                    item?.id === activeTab ? COLORS.white : COLORS.textLabel
+                  }
                 />
-                <Text numberOfLines={1} style={styles.tabBtnTxt}>
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.tabBtnTxt,
+                    {
+                      color:
+                        item?.id === activeTab
+                          ? COLORS.white
+                          : COLORS.textLabel,
+                    },
+                  ]}>
                   {item?.tabName}
                 </Text>
               </TouchableOpacity>
             ),
           )}
         </View>
-      </LinearGradient>
 
-      {/* // @ Content */}
-      {activeTab === 1 ? (
-        <ProfileDetails
-          shimmer={shimmer?.profile}
-          profileDetails={profileData?.profileDetails}
-          navigation={navigation}
-        />
-      ) : activeTab === 2 ? (
-        <AttendanceHistory
-          shimmer={shimmer?.attendance}
-          attendanceHistory={attendanceData}
-        />
-      ) : activeTab === 3 ? (
-        <PaymentHistory
-          shimmer={shimmer?.payment}
-          paymentHistory={paymentData}
-        />
-      ) : null}
+        {/* // @ Content */}
+        {activeTab === 1 ? (
+          <ProfileDetails
+            shimmer={shimmer?.profile}
+            profileDetails={profileData?.profileDetails}
+            navigation={navigation}
+          />
+        ) : activeTab === 2 ? (
+          <AttendanceHistory
+            shimmer={shimmer?.attendance}
+            attendanceHistory={attendanceData}
+          />
+        ) : activeTab === 3 ? (
+          <PaymentHistory
+            shimmer={shimmer?.payment}
+            paymentHistory={paymentData}
+          />
+        ) : null}
 
-      {/* // @ Pick Image upload */}
-      <ImageUploadModal
-        visible={imagePicker}
-        uploadType={uploadType}
-        closeModal={() => setImagePicker(false)}
-      />
-    </View>
+        {/* // @ Pick Image upload */}
+        <ImageUploadModal
+          visible={imagePicker}
+          uploadType={uploadType}
+          closeModal={() => setImagePicker(false)}
+        />
+      </View>
+    </Container>
   );
 };
 
@@ -399,7 +417,7 @@ const styles = StyleSheet.create({
   folkIdTxt: {
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.silver,
+    color: COLORS.folkIdLbl,
     width: '90%',
     marginTop: '1%',
     alignSelf: 'center',

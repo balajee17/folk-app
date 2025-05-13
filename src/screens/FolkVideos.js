@@ -86,220 +86,217 @@ const FolkVideos = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
-        {/* // # Contents */}
-        <View style={[styles.contentContainer, MyStyles.paddingHor10]}>
-          <View style={{flex: 0.5}}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {/* // # Youtube Video */}
-              <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
-                {shimmer?.video ? (
-                  <YoutubeShimmer />
-                ) : (
-                  <YoutubePlayer
-                    videoId={playingVideo?.videos?.[0]?.vediocode}
-                    width={windowWidth * 0.95}
-                    height={windowWidth * 0.95 * (9 / 16)}
-                    webViewStyle={{
-                      borderRadius: moderateScale(15),
-                    }}
-                    onReady={() => {
-                      console.log('Ready_VIDEO');
-                      setShimmer(prev => ({...prev, video: false}));
-                    }}
-                    play={videoControl?.playVideo}
-                    mute={videoControl?.muteAudio}
-                    onChangeState={onStateChange}
-                    onError={e => {
-                      setShimmer(prev => ({...prev, video: false}));
-                    }}
-                  />
-                )}
-              </View>
-              {/* // # Video Description */}
-              {shimmer?.text ? (
-                <>
-                  <View style={styles.videoContainer}>
-                    <View style={{width: '72%'}}>
-                      <SkeletonPlaceholder
-                        highlightColor={COLORS.highLightColor}
-                        backgroundColor={COLORS.gunsmoke}>
-                        <SkeletonPlaceholder.Item
-                          height={verticalScale(15)}
-                          width={'100%'}
-                          borderRadius={20}
-                        />
-                      </SkeletonPlaceholder>
-                    </View>
-                    <View style={{width: '27%'}}>
-                      <SkeletonPlaceholder
-                        highlightColor={COLORS.highLightColor}
-                        backgroundColor={COLORS.gunsmoke}>
-                        <SkeletonPlaceholder.Item
-                          height={verticalScale(15)}
-                          width={'100%'}
-                          borderRadius={20}
-                        />
-                      </SkeletonPlaceholder>
-                    </View>
-                  </View>
-
-                  <SkeletonPlaceholder
-                    highlightColor={COLORS.highLightColor}
-                    backgroundColor={COLORS.gunsmoke}>
-                    <SkeletonPlaceholder.Item
-                      height={verticalScale(10)}
-                      width={'80%'}
-                      borderRadius={20}
-                      marginTop={'5%'}
-                    />
-                  </SkeletonPlaceholder>
-                  <SkeletonPlaceholder
-                    highlightColor={COLORS.highLightColor}
-                    backgroundColor={COLORS.gunsmoke}>
-                    <SkeletonPlaceholder.Item
-                      height={verticalScale(10)}
-                      width={'70%'}
-                      borderRadius={20}
-                      marginTop={'1%'}
-                    />
-                  </SkeletonPlaceholder>
-                </>
+      {/* // # Header */}
+      <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
+      {/* // # Contents */}
+      <View style={[styles.contentContainer, MyStyles.paddingHor10]}>
+        <View style={{flex: 0.5}}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* // # Youtube Video */}
+            <View style={[MyStyles.marTop10, MyStyles.youtubeCont]}>
+              {shimmer?.video ? (
+                <YoutubeShimmer />
               ) : (
-                <>
-                  <View style={[styles.videoContainer]}>
-                    <Text style={styles.videoTitle}>
-                      {playingVideo?.videos?.[0]?.title}
-                    </Text>
-                    <Text style={styles.dateTxt}>
-                      {playingVideo?.videos?.[0]?.date}
-                    </Text>
-                  </View>
-                  <Text style={styles.descrpTxt}>
-                    {playingVideo?.videos?.[0]?.text}
-                  </Text>
-                </>
+                <YoutubePlayer
+                  videoId={playingVideo?.videos?.[0]?.vediocode}
+                  width={windowWidth * 0.95}
+                  height={windowWidth * 0.95 * (9 / 16)}
+                  webViewStyle={{
+                    borderRadius: moderateScale(15),
+                  }}
+                  onReady={() => {
+                    console.log('Ready_VIDEO');
+                    setShimmer(prev => ({...prev, video: false}));
+                  }}
+                  play={videoControl?.playVideo}
+                  mute={videoControl?.muteAudio}
+                  onChangeState={onStateChange}
+                  onError={e => {
+                    setShimmer(prev => ({...prev, video: false}));
+                  }}
+                />
               )}
-            </ScrollView>
-          </View>
+            </View>
+            {/* // # Video Description */}
+            {shimmer?.text ? (
+              <>
+                <View style={styles.videoContainer}>
+                  <View style={{width: '72%'}}>
+                    <SkeletonPlaceholder
+                      highlightColor={COLORS.border}
+                      backgroundColor={COLORS.gunsmoke}>
+                      <SkeletonPlaceholder.Item
+                        height={verticalScale(15)}
+                        width={'100%'}
+                        borderRadius={20}
+                      />
+                    </SkeletonPlaceholder>
+                  </View>
+                  <View style={{width: '27%'}}>
+                    <SkeletonPlaceholder
+                      highlightColor={COLORS.border}
+                      backgroundColor={COLORS.gunsmoke}>
+                      <SkeletonPlaceholder.Item
+                        height={verticalScale(15)}
+                        width={'100%'}
+                        borderRadius={20}
+                      />
+                    </SkeletonPlaceholder>
+                  </View>
+                </View>
 
-          <View style={{flex: 0.5}}>
-            {/* // # Youtube Videos List */}
-            <View style={styles.historyCont}>
-              {shimmer?.text ? (
-                Array(3)
-                  .fill(3)
-                  .map(_ => {
-                    return (
-                      <>
-                        <TitleShimmer
-                          width={'30%'}
-                          marginTop={'2%'}
-                          height={verticalScale(15)}
-                        />
+                <SkeletonPlaceholder
+                  highlightColor={COLORS.border}
+                  backgroundColor={COLORS.gunsmoke}>
+                  <SkeletonPlaceholder.Item
+                    height={verticalScale(10)}
+                    width={'80%'}
+                    borderRadius={20}
+                    marginTop={'5%'}
+                  />
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder
+                  highlightColor={COLORS.border}
+                  backgroundColor={COLORS.gunsmoke}>
+                  <SkeletonPlaceholder.Item
+                    height={verticalScale(10)}
+                    width={'70%'}
+                    borderRadius={20}
+                    marginTop={'1%'}
+                  />
+                </SkeletonPlaceholder>
+              </>
+            ) : (
+              <>
+                <View style={[styles.videoContainer]}>
+                  <Text style={styles.videoTitle}>
+                    {playingVideo?.videos?.[0]?.title}
+                  </Text>
+                  <Text style={styles.dateTxt}>
+                    {playingVideo?.videos?.[0]?.date}
+                  </Text>
+                </View>
+                <Text style={styles.descrpTxt}>
+                  {playingVideo?.videos?.[0]?.text}
+                </Text>
+              </>
+            )}
+          </ScrollView>
+        </View>
 
-                        <View style={styles.historyVideoCont}>
+        <View style={{flex: 0.5}}>
+          {/* // # Youtube Videos List */}
+          <View style={styles.historyCont}>
+            {shimmer?.text ? (
+              Array(3)
+                .fill(3)
+                .map(_ => {
+                  return (
+                    <>
+                      <TitleShimmer
+                        width={'30%'}
+                        marginTop={'2%'}
+                        height={verticalScale(15)}
+                      />
+
+                      <View style={styles.historyVideoCont}>
+                        <View>
+                          <SkeletonPlaceholder
+                            highlightColor={COLORS.border}
+                            backgroundColor={COLORS.gunsmoke}>
+                            <SkeletonPlaceholder.Item
+                              width={horizontalScale(88)}
+                              height={horizontalScale(80)}
+                              resizeMode={'cover'}
+                              borderRadius={moderateScale(8)}
+                            />
+                          </SkeletonPlaceholder>
+                        </View>
+
+                        <View style={[styles.histVideoTitleCont]}>
                           <View>
                             <SkeletonPlaceholder
-                              highlightColor={COLORS.highLightColor}
+                              highlightColor={COLORS.border}
                               backgroundColor={COLORS.gunsmoke}>
                               <SkeletonPlaceholder.Item
-                                width={horizontalScale(88)}
-                                height={horizontalScale(80)}
+                                width={'100%'}
+                                height={horizontalScale(12)}
                                 resizeMode={'cover'}
                                 borderRadius={moderateScale(8)}
                               />
                             </SkeletonPlaceholder>
                           </View>
-
-                          <View style={[styles.histVideoTitleCont]}>
-                            <View>
-                              <SkeletonPlaceholder
-                                highlightColor={COLORS.highLightColor}
-                                backgroundColor={COLORS.gunsmoke}>
-                                <SkeletonPlaceholder.Item
-                                  width={'100%'}
-                                  height={horizontalScale(12)}
-                                  resizeMode={'cover'}
-                                  borderRadius={moderateScale(8)}
-                                />
-                              </SkeletonPlaceholder>
-                            </View>
-                            <View>
-                              <SkeletonPlaceholder
-                                highlightColor={COLORS.highLightColor}
-                                backgroundColor={COLORS.gunsmoke}>
-                                <SkeletonPlaceholder.Item
-                                  width={'80%'}
-                                  height={horizontalScale(8)}
-                                  resizeMode={'cover'}
-                                  borderRadius={moderateScale(8)}
-                                  marginTop={'6%'}
-                                />
-                              </SkeletonPlaceholder>
-                            </View>
-                            <View>
-                              <SkeletonPlaceholder
-                                highlightColor={COLORS.highLightColor}
-                                backgroundColor={COLORS.gunsmoke}>
-                                <SkeletonPlaceholder.Item
-                                  width={'70%'}
-                                  height={horizontalScale(8)}
-                                  resizeMode={'cover'}
-                                  borderRadius={moderateScale(8)}
-                                  marginTop={'2%'}
-                                />
-                              </SkeletonPlaceholder>
-                            </View>
+                          <View>
+                            <SkeletonPlaceholder
+                              highlightColor={COLORS.border}
+                              backgroundColor={COLORS.gunsmoke}>
+                              <SkeletonPlaceholder.Item
+                                width={'80%'}
+                                height={horizontalScale(8)}
+                                resizeMode={'cover'}
+                                borderRadius={moderateScale(8)}
+                                marginTop={'6%'}
+                              />
+                            </SkeletonPlaceholder>
+                          </View>
+                          <View>
+                            <SkeletonPlaceholder
+                              highlightColor={COLORS.border}
+                              backgroundColor={COLORS.gunsmoke}>
+                              <SkeletonPlaceholder.Item
+                                width={'70%'}
+                                height={horizontalScale(8)}
+                                resizeMode={'cover'}
+                                borderRadius={moderateScale(8)}
+                                marginTop={'2%'}
+                              />
+                            </SkeletonPlaceholder>
                           </View>
                         </View>
-                      </>
-                    );
-                  })
-              ) : (
-                <FlatList
-                  data={videosData}
-                  showsVerticalScrollIndicator={false}
-                  keyExtractor={item => item?.id}
-                  renderItem={({item, index}) => {
-                    return (
-                      <>
-                        <Text style={[styles.histDateTxt]}>{item?.day}</Text>
-                        <TouchableOpacity
-                          onPress={() => {
-                            playingVideo?.videos?.[0]?.id !==
-                              item?.videos?.[0]?.id && setPlayingVideo(item);
+                      </View>
+                    </>
+                  );
+                })
+            ) : (
+              <FlatList
+                data={videosData}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={item => item?.id}
+                renderItem={({item, index}) => {
+                  return (
+                    <>
+                      <Text style={[styles.histDateTxt]}>{item?.day}</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          playingVideo?.videos?.[0]?.id !==
+                            item?.videos?.[0]?.id && setPlayingVideo(item);
+                        }}
+                        activeOpacity={0.7}
+                        style={styles.historyVideoCont}>
+                        <Image
+                          source={{
+                            uri: item?.videos[0]?.thumbnail_url,
                           }}
-                          activeOpacity={0.7}
-                          style={styles.historyVideoCont}>
-                          <Image
-                            source={{
-                              uri: item?.videos[0]?.thumbnail_url,
-                            }}
-                            style={styles.histImgStyle}
-                          />
-                          <View style={styles.histVideoTitleCont}>
-                            <Text
-                              style={[styles.videoTitle, styles.width100Per]}>
-                              {item?.videos[0]?.title}
-                            </Text>
-                            <Text numberOfLines={2} style={styles.descrpTxt}>
-                              {item?.videos[0]?.text}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      </>
-                    );
-                  }}
-                  ListEmptyComponent={NoDataFound}
-                />
-              )}
-            </View>
+                          style={styles.histImgStyle}
+                        />
+                        <View style={styles.histVideoTitleCont}>
+                          <Text style={[styles.videoTitle, styles.width100Per]}>
+                            {item?.videos[0]?.title}
+                          </Text>
+                          <Text numberOfLines={2} style={styles.descrpTxt}>
+                            {item?.videos[0]?.text}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  );
+                }}
+                ListEmptyComponent={NoDataFound}
+              />
+            )}
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     </Container>
   );
 };
@@ -341,7 +338,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   historyCont: {
-    backgroundColor: COLORS.davyGrey,
+    backgroundColor: COLORS.btIcon,
     width: '100%',
     alignSelf: 'center',
     ...MyStyles.paddingHor10,

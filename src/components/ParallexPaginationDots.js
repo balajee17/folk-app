@@ -82,6 +82,6 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(4),
     marginHorizontal: horizontalScale(6),
     height: verticalScale(8),
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.btIcon,
   },
 });

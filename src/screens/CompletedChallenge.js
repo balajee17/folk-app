@@ -88,30 +88,28 @@ const CompletedChallenge = props => {
 
   return (
     <Container>
-      <SafeAreaView style={MyStyles.flex1}>
-        {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.completedChallenge}
+      {/* // # Header */}
+      <CustomHeader
+        goBack={() => navigation.goBack()}
+        titleName={screenNames.completedChallenge}
+      />
+      {/* // # Contents */}
+      <View style={MyStyles.contentCont}>
+        <FlatList
+          data={challengesList}
+          contentContainerStyle={{paddingBottom: '5%'}}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item}) => (
+            <ChallengeCompletedCard
+              key={item?.id}
+              title={item?.title}
+              image={item?.image}
+              fillPercentage={item?.percentage}
+              color={item?.color}
+            />
+          )}
         />
-        {/* // # Contents */}
-        <View style={MyStyles.contentCont}>
-          <FlatList
-            data={challengesList}
-            contentContainerStyle={{paddingBottom: '5%'}}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item}) => (
-              <ChallengeCompletedCard
-                key={item?.id}
-                title={item?.title}
-                image={item?.image}
-                fillPercentage={item?.percentage}
-                color={item?.color}
-              />
-            )}
-          />
-        </View>
-      </SafeAreaView>
+      </View>
     </Container>
   );
 };

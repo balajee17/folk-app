@@ -318,7 +318,7 @@ export const EventShimmer = props => {
   return (
     <View
       style={{
-        backgroundColor: COLORS.charcoal,
+        backgroundColor: COLORS.btIcon,
         alignSelf: 'center',
         borderRadius: moderateScale(26),
         width: '93%',
@@ -344,7 +344,7 @@ export const EventShimmer = props => {
           }}>
           <SkeletonPlaceholder
             highlightColor={COLORS.white}
-            backgroundColor={COLORS.diesel}>
+            backgroundColor={COLORS.highLightColor}>
             <SkeletonPlaceholder.Item
               margin={'0.7%'}
               width={horizontalScale(45)}
@@ -355,7 +355,7 @@ export const EventShimmer = props => {
 
           <SkeletonPlaceholder
             highlightColor={COLORS.white}
-            backgroundColor={COLORS.diesel}>
+            backgroundColor={COLORS.highLightColor}>
             <SkeletonPlaceholder.Item
               padding={'2%'}
               width={horizontalScale(60)}

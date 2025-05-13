@@ -31,11 +31,13 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
               height={horizontalScale(25)}
               width={horizontalScale(100)}
               alignSelf={'center'}
+              backgroundColor={COLORS.gunsmoke}
             />
             <ImageShimmer
               width={horizontalScale(75)}
               borderRadius={moderateScale(12)}
-              height={horizontalScale(35)}
+              height={horizontalScale(40)}
+              backgroundColor={COLORS.gunsmoke}
             />
           </>
         ) : (
@@ -51,7 +53,6 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
               }}
               activeOpacity={0.8}
               style={styles.editIcnBtn}>
-              <Text style={styles.editTxt}>Edit</Text>
               <FontAwesome6
                 name="edit"
                 size={moderateScale(15)}
@@ -71,6 +72,7 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
                 marginTop={'6%'}
                 height={horizontalScale(15)}
                 width={horizontalScale(100)}
+                backgroundColor={COLORS.gunsmoke}
               />
 
               <ImageShimmer
@@ -78,6 +80,7 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
                 width={'100%'}
                 borderRadius={moderateScale(12)}
                 height={horizontalScale(40)}
+                backgroundColor={COLORS.gunsmoke}
               />
             </>
           ))}
@@ -129,13 +132,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   editIcnBtn: {
-    backgroundColor: COLORS.dolphin,
-    width: horizontalScale(75),
+    backgroundColor: COLORS.gunsmoke,
+    width: horizontalScale(35),
     padding: '3%',
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    borderRadius: moderateScale(12),
+    borderRadius: moderateScale(30),
   },
   titleTxt: {
     fontSize: SIZES.xxl,
@@ -152,13 +153,13 @@ const styles = StyleSheet.create({
   labelTxt: {
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistBold,
-    color: COLORS.midGrey,
+    color: COLORS.textLabel,
     width: '100%',
     marginTop: '3%',
   },
   valueBox: {
     marginTop: '2%',
-    backgroundColor: COLORS.chromeWhite,
+    backgroundColor: COLORS.inptBg,
     width: '100%',
     borderRadius: moderateScale(12),
     padding: '4%',
@@ -169,6 +170,6 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.midGrey,
+    color: COLORS.textLabel,
   },
 });

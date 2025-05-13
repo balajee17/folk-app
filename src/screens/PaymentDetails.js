@@ -32,7 +32,7 @@ import {screenNames} from '../constants/ScreenNames';
 
 const PaymentDetails = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
-  const {profileId} = globalState;
+  const {profileId, cardColor} = globalState;
 
   const {paymentId = '', paymentStatus = {}, screenFrom = ''} = route?.params;
 
@@ -151,7 +151,8 @@ const PaymentDetails = ({navigation, route}) => {
         <View
           style={[
             styles.payDetailsBox,
-            shimmer && {backgroundColor: COLORS.charcoal},
+            shimmer && {backgroundColor: COLORS.card},
+            {backgroundColor: cardColor || COLORS.card},
           ]}>
           {/* // # Icon and Pay Details */}
           <View style={styles.payDetailIcnCont}>
@@ -206,7 +207,7 @@ const PaymentDetails = ({navigation, route}) => {
               <MaterialIcons
                 name="content-copy"
                 size={moderateScale(25)}
-                color={COLORS.charcoal}
+                color={COLORS.gunsmoke}
                 style={{textAlignVertical: 'bottom'}}
               />
             </View>
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
   eventName: {
     fontSize: SIZES.xl,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.midGrey,
+    color: COLORS.gunsmoke,
     width: '90%',
     marginTop: '1%',
     textAlign: 'center',
@@ -307,7 +308,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   payDetailsBox: {
-    backgroundColor: COLORS.chromeWhite,
+    backgroundColor: COLORS.card,
     alignSelf: 'center',
     width: '95%',
     marginTop: '10%',
@@ -339,8 +340,9 @@ const styles = StyleSheet.create({
   labelTxt: {
     fontSize: SIZES.xl,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.highLightColor,
+    color: COLORS.textLabel,
     width: '100%',
+    marginTop: '2%',
   },
   valueTxt: {
     color: COLORS.black,
@@ -349,5 +351,6 @@ const styles = StyleSheet.create({
     width: '35%',
     color: COLORS.black,
     textAlign: 'right',
+    marginTop: '2%',
   },
 });

@@ -273,55 +273,53 @@ const SwitcherScreen = ({navigation, route}) => {
         }}
         goBack={() => navigation.goBack()}
       />
-      <SafeAreaView styles={[MyStyles.flex1]}>
-        {/* // @ Exit App Modal */}
-        <CustomPopup
-          visible={exitAppModal}
-          onOkay={() => handleOkay()}
-          onCancel={() => handleCancel()}
-          content={{
-            title: 'Exit App?',
-            text: 'Are you sure you want to exit?',
-            buttonName: 'Exit',
-          }}
-        />
-        {/* // # Contents */}
-        {btTab === 'DB1' ? (
-          shimmer?.home || checkHomeData ? (
-            <Home
-              shimmer={shimmer?.home}
-              apiData={tab1Data}
-              refreshData={() => {
-                getHomeScreenData();
-              }}
-            />
-          ) : (
-            <NoDataFound />
-          )
-        ) : btTab === 'B2' ? (
-          <Events
-            openFilter={opnFltr}
-            closeFilter={() => setOpnFltr(false)}
-            index={eventTabIndex}
-            eventTabChange={index => setEventTabIndex(index)}
-            shimmer={shimmer}
-            eventList={eventList}
-            navigation={navigation}
-            refreshUpcoming={() => getUpcomingList()}
-            refreshRegistered={() => getRegisteredList()}
+      {/* // @ Exit App Modal */}
+      <CustomPopup
+        visible={exitAppModal}
+        onOkay={() => handleOkay()}
+        onCancel={() => handleCancel()}
+        content={{
+          title: 'Exit App?',
+          text: 'Are you sure you want to exit?',
+          buttonName: 'Exit',
+        }}
+      />
+      {/* // # Contents */}
+      {btTab === 'DB1' ? (
+        shimmer?.home || checkHomeData ? (
+          <Home
+            shimmer={shimmer?.home}
+            apiData={tab1Data}
+            refreshData={() => {
+              getHomeScreenData();
+            }}
           />
-        ) : btTab === 'B3' ? (
-          <Courses />
-        ) : btTab === 'B4' ? (
-          shimmer?.connectUs || checkConnectData ? (
-            <ConnectUs apiData={connectDetails} shimmer={shimmer?.connectUs} />
-          ) : (
-            <NoDataFound />
-          )
         ) : (
-          <></>
-        )}
-      </SafeAreaView>
+          <NoDataFound />
+        )
+      ) : btTab === 'B2' ? (
+        <Events
+          openFilter={opnFltr}
+          closeFilter={() => setOpnFltr(false)}
+          index={eventTabIndex}
+          eventTabChange={index => setEventTabIndex(index)}
+          shimmer={shimmer}
+          eventList={eventList}
+          navigation={navigation}
+          refreshUpcoming={() => getUpcomingList()}
+          refreshRegistered={() => getRegisteredList()}
+        />
+      ) : btTab === 'B3' ? (
+        <Courses />
+      ) : btTab === 'B4' ? (
+        shimmer?.connectUs || checkConnectData ? (
+          <ConnectUs apiData={connectDetails} shimmer={shimmer?.connectUs} />
+        ) : (
+          <NoDataFound />
+        )
+      ) : (
+        <></>
+      )}
       {/* // @ Bottom Tab */}
       <CustomBottomTab
         selIcon={btTab}
