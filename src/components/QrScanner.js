@@ -21,6 +21,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {getImage} from '../utils/ImagePath';
 import {useStatusBarHeight} from './StatusBarComponent';
 import AndroidBackHandler from './BackHandler';
+import Container from './Container';
 
 const QrScanner = props => {
   const {globalState, setGlobalState} = useAppContext();
@@ -31,22 +32,16 @@ const QrScanner = props => {
   const [loader, setLoader] = useState(false);
 
   const onSuccess = e => {
-    console.log('QR Code Scanned:', e.data);
-    sendEventAttendance(e.data);
+    console.log('QR Code Scanned:', e?.data);
+    sendEventAttendance(e?.data);
   };
   const {navigation, route} = props;
-  const {eventId} = route?.params;
+  const {eventId = ''} = route?.params;
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
-
-
     return AndroidBackHandler.removerHandler();
-
-
   }, []);
-
- 
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -72,7 +67,11 @@ const QrScanner = props => {
           activeEventTab: 1,
         }));
         toastMsg(message, 'success');
-        await setGlobalState((prev)=>({...prev,reloadEventList:'Y',activeEventTab:1}));
+        await setGlobalState(prev => ({
+          ...prev,
+          reloadEventList: 'Y',
+          activeEventTab: 1,
+        }));
         navigation.goBack();
       } else {
         toastMsg(message, 'warning');
@@ -86,48 +85,50 @@ const QrScanner = props => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* // @ Header - Flash Icn, Title, Close Icn  */}
-      <View style={styles.header(statusBarHeight)}>
-        <TouchableOpacity
-          onPress={() => setFlash(!flash)}
-          activeOpacity={0.8}
-          style={styles.flashIcon}>
-          <Ionicons name="flash" size={30} color={COLORS.white} />
-        </TouchableOpacity>
+    <Container>
+      <View style={styles.container}>
+        {/* // @ Header - Flash Icn, Title, Close Icn  */}
+        <View style={styles.header(statusBarHeight)}>
+          <TouchableOpacity
+            onPress={() => setFlash(!flash)}
+            activeOpacity={0.8}
+            style={styles.flashIcon}>
+            <Ionicons name="flash" size={30} color={COLORS.white} />
+          </TouchableOpacity>
 
-        <Text style={styles.title}>Scan QR</Text>
+          <Text style={styles.title}>Scan QR</Text>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.closeIcon}
-          onPress={() => navigation.goBack()}>
-          <Ionicons name="close" size={30} color={COLORS.white} />
-        </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.closeIcon}
+            onPress={() => navigation.goBack()}>
+            <Ionicons name="close" size={30} color={COLORS.white} />
+          </TouchableOpacity>
+        </View>
+        {/* // @ Sub Title */}
+
+        <Text style={styles.scanText}>
+          Scan the QR code to{'\n'}Mark your Attendance
+        </Text>
+        {/* // @ Qr Scanner */}
+        <QRCodeScanner
+          onRead={onSuccess}
+          flashMode={
+            flash
+              ? RNCamera.Constants.FlashMode.torch
+              : RNCamera.Constants.FlashMode.off
+          }
+          reactivate={true}
+          reactivateTimeout={2000}
+          cameraContainerStyle={styles.camContainer}
+          cameraStyle={styles.cameraStyle}
+        />
+        {/* // @ Camera outer border img */}
+        <View style={styles.outerBorderImg}>
+          <Image source={getImage.scanner} style={styles.marker} />
+        </View>
       </View>
-      {/* // @ Sub Title */}
-
-      <Text style={styles.scanText}>
-        Scan the QR code to{'\n'}Mark your Attendance
-      </Text>
-      {/* // @ Qr Scanner */}
-      <QRCodeScanner
-        onRead={onSuccess}
-        flashMode={
-          flash
-            ? RNCamera.Constants.FlashMode.torch
-            : RNCamera.Constants.FlashMode.off
-        }
-        reactivate={true}
-        reactivateTimeout={2000}
-        cameraContainerStyle={styles.camContainer}
-        cameraStyle={styles.cameraStyle}
-      />
-      {/* // @ Camera outer border img */}
-      <View style={styles.outerBorderImg}>
-        <Image source={getImage.scanner} style={styles.marker} />
-      </View>
-    </View>
+    </Container>
   );
 };
 

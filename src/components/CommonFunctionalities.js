@@ -248,7 +248,7 @@ export const ImageUploadModal = ({visible, closeModal, uploadType}) => {
   return (
     <Modal visible={visible} transparent animationType={'slide'}>
       <Pressable onPress={closeModal} style={MyStyles.modal}>
-        <Pressable style={MyStyles.container}>
+        <Pressable style={[MyStyles.container]}>
           <TouchableOpacity
             onPress={closeModal}
             activeOpacity={0.7}

@@ -17,7 +17,8 @@ export const getImage = {
   connectCard: require('../assets/images/connectCdBg.png'),
   loginBg: require('../assets/images/loginBg.png'),
   appLoader: require('../assets/images/appLoader.gif'),
-  folkGIF: require('../assets/images/folkGIF.gif'),
+  folkCircle: require('../assets/images/FOLK_Circle.png'),
   noNetwork: require('../assets/images/noNetwork.gif'),
   folkSplash: require('../assets/images/folk_splash.png'),
+  // Folk_GIF_CDN_Link: 'https://dashboard.folknet.in/Folk-home.gif',
 };

@@ -208,160 +208,162 @@ const Profile = props => {
   };
 
   return (
-    <Container>
-      <View style={MyStyles.contentCont}>
-        <LinearGradientBg height={verticalScale(450)} />
-        {/* // # Header */}
-        <CustomHeader
-          goBack={() => navigation.goBack()}
-          titleName={screenNames.profile}
-          rightIcnAction={value => {
-            if (value === 1) {
-              navigation.navigate(screenNames.changeTheme);
-            }
-          }}
-        />
-
-        <Spinner spinnerVisible={loader} />
-        {/* // # User Image */}
-        <Pressable
-          disabled={shimmer?.primary}
-          onPress={() => setImagePicker(true)}
-          style={styles.usrImgCont}>
-          {shimmer?.primary ? (
-            <ImageShimmer
-              width={horizontalScale(104)}
-              borderRadius={moderateScale(70)}
-              height={horizontalScale(104)}
-            />
-          ) : (
-            <Image
-              source={{
-                uri: globalState?.photo,
-              }}
-              style={styles.usrImg}
-            />
-          )}
-        </Pressable>
-        {/* // # User Name */}
-        {shimmer?.primary ? (
-          <TitleShimmer
-            marginTop={'2%'}
-            height={verticalScale(15)}
-            width={'60%'}
-            alignSelf={'center'}
+    <>
+      <Container>
+        <View style={MyStyles.contentCont}>
+          <LinearGradientBg height={verticalScale(450)} />
+          {/* // # Header */}
+          <CustomHeader
+            goBack={() => navigation.goBack()}
+            titleName={screenNames.profile}
+            rightIcnAction={value => {
+              if (value === 1) {
+                navigation.navigate(screenNames.changeTheme);
+              }
+            }}
           />
-        ) : (
-          <Text style={styles.usrName}>
-            {profileData?.primaryDetails?.Name}
-          </Text>
-        )}
-        {/* // # User FOLK ID */}
-        {shimmer?.primary ? (
-          <TitleShimmer
-            marginTop={'1%'}
-            height={verticalScale(12)}
-            width={'40%'}
-            alignSelf={'center'}
-          />
-        ) : (
-          <Text style={styles.folkIdTxt}>
-            {profileData?.primaryDetails?.Folk_id}
-          </Text>
-        )}
 
-        {/* // # Tab Bar */}
-        <View style={styles.tabBarCont}>
-          {tabItems.map((item, index) =>
-            shimmer?.primary ? (
+          <Spinner spinnerVisible={loader} />
+          {/* // # User Image */}
+          <Pressable
+            disabled={shimmer?.primary}
+            onPress={() => setImagePicker(true)}
+            style={styles.usrImgCont}>
+            {shimmer?.primary ? (
               <ImageShimmer
-                width={horizontalScale(110)}
-                borderRadius={moderateScale(20)}
-                padding={'2.5%'}
-                height={verticalScale(45)}
+                width={horizontalScale(104)}
+                borderRadius={moderateScale(70)}
+                height={horizontalScale(104)}
               />
             ) : (
-              <TouchableOpacity
-                key={item?.id}
-                onPress={() => {
-                  setActiveTab(item?.id);
-
-                  const checkCurrentSectionLoading = shimmer[item?.id] === true;
-
-                  const conditions = {
-                    1: checkProfileExist,
-                    2: checkAttendanceExist,
-                    3: checkPaymentExist,
-                  };
-                  if (!checkCurrentSectionLoading && !conditions[item?.id]) {
-                    getUserData(item?.id);
-                  }
+              <Image
+                source={{
+                  uri: globalState?.photo,
                 }}
-                activeOpacity={0.6}
-                style={[
-                  styles.tabButton,
-                  {
-                    width: item?.id === 2 ? '33%' : '30%',
+                style={styles.usrImg}
+              />
+            )}
+          </Pressable>
+          {/* // # User Name */}
+          {shimmer?.primary ? (
+            <TitleShimmer
+              marginTop={'2%'}
+              height={verticalScale(15)}
+              width={'60%'}
+              alignSelf={'center'}
+            />
+          ) : (
+            <Text style={styles.usrName}>
+              {profileData?.primaryDetails?.Name}
+            </Text>
+          )}
+          {/* // # User FOLK ID */}
+          {shimmer?.primary ? (
+            <TitleShimmer
+              marginTop={'1%'}
+              height={verticalScale(12)}
+              width={'40%'}
+              alignSelf={'center'}
+            />
+          ) : (
+            <Text style={styles.folkIdTxt}>
+              {profileData?.primaryDetails?.Folk_id}
+            </Text>
+          )}
 
-                    backgroundColor:
-                      item?.id === activeTab
-                        ? tabIndicatorColor || COLORS.button
-                        : COLORS.white,
-                    borderRadius: moderateScale(20),
-                  },
-                ]}>
-                <Ionicons
-                  name={item?.icon}
-                  size={moderateScale(20)}
-                  color={
-                    item?.id === activeTab ? COLORS.white : COLORS.textLabel
-                  }
+          {/* // # Tab Bar */}
+          <View style={styles.tabBarCont}>
+            {tabItems.map((item, index) =>
+              shimmer?.primary ? (
+                <ImageShimmer
+                  width={horizontalScale(110)}
+                  borderRadius={moderateScale(20)}
+                  padding={'2.5%'}
+                  height={verticalScale(45)}
                 />
-                <Text
-                  numberOfLines={1}
+              ) : (
+                <TouchableOpacity
+                  key={item?.id}
+                  onPress={() => {
+                    setActiveTab(item?.id);
+
+                    const checkCurrentSectionLoading =
+                      shimmer[item?.id] === true;
+
+                    const conditions = {
+                      1: checkProfileExist,
+                      2: checkAttendanceExist,
+                      3: checkPaymentExist,
+                    };
+                    if (!checkCurrentSectionLoading && !conditions[item?.id]) {
+                      getUserData(item?.id);
+                    }
+                  }}
+                  activeOpacity={0.6}
                   style={[
-                    styles.tabBtnTxt,
+                    styles.tabButton,
                     {
-                      color:
+                      width: item?.id === 2 ? '33%' : '30%',
+
+                      backgroundColor:
                         item?.id === activeTab
-                          ? COLORS.white
-                          : COLORS.textLabel,
+                          ? tabIndicatorColor || COLORS.button
+                          : COLORS.white,
+                      borderRadius: moderateScale(20),
                     },
                   ]}>
-                  {item?.tabName}
-                </Text>
-              </TouchableOpacity>
-            ),
-          )}
+                  <Ionicons
+                    name={item?.icon}
+                    size={moderateScale(20)}
+                    color={
+                      item?.id === activeTab ? COLORS.white : COLORS.textLabel
+                    }
+                  />
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      styles.tabBtnTxt,
+                      {
+                        color:
+                          item?.id === activeTab
+                            ? COLORS.white
+                            : COLORS.textLabel,
+                      },
+                    ]}>
+                    {item?.tabName}
+                  </Text>
+                </TouchableOpacity>
+              ),
+            )}
+          </View>
+
+          {/* // @ Content */}
+          {activeTab === 1 ? (
+            <ProfileDetails
+              shimmer={shimmer?.profile}
+              profileDetails={profileData?.profileDetails}
+              navigation={navigation}
+            />
+          ) : activeTab === 2 ? (
+            <AttendanceHistory
+              shimmer={shimmer?.attendance}
+              attendanceHistory={attendanceData}
+            />
+          ) : activeTab === 3 ? (
+            <PaymentHistory
+              shimmer={shimmer?.payment}
+              paymentHistory={paymentData}
+            />
+          ) : null}
         </View>
-
-        {/* // @ Content */}
-        {activeTab === 1 ? (
-          <ProfileDetails
-            shimmer={shimmer?.profile}
-            profileDetails={profileData?.profileDetails}
-            navigation={navigation}
-          />
-        ) : activeTab === 2 ? (
-          <AttendanceHistory
-            shimmer={shimmer?.attendance}
-            attendanceHistory={attendanceData}
-          />
-        ) : activeTab === 3 ? (
-          <PaymentHistory
-            shimmer={shimmer?.payment}
-            paymentHistory={paymentData}
-          />
-        ) : null}
-
-        {/* // @ Pick Image upload */}
-        <ImageUploadModal
-          visible={imagePicker}
-          uploadType={uploadType}
-          closeModal={() => setImagePicker(false)}
-        />
-      </View>
-    </Container>
+      </Container>
+      {/* // @ Pick Image upload */}
+      <ImageUploadModal
+        visible={imagePicker}
+        uploadType={uploadType}
+        closeModal={() => setImagePicker(false)}
+      />
+    </>
   );
 };
 

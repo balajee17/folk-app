@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import {
   COLORS,
@@ -175,6 +182,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     backgroundColor: COLORS.white,
+    paddingBottom: Platform.OS === 'ios' ? '5%' : 0,
   },
   tabContainer: {
     width: '100%',

@@ -80,7 +80,7 @@ const SadhanaCalendar = props => {
   // # Get Sadhana Details
   const getSadhanaDetails = async () => {
     try {
-      !spinner && setSpinner(true);
+      // !spinner && setSpinner(true);
       const params = {
         profileId,
         sadhanaMonth: moment(currentDate).format('MMM'),
@@ -224,15 +224,17 @@ const SadhanaCalendar = props => {
 
                   {item?.percentage >= 100 && (
                     <View style={styles.icnTxtCont}>
-                      <MaterialCommunityIcons
+                      <View
                         style={[
                           styles.iconStyle,
                           {backgroundColor: item?.progressColor},
-                        ]}
-                        name="check"
-                        size={moderateScale(23)}
-                        color={COLORS.white}
-                      />
+                        ]}>
+                        <MaterialCommunityIcons
+                          name="check"
+                          size={moderateScale(23)}
+                          color={COLORS.white}
+                        />
+                      </View>
                       <Text style={styles.percentageTxt}>{item?.text}</Text>
                     </View>
                   )}
@@ -332,9 +334,9 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: horizontalScale(30),
     height: horizontalScale(30),
-    borderRadius: moderateScale(20),
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    borderRadius: moderateScale(40),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   percentageTxt: {
     marginTop: '5%',

@@ -291,7 +291,17 @@ const EventDetails = props => {
                 width={horizontalScale(60)}
               />
             ) : !!eventDetails?.Amount ? (
-              <Text style={styles.amtTxt}>{eventDetails?.Amount}</Text>
+              <View
+                style={{
+                  height: verticalScale(30),
+                  borderRadius: moderateScale(30),
+                  backgroundColor: COLORS.button,
+                  width: '20%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.amtTxt}>{eventDetails?.Amount}</Text>
+              </View>
             ) : (
               <></>
             )}
@@ -488,7 +498,8 @@ const EventDetails = props => {
             )}
 
           {/* // # Amount Section */}
-          {screen === 'Upcoming' &&
+          {!shimmer &&
+            screen === 'Upcoming' &&
             eventDetails?.is_paid_event === 'Y' &&
             amountDetails?.length > 0 &&
             amountDetails?.map((item, index) => {
@@ -605,14 +616,8 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.urbanistBold,
     fontSize: SIZES.xl,
     color: COLORS.black,
-    paddingHorizontal: '4%',
-    height: verticalScale(35),
-    textAlignVertical: 'center',
-    borderRadius: moderateScale(30),
-    backgroundColor: COLORS.button,
   },
   contentCont: {
-    backgroundColor: COLORS.white,
     width: '100%',
     flex: 1,
     borderTopLeftRadius: moderateScale(30),

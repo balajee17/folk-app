@@ -1,5 +1,6 @@
 import {
   BackHandler,
+  Image,
   ImageBackground,
   Keyboard,
   SafeAreaView,
@@ -49,7 +50,6 @@ const Login = ({navigation}) => {
   const [showOtp, setShowOtp] = useState(false);
   const [loader, setLoader] = useState(false);
   const [exitAppModal, setExitAppModal] = useState(false);
-
   const toast = useToast();
   const toastMsg = (msg, type) => {
     toast.show(msg, {
@@ -215,11 +215,17 @@ const Login = ({navigation}) => {
           />
 
           {/* // @ FOLK GIF */}
-          <FastImage
-            style={styles.folkGIF(statusBarHeight)}
-            source={getImage.folkGIF}
-            resizeMode={FastImage.resizeMode.contain}
-          />
+          <View style={styles.folkGIF}>
+            <FastImage
+              style={{
+                width: horizontalScale(320),
+                height: horizontalScale(320),
+              }}
+              source={getImage.folkCircle}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+          </View>
+
           <ScrollView
             style={MyStyles.flex1}
             showsVerticalScrollIndicator={false}
@@ -284,11 +290,11 @@ const Login = ({navigation}) => {
 export default Login;
 
 const styles = StyleSheet.create({
-  folkGIF: statusBarHeight => ({
+  folkGIF: {
     width: horizontalScale(320),
     height: horizontalScale(320),
     alignSelf: 'center',
-  }),
+  },
   loginTxt: {
     fontFamily: FONTS.poppinsBold,
     fontSize: SIZES.xxxl + 5,

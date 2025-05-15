@@ -40,34 +40,38 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
   };
 
   const checkCameraPermission = async ID => {
-    const permission =
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.CAMERA
-        : PERMISSIONS.ANDROID.CAMERA;
-    // Function to check permission
-    const result = await check(
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.CAMERA
-        : PERMISSIONS.ANDROID.CAMERA,
-    );
-
-    if (result === RESULTS.GRANTED) {
-      navigateTo(screenNames.scanner, {eventId: ID});
-    } else if (result === RESULTS.DENIED) {
-      const result = await request(permission);
+    try {
+      const permission =
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.CAMERA
+          : PERMISSIONS.ANDROID.CAMERA;
+      // Function to check permission
+      const result = await check(
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.CAMERA
+          : PERMISSIONS.ANDROID.CAMERA,
+      );
 
       if (result === RESULTS.GRANTED) {
         navigateTo(screenNames.scanner, {eventId: ID});
+      } else if (result === RESULTS.DENIED) {
+        const result = await request(permission);
+
+        if (result === RESULTS.GRANTED) {
+          navigateTo(screenNames.scanner, {eventId: ID});
+        }
+      } else if (result === RESULTS.BLOCKED) {
+        Alert.alert(
+          'Permission Blocked',
+          'Please enable camera access in settings.',
+          [
+            {text: 'Cancel', style: 'cancel'},
+            {text: 'Open Settings', onPress: openAppSettings},
+          ],
+        );
       }
-    } else if (result === RESULTS.BLOCKED) {
-      Alert.alert(
-        'Permission Blocked',
-        'Please enable camera access in settings.',
-        [
-          {text: 'Cancel', style: 'cancel'},
-          {text: 'Open Settings', onPress: openAppSettings},
-        ],
-      );
+    } catch (error) {
+      console.log('error', error);
     }
   };
 
