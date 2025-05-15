@@ -143,12 +143,8 @@ const Login = ({navigation}) => {
           setLoader(false);
         } else {
           setLoader(false);
+          const {id, photo, name, folkId, mobile} = response?.data?.profile;
           const {
-            id,
-            photo,
-            name,
-            folkId,
-            mobile,
             header,
             bottomTab,
             button,
@@ -156,7 +152,7 @@ const Login = ({navigation}) => {
             eventCard,
             announcementCard,
             tabIndicator,
-          } = response?.data?.profile;
+          } = response?.data?.colors;
           const userDetails = {
             profileId: id,
             photo,

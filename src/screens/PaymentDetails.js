@@ -32,7 +32,7 @@ import {screenNames} from '../constants/ScreenNames';
 
 const PaymentDetails = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
-  const {profileId, cardColor} = globalState;
+  const {profileId, cardColor, headerColor} = globalState;
 
   const {paymentId = '', paymentStatus = {}, screenFrom = ''} = route?.params;
 
@@ -86,7 +86,7 @@ const PaymentDetails = ({navigation, route}) => {
 
   return (
     <>
-      <CommonStatusBar bgColor={COLORS.header} />
+      <CommonStatusBar bgColor={headerColor} />
       <SafeAreaView style={[MyStyles.flex1, styles.mainContainer]}>
         {/* // @ Left Arrow Icon */}
         <CustomHeader

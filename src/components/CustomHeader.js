@@ -25,14 +25,14 @@ const CustomHeader = ({
   martop,
 }) => {
   const {setGlobalState, globalState} = useAppContext();
-  const {mobileNumber, folkId, menuItems} = globalState;
+  const {mobileNumber, folkId, menuItems, headerColor} = globalState;
   const statusBarHeight = useStatusBarHeight();
-  const filterIcnScreens = '';
-  // titleName === screenNames.quotes ||
-  // titleName === screenNames.dailyDarshan ||
-  // titleName === screenNames.updates ||
-  // titleName === screenNames.folkVideos ||
-  // titleName === screenNames.events;
+  const filterIcnScreens =
+    titleName === screenNames.quotes ||
+    titleName === screenNames.dailyDarshan ||
+    titleName === screenNames.updates ||
+    titleName === screenNames.folkVideos ||
+    titleName === screenNames.events;
 
   const toast = useToast();
   const toastMsg = toastThrottle((msg, type) => {
@@ -57,7 +57,7 @@ const CustomHeader = ({
     titleName === screenNames.profile ||
     titleName === screenNames.paymentDetails
       ? COLORS.transparent
-      : COLORS.header;
+      : headerColor || COLORS.header;
 
   const noRightIcn =
     titleName === screenNames.eventDetails ||
@@ -175,7 +175,7 @@ const CustomHeader = ({
           {removeTitle && titleName}
         </Text>
       )}
-      {!noRightIcn ? (
+      {!filterIcnScreens && !noRightIcn ? (
         <TouchableOpacity // Right Icon
           onPress={() => {
             titleName === screenNames.home

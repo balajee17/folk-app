@@ -2,11 +2,14 @@ import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {COLORS} from '../styles/MyStyles';
 import {CommonStatusBar} from './StatusBarComponent';
+import {useAppContext} from '../../App';
 
 const Container = ({children}) => {
+  const {globalState} = useAppContext();
+  const {headerColor} = globalState;
   return (
     <View style={styles.mainContainer}>
-      <CommonStatusBar />
+      <CommonStatusBar bgColor={headerColor} />
 
       {children}
     </View>

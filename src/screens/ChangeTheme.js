@@ -24,6 +24,7 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {useAppContext} from '../../App';
 import WheelColor from '../components/WheelColor';
+import Spinner from '../components/Spinner';
 
 const ChangeTheme = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -34,25 +35,9 @@ const ChangeTheme = ({navigation}) => {
       type: type,
     });
   };
-  const [sections, setSections] = useState([
-    {
-      section: 'header',
-      sectionText: 'Header',
-      defaultColor: COLORS.border,
-      userColor: '#000',
-    },
-    {
-      section: 'bottomTab',
-      sectionText: 'Bottom Tab',
-      defaultColor: COLORS.border,
-      userColor: '#565123',
-    },
-  ]);
-  const [userColors, setUserColors] = useState({
-    header: '#000',
-    bottomTab: '#565123',
-  });
-  const [spinner, setSpinner] = useState(false);
+  const [sections, setSections] = useState([]);
+  const [userColors, setUserColors] = useState({});
+  const [spinner, setSpinner] = useState(true);
   const [selSection, setSelSection] = useState({});
   const [openColorPick, setOpenColorPick] = useState(false);
   const [selColor, setSelColor] = useState('');
@@ -79,11 +64,11 @@ const ChangeTheme = ({navigation}) => {
       const response = await API.getColorTheme(params);
 
       console.log('response', response?.data);
-      const {data, SuccessCode, message} = response?.data;
-      if (SuccessCode === 1) {
-        setSections(data);
+      const {colors, successCode, message} = response?.data;
+      if (successCode === 1) {
+        setSections(colors);
         const getUserColors = [
-          data.reduce((acc, item) => {
+          colors.reduce((acc, item) => {
             acc[item?.section] = item?.userColor;
             return acc;
           }, {}),
@@ -113,11 +98,11 @@ const ChangeTheme = ({navigation}) => {
       const response = await API.updateColorTheme(params);
 
       console.log('Update response', response?.data);
-      const {data, SuccessCode, message} = response?.data;
-      if (SuccessCode === 1) {
-        setSections(data?.sections);
+      const {sections, successCode, message} = response?.data;
+      if (successCode === 1) {
+        setSections(sections);
         toastMsg(message, 'success');
-        storeColors(data?.sections);
+        storeColors(sections);
       } else {
         toastMsg(message, 'warning');
       }
@@ -175,6 +160,7 @@ const ChangeTheme = ({navigation}) => {
         goBack={() => navigation.goBack()}
         titleName={screenNames.changeTheme}
       />
+      <Spinner spinnerVisible={spinner} />
       {/* // # Contents */}
       <View style={[MyStyles.contentCont, styles.content]}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -221,21 +207,22 @@ const ChangeTheme = ({navigation}) => {
               </View>
             </View>
           ))}
-
-          <View style={styles.btnContainer}>
-            <TouchableOpacity
-              onPress={() => applyColorSections('Y')}
-              activeOpacity={0.8}
-              style={styles.button(COLORS.shimmerBg)}>
-              <Text style={styles.btnTxt}>Reset</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => applyColorSections()}
-              activeOpacity={0.8}
-              style={styles.button(buttonColor)}>
-              <Text style={styles.btnTxt}>Apply</Text>
-            </TouchableOpacity>
-          </View>
+          {Array.isArray(sections) && sections?.length > 0 && (
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                onPress={() => applyColorSections('Y')}
+                activeOpacity={0.8}
+                style={styles.button(COLORS.shimmerBg)}>
+                <Text style={styles.btnTxt}>Reset</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => applyColorSections()}
+                activeOpacity={0.8}
+                style={styles.button(buttonColor)}>
+                <Text style={styles.btnTxt}>Apply</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
       </View>
 
@@ -278,10 +265,10 @@ const styles = StyleSheet.create({
   },
   colorCircleCont: {width: '45%', alignItems: 'center'},
   colorCircle: {
-    backgroundColor: 'red',
     width: horizontalScale(30),
     height: horizontalScale(30),
     borderRadius: moderateScale(30),
+    borderWidth: 1.5,
   },
   valueContainer: {
     marginTop: '5%',

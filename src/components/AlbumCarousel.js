@@ -36,8 +36,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useToast} from 'react-native-toast-notifications';
 import {RedirectURL, ShareLink} from './CommonFunctionalities';
 import {DownloadImage} from './FileDownloader';
+import {useAppContext} from '../../App';
 
 const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
+  const {globalState} = useAppContext();
+  const {headerColor} = globalState;
   const WIDTH = windowWidth * 0.9;
   const HEIGHT = WIDTH * 1.3;
   const imagesData = selectedItem?.images;
@@ -70,7 +73,7 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
 
   return (
     <>
-      <CommonStatusBar />
+      <CommonStatusBar bgColor={headerColor} />
       <View style={{backgroundColor: '#000', flex: 1}}>
         <View style={StyleSheet.absoluteFillObject}>
           {imagesData?.map((item, index) => {

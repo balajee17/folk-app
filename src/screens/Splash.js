@@ -1,11 +1,4 @@
-import {
-  Animated,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {COLORS, MyStyles, screenWidth} from '../styles/MyStyles';
 import {CommonStatusBar} from '../components/StatusBarComponent';
@@ -45,43 +38,64 @@ const Splash = ({navigation}) => {
 
   const updateFcm = async userData => {
     try {
-      await setGlobalState(prev => ({
-        ...prev,
-        profileId: userData?.profileId,
-        folkId: userData?.folkId,
-        userName: userData?.name,
-        mobileNumber: userData?.mobile,
-        photo: userData?.photo,
-      }));
+      const asyncStorageFcmId = await AsyncStorage.getItem('@FcmId');
+      console.log('asyncStorageFcmId', asyncStorageFcmId);
       const {
         getAppVersion,
         getDeviceId,
         getDeviceModel,
         getDeviceName,
-        getDeviceOS,
-        getDeviceOsVersion,
         getDeviceVersion,
       } = DeviceInformation;
       const params = {
         profileId: userData?.profileId,
-        fcmId: 'FCM-15645641498454235346',
-        device_id: await getDeviceId(),
-        device_name: await getDeviceName(),
-        device_model: await getDeviceModel(),
-        device_version: await getDeviceVersion(),
-        app_version: await getAppVersion(),
-        device_os: await getDeviceOS(),
+        fcmId: asyncStorageFcmId,
+        deviceId: await getDeviceId(),
+        deviceName: await getDeviceName(),
+        deviceModel: await getDeviceModel(),
+        deviceVersion: await getDeviceVersion(),
+        appVersion: await getAppVersion(),
       };
       const response = await API.checkFCMId(params);
 
       console.log('Check_FCM_response', response?.data);
-      const {successCode, message} = response?.data;
+      const {colors, successCode, message} = response?.data;
+      const {
+        header,
+        bottomTab,
+        button,
+        card,
+        eventCard,
+        announcementCard,
+        tabIndicator,
+      } = colors || {};
       if (successCode === 1) {
+        await setGlobalState(prev => ({
+          ...prev,
+          profileId: userData?.profileId,
+          folkId: userData?.folkId,
+          userName: userData?.name,
+          mobileNumber: userData?.mobile,
+          photo: userData?.photo,
+          current: 'DB1',
+          btTab: 'DB1',
+          activeEventTab: 0,
+          isConnected: true,
+          headerColor: header,
+          bottomTabColor: bottomTab,
+          buttonColor: button,
+          cardColor: card,
+          eventCardColor: eventCard,
+          announcementCardColor: announcementCard,
+          tabIndicatorColor: tabIndicator,
+        }));
+        navigation.replace(screenNames.drawerNavigation);
+      } else {
+        navigation.replace(screenNames.login);
       }
-      navigation.replace(screenNames.drawerNavigation);
     } catch (error) {
       console.log('ERROR_FCM_Update', error);
-      navigation.replace(screenNames.drawerNavigation);
+      navigation.replace(screenNames.login);
     }
   };
 
@@ -94,6 +108,7 @@ const Splash = ({navigation}) => {
       }).start(() => resolve());
     });
   };
+
   return (
     <>
       <CommonStatusBar />

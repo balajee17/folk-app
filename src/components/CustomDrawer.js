@@ -88,7 +88,7 @@ const CustomDrawer = ({navigation, route}) => {
 
   return (
     <>
-      <CommonStatusBar />
+      <CommonStatusBar bgColor={headerColor} />
       <>
         {/* // @ Profile Info */}
         <View style={styles.header(headerColor)}>

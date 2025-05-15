@@ -48,7 +48,8 @@ import AndroidBackHandler from '../components/BackHandler';
 const EventDetails = props => {
   const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
-  const {profileId, reloadEventList} = globalState;
+  const {profileId, reloadEventList, buttonColor, announcementCardColor} =
+    globalState;
 
   const [expanded, setExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState({});
@@ -247,7 +248,7 @@ const EventDetails = props => {
   };
 
   return (
-    <>
+    <View style={[MyStyles.flex1, {backgroundColor: COLORS.white}]}>
       <StatusBarTransp />
       <Spinner spinnerVisible={loader} />
       <ScrollView
@@ -535,8 +536,8 @@ const EventDetails = props => {
                 {
                   backgroundColor:
                     screen === 'Upcoming'
-                      ? COLORS.button
-                      : COLORS.announcementCard,
+                      ? buttonColor || COLORS.button
+                      : announcementCardColor || COLORS.announcementCard,
                 },
               ]}>
               <Text style={styles.payBtnTxt}>
@@ -554,7 +555,7 @@ const EventDetails = props => {
           )}
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 

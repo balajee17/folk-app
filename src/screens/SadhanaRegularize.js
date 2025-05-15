@@ -45,7 +45,7 @@ const SadhanaRegularize = props => {
 
   const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId} = globalState;
+  const {profileId, buttonColor} = globalState;
 
   const [regularizeData, setRegularizeData] = useState({});
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -371,7 +371,10 @@ const SadhanaRegularize = props => {
           <TouchableOpacity
             onPress={() => checkDataExists()}
             activeOpacity={0.8}
-            style={styles.updateBtn}>
+            style={[
+              styles.updateBtn,
+              {backgroundColor: buttonColor || COLORS.button},
+            ]}>
             <Text style={styles.updateTxt}>Update</Text>
           </TouchableOpacity>
         )}

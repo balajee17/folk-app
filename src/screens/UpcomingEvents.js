@@ -25,7 +25,7 @@ import {useAppContext} from '../../App';
 
 const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
   const {globalState} = useAppContext();
-  const {eventCardColor} = globalState;
+  const {eventCardColor, buttonColor} = globalState;
 
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
@@ -137,7 +137,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                           backgroundColor:
                             item?.availableSlot === 0
                               ? COLORS.border
-                              : COLORS.button,
+                              : buttonColor || COLORS.button,
                         },
                       ]}>
                       <Text style={MyStyles.registerTxt}>

@@ -19,10 +19,12 @@ import {screenNames} from '../constants/ScreenNames';
 import {useNavigation} from '@react-navigation/native';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import moment from 'moment';
+import {useAppContext} from '../../App';
 
 const PaymentHistory = ({shimmer, paymentHistory}) => {
   const navigation = useNavigation();
-
+  const {globalState} = useAppContext();
+  const {cardColor} = globalState;
   // # Navigate Sreen
   const navigateTo = (screen, paymentId) => {
     navigation.navigate(screen, {paymentId});
@@ -76,7 +78,10 @@ const PaymentHistory = ({shimmer, paymentHistory}) => {
             navigateTo(screenNames.paymentDetails, item?.PAYMENT_ID)
           }
           activeOpacity={0.8}
-          style={[styles.attendanceCard]}>
+          style={[
+            styles.attendanceCard,
+            {backgroundColor: cardColor || COLORS.card},
+          ]}>
           <View style={styles.evtImgNameCont}>
             {/* // # First Letter of Event Name */}
             <View style={styles.eventImg}>

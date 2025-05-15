@@ -7,8 +7,7 @@ import notifee, {
 } from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {setFCMID, setRedirectToScreen} from '../Redux/Actions/Action';
-import {Alert, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import {screenNames} from '../constants/ScreenNames';
 
 const CHANNEL_ID = 'folk-channel-id';
@@ -85,8 +84,8 @@ export const backgroundNotificationHandler = async () => {
         notification.data?.redirectScreenName?.data?.click_action;
 
       if (
-        redirectScreen === ScreenNames.sadhana ||
-        redirectScreen === ScreenNames.regularize
+        redirectScreen === screenNames.sadhana ||
+        redirectScreen === screenNames.regularize
       ) {
         // await Store.dispatch(setRedirectToScreen(redirectScreen));
         // RootNavigation.navigate(redirectScreen);
@@ -116,8 +115,8 @@ export const foreGroundNotificationHandler = () => {
       const redirectScreen =
         notification.data?.redirectScreenName?.data?.click_action;
       if (
-        redirectScreen === screenNames.sadhana ||
-        redirectScreen === screenNames.regularize
+        redirectScreen === screenNames.sadhanaCalendar ||
+        redirectScreen === screenNames.sadhanaRegularize
       ) {
         // await Store.dispatch(setRedirectToScreen(redirectScreen));
         // RootNavigation.navigate(redirectScreen);
@@ -135,7 +134,7 @@ const displayNotification = async remoteMessage => {
       id: 'sound',
       name: CHANNEL_NAME,
       importance: AndroidImportance.HIGH,
-      sound: 'hare_krishna',
+      // sound: 'hare_krishna',
     });
 
     await notifee.displayNotification({
@@ -146,7 +145,7 @@ const displayNotification = async remoteMessage => {
       android: {
         channelId,
         ongoing: true,
-        sound: 'hare_krishna',
+        // sound: 'hare_krishna',
 
         // smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
         //  # pressAction is needed if you want the notification to open the app when pressed
@@ -174,7 +173,7 @@ const displayNotification = async remoteMessage => {
               require('../assets/images/folkIcn.png'),
           },
         ],
-        sound: 'hare_krishna.mp3',
+        // sound: 'hare_krishna.mp3',
       },
 
       importance: AndroidImportance.HIGH,

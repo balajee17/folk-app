@@ -45,13 +45,13 @@ const App = () => {
     menuSpinner: true,
     reloadSadhana: 'N',
     // Dynamic color themes
-    headerColor: '#4571BF',
-    bottomTabColor: '#E0C24A',
-    buttonColor: '#B1C63C',
-    cardColor: '#F6F6F6',
-    eventCardColor: '#40414F',
-    announcementCardColor: '#2D3B60',
-    tabIndicatorColor: '#B1C63C',
+    headerColor: COLORS.header,
+    bottomTabColor: COLORS.bottomTab,
+    buttonColor: COLORS.button,
+    cardColor: COLORS.card,
+    eventCardColor: COLORS.eventCard,
+    announcementCardColor: COLORS.announcementCard,
+    tabIndicatorColor: COLORS.tabIndicator,
   });
 
   useEffect(() => {

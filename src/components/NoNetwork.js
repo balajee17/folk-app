@@ -31,7 +31,7 @@ import Container from './Container';
 
 const NoNetwork = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
-  const {isConnected} = globalState;
+  const {isConnected, headerColor} = globalState;
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -71,7 +71,7 @@ const NoNetwork = ({navigation}) => {
 
   return (
     <Container>
-      <CommonStatusBar />
+      <CommonStatusBar bgColor={headerColor} />
       <View style={[MyStyles.contentCont, {justifyContent: 'center'}]}>
         <FastImage
           style={{

@@ -296,7 +296,7 @@ export const API = {
 
   // # Color Theme
   getColorTheme(data) {
-    const colorSectionsURL = baseURL + '';
+    const colorSectionsURL = baseURL + '/folk-theme/edit';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL color Sections URL Data ',
@@ -307,7 +307,7 @@ export const API = {
     return axios.post(colorSectionsURL, requestData);
   },
   updateColorTheme(data) {
-    const updateColorURL = baseURL + '';
+    const updateColorURL = baseURL + '/folk-theme/store';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'URL Update Color Theme URL Data ',

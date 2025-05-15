@@ -269,7 +269,8 @@ const SwitcherScreen = ({navigation, route}) => {
         rightIcnAction={value => {
           value === 0
             ? navigation.navigate(screenNames.notifications)
-            : setOpnFltr(true);
+            : // : setOpnFltr(true);
+              null;
         }}
         goBack={() => navigation.goBack()}
       />
