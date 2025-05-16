@@ -13,8 +13,7 @@ def node_require(script)
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
-pod 'rn-fetch-blob',
-    :path => '../node_modules/rn-fetch-blob'
+
 setup_permissions([
   # 'AppTrackingTransparency',
   # 'Bluetooth',
@@ -49,17 +48,22 @@ end
 target 'FOLK' do
   $RNFirebaseAsStaticFramework = true
   config = use_native_modules!
-#use_frameworks! :linkage => :static
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
+  #   :fabric_enabled => true,
+  # :hermes_enabled => true,
   )
 
   pod 'GoogleUtilities', :modular_headers => true;
-  pod 'Firebase', :modular_headers => true
-  pod 'FirebaseCoreInternal', :modular_headers => true
+  # pod 'Firebase', :modular_headers => true
+  # pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
+  # pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+  # pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
+  # pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
+
 
   target 'FOLKTests' do
     inherit! :complete
@@ -67,12 +71,10 @@ target 'FOLK' do
   end
 
   post_install do |installer|
-    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
-      # :ccache_enabled => true
     )
   end
 end
