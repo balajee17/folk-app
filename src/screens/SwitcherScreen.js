@@ -1,5 +1,6 @@
 import {
   BackHandler,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -29,12 +30,14 @@ import NoNetwork from '../components/NoNetwork';
 import NoDataFound from '../components/NoDataFound';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {CustomPopup} from '../components/BackHandler';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const SwitcherScreen = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
   const toast = useToast();
 
-  const {btTab, profileId, activeEventTab, reloadEventList} = globalState;
+  const {btTab, profileId, activeEventTab, reloadEventList, headerColor} =
+    globalState;
   const [opnFltr, setOpnFltr] = useState(false);
   const [tab1Data, setTab1Data] = useState([
     {section: 1, title: '', updates: [{id: 1, link: ''}], forLoader: 'Y'},
@@ -151,6 +154,17 @@ const SwitcherScreen = ({navigation, route}) => {
       }
     }, [reloadEventList]),
   );
+
+  useEffect(() => {
+    changeNavBarColor();
+  }, []);
+
+  const changeNavBarColor = async () => {
+    try {
+      Platform.OS === 'android' &&
+        (await changeNavigationBarColor(headerColor));
+    } catch (e) {}
+  };
 
   const handleOkay = () => {
     BackHandler.exitApp();

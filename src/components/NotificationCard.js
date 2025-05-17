@@ -35,7 +35,11 @@ const NotificationCard = ({item, index, swipedNotify}) => {
 
   const panGesture = Gesture.Pan()
     .onUpdate(event => {
-      translateX.value = event.translationX;
+      if (event.translationX > 0) {
+        return false;
+      } else {
+        translateX.value = event.translationX;
+      }
     })
     .onEnd(() => {
       const shouldBeDismissed = translateX.value < Translate_X_Threshold;
@@ -51,7 +55,9 @@ const NotificationCard = ({item, index, swipedNotify}) => {
       } else {
         translateX.value = withTiming(0);
       }
-    });
+    })
+    .minDistance(100)
+    .activeOffsetX([-10, 10]);
 
   const cardAnimate = useAnimatedStyle(() => ({
     transform: [{translateX: translateX.value}],

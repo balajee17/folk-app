@@ -35,6 +35,7 @@ const App = () => {
     activeEventTab: 0,
     isConnected: true,
     folkId: '',
+    folkLevel: '',
     userName: '',
     mobileNumber: '',
     photo: '',

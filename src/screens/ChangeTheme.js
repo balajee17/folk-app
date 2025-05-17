@@ -1,5 +1,6 @@
 import {
   Modal,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -25,6 +26,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useAppContext} from '../../App';
 import WheelColor from '../components/WheelColor';
 import Spinner from '../components/Spinner';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const ChangeTheme = ({navigation}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -133,24 +135,28 @@ const ChangeTheme = ({navigation}) => {
   };
 
   const storeColors = async colorCollection => {
-    const getUserColors = [
-      colorCollection?.reduce((acc, item) => {
-        acc[item?.section] = item?.userColor;
-        return acc;
-      }, {}),
-    ];
-    setUserColors(getUserColors[0]);
+    try {
+      const getUserColors = [
+        colorCollection?.reduce((acc, item) => {
+          acc[item?.section] = item?.userColor;
+          return acc;
+        }, {}),
+      ];
+      setUserColors(getUserColors[0]);
 
-    await setGlobalState(prev => ({
-      ...prev,
-      headerColor: getUserColors[0]?.header,
-      bottomTabColor: getUserColors[0]?.bottomTab,
-      buttonColor: getUserColors[0]?.button,
-      cardColor: getUserColors[0]?.card,
-      eventCardColor: getUserColors[0]?.eventCard,
-      announcementCardColor: getUserColors[0]?.announcementCard,
-      tabIndicatorColor: getUserColors[0]?.tabIndicator,
-    }));
+      await setGlobalState(prev => ({
+        ...prev,
+        headerColor: getUserColors[0]?.header,
+        bottomTabColor: getUserColors[0]?.bottomTab,
+        buttonColor: getUserColors[0]?.button,
+        cardColor: getUserColors[0]?.card,
+        eventCardColor: getUserColors[0]?.eventCard,
+        announcementCardColor: getUserColors[0]?.announcementCard,
+        tabIndicatorColor: getUserColors[0]?.tabIndicator,
+      }));
+      Platform.OS === 'android' &&
+        (await changeNavigationBarColor(getUserColors[0]?.header));
+    } catch (e) {}
   };
 
   return (
@@ -225,7 +231,6 @@ const ChangeTheme = ({navigation}) => {
           )}
         </ScrollView>
       </View>
-
       {/* // # Color Picker */}
       <WheelColor
         openColorPick={openColorPick}

@@ -97,7 +97,6 @@ export let COLORS = {
   transparent: '#0000',
   whiteGlassy: 'rgba(255, 255, 255, 0.2)',
   textLabel: '#5D5D5D',
-  folkIdLbl: '#E6E6E6',
   inptBg: '#F8F8F8',
   citrine: '#E4D721',
   windowsBlue: '#308AAF',
@@ -114,6 +113,7 @@ export let COLORS = {
   shareBtn: 'rgba(0, 0, 0, 0.71)',
   borderColor: 'rgba(0, 0, 0, 0.03)',
   logoutColor: '#F8512B',
+  imageViewBg: 'rgba(0, 0, 0, 0.95)',
 };
 
 // @ FONTS
@@ -347,19 +347,16 @@ export let MyStyles = {
 
   // # Image Upload Modal Styles
   modal: {
-    height: '100%',
-    width: '100%',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flex: 1,
     backgroundColor: COLORS.modalBg,
+    justifyContent: 'flex-end',
   },
   container: {
     backgroundColor: COLORS.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: '4%',
-    borderTopLeftRadius: moderateScale(25),
-    borderTopRightRadius: moderateScale(25),
-    width: screenWidth,
-    justifyContent: 'space-around',
+    overflow: 'hidden',
   },
   closeBtn: {
     alignItems: 'center',

@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   folkIdTxt: {
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistSemiBold,
-    color: COLORS.folkIdLbl,
+    color: COLORS.inptBg,
     width: '90%',
     marginTop: '1%',
     alignSelf: 'center',

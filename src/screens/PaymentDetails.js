@@ -29,6 +29,7 @@ import {useAppContext} from '../../App';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
+import {CopyToClipboard} from '../components/CommonFunctionalities';
 
 const PaymentDetails = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -205,6 +206,13 @@ const PaymentDetails = ({navigation, route}) => {
                 </Text>
               </View>
               <MaterialIcons
+                onPress={() => {
+                  if (CopyToClipboard(paymentDetails?.BANK_TRANSACTION_ID)) {
+                    toastMsg('Transaction Id copied.', 'success');
+                  } else {
+                    toastMsg('Unable to copy the text', 'error');
+                  }
+                }}
                 name="content-copy"
                 size={moderateScale(25)}
                 color={COLORS.gunsmoke}

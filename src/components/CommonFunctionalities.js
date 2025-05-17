@@ -8,11 +8,7 @@ import {
   View,
 } from 'react-native';
 import Share from 'react-native-share';
-import {
-  CFCallback,
-  CFErrorResponse,
-  CFPaymentGatewayService,
-} from 'react-native-cashfree-pg-sdk';
+import {CFPaymentGatewayService} from 'react-native-cashfree-pg-sdk';
 import {
   CFDropCheckoutPayment,
   CFEnvironment,
@@ -22,13 +18,7 @@ import {
   CFThemeBuilder,
 } from 'cashfree-pg-api-contract';
 import {API} from '../services/API';
-import {
-  COLORS,
-  FONTS,
-  moderateScale,
-  MyStyles,
-  screenHeight,
-} from '../styles/MyStyles';
+import {COLORS, moderateScale, MyStyles, screenWidth} from '../styles/MyStyles';
 import ImagePicker from 'react-native-image-crop-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -246,9 +236,14 @@ export const CaptureImage = async () => {
 // # Image Upload option
 export const ImageUploadModal = ({visible, closeModal, uploadType}) => {
   return (
-    <Modal visible={visible} transparent animationType={'slide'}>
+    <Modal
+      // style={{z flex: 1}}
+      visible={visible}
+      transparent
+      onRequestClose={closeModal}
+      animationType={'slide'}>
       <Pressable onPress={closeModal} style={MyStyles.modal}>
-        <Pressable style={[MyStyles.container]}>
+        <Pressable style={MyStyles.container}>
           <TouchableOpacity
             onPress={closeModal}
             activeOpacity={0.7}

@@ -1,63 +1,56 @@
-import {PermissionsAndroid, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import {
   PERMISSIONS,
   request,
   requestMultiple,
   RESULTS,
 } from 'react-native-permissions';
-import {useToast} from 'react-native-toast-notifications';
 import RNFetchBlob from 'rn-fetch-blob';
-import {verticalScale} from '../styles/MyStyles';
 
 const isAndroid = Platform.OS === 'android';
 
-export const showToast = (message, type = 'normal') => {
-  if (toastRef.current) {
-    toastRef.current.show(message, {type});
-  } else {
-    console.warn('Toast ref not available');
-  }
-};
-
 const DownLoadFile = (link, name) => {
-  const {dirs} = RNFetchBlob.fs;
-  const dirToSave = isAndroid ? dirs.DownloadDir : dirs.DocumentDir;
-  const configfb = isAndroid
-    ? {
-        fileCache: true,
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          mediaScannable: true,
-          title: name,
-          path: `${dirToSave}/${name}`,
-        },
-      }
-    : {
-        fileCache: true,
-        path: `${dirToSave}/${fileName}`,
-      };
+  return new Promise((resolve, reject) => {
+    const fileName = !!name ? name : link.split('/').pop().split('.')[0]; // Get the name before the extension
+    const {dirs} = RNFetchBlob.fs;
+    const dirToSave = isAndroid ? dirs.DownloadDir : dirs.DocumentDir;
+    const configfb = isAndroid
+      ? {
+          fileCache: true,
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            mediaScannable: true,
+            title: fileName,
+            path: `${dirToSave}/${fileName}`,
+          },
+        }
+      : {
+          fileCache: true,
+          path: ` ${dirToSave}/${fileName}`,
+        };
 
-  const configOptions = Platform.select({
-    ios: configfb,
-    android: configfb,
-  });
-
-  RNFetchBlob.config(configOptions || {})
-    .fetch('GET', link, {})
-    .then(res => {
-      if (!isAndroid) {
-        RNFetchBlob.ios.openDocument(configfb.path);
-      }
-      if (isAndroid) {
-        console.log('file downloaded', configfb.addAndroidDownloads.path);
-        toastMsg('Image downloaded.', 'success');
-      }
-    })
-    .catch(e => {
-      console.log('Download_error==>', e);
-      toastMsg('Download failed.', 'error');
+    const configOptions = Platform.select({
+      ios: configfb,
+      android: configfb,
     });
+
+    RNFetchBlob.config(configOptions || {})
+      .fetch('GET', link, {})
+      .then(res => {
+        if (!isAndroid) {
+          RNFetchBlob.ios.openDocument(configfb.path);
+        }
+        if (isAndroid) {
+          console.log('file downloaded', configfb.addAndroidDownloads.path);
+          resolve(true); // Resolve with true if download is successful
+        }
+      })
+      .catch(e => {
+        console.log('Download_error==>', e);
+        reject(false); // Reject the promise with false if there's an error
+      });
+  });
 };
 
 const requestIOSPhotoPermission = async (link, name) => {
@@ -96,11 +89,13 @@ const requestAndroidStoragePermission = async (link, name) => {
   }
 };
 
-export const DownloadImage = data => {
-  const {link, name} = data;
-  //   isAndroid
-  //     ? requestAndroidStoragePermission(link, name)
-  //     : requestIOSPhotoPermission(link, name);
-
-  DownLoadFile(link, name);
+export const DownloadImage = async data => {
+  try {
+    const {link, name} = data;
+    const downloadResult = await DownLoadFile(link, name);
+    return downloadResult;
+  } catch (error) {
+    console.log('Error in downloading image: ', error);
+    return false;
+  }
 };

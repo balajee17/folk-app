@@ -41,6 +41,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Feather from 'react-native-vector-icons/Feather';
 import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
 import {useAppContext} from '../../App';
+import {DownloadImage} from '../components/FileDownloader';
 
 const Quotes = props => {
   const [quotesData, setQuotesData] = useState([]);
@@ -150,9 +151,18 @@ const Quotes = props => {
                             <View style={styles.shareDwnldCont}>
                               <TouchableOpacity
                                 onPress={async () => {
-                                  const result = await RedirectURL(card);
-                                  if (!!result?.type) {
-                                    toastMsg(result?.message, result?.type);
+                                  const result = await DownloadImage({
+                                    link: card,
+                                    name: `DailyQuotes${cardIndex}`,
+                                  });
+
+                                  if (result) {
+                                    toastMsg(
+                                      'Image downloaded successfully.',
+                                      'success',
+                                    );
+                                  } else {
+                                    toastMsg('Download failed.', 'error');
                                   }
                                 }}
                                 style={styles.quotesBtns}

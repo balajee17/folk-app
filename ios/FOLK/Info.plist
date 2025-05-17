@@ -45,6 +45,8 @@
 	</dict>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>FOLK app needs calendar permission</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>FOLK app needs calendar permission</string>
 	<key>NSCameraUsageDescription</key>
 	<string>FOLK app needs camera permission</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -81,6 +83,7 @@
 		<string>YsabeauInfant-Regular.ttf</string>
 		<string>LufgaBold.ttf</string>
 		<string>Poppins-Bold.ttf</string>
+		<string>Urbanist-Bold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

@@ -21,7 +21,7 @@ const Splash = ({navigation}) => {
         if (userData?.profileId) {
           updateFcm(userData);
         } else {
-          navigation.navigate(screenNames.login);
+          navigation.replace(screenNames.login);
         }
       })
       .catch(error => {
@@ -39,7 +39,6 @@ const Splash = ({navigation}) => {
   const updateFcm = async userData => {
     try {
       const asyncStorageFcmId = await AsyncStorage.getItem('@FcmId');
-      console.log('asyncStorageFcmId', asyncStorageFcmId);
       const {
         getAppVersion,
         getDeviceId,
@@ -74,6 +73,7 @@ const Splash = ({navigation}) => {
           ...prev,
           profileId: userData?.profileId,
           folkId: userData?.folkId,
+          folkLevel: userData?.folkLevel,
           userName: userData?.name,
           mobileNumber: userData?.mobile,
           photo: userData?.photo,

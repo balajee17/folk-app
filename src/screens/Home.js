@@ -1,5 +1,6 @@
 import {
   Image,
+  NativeModules,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -39,12 +40,11 @@ import {
   RedirectURL,
   ShareLink,
 } from '../components/CommonFunctionalities';
+import {DownloadImage} from '../components/FileDownloader';
 
 const Home = ({apiData, shimmer, refreshData}) => {
   const {globalState, setGlobalState} = useAppContext();
-
   const {announcementCardColor} = globalState;
-
   const navigation = useNavigation();
 
   const [playVideo, setPlayVideo] = useState(true);
@@ -274,9 +274,17 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       <View style={styles.shareDwnldCont}>
                         <TouchableOpacity
                           onPress={async () => {
-                            const result = await RedirectURL(card?.link);
-                            if (!!result?.type) {
-                              toastMsg(result?.message, result?.type);
+                            const result = await DownloadImage({
+                              link: card?.link,
+                              name: card?.name || `DailyQuotes${cardIndex}`,
+                            });
+                            if (result) {
+                              toastMsg(
+                                'Image downloaded successfully.',
+                                'success',
+                              );
+                            } else {
+                              toastMsg('Download failed.', 'error');
                             }
                           }}
                           style={styles.quotesBtns}
@@ -377,18 +385,24 @@ const Home = ({apiData, shimmer, refreshData}) => {
                         uri: updateItem?.link,
                       }}
                     />
-                    {/*  // # Share Btn */}
+                    {/*  // # Download Btn */}
                     <TouchableOpacity
-                      onPress={() => {
-                        const result = ShareLink(updateItem?.link);
-                        if (!!result?.type) {
-                          toastMsg(result?.message, result?.type);
+                      onPress={async () => {
+                        const result = await DownloadImage({
+                          link: updateItem?.link,
+                          name: updateItem?.title || 'Announcements',
+                        });
+
+                        if (result) {
+                          toastMsg('Image downloaded successfully.', 'success');
+                        } else {
+                          toastMsg('Download failed.', 'error');
                         }
                       }}
                       style={MyStyles.shareBtn}
                       activeOpacity={0.6}>
                       <MaterialCommunityIcons
-                        name="share"
+                        name="download"
                         size={moderateScale(25)}
                         color={COLORS.white}
                       />

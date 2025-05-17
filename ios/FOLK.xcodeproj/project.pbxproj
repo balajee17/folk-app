@@ -41,6 +41,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		815A77EDE2194BD2ACAA2B63 /* Urbanist-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62E72F84BCFC44A08D09BE30 /* Urbanist-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C398B9B872E559259C0E6F6D /* libPods-FOLK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD0384F4FBA83F00E98209CE /* libPods-FOLK.a */; };
 		FF57239DEE2A6129FB371C34 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EB18D0CA8F185DE44AC3E117 /* PrivacyInfo.xcprivacy */; };
@@ -60,6 +61,7 @@
 		00E356EE1AD99517003FC87E /* FOLKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FOLKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* FOLKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOLKTests.m; sourceTree = "<group>"; };
+		011E49BD2DD75A5B002B756C /* Urbanist-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Urbanist-Bold.ttf"; path = "../src/assets/fonts/Urbanist-Bold.ttf"; sourceTree = "<group>"; };
 		017A53DB2DD6276100EC764A /* YsabeauInfant-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "YsabeauInfant-Bold.ttf"; path = "../src/assets/fonts/YsabeauInfant-Bold.ttf"; sourceTree = "<group>"; };
 		017A53DC2DD6276200EC764A /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		017A53DD2DD6276200EC764A /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = FOLK/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		2988FCD9DBE7A9D9D1C444D7 /* Pods-FOLK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOLK.debug.xcconfig"; path = "Target Support Files/Pods-FOLK/Pods-FOLK.debug.xcconfig"; sourceTree = "<group>"; };
 		3BE6837599B89DC92F3FEF02 /* Pods-FOLK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOLK.release.xcconfig"; path = "Target Support Files/Pods-FOLK/Pods-FOLK.release.xcconfig"; sourceTree = "<group>"; };
+		62E72F84BCFC44A08D09BE30 /* Urbanist-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Urbanist-Bold.ttf"; path = "../src/assets/fonts/Urbanist-Bold.ttf"; sourceTree = "<group>"; };
 		6E8AF307D81CEACA1C3B39E7 /* libPods-FOLK-FOLKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FOLK-FOLKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FOLK/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD0384F4FBA83F00E98209CE /* libPods-FOLK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FOLK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,6 +179,8 @@
 				01D930E72DD627D800B3EC30 /* Octicons.ttf */,
 				01D930F22DD627D900B3EC30 /* SimpleLineIcons.ttf */,
 				01D930F02DD627D900B3EC30 /* Zocial.ttf */,
+				62E72F84BCFC44A08D09BE30 /* Urbanist-Bold.ttf */,
+				011E49BD2DD75A5B002B756C /* Urbanist-Bold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -344,6 +349,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				815A77EDE2194BD2ACAA2B63 /* Urbanist-Bold.ttf in Resources */,
 				0164D6A62DD72489005D2F0B /* LufgaBold.ttf in Resources */,
 				0164D6A72DD72489005D2F0B /* Poppins-Bold.ttf in Resources */,
 				0164D6A82DD72489005D2F0B /* Poppins-Regular.ttf in Resources */,
@@ -616,7 +622,7 @@
 				CODE_SIGN_ENTITLEMENTS = FOLK/FOLK.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = P5K96FX6C4;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -900,7 +906,7 @@
 				CODE_SIGN_ENTITLEMENTS = FOLK/FOLK.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = P5K96FX6C4;
 				INFOPLIST_FILE = FOLK/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FOLK;
@@ -1007,7 +1013,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -1091,7 +1100,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

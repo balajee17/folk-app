@@ -42,7 +42,11 @@ const WheelColor = ({
   };
 
   return (
-    <Modal visible={openColorPick} transparent animationType={'slide'}>
+    <Modal
+      presentationStyle="overFullScreen"
+      visible={openColorPick}
+      transparent
+      animationType={'fade'}>
       <View style={[MyStyles.modal, {justifyContent: 'center'}]}>
         <View style={styles.modalBox}>
           {/* // @ Close Button */}
@@ -65,8 +69,10 @@ const WheelColor = ({
               sliderSize={25}
               noSnap={true}
               row={false}
+              useNativeLayout={true}
               swatchesLast={true}
               swatches={true}
+              style={{width: 250, height: 250, alignSelf: 'center'}}
               discrete={false}
               wheelLodingIndicator={
                 <ActivityIndicator size={40} color={COLORS.header} />

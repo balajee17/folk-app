@@ -125,7 +125,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                   <TouchableOpacity
                     onPress={() => {
                       if (CopyToClipboard(apiData?.guideDetails?.MOBILE)) {
-                        toastMsg('Mobile number copied', 'success');
+                        toastMsg('Mobile number copied.', 'success');
                       } else {
                         toastMsg('Unable to copy the text', 'error');
                       }
@@ -147,7 +147,7 @@ const ConnectUs = ({apiData, shimmer}) => {
                   <TouchableOpacity
                     onPress={() => {
                       if (CopyToClipboard(apiData?.guideDetails?.MAIL)) {
-                        toastMsg('Email copied', 'success');
+                        toastMsg('Email copied.', 'success');
                       } else {
                         toastMsg('Unable to copy the text', 'error');
                       }

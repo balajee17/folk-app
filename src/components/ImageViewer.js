@@ -1,8 +1,10 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {
   COLORS,
+  horizontalScale,
+  moderateScale,
   verticalScale,
   windowHeight,
   windowWidth,
@@ -16,6 +18,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ImageViewer = ({imageURL, closeImage}) => {
   const translateY = useSharedValue(0);
@@ -58,8 +61,8 @@ const ImageViewer = ({imageURL, closeImage}) => {
     );
 
     return {
-      backgroundColor: 'rgba(0, 0, 0, 1)', // This doesn't affect opacity, so:
-      opacity: dynamicOpacity, // This fades the entire background
+      backgroundColor: COLORS.imageViewBg,
+      opacity: dynamicOpacity,
     };
   });
 
@@ -67,12 +70,23 @@ const ImageViewer = ({imageURL, closeImage}) => {
     <View style={[styles.container]}>
       {/* Fullscreen image */}
       <Animated.View style={[styles.fullscreenOverlay, overlayStyle]}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={styles.closeButton}
+          onPress={requestToClose}>
+          <MaterialCommunityIcons
+            name="close"
+            color={COLORS.white}
+            size={moderateScale(20)}
+          />
+        </TouchableOpacity>
+
         <GestureDetector gesture={panGesture}>
           <Animated.View
             style={[styles.fullscreenImageContainer, animatedStyle]}>
             <Image
               source={{uri: imageURL}}
-              style={styles.fullscreenImage}
+              style={[styles.fullscreenImage]}
               resizeMode="contain"
             />
           </Animated.View>
@@ -97,7 +111,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: COLORS.black,
+    backgroundColor: COLORS.imageViewBg,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
@@ -112,5 +126,18 @@ const styles = StyleSheet.create({
   fullscreenImage: {
     width: '100%',
     height: '100%',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: verticalScale(110),
+    right: horizontalScale(15),
+    zIndex: 10,
+    width: horizontalScale(30),
+    height: horizontalScale(30),
+    backgroundColor: COLORS.whiteGlassy,
+    borderRadius: moderateScale(30),
+    padding: moderateScale(5),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

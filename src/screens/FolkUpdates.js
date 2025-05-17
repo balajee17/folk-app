@@ -27,6 +27,7 @@ import AndroidBackHandler from '../components/BackHandler';
 import {CopyToClipboard, ShareLink} from '../components/CommonFunctionalities';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useAppContext} from '../../App';
+import {DownloadImage} from '../components/FileDownloader';
 
 const FolkUpdates = props => {
   const [shimmer, setShimmer] = useState(true);
@@ -135,18 +136,27 @@ const FolkUpdates = props => {
                                 uri: updateItem?.link,
                               }}
                             />
-                            {/*  // # Share Btn */}
+                            {/*  // # Download Btn */}
                             <TouchableOpacity
-                              onPress={() => {
-                                const result = ShareLink(updateItem?.link);
-                                if (!!result?.type) {
-                                  toastMsg(result?.message, result?.type);
+                              onPress={async () => {
+                                const result = await DownloadImage({
+                                  link: updateItem?.link,
+                                  name: updateItem?.title || 'Announcements',
+                                });
+
+                                if (result) {
+                                  toastMsg(
+                                    'Image downloaded successfully.',
+                                    'success',
+                                  );
+                                } else {
+                                  toastMsg('Download failed.', 'error');
                                 }
                               }}
                               style={MyStyles.shareBtn}
                               activeOpacity={0.6}>
                               <MaterialCommunityIcons
-                                name="share"
+                                name="download"
                                 size={moderateScale(25)}
                                 color={COLORS.white}
                               />

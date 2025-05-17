@@ -69,7 +69,7 @@ export const CommonStatusBar = ({bgColor}) => {
       ) : (
         <View
           style={{
-            backgroundColor: COLORS.header,
+            backgroundColor: bgColor || COLORS.header,
             height: statusBarHeight,
             zIndex: 999,
           }}

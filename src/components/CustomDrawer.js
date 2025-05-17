@@ -1,21 +1,17 @@
 import {
   Image,
-  Modal,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   COLORS,
   FONTS,
   horizontalScale,
   moderateScale,
-  MyStyles,
-  screenWidth,
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
@@ -26,16 +22,16 @@ import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
 import {CommonStatusBar, useStatusBarHeight} from './StatusBarComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsFocused} from '@react-navigation/native';
 import {ImageShimmer, TitleShimmer} from './Shimmer';
 import {CustomPopup} from './BackHandler';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const CustomDrawer = ({navigation, route}) => {
-  const statusBarHeight = useStatusBarHeight();
   const {globalState, setGlobalState} = useAppContext();
   const {
     current,
     folkId,
+    folkLevel,
     userName,
     photo,
     menuItems,
@@ -66,24 +62,31 @@ const CustomDrawer = ({navigation, route}) => {
   };
 
   const logout = async () => {
-    setShowLogout(false);
-    await setGlobalState(prev => ({
-      ...prev,
-      current: 'DB1',
-      btTab: 'DB1',
-      profileId: '',
-      activeEventTab: 0,
-      isConnected: true,
-      folkId: '',
-      userName: '',
-      mobileNumber: '',
-      photo: '',
-      menuItems: [],
-      menuSpinner: true,
-      reloadSadhana: 'N',
-    }));
-    await AsyncStorage.clear();
-    navigation.replace(screenNames.login);
+    try {
+      setShowLogout(false);
+      await setGlobalState(prev => ({
+        ...prev,
+        current: 'DB1',
+        btTab: 'DB1',
+        profileId: '',
+        activeEventTab: 0,
+        isConnected: true,
+        folkId: '',
+        userName: '',
+        mobileNumber: '',
+        photo: '',
+        menuItems: [],
+        menuSpinner: true,
+        reloadSadhana: 'N',
+        folkLevel: '',
+      }));
+      await AsyncStorage.clear();
+      Platform.OS === 'android' &&
+        (await changeNavigationBarColor(COLORS.header));
+      navigation.replace(screenNames.login);
+    } catch (e) {
+      console.log('logout e', e);
+    }
   };
 
   return (
@@ -123,6 +126,11 @@ const CustomDrawer = ({navigation, route}) => {
               {!!folkId && (
                 <Text style={[styles.profName, styles.mailTxt]}>
                   FOLK ID : {folkId}
+                </Text>
+              )}
+              {!!folkLevel && (
+                <Text style={[styles.profName, styles.mailTxt]}>
+                  FOLK LEVEL : {folkLevel}
                 </Text>
               )}
             </TouchableOpacity>
@@ -258,8 +266,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   mailTxt: {
-    fontSize: SIZES.l,
-    color: COLORS.whiteSmoke,
+    fontSize: SIZES.m,
+    color: COLORS.inptBg,
     fontFamily: FONTS.ysabeauInfantBold,
     width: '100%',
   },

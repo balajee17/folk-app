@@ -163,10 +163,16 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                   }}>
                   <TouchableOpacity
                     onPress={async () => {
-                      DownloadImage({
+                      const result = await DownloadImage({
                         link: item?.link,
-                        name: 'FOLK_Downloaded',
+                        name: item?.name || `DailyDarshan${index}`,
                       });
+
+                      if (result) {
+                        toastMsg('Image downloaded successfully.', 'success');
+                      } else {
+                        toastMsg('Download failed.', 'error');
+                      }
                     }}
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.3)',

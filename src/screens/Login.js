@@ -1,6 +1,5 @@
 import {
   BackHandler,
-  Image,
   ImageBackground,
   Keyboard,
   SafeAreaView,
@@ -10,10 +9,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   CommonStatusBar,
-  StatusBarTransp,
   useStatusBarHeight,
 } from '../components/StatusBarComponent';
 import {getImage} from '../utils/ImagePath';
@@ -34,11 +32,11 @@ import {useToast} from 'react-native-toast-notifications';
 import {API} from '../services/API';
 import Spinner from '../components/Spinner';
 import OtpInput from '../components/OtpInput';
-import {useFocusEffect} from '@react-navigation/native';
 import DeviceInformation from '../components/DeviceInfo';
-import AndroidBackHandler, {CustomPopup} from '../components/BackHandler';
+import {CustomPopup} from '../components/BackHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAppContext} from '../../App';
+import {getFcmId} from '../components/FCM';
 
 const Login = ({navigation}) => {
   const statusBarHeight = useStatusBarHeight();
@@ -110,6 +108,12 @@ const Login = ({navigation}) => {
   const loginAPI = async type => {
     try {
       setLoader(true);
+      let asyncStorageFcmId = await AsyncStorage.getItem('@FcmId');
+
+      if (!asyncStorageFcmId) {
+        await getFcmId();
+        asyncStorageFcmId = await AsyncStorage.getItem('@FcmId');
+      }
       const {
         getAppVersion,
         getDeviceId,
@@ -125,7 +129,7 @@ const Login = ({navigation}) => {
           : {
               mobileNumber: mobile,
               otp: otp,
-              fcm_id: 'FCM-1564564149845456845',
+              fcm_id: asyncStorageFcmId,
               device_id: await getDeviceId(),
               device_name: await getDeviceName(),
               device_model: await getDeviceModel(),
@@ -143,7 +147,9 @@ const Login = ({navigation}) => {
           setLoader(false);
         } else {
           setLoader(false);
-          const {id, photo, name, folkId, mobile} = response?.data?.profile;
+
+          const {id, photo, name, folkId, mobile, folkLevel} =
+            response?.data?.profile;
           const {
             header,
             bottomTab,
@@ -159,6 +165,7 @@ const Login = ({navigation}) => {
             name,
             folkId,
             mobile,
+            folkLevel,
           };
           await setGlobalState(prev => ({
             ...prev,
@@ -167,10 +174,10 @@ const Login = ({navigation}) => {
             profileId: id,
             activeEventTab: 0,
             isConnected: true,
-            folkId: folkId,
+            folkId,
             userName: name,
             mobileNumber: mobile,
-            photo: photo,
+            photo,
             headerColor: header,
             bottomTabColor: bottomTab,
             buttonColor: button,
@@ -178,6 +185,7 @@ const Login = ({navigation}) => {
             eventCardColor: eventCard,
             announcementCardColor: announcementCard,
             tabIndicatorColor: tabIndicator,
+            folkLevel,
           }));
           await AsyncStorage.setItem(
             'userDetails',

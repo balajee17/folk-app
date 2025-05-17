@@ -1,6 +1,7 @@
 import {
   Image,
   Keyboard,
+  Modal,
   Platform,
   Pressable,
   SafeAreaView,
@@ -8,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -219,6 +221,10 @@ const SadhanaRegularize = props => {
     return date;
   };
 
+  const closePicker = () => {
+    setTimePicker({visible: false});
+  };
+
   return (
     <Container>
       <CustomHeader
@@ -347,21 +353,19 @@ const SadhanaRegularize = props => {
                     });
                   }
                 }}>
-                <FloatingInput
-                  label={item?.placeHolder}
-                  editable={item?.inputType !== 'C'}
-                  keyboardType="default"
-                  drpdwnContStyle={styles.dropdownCntStyle}
-                  value={regularizeData[item?.sadhana] || item?.sadhanaVal}
-                  onChangeText={val => handleChange(item?.sadhana, val)}
-                  cntnrStyle={styles.dropdownCont}
-                  labelStyle={{color: COLORS.textLabel}}
-                  txtInptStyle={{
-                    color: COLORS.black,
-                    fontFamily: FONTS.urbanistSemiBold,
-                    fontSize: SIZES.l,
-                  }}
-                />
+                <View pointerEvents="none">
+                  <FloatingInput
+                    label={item?.placeHolder}
+                    editable={item?.inputType !== 'C'}
+                    keyboardType="default"
+                    drpdwnContStyle={styles.dropdownCntStyle}
+                    value={regularizeData[item?.sadhana] || item?.sadhanaVal}
+                    onChangeText={val => handleChange(item?.sadhana, val)}
+                    cntnrStyle={styles.dropdownCont}
+                    labelStyle={{color: COLORS.textLabel}}
+                    txtInptStyle={styles.txtInptStyle}
+                  />
+                </View>
               </Pressable>
             </View>
           ))}
@@ -378,24 +382,63 @@ const SadhanaRegularize = props => {
             <Text style={styles.updateTxt}>Update</Text>
           </TouchableOpacity>
         )}
+        {/* // # Time Picker */}
+        {timePicker?.visible && Platform.OS === 'ios' && (
+          <Modal
+            transparent
+            animationType="slide"
+            visible={true}
+            onRequestClose={() => closePicker()}>
+            <Pressable onPress={() => closePicker()} style={MyStyles.modal}>
+              <View style={styles.modalTimeBox}>
+                <DateTimePicker
+                  mode="time"
+                  value={
+                    moment(timePicker?.time, 'hh:mm a').toDate() || new Date()
+                  }
+                  onChange={(event, selectedTime) => {
+                    if (selectedTime) {
+                      setTimePicker(prev => ({
+                        ...prev,
+                        time: selectedTime,
+                      }));
+                    }
+                  }}
+                  display="spinner"
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    handleChange(
+                      timePicker?.selItem?.sadhana,
+                      moment(timePicker?.time).format('hh:mm a'),
+                    );
+                    setTimePicker({visible: false});
+                  }}
+                  style={styles.doneBtn}>
+                  <Text style={styles.doneTxt}>Done</Text>
+                </TouchableOpacity>
+              </View>
+            </Pressable>
+          </Modal>
+        )}
+
+        {timePicker?.visible && Platform.OS === 'android' && (
+          <DateTimePicker
+            mode="time"
+            value={moment(timePicker?.time, 'hh:mm a').toDate() || new Date()}
+            onChange={(event, selectedTime) => {
+              closePicker();
+              if (event.type === 'set' && selectedTime) {
+                handleChange(
+                  timePicker?.selItem?.sadhana,
+                  moment(selectedTime).format('hh:mm a'),
+                );
+              }
+            }}
+            display="default"
+          />
+        )}
       </ScrollView>
-      {/* // # Time Picker */}
-      {timePicker?.visible && (
-        <DateTimePicker
-          mode="time"
-          accentColor={COLORS.header}
-          value={timePicker?.time || new Date()}
-          onChange={(event, selectedTime) => {
-            setTimePicker({visible: false});
-            handleChange(
-              timePicker?.selItem?.sadhana,
-              moment(selectedTime).format('hh:mm a'),
-            );
-          }}
-          textColor={COLORS.black}
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-        />
-      )}
     </Container>
   );
 };
@@ -413,8 +456,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
     marginTop: '5%',
-    borderTopLeftRadius: moderateScale(30),
-    borderTopRightRadius: moderateScale(30),
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   fieldCont: {
     flexDirection: 'row',
@@ -511,5 +554,25 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.blackOpacity01,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  modalTimeBox: {
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  doneBtn: {
+    backgroundColor: COLORS.header,
+    padding: '4%',
+    alignItems: 'center',
+  },
+  doneTxt: {
+    color: COLORS.white,
+    fontFamily: FONTS.urbanistSemiBold,
+    fontSize: SIZES.xl,
+  },
+  txtInptStyle: {
+    color: COLORS.black,
+    fontFamily: FONTS.urbanistSemiBold,
+    fontSize: SIZES.l,
   },
 });
