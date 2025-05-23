@@ -1,8 +1,6 @@
 import {
-  Modal,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -100,11 +98,10 @@ const ChangeTheme = ({navigation}) => {
       const response = await API.updateColorTheme(params);
 
       console.log('Update response', response?.data);
-      const {sections, successCode, message} = response?.data;
+      const {successCode, message} = response?.data;
       if (successCode === 1) {
-        setSections(sections);
+        storeColors();
         toastMsg(message, 'success');
-        storeColors(sections);
       } else {
         toastMsg(message, 'warning');
       }
@@ -134,28 +131,20 @@ const ChangeTheme = ({navigation}) => {
     setOpenColorPick(false);
   };
 
-  const storeColors = async colorCollection => {
+  const storeColors = async () => {
     try {
-      const getUserColors = [
-        colorCollection?.reduce((acc, item) => {
-          acc[item?.section] = item?.userColor;
-          return acc;
-        }, {}),
-      ];
-      setUserColors(getUserColors[0]);
-
       await setGlobalState(prev => ({
         ...prev,
-        headerColor: getUserColors[0]?.header,
-        bottomTabColor: getUserColors[0]?.bottomTab,
-        buttonColor: getUserColors[0]?.button,
-        cardColor: getUserColors[0]?.card,
-        eventCardColor: getUserColors[0]?.eventCard,
-        announcementCardColor: getUserColors[0]?.announcementCard,
-        tabIndicatorColor: getUserColors[0]?.tabIndicator,
+        headerColor: userColors?.header,
+        bottomTabColor: userColors?.bottomTab,
+        buttonColor: userColors?.button,
+        cardColor: userColors?.card,
+        eventCardColor: userColors?.eventCard,
+        announcementCardColor: userColors?.announcementCard,
+        tabIndicatorColor: userColors?.tabIndicator,
       }));
       Platform.OS === 'android' &&
-        (await changeNavigationBarColor(getUserColors[0]?.header));
+        (await changeNavigationBarColor(userColors?.header));
     } catch (e) {}
   };
 
@@ -238,7 +227,7 @@ const ChangeTheme = ({navigation}) => {
           saveColor(colorCode);
         }}
         closePicker={() => closePicker()}
-        userColorCode={selSection?.userColor}
+        userColorCode={userColors?.[selSection?.section]}
       />
     </Container>
   );

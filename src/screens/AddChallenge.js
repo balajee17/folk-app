@@ -1,11 +1,4 @@
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAppContext} from '../../App';
 import AndroidBackHandler from '../components/BackHandler';
@@ -20,11 +13,8 @@ import {
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
-import {getImage} from '../utils/ImagePath';
 
 const AddChallenge = props => {
-  const {globalState, setGlobalState} = useAppContext();
-
   const [challengesList, setChallengesList] = useState([
     {
       id: 3,

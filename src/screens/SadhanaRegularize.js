@@ -1,15 +1,12 @@
 import {
   Image,
-  Keyboard,
   Modal,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -126,9 +123,8 @@ const SadhanaRegularize = props => {
       console.log('Update_Sadhana_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-        setRegularizeFields(data?.regularizeFields);
         setCalendarList(data?.sadhanaCalendar);
-        setRegularizeData({});
+        toastMsg(message, 'success');
       } else {
         toastMsg(message, 'info');
       }
@@ -272,7 +268,7 @@ const SadhanaRegularize = props => {
                       ]}>
                       {item?.day}
                     </Text>
-                    {Number(item?.percentage) == 100 ? (
+                    {Number(item?.percentage) >= 100 ? (
                       <View style={styles.perCircleCont(item?.progressColor)}>
                         <IonIcons
                           name="checkmark"
@@ -335,17 +331,13 @@ const SadhanaRegularize = props => {
                 />
                 <Text style={styles.fieldName}>{item?.sadhana}</Text>
               </View>
-              {console.log(
-                'regularizeData[item?.sadhana]',
-                regularizeData[item?.sadhana],
-                item?.sadhanaVal,
-              )}
               <Pressable
                 onPress={() => {
                   if (item?.inputType === 'C') {
                     const timeValue = !!item?.sadhanaVal
                       ? getTimeAsDate(item?.sadhanaVal)
-                      : '';
+                      : new Date();
+                    console.log('timeValue', timeValue);
                     setTimePicker({
                       visible: true,
                       selItem: item,
@@ -353,19 +345,23 @@ const SadhanaRegularize = props => {
                     });
                   }
                 }}>
-                <View pointerEvents="none">
-                  <FloatingInput
-                    label={item?.placeHolder}
-                    editable={item?.inputType !== 'C'}
-                    keyboardType="default"
-                    drpdwnContStyle={styles.dropdownCntStyle}
-                    value={regularizeData[item?.sadhana] || item?.sadhanaVal}
-                    onChangeText={val => handleChange(item?.sadhana, val)}
-                    cntnrStyle={styles.dropdownCont}
-                    labelStyle={{color: COLORS.textLabel}}
-                    txtInptStyle={styles.txtInptStyle}
-                  />
-                </View>
+                {/* <View pointerEvents="none"> */}
+                <FloatingInput
+                  label={item?.placeHolder}
+                  editable={item?.inputType !== 'C'}
+                  keyboardType="default"
+                  drpdwnContStyle={styles.dropdownCntStyle}
+                  value={
+                    regularizeData.hasOwnProperty(item?.sadhana)
+                      ? regularizeData[item?.sadhana]
+                      : item?.sadhanaVal
+                  }
+                  onChangeText={val => handleChange(item?.sadhana, val)}
+                  cntnrStyle={styles.dropdownCont}
+                  labelStyle={{color: COLORS.textLabel}}
+                  txtInptStyle={styles.txtInptStyle}
+                />
+                {/* </View> */}
               </Pressable>
             </View>
           ))}

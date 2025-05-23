@@ -1,12 +1,4 @@
-import {
-  BackHandler,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {BackHandler, Platform, StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import CustomBottomTab from '../components/CustomBottomTab';
 import Home from './Home';
@@ -14,21 +6,13 @@ import Events from './Events';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import Container from '../components/Container';
-import {COLORS, MyStyles, screenHeight} from '../styles/MyStyles';
 import ConnectUs from './ConnectUs';
 import {useToast} from 'react-native-toast-notifications';
 import Courses from './Courses';
 import {useAppContext} from '../../App';
 import {API} from '../services/API';
-import {
-  CommonActions,
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
-import NoNetwork from '../components/NoNetwork';
+import {useFocusEffect} from '@react-navigation/native';
 import NoDataFound from '../components/NoDataFound';
-import Clipboard from '@react-native-clipboard/clipboard';
 import {CustomPopup} from '../components/BackHandler';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 

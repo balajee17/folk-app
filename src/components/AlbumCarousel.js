@@ -1,40 +1,24 @@
-import {
-  FlatList,
-  Image,
-  Linking,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef} from 'react';
 import {
   COLORS,
   horizontalScale,
   moderateScale,
-  windowHeight,
   windowWidth,
 } from '../styles/MyStyles';
 import Animated, {
   Extrapolation,
   interpolate,
-  interpolateColor,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
-  withTiming,
 } from 'react-native-reanimated';
-import {
-  CommonStatusBar,
-  StatusBarTransp,
-} from '../components/StatusBarComponent';
+import {CommonStatusBar} from '../components/StatusBarComponent';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useToast} from 'react-native-toast-notifications';
-import {RedirectURL, ShareLink} from './CommonFunctionalities';
+import {ShareLink} from './CommonFunctionalities';
 import {DownloadImage} from './FileDownloader';
 import {useAppContext} from '../../App';
 
@@ -163,13 +147,13 @@ const AlbumCarousel = ({selectedItem, activeIndex, closeAlbum}) => {
                   }}>
                   <TouchableOpacity
                     onPress={async () => {
-                      const result = await DownloadImage({
-                        link: item?.link,
-                        name: item?.name || `DailyDarshan${index}`,
-                      });
+                      const result = await DownloadImage(item?.link);
 
-                      if (result) {
-                        toastMsg('Image downloaded successfully.', 'success');
+                      if (!!result?.type) {
+                        toastMsg(
+                          result?.msg,
+                          result?.type === 'S' ? 'success' : 'error',
+                        );
                       } else {
                         toastMsg('Download failed.', 'error');
                       }

@@ -20,7 +20,7 @@ import {appVersion} from '../../AppVersion.json';
 import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
-import {CommonStatusBar, useStatusBarHeight} from './StatusBarComponent';
+import {CommonStatusBar} from './StatusBarComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ImageShimmer, TitleShimmer} from './Shimmer';
 import {CustomPopup} from './BackHandler';
@@ -57,7 +57,7 @@ const CustomDrawer = ({navigation, route}) => {
         : null;
     } else {
       setGlobalState(prev => ({...prev, current: id})),
-        navigateTo(screenName, {titleName: title});
+        navigateTo(screenName, {titleName: title, id});
     }
   };
 

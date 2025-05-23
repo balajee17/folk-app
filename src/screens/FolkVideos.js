@@ -1,14 +1,13 @@
 import {
   FlatList,
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
@@ -16,14 +15,11 @@ import {
   horizontalScale,
   moderateScale,
   MyStyles,
-  screenHeight,
   SIZES,
   verticalScale,
-  windowHeight,
   windowWidth,
 } from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
-import {screenNames} from '../constants/ScreenNames';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {TitleShimmer, YoutubeShimmer} from '../components/Shimmer';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';

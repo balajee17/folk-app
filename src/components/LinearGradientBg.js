@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {COLORS, moderateScale, verticalScale} from '../styles/MyStyles';
+import {verticalScale} from '../styles/MyStyles';
 import {useAppContext} from '../../App';
 import {getGradientColors} from './CommonFunctionalities';
 

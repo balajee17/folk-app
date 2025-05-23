@@ -1,19 +1,6 @@
-import {
-  Alert,
-  Image,
-  ImageBackground,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
-import {
-  CFCallback,
-  CFErrorResponse,
-  CFPaymentGatewayService,
-} from 'react-native-cashfree-pg-sdk';
+import {CFPaymentGatewayService} from 'react-native-cashfree-pg-sdk';
 import {
   CFDropCheckoutPayment,
   CFEnvironment,
@@ -23,7 +10,6 @@ import {
   CFThemeBuilder,
 } from 'cashfree-pg-api-contract';
 import {COLORS} from '../styles/MyStyles';
-import Swiper from 'react-native-deck-swiper';
 
 const PAYMENT = () => {
   useEffect(() => {

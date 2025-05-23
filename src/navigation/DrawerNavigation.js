@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import CustomDrawer from '../components/CustomDrawer';
 import {screenNames} from '../constants/ScreenNames';

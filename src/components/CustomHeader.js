@@ -5,7 +5,6 @@ import {
   horizontalScale,
   moderateScale,
   MyStyles,
-  verticalScale,
 } from '../styles/MyStyles';
 import {getImage} from '../utils/ImagePath';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,6 +22,7 @@ const CustomHeader = ({
   goBack,
   rightIcnAction,
   martop,
+  id = undefined,
 }) => {
   const {setGlobalState, globalState} = useAppContext();
   const {mobileNumber, folkId, menuItems, headerColor} = globalState;
@@ -46,8 +46,11 @@ const CustomHeader = ({
     titleName === screenNames.events ||
     titleName === screenNames.connectUs ||
     titleName === screenNames.courses ||
-    titleName === screenNames.yfhForm ||
-    titleName === screenNames.accommodation ||
+    // titleName === screenNames.yfhForm ||
+    id === 'D2' ||
+    id === 'D7' ||
+    id === 'D8' ||
+    (titleName === screenNames.titleName) === screenNames.accommodation ||
     titleName === screenNames.folkMerchant ||
     titleName === screenNames.contribution ||
     titleName === screenNames.habitsSadhana;

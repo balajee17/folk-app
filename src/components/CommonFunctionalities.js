@@ -18,7 +18,7 @@ import {
   CFThemeBuilder,
 } from 'cashfree-pg-api-contract';
 import {API} from '../services/API';
-import {COLORS, moderateScale, MyStyles, screenWidth} from '../styles/MyStyles';
+import {COLORS, moderateScale, MyStyles} from '../styles/MyStyles';
 import ImagePicker from 'react-native-image-crop-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Clipboard from '@react-native-clipboard/clipboard';

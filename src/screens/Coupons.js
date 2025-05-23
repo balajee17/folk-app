@@ -1,11 +1,7 @@
 import {
   FlatList,
-  Image,
-  ImageBackground,
   Modal,
-  Pressable,
   RefreshControl,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,7 +16,6 @@ import {
   FONTS,
   horizontalScale,
   moderateScale,
-  MyStyles,
   SIZES,
   verticalScale,
   windowWidth,
@@ -30,7 +25,6 @@ import {useAppContext} from '../../App';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
-import moment from 'moment';
 import Spinner from '../components/Spinner';
 import {
   CashFreePayment,
@@ -39,7 +33,7 @@ import {
 } from '../components/CommonFunctionalities';
 import AndroidBackHandler from '../components/BackHandler';
 import FloatingInput from '../components/FloatingInput';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import FlipCardCoupon from '../components/FlipCardCoupon';
 
 const Coupons = props => {

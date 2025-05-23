@@ -2,7 +2,6 @@ export const getImage = {
   menu: require('../assets/images/menu.png'),
   notification: require('../assets/images/notification.png'),
   folk: require('../assets/images/folk.png'),
-  folkIcn: require('../assets/images/folkIcn.png'),
   home: require('../assets/images/home.png'),
   homeActive: require('../assets/images/homeActive.png'),
   calendar: require('../assets/images/calendar.png'),
@@ -20,5 +19,4 @@ export const getImage = {
   folkCircle: require('../assets/images/FOLK_Circle.png'),
   noNetwork: require('../assets/images/noNetwork.gif'),
   folkSplash: require('../assets/images/folk_splash.png'),
-  // Folk_GIF_CDN_Link: 'https://dashboard.folknet.in/Folk-home.gif',
 };

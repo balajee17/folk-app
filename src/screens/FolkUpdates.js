@@ -2,8 +2,6 @@ import {
   FlatList,
   Image,
   Pressable,
-  SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -24,7 +22,7 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
 import AndroidBackHandler from '../components/BackHandler';
-import {CopyToClipboard, ShareLink} from '../components/CommonFunctionalities';
+import {CopyToClipboard} from '../components/CommonFunctionalities';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useAppContext} from '../../App';
 import {DownloadImage} from '../components/FileDownloader';
@@ -139,15 +137,14 @@ const FolkUpdates = props => {
                             {/*  // # Download Btn */}
                             <TouchableOpacity
                               onPress={async () => {
-                                const result = await DownloadImage({
-                                  link: updateItem?.link,
-                                  name: updateItem?.title || 'Announcements',
-                                });
+                                const result = await DownloadImage(
+                                  updateItem?.link,
+                                );
 
-                                if (result) {
+                                if (!!result?.type) {
                                   toastMsg(
-                                    'Image downloaded successfully.',
-                                    'success',
+                                    result?.msg,
+                                    result?.type === 'S' ? 'success' : 'error',
                                   );
                                 } else {
                                   toastMsg('Download failed.', 'error');

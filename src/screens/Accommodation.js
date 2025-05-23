@@ -1,6 +1,6 @@
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
-import {MyStyles, screenHeight, windowWidth} from '../styles/MyStyles';
+import {MyStyles} from '../styles/MyStyles';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';

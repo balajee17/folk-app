@@ -1,7 +1,5 @@
 import {
   BackHandler,
-  Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -36,7 +34,7 @@ const NoNetwork = ({navigation}) => {
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
-      AndroidBackHandler.noGoingBack(),
+      AndroidBackHandler.noGoingBack,
     );
 
     return () => backHandler.remove();

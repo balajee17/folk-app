@@ -1,15 +1,12 @@
 import {
   FlatList,
   Image,
-  ImageBackground,
-  SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from '../components/Container';
 import {
   COLORS,
@@ -21,25 +18,14 @@ import {
 } from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
-import {getImage} from '../utils/ImagePath';
-import Animated, {
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import SwipeCard from '../components/SwipeCard';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import AndroidBackHandler from '../components/BackHandler';
 import Swiper from 'react-native-deck-swiper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import {RedirectURL, ShareLink} from '../components/CommonFunctionalities';
+import {ShareLink} from '../components/CommonFunctionalities';
 import {useAppContext} from '../../App';
 import {DownloadImage} from '../components/FileDownloader';
 
@@ -151,15 +137,14 @@ const Quotes = props => {
                             <View style={styles.shareDwnldCont}>
                               <TouchableOpacity
                                 onPress={async () => {
-                                  const result = await DownloadImage({
-                                    link: card,
-                                    name: `DailyQuotes${cardIndex}`,
-                                  });
+                                  const result = await DownloadImage(card);
 
-                                  if (result) {
+                                  if (!!result?.type) {
                                     toastMsg(
-                                      'Image downloaded successfully.',
-                                      'success',
+                                      result?.msg,
+                                      result?.type === 'S'
+                                        ? 'success'
+                                        : 'error',
                                     );
                                   } else {
                                     toastMsg('Download failed.', 'error');

@@ -1,5 +1,5 @@
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -17,7 +17,6 @@ import AttendedEvents from './AttendedEvents';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FloatingInput from '../components/FloatingInput';
 import {TabView} from 'react-native-tab-view';
-import {useIsFocused} from '@react-navigation/native';
 import {useAppContext} from '../../App';
 
 const Events = ({

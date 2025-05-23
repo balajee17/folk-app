@@ -1,27 +1,29 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  BackHandler,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import {RNCamera} from 'react-native-camera';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   COLORS,
   FONTS,
-  horizontalScale,
   moderateScale,
   screenHeight,
+  screenWidth,
   SIZES,
-  verticalScale,
-  windowHeight,
-  windowWidth,
 } from '../styles/MyStyles';
 import {API} from '../services/API';
-import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
 import {getImage} from '../utils/ImagePath';
 import {useStatusBarHeight} from './StatusBarComponent';
 import AndroidBackHandler from './BackHandler';
 import Container from './Container';
+import {Camera} from 'react-native-camera-kit';
 
 const QrScanner = props => {
   const {globalState, setGlobalState} = useAppContext();
@@ -30,24 +32,39 @@ const QrScanner = props => {
 
   const [flash, setFlash] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [cameraActive, setCameraActive] = useState(true);
+  const [scanBarCode, setScanBarCode] = useState(true);
 
-  const onSuccess = e => {
-    console.log('QR Code Scanned:', e?.data);
-    sendEventAttendance(e?.data);
-  };
   const {navigation, route} = props;
   const {eventId = ''} = route?.params;
-
-  useEffect(() => {
-    AndroidBackHandler.setHandler(props);
-    return AndroidBackHandler.removerHandler();
-  }, []);
 
   const toast = useToast();
   const toastMsg = (msg, type) => {
     toast.show(msg, {
       type: type,
     });
+  };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      AndroidBackHandler.noGoingBack,
+    );
+    return () => backHandler.remove();
+  }, []);
+
+  const onSuccess = e => {
+    console.log('QR Code Scanned:', e.nativeEvent.codeStringValue);
+    const scannedData = e.nativeEvent.codeStringValue;
+    setScanBarCode(false);
+    if (!!scannedData) {
+      sendEventAttendance(scannedData);
+    } else {
+      setTimeout(() => {
+        setScanBarCode(true);
+      }, 2500);
+      toastMsg('Invalid Qr Code.', 'error');
+    }
   };
 
   // # API to mark attendance
@@ -72,15 +89,18 @@ const QrScanner = props => {
           reloadEventList: 'Y',
           activeEventTab: 1,
         }));
+        setScanBarCode(true);
         navigation.goBack();
       } else {
         toastMsg(message, 'warning');
+        setScanBarCode(true);
       }
       setLoader(false);
     } catch (err) {
       console.log('ERR-Event-Attendance-screen', err);
       setLoader(false);
       toastMsg('', 'error');
+      setScanBarCode(true);
     }
   };
 
@@ -93,7 +113,11 @@ const QrScanner = props => {
             onPress={() => setFlash(!flash)}
             activeOpacity={0.8}
             style={styles.flashIcon}>
-            <Ionicons name="flash" size={30} color={COLORS.white} />
+            <Ionicons
+              name="flash"
+              size={30}
+              color={flash ? COLORS.citrine : COLORS.white}
+            />
           </TouchableOpacity>
 
           <Text style={styles.title}>Scan QR</Text>
@@ -101,30 +125,33 @@ const QrScanner = props => {
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.closeIcon}
-            onPress={() => navigation.goBack()}>
+            onPress={() => {
+              setCameraActive(false);
+              navigation.goBack();
+            }}>
             <Ionicons name="close" size={30} color={COLORS.white} />
           </TouchableOpacity>
         </View>
         {/* // @ Sub Title */}
-
         <Text style={styles.scanText}>
           Scan the QR code to{'\n'}Mark your Attendance
         </Text>
         {/* // @ Qr Scanner */}
-        <QRCodeScanner
-          onRead={onSuccess}
-          flashMode={
-            flash
-              ? RNCamera.Constants.FlashMode.torch
-              : RNCamera.Constants.FlashMode.off
-          }
-          reactivate={true}
-          reactivateTimeout={2000}
-          cameraContainerStyle={styles.camContainer}
-          cameraStyle={styles.cameraStyle}
-        />
+        <View style={[styles.camContainer]}>
+          {cameraActive && (
+            <Camera
+              scanBarcode={scanBarCode}
+              onReadCode={event => onSuccess(event)}
+              showFrame={false}
+              flashMode={flash ? 'on' : 'off'}
+              cameraType="back"
+              style={{width: screenWidth * 0.7, height: screenHeight * 0.5}}
+              maxZoom={5}
+            />
+          )}
+        </View>
         {/* // @ Camera outer border img */}
-        <View style={styles.outerBorderImg}>
+        <View pointerEvents="none" style={styles.outerBorderImg}>
           <Image source={getImage.scanner} style={styles.marker} />
         </View>
       </View>
@@ -148,7 +175,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     position: 'absolute',
     top: '3%',
-    // marginTop: '3%',
   }),
   title: {
     fontFamily: FONTS.urbanistSemiBold,
@@ -165,27 +191,36 @@ const styles = StyleSheet.create({
     zIndex: 99,
   },
   camContainer: {
-    height: windowWidth * 0.75,
-    width: windowWidth * 0.75,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: COLORS.scannerBg,
-  },
-  cameraStyle: {
-    height: windowWidth * 0.7,
-    width: windowWidth * 0.7,
+    height: screenWidth * 0.7,
+    width: screenWidth * 0.7,
     borderRadius: moderateScale(30),
     overflow: 'hidden',
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cameraStyle: {
+    height: '100%',
+    width: '100%',
   },
   outerBorderImg: {
     position: 'absolute',
   },
   marker: {
-    height: windowWidth * 0.9,
-    width: windowWidth * 0.9,
+    height: screenWidth * 0.9,
+    width: screenWidth * 0.9,
     resizeMode: 'contain',
     zIndex: 99,
+  },
+  tapScanCont: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tapScanTxt: {
+    color: COLORS.white,
+    fontFamily: FONTS.urbanistSemiBold,
+    fontSize: SIZES.xxl,
   },
 });

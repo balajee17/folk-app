@@ -1,23 +1,20 @@
 import {
   Image,
   ImageBackground,
-  Linking,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   COLORS,
   FONTS,
   horizontalScale,
   moderateScale,
-  screenHeight,
   SIZES,
   verticalScale,
-  windowHeight,
 } from '../styles/MyStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,9 +22,6 @@ import LinearGradientBg from '../components/LinearGradientBg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import {useToast} from 'react-native-toast-notifications';
-import {API} from '../services/API';
-import Clipboard from '@react-native-clipboard/clipboard';
-import {useAppContext} from '../../App';
 import {
   CopyToClipboard,
   RedirectURL,

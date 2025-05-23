@@ -1,6 +1,5 @@
 import {
   Image,
-  NativeModules,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -176,7 +175,8 @@ const Home = ({apiData, shimmer, refreshData}) => {
             UPDATES?.length > 0 && (
               <ParallexCarousel
                 carouselItems={UPDATES}
-                autoScroll={UPDATES?.length < 8}
+                // autoScroll={UPDATES?.length < 8}
+                autoScroll={true}
               />
             )
           )}
@@ -274,14 +274,12 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       <View style={styles.shareDwnldCont}>
                         <TouchableOpacity
                           onPress={async () => {
-                            const result = await DownloadImage({
-                              link: card?.link,
-                              name: card?.name || `DailyQuotes${cardIndex}`,
-                            });
-                            if (result) {
+                            const result = await DownloadImage(card?.link);
+
+                            if (!!result?.type) {
                               toastMsg(
-                                'Image downloaded successfully.',
-                                'success',
+                                result?.msg,
+                                result?.type === 'S' ? 'success' : 'error',
                               );
                             } else {
                               toastMsg('Download failed.', 'error');
@@ -388,13 +386,13 @@ const Home = ({apiData, shimmer, refreshData}) => {
                     {/*  // # Download Btn */}
                     <TouchableOpacity
                       onPress={async () => {
-                        const result = await DownloadImage({
-                          link: updateItem?.link,
-                          name: updateItem?.title || 'Announcements',
-                        });
+                        const result = await DownloadImage(updateItem?.link);
 
-                        if (result) {
-                          toastMsg('Image downloaded successfully.', 'success');
+                        if (!!result?.type) {
+                          toastMsg(
+                            result?.msg,
+                            result?.type === 'S' ? 'success' : 'error',
+                          );
                         } else {
                           toastMsg('Download failed.', 'error');
                         }

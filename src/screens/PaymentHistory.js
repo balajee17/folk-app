@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
@@ -18,7 +17,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {screenNames} from '../constants/ScreenNames';
 import {useNavigation} from '@react-navigation/native';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
-import moment from 'moment';
 import {useAppContext} from '../../App';
 
 const PaymentHistory = ({shimmer, paymentHistory}) => {

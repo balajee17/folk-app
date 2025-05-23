@@ -1,15 +1,13 @@
 import {
   ImageBackground,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
@@ -19,16 +17,14 @@ import {
   screenHeight,
   SIZES,
   verticalScale,
-  windowWidth,
 } from '../styles/MyStyles';
 import {
   StatusBarTransp,
   useStatusBarHeight,
 } from '../components/StatusBarComponent';
-import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {API} from '../services/API';
 import {useAppContext} from '../../App';
 import {useToast} from 'react-native-toast-notifications';
@@ -36,7 +32,6 @@ import Spinner from '../components/Spinner';
 import {TitleShimmer} from '../components/Shimmer';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
-import moment from 'moment';
 import {
   CashFreePayment,
   GetPaymentStatus,
@@ -260,6 +255,7 @@ const EventDetails = props => {
             source={{
               uri: eventDetails?.Image,
             }}
+            resizeMode="stretch"
             style={styles.bgImg}>
             {/* // # Header */}
             <View style={{marginTop: statusBarHeight}}>
@@ -620,8 +616,6 @@ const styles = StyleSheet.create({
   contentCont: {
     width: '100%',
     flex: 1,
-    borderTopLeftRadius: moderateScale(30),
-    borderTopRightRadius: moderateScale(30),
     overflow: 'hidden',
     padding: '4%',
   },

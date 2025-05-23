@@ -1,23 +1,18 @@
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
   horizontalScale,
   moderateScale,
-  percentageToPixel,
-  resHeight,
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
 import Animated, {
-  Easing,
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
 
 const OFF_SET = 45;
@@ -25,8 +20,6 @@ const ITEM_WIDTH = Math.round(windowWidth - OFF_SET * 2);
 const ITEM_HEIGHT = verticalScale(220);
 
 const CustomCarousel = ({carouselItems, autoScroll, dots}) => {
-  const [activeIndex, setActiveIndex] = useState(1);
-
   const WIDTH_SIZE = Math.round(windowWidth * 0.8);
 
   const x = useSharedValue(0);

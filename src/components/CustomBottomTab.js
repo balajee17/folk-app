@@ -1,11 +1,4 @@
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {
   COLORS,
@@ -15,8 +8,6 @@ import {
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,7 +16,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 
 const ICONS = [

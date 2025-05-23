@@ -8,7 +8,6 @@ import Quotes from '../screens/Quotes';
 import DailyDarshan from '../screens/DailyDarshan';
 import FolkUpdates from '../screens/FolkUpdates';
 import FolkVideos from '../screens/FolkVideos';
-import YFHForm from '../screens/YFHForm';
 import EventDetails from '../screens/EventDetails';
 import Coupons from '../screens/Coupons';
 import Notifications from '../screens/Notifications';
@@ -19,10 +18,7 @@ import Courses from '../screens/Courses';
 import NoNetwork from '../components/NoNetwork';
 import {useAppContext} from '../../App';
 import Login from '../screens/Login';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../screens/Splash';
-import PAYMENT from '../components/PAYMENT';
-import WheelColor from '../components/WheelColor';
 import EditProfile from '../screens/EditProfile';
 import AddChallenge from '../screens/AddChallenge';
 import CompletedChallenge from '../screens/CompletedChallenge';
@@ -118,7 +114,11 @@ const StackNavigation = () => {
           component={PaymentDetails}
         />
         {/* // @ Scanner */}
-        <Stack.Screen name={screenNames.scanner} component={QrScanner} />
+        <Stack.Screen
+          options={{gestureEnabled: false}}
+          name={screenNames.scanner}
+          component={QrScanner}
+        />
         {/* // @ Courses */}
         <Stack.Screen name={screenNames.courses} component={Courses} />
 

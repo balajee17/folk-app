@@ -1,7 +1,5 @@
 import {
-  Alert,
   BackHandler,
-  Image,
   Modal,
   Platform,
   StyleSheet,
@@ -14,7 +12,6 @@ import {
   FONTS,
   horizontalScale,
   moderateScale,
-  MyStyles,
   screenWidth,
   SIZES,
 } from '../styles/MyStyles';

@@ -159,18 +159,14 @@ const displayNotification = async remoteMessage => {
 
         style: {
           type: AndroidStyle.BIGPICTURE,
-          picture:
-            remoteMessage?.data?.image ||
-            require('../assets/images/folkIcn.png'),
+          picture: remoteMessage?.data?.image,
         },
       },
 
       ios: {
         attachments: [
           {
-            url:
-              remoteMessage?.data?.image ||
-              require('../assets/images/folkIcn.png'),
+            url: remoteMessage?.data?.image,
           },
         ],
         // sound: 'hare_krishna.mp3',

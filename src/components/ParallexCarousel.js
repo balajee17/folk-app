@@ -1,8 +1,7 @@
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   COLORS,
-  horizontalScale,
   moderateScale,
   verticalScale,
   windowWidth,
@@ -18,7 +17,7 @@ import ParallexPaginationDots from './ParallexPaginationDots';
 import ImageViewer from './ImageViewer';
 
 const OFF_SET = moderateScale(25);
-const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
+const ITEM_WIDTH = windowWidth - OFF_SET * 2;
 
 const ITEM_HEIGHT = verticalScale(400);
 const Border_Radius = moderateScale(15);
@@ -151,7 +150,7 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
             const translate = interpolate(
               scrollX.value,
               inputRange,
-              [0.97, 0.85, 0.97],
+              [0.9, 1, 0.9],
               {
                 extrapolate: Extrapolation.CLAMP,
               },
@@ -160,7 +159,7 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
             const opacity = interpolate(
               scrollX.value,
               inputRange,
-              [0.85, 1, 0.85],
+              [0.7, 1, 0.7],
               {
                 extrapolate: Extrapolation.CLAMP,
               },
@@ -176,14 +175,14 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
             const overlayOpacity = interpolate(
               scrollX.value,
               inputRange,
-              [0.85, 0, 0.85],
+              [0.4, 0, 0.4],
               {
                 extrapolate: Extrapolation.CLAMP,
               },
             );
 
             return {
-              backgroundColor: COLORS.halfTransparent,
+              backgroundColor: COLORS.black,
               opacity: overlayOpacity,
               position: 'absolute',
               top: 0,
@@ -198,7 +197,7 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
             const translate = interpolate(scrollX.value, inputRange, [
               -ITEM_WIDTH * 0.2,
               0.87,
-              ITEM_WIDTH * 0.4,
+              ITEM_WIDTH * 0.2,
             ]);
 
             return {
@@ -222,7 +221,7 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
                 },
                 translateStyle,
               ]}>
-              <TouchableOpacity
+              <Pressable
                 activeOpacity={0.8}
                 onPress={() => {
                   stopAutoScroll();
@@ -244,7 +243,7 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
                   />
                   <Animated.View style={overlayStyle} />
                 </Animated.View>
-              </TouchableOpacity>
+              </Pressable>
             </Animated.View>
           );
         })}

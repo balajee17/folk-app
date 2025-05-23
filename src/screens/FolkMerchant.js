@@ -1,4 +1,4 @@
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {MyStyles} from '../styles/MyStyles';
 import {getImage} from '../utils/ImagePath';

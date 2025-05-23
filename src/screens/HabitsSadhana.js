@@ -1,6 +1,5 @@
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,14 +15,12 @@ import {
   FONTS,
   horizontalScale,
   moderateScale,
-  MyStyles,
   SIZES,
 } from '../styles/MyStyles';
 import CustomBottomTab from '../components/CustomBottomTab';
 import {useAppContext} from '../../App';
 import LinearGradientBg from '../components/LinearGradientBg';
 import LinearGradient from 'react-native-linear-gradient';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {

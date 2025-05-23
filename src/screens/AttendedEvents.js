@@ -66,7 +66,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
           'Please enable camera access in settings.',
           [
             {text: 'Cancel', style: 'cancel'},
-            {text: 'Open Settings', onPress: openAppSettings},
+            {text: 'Open Settings', onPress: () => openAppSettings()},
           ],
         );
       }
@@ -185,7 +185,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                         </TouchableOpacity>
                       )}
 
-                      {item?.show_scan === 'Y' && (
+                      {item?.show_scan === 'N' && (
                         <TouchableOpacity
                           onPress={() => checkCameraPermission(item?.id)}
                           style={MyStyles.iconStyle}

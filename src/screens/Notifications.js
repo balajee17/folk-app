@@ -1,20 +1,6 @@
-import {
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  COLORS,
-  FONTS,
-  horizontalScale,
-  moderateScale,
-  MyStyles,
-  SIZES,
-} from '../styles/MyStyles';
+import {MyStyles} from '../styles/MyStyles';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
@@ -23,12 +9,7 @@ import {useAppContext} from '../../App';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import Spinner from '../components/Spinner';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+
 import NotificationCard from '../components/NotificationCard';
 
 const Notifications = props => {

@@ -1,11 +1,4 @@
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   COLORS,
@@ -15,14 +8,9 @@ import {
   MyStyles,
   SIZES,
 } from '../styles/MyStyles';
-import {
-  CommonStatusBar,
-  useStatusBarHeight,
-} from '../components/StatusBarComponent';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import {CommonStatusBar} from '../components/StatusBarComponent';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {getImage} from '../utils/ImagePath';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {useAppContext} from '../../App';

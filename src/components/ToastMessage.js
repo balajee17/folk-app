@@ -21,7 +21,7 @@ const ToastMessage = ({toast}) => {
       }),
       Animated.timing(progressAnim, {
         toValue: 0, // Progress shrinks to 0
-        duration: 3500,
+        duration: 3000,
         useNativeDriver: false, // Progress bar width needs `layout` updates
       }),
     ]).start();
@@ -40,7 +40,7 @@ const ToastMessage = ({toast}) => {
           useNativeDriver: true,
         }),
       ]).start();
-    }, 3500);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);

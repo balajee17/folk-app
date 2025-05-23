@@ -1,32 +1,13 @@
-import {
-  FlatList,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useAppContext} from '../../App';
 import AndroidBackHandler from '../components/BackHandler';
-import {
-  COLORS,
-  FONTS,
-  horizontalScale,
-  moderateScale,
-  MyStyles,
-  SIZES,
-  verticalScale,
-} from '../styles/MyStyles';
+import {MyStyles} from '../styles/MyStyles';
 import Container from '../components/Container';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
 import ChallengeCompletedCard from '../components/ChallengeCompletedCard';
 
 const CompletedChallenge = props => {
-  const {globalState, setGlobalState} = useAppContext();
-
   const [challengesList, setChallengesList] = useState([
     {
       id: 3,

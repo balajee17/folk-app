@@ -2,8 +2,6 @@ import {
   FlatList,
   Image,
   ImageBackground,
-  SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,17 +11,14 @@ import React, {useEffect, useState} from 'react';
 import {
   COLORS,
   FONTS,
-  horizontalScale,
   moderateScale,
   MyStyles,
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
-import {screenNames} from '../constants/ScreenNames';
 import Container from '../components/Container';
 import AlbumCarousel from '../components/AlbumCarousel';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {DarshanShimmer} from '../components/Shimmer';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';

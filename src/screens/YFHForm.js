@@ -1,19 +1,9 @@
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import Container from '../components/Container';
-import {COLORS, MyStyles, screenHeight} from '../styles/MyStyles';
+import {screenHeight} from '../styles/MyStyles';
 import CustomHeader from '../components/CustomHeader';
 import {screenNames} from '../constants/ScreenNames';
-import FloatingInput from '../components/FloatingInput';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {getImage} from '../utils/ImagePath';
 import AndroidBackHandler from '../components/BackHandler';
 import CustomBottomTab from '../components/CustomBottomTab';
 import {useAppContext} from '../../App';
@@ -48,6 +38,7 @@ const YFHForm = props => {
 
   useFocusEffect(
     useCallback(() => {
+      console.log('YFH SCREEN');
       getYFHLink();
     }, []),
   );
@@ -58,7 +49,7 @@ const YFHForm = props => {
       const response = await API.getYFHLink({mobile: mobileNumber});
       const {link, successCode, message} = response?.data;
       if (successCode === 1) {
-        console.log('YFH_Link_res', !link && setLoader(false));
+        console.log('YFH_Link_res', link);
         setYFHLink(link);
         !!link && setLoader(false);
       } else {
@@ -86,9 +77,9 @@ const YFHForm = props => {
       <CustomHeader
         toggleDrawer={() => navigation.openDrawer()}
         titleName={route?.params?.titleName}
+        id={route?.params?.id}
       />
       <Spinner spinnerVisible={loader} />
-
       {/* // # WebView YFH FORM */}
       {YFHLink && (
         <WebView
@@ -98,7 +89,10 @@ const YFHForm = props => {
           }}
           style={{
             flex: 1,
-            marginBottom: '3%',
+            maxHeight: screenHeight * 0.78,
+          }}
+          onNavigationStateChange={event => {
+            console.log('EVENT_WEBVIEW', event);
           }}
           onLoad={() => setLoader(false)}
         />
@@ -170,7 +164,6 @@ const YFHForm = props => {
             }}
           /> */}
       {/* <Image source={getImage.comingSoon} style={MyStyles.comingSoonImg} /> */}
-
       {/* // @ Bottom Tab */}
       <CustomBottomTab
         selIcon={''}

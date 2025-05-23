@@ -1,6 +1,5 @@
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,7 +14,6 @@ import {
   FONTS,
   horizontalScale,
   moderateScale,
-  MyStyles,
   SIZES,
   verticalScale,
 } from '../styles/MyStyles';
@@ -149,10 +147,9 @@ const EditProfile = props => {
       const response = await API.sendEditProfileDetails(params);
 
       console.log('Edit Profile_response', response?.data);
-      const {profileDetails, successCode, message} = response?.data;
+      const {successCode, message} = response?.data;
       if (successCode === 1) {
         toastMsg(message, 'success');
-        setProfileData(profileDetails);
         await setGlobalState(prev => ({...prev, reloadProfile: 'Y'}));
       } else {
         toastMsg(message, 'warning');
