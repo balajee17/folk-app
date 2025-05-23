@@ -53,6 +53,8 @@
 	<string>FOLK need access to save images.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>FOLK need access to photos.</string>
+	 <key>NSAppleMusicUsageDescription</key>
+  <string>FOLK App needs access to play music from your library.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

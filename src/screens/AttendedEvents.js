@@ -185,7 +185,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                         </TouchableOpacity>
                       )}
 
-                      {item?.show_scan === 'N' && (
+                      {item?.show_scan === 'Y' && (
                         <TouchableOpacity
                           onPress={() => checkCameraPermission(item?.id)}
                           style={MyStyles.iconStyle}

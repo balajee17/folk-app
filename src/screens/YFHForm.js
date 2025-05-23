@@ -38,9 +38,8 @@ const YFHForm = props => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('YFH SCREEN');
       getYFHLink();
-    }, []),
+    }, [route?.params?.titleName]),
   );
 
   // # API Get YFH Form Link
