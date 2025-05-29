@@ -135,6 +135,7 @@ const CustomBottomTab = ({selIcon, setSelIcon}) => {
                 style={[styles.icon, opacityAnim]}
               />
               <Animated.Text
+                numberOfLines={1}
                 style={[
                   styles.iconTxt,
                   textAnimation,

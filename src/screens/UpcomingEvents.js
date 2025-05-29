@@ -48,80 +48,73 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                     {
                       marginTop: index == 0 ? '2%' : '5%',
                       backgroundColor: eventCardColor || COLORS.eventCard,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                     },
                   ]}
                   key={item?.id}>
-                  {/* // # Card image */}
-                  <View
-                    style={{
-                      borderRadius: moderateScale(20),
-                      overflow: 'hidden',
-                    }}>
+                  {/* // # Left Side Image */}
+                  <View style={[MyStyles.imgCont]}>
                     <Image
-                      style={{
-                        aspectRatio: 1 / 0.4,
-                        borderRadius: moderateScale(20),
-                      }}
+                      style={MyStyles.image}
                       source={{
                         uri: item?.image,
                       }}
                     />
                   </View>
 
-                  {/* // # Date Mode Container */}
-                  <View style={MyStyles.dateModeCont}>
-                    <View style={MyStyles.dateCont}>
-                      <Text style={MyStyles.dateTxt}>{item?.start_date}</Text>
-                      <Text style={MyStyles.monthTxt}>{item?.start_month}</Text>
-                    </View>
+                  {/* // # Right Side - Event Title */}
+                  <View style={{width: '66%'}}>
+                    <Text numberOfLines={1} style={MyStyles.titleTxt}>
+                      {item?.session_name}
+                    </Text>
+                    <Text
+                      numberOfLines={3}
+                      style={[
+                        MyStyles.descripTxt,
+                        {marginTop: '1%', lineHeight: 17},
+                      ]}>
+                      {item?.description}
+                    </Text>
+                    {/* // # Date & mode */}
+                    <View style={MyStyles.dateModeCont}>
+                      <Text numberOfLines={1} style={MyStyles.dateTxt}>
+                        {item?.start_date}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={[MyStyles.dateTxt, {marginLeft: '2%'}]}>
+                        {item?.start_month},
+                      </Text>
 
-                    <View style={MyStyles.modeCont}>
-                      <Text style={MyStyles.modeTxt}>
+                      <Text
+                        numberOfLines={1}
+                        style={[MyStyles.dateTxt, {marginLeft: '1%'}]}>
                         {item?.event_type === 'F' ? 'Offline' : 'Online'}
                       </Text>
                     </View>
-                  </View>
 
-                  {item?.isLive === 'Y' && (
-                    <View style={styles.liveCont}>
-                      <MaterialCommunityIcons
-                        name="access-point"
-                        size={horizontalScale(12)}
-                        color={COLORS.white}
-                      />
-                      <Text style={styles.liveTxt}>LIVE</Text>
-                    </View>
-                  )}
+                    {/*  // # Amount & Available Seats */}
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        MyStyles.amtTxt,
+                        {width: '100%', marginTop: '2%'},
+                      ]}>
+                      {item?.amount}
+                    </Text>
 
-                  {/* // # Content Container */}
-                  <View style={MyStyles.boxContentContainer}>
-                    <View style={{width: '72%'}}>
-                      <Text numberOfLines={1} style={MyStyles.titleTxt}>
-                        {item?.session_name}
-                      </Text>
-                      <Text numberOfLines={1} style={MyStyles.descripTxt}>
-                        {item?.description}
-                      </Text>
-                    </View>
-
-                    <View style={{width: '25%'}}>
-                      <Text style={MyStyles.amtTxt}>{item?.amount}</Text>
-                    </View>
-                  </View>
-
-                  {/* // # Icon & Register Btn Container */}
-                  <View
-                    style={[
-                      MyStyles.boxContentContainer,
-                      {marginBottom: '1%', justifyContent: 'space-between'},
-                    ]}>
-                    <View style={styles.leftContainer}>
-                      <Text style={styles.avlSlotTxt}>
-                        {item?.availableSlot && item?.availableSlot !== ''
-                          ? `Available Seats : ${item?.availableSlot}`
-                          : ''}
-                      </Text>
-                    </View>
+                    {/*  // # Button */}
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        MyStyles.avlSlotTxt,
+                        {marginTop: '2%', width: '100%'},
+                      ]}>
+                      {item?.availableSlot && item?.availableSlot !== ''
+                        ? `Available Seats : ${item?.availableSlot}`
+                        : ''}
+                    </Text>
                     <TouchableOpacity
                       activeOpacity={0.6}
                       onPress={() => {
@@ -140,7 +133,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                               : buttonColor || COLORS.button,
                         },
                       ]}>
-                      <Text style={MyStyles.registerTxt}>
+                      <Text numberOfLines={1} style={MyStyles.registerTxt}>
                         {item?.availableSlot === 0 ? 'Full' : 'Register'}
                       </Text>
                     </TouchableOpacity>
@@ -157,8 +150,8 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
           }
         />
       ) : (
-        Array(2)
-          .fill(2)
+        Array(3)
+          .fill(3)
           .map((_, i) => <EventShimmer marginTop={i === 0 ? '2%' : '5%'} />)
       )}
     </>
@@ -166,33 +159,3 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
 };
 
 export default UpcomingEvents;
-
-const styles = StyleSheet.create({
-  leftContainer: {
-    width: '40%',
-  },
-  avlSlotTxt: {
-    fontFamily: FONTS.urbanistRegular,
-    fontSize: SIZES.m,
-    color: COLORS.white,
-  },
-  liveCont: {
-    width: horizontalScale(40),
-    borderRadius: moderateScale(3),
-    position: 'absolute',
-    bottom: '50%',
-    alignSelf: 'flex-end',
-    right: '8%',
-    backgroundColor: 'red',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingHorizontal: '1%',
-  },
-  liveTxt: {
-    fontFamily: FONTS.poppinsSemiBold,
-    fontSize: SIZES.s,
-    color: COLORS.white,
-    top: '4%',
-  },
-});

@@ -25,6 +25,8 @@ import CompletedChallenge from '../screens/CompletedChallenge';
 import SadhanaCalendar from '../screens/SadhanaCalendar';
 import SadhanaRegularize from '../screens/SadhanaRegularize';
 import ChangeTheme from '../screens/ChangeTheme';
+import {navigationRef} from '../components/RootNavigation';
+import HabitsSadhana from '../screens/HabitsSadhana';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +34,7 @@ const StackNavigation = () => {
   const {globalState, setGlobalState} = useAppContext();
   const {isConnected} = globalState;
 
-  const navigationRef = useRef();
+  // const navigationRef = useRef();
 
   useEffect(() => {
     if (navigationRef.current) {
@@ -132,6 +134,12 @@ const StackNavigation = () => {
         <Stack.Screen
           name={screenNames.completedChallenge}
           component={CompletedChallenge}
+        />
+
+        {/* // @ Sadhana Calendar */}
+        <Stack.Screen
+          name={screenNames.habitsSadhana}
+          component={HabitsSadhana}
         />
 
         {/* // @ Sadhana Calendar */}

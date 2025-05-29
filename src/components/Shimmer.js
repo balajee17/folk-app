@@ -320,85 +320,62 @@ export const EventShimmer = props => {
       style={{
         backgroundColor: COLORS.btIcon,
         alignSelf: 'center',
-        borderRadius: moderateScale(26),
+        borderRadius: moderateScale(12),
         width: '93%',
         padding: '2%',
         ...props,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
       }}>
-      <View
-        style={[
-          {
-            backgroundColor: COLORS.shimmerBg,
-            width: '100%',
-            height: verticalScale(150),
-            alignSelf: 'center',
-            borderRadius: moderateScale(20),
-            padding: '2%',
-          },
-        ]}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <SkeletonPlaceholder
-            highlightColor={COLORS.white}
-            backgroundColor={COLORS.highLightColor}>
-            <SkeletonPlaceholder.Item
-              margin={'0.7%'}
-              width={horizontalScale(45)}
-              height={horizontalScale(45)}
-              borderRadius={moderateScale(25)}
-            />
-          </SkeletonPlaceholder>
-
-          <SkeletonPlaceholder
-            highlightColor={COLORS.white}
-            backgroundColor={COLORS.highLightColor}>
-            <SkeletonPlaceholder.Item
-              padding={'2%'}
-              width={horizontalScale(60)}
-              height={horizontalScale(20)}
-              borderRadius={moderateScale(13)}
-            />
-          </SkeletonPlaceholder>
-        </View>
+      <View style={{width: '40%'}}>
+        <SkeletonPlaceholder
+          highlightColor={COLORS.white}
+          backgroundColor={COLORS.shimmerBg}>
+          <SkeletonPlaceholder.Item
+            width={'100%'}
+            height={verticalScale(160)}
+            borderRadius={moderateScale(10)}
+          />
+        </SkeletonPlaceholder>
       </View>
 
-      <SkeletonPlaceholder
-        highlightColor={COLORS.white}
-        backgroundColor={COLORS.shimmerBg}>
-        <SkeletonPlaceholder.Item
-          marginTop={verticalScale(10)}
-          width={horizontalScale(250)}
-          height={horizontalScale(15)}
-          borderRadius={moderateScale(25)}
-        />
-      </SkeletonPlaceholder>
+      <View style={{width: '66%'}}>
+        <SkeletonPlaceholder
+          highlightColor={COLORS.white}
+          backgroundColor={COLORS.shimmerBg}>
+          <SkeletonPlaceholder.Item
+            width={'80%'}
+            height={horizontalScale(15)}
+            borderRadius={moderateScale(25)}
+            marginLeft={'4%'}
+            marginTop={verticalScale(5)}
+          />
+        </SkeletonPlaceholder>
 
-      <SkeletonPlaceholder
-        highlightColor={COLORS.white}
-        backgroundColor={COLORS.shimmerBg}>
-        <SkeletonPlaceholder.Item
-          marginTop={verticalScale(10)}
-          width={horizontalScale(200)}
-          height={horizontalScale(15)}
-          borderRadius={moderateScale(25)}
-        />
-      </SkeletonPlaceholder>
+        <SkeletonPlaceholder
+          highlightColor={COLORS.white}
+          backgroundColor={COLORS.shimmerBg}>
+          <SkeletonPlaceholder.Item
+            marginTop={verticalScale(10)}
+            width={'56%'}
+            height={horizontalScale(15)}
+            borderRadius={moderateScale(25)}
+            marginLeft={'4%'}
+          />
+        </SkeletonPlaceholder>
 
-      <SkeletonPlaceholder
-        highlightColor={COLORS.white}
-        backgroundColor={COLORS.shimmerBg}>
-        <SkeletonPlaceholder.Item
-          marginTop={verticalScale(10)}
-          width={horizontalScale(100)}
-          height={horizontalScale(30)}
-          borderRadius={moderateScale(25)}
-          alignSelf="flex-end"
-        />
-      </SkeletonPlaceholder>
+        <SkeletonPlaceholder
+          highlightColor={COLORS.white}
+          backgroundColor={COLORS.shimmerBg}>
+          <SkeletonPlaceholder.Item
+            marginTop={verticalScale(80)}
+            width={horizontalScale(100)}
+            height={horizontalScale(30)}
+            borderRadius={moderateScale(25)}
+            marginLeft={'45%'}
+          />
+        </SkeletonPlaceholder>
+      </View>
     </View>
   );
 };

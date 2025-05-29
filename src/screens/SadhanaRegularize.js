@@ -53,6 +53,7 @@ const SadhanaRegularize = props => {
   const [calendarList, setCalendarList] = useState(sadhanaData);
   const [spinner, setSpinner] = useState(true);
   const [timePicker, setTimePicker] = useState({visible: false, selItem: {}});
+  const [layoutDone, setLayoutDone] = useState(false);
 
   const scrollRef = useRef(null);
 
@@ -76,7 +77,7 @@ const SadhanaRegularize = props => {
         animated: true,
       });
     }
-  }, []);
+  }, [layoutDone]);
 
   useEffect(() => {
     getRegularizeFields();
@@ -237,6 +238,7 @@ const SadhanaRegularize = props => {
       <View style={styles.dateSelectCont}>
         <ScrollView
           ref={scrollRef}
+          onLayout={() => setLayoutDone(true)}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollViewContent}>
@@ -345,23 +347,24 @@ const SadhanaRegularize = props => {
                     });
                   }
                 }}>
-                {/* <View pointerEvents="none"> */}
-                <FloatingInput
-                  label={item?.placeHolder}
-                  editable={item?.inputType !== 'C'}
-                  keyboardType="default"
-                  drpdwnContStyle={styles.dropdownCntStyle}
-                  value={
-                    regularizeData.hasOwnProperty(item?.sadhana)
-                      ? regularizeData[item?.sadhana]
-                      : item?.sadhanaVal
-                  }
-                  onChangeText={val => handleChange(item?.sadhana, val)}
-                  cntnrStyle={styles.dropdownCont}
-                  labelStyle={{color: COLORS.textLabel}}
-                  txtInptStyle={styles.txtInptStyle}
-                />
-                {/* </View> */}
+                <View
+                  pointerEvents={item?.inputType === 'C' ? 'box-only' : 'auto'}>
+                  <FloatingInput
+                    label={item?.placeHolder}
+                    editable={item?.inputType !== 'C'}
+                    keyboardType="default"
+                    drpdwnContStyle={styles.dropdownCntStyle}
+                    value={
+                      regularizeData.hasOwnProperty(item?.sadhana)
+                        ? regularizeData[item?.sadhana]
+                        : item?.sadhanaVal
+                    }
+                    onChangeText={val => handleChange(item?.sadhana, val)}
+                    cntnrStyle={styles.dropdownCont}
+                    labelStyle={{color: COLORS.textLabel}}
+                    txtInptStyle={styles.txtInptStyle}
+                  />
+                </View>
               </Pressable>
             </View>
           ))}

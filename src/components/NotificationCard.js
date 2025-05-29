@@ -24,7 +24,7 @@ const NotificationCard = ({item, index, swipedNotify}) => {
   const {globalState} = useAppContext();
   const {cardColor} = globalState;
   const Margin_Top = verticalScale(15);
-  const HEIGHT = verticalScale(110);
+  const HEIGHT = verticalScale(120);
 
   const translateX = useSharedValue(0);
   const Translate_X_Threshold = -windowWidth * 0.3;
@@ -95,17 +95,17 @@ const NotificationCard = ({item, index, swipedNotify}) => {
               <View style={styles.circleIcon}>
                 <Image
                   style={{width: '100%', height: '100%'}}
-                  source={{uri: item?.ICON}}
+                  source={{uri: item?.IMAGE}}
                 />
               </View>
 
-              <Text numberOfLines={2} style={styles.titleTxt}>
+              <Text numberOfLines={1} style={styles.titleTxt}>
                 {item?.TITLE}
               </Text>
             </View>
 
             {/* // #  Description */}
-            <Text numberOfLines={2} style={styles.descrpTxt}>
+            <Text numberOfLines={1} style={styles.descrpTxt}>
               {item?.NOTIFICATION}
             </Text>
           </View>

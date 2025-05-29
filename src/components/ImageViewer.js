@@ -1,4 +1,4 @@
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {
@@ -19,80 +19,91 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ZoomSwiper from 'react-native-image-zoom-viewer';
 
-const ImageViewer = ({imageURL, closeImage}) => {
-  const translateY = useSharedValue(0);
-  const opacity = useSharedValue(0);
-
+const ImageViewer = ({closeImage, imageData, selectedItem}) => {
+  // const translateY = useSharedValue(0);
+  // const opacity = useSharedValue(0);
   useEffect(() => {
-    opacity.value = withTiming(1, {duration: 300});
+    // opacity.value = withTiming(1, {duration: 300});
   }, []);
 
-  const requestToClose = () => {
-    opacity.value = withTiming(0, {duration: 200});
-    closeImage();
-  };
+  // const requestToClose = () => {
+  //   opacity.value = withTiming(0, {duration: 200});
+  //   closeImage();
+  // };
 
-  const panGesture = Gesture.Pan()
-    .onUpdate(e => {
-      if (e.translationY > 0) {
-        translateY.value = e.translationY;
-      }
-    })
-    .onEnd(() => {
-      if (translateY.value > 150) {
-        runOnJS(requestToClose)();
-      } else {
-        translateY.value = withSpring(0);
-      }
-    });
+  // const panGesture = Gesture.Pan()
+  //   .onUpdate(e => {
+  //     if (e.translationY > 0) {
+  //       translateY.value = e.translationY;
+  //     }
+  //   })
+  //   .onEnd(() => {
+  //     if (translateY.value > 150) {
+  //       runOnJS(requestToClose)();
+  //     } else {
+  //       translateY.value = withSpring(0);
+  //     }
+  //   });
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: translateY.value}],
-  }));
+  // const animatedStyle = useAnimatedStyle(() => ({
+  //   transform: [{translateY: translateY.value}],
+  // }));
 
-  const overlayStyle = useAnimatedStyle(() => {
-    const clampedY = Math.min(translateY.value, 150); // Cap drag value at 150
-    const dynamicOpacity = interpolate(
-      clampedY,
-      [0, 150],
-      [1, 0],
-      Extrapolation.CLAMP,
-    );
+  // const overlayStyle = useAnimatedStyle(() => {
+  //   const clampedY = Math.min(translateY.value, 150); // Cap drag value at 150
+  //   const dynamicOpacity = interpolate(
+  //     clampedY,
+  //     [0, 150],
+  //     [1, 0],
+  //     Extrapolation.CLAMP,
+  //   );
 
-    return {
-      backgroundColor: COLORS.imageViewBg,
-      opacity: dynamicOpacity,
-    };
-  });
+  //   return {
+  //     backgroundColor: COLORS.imageViewBg,
+  //     opacity: dynamicOpacity,
+  //   };
+  // });
 
   return (
-    <View style={[styles.container]}>
-      {/* Fullscreen image */}
-      <Animated.View style={[styles.fullscreenOverlay, overlayStyle]}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={styles.closeButton}
-          onPress={requestToClose}>
-          <MaterialCommunityIcons
-            name="close"
-            color={COLORS.white}
-            size={moderateScale(20)}
-          />
-        </TouchableOpacity>
+    // <View style={[styles.container]}>
+    //   {/* Fullscreen image */}
+    //   <Animated.View style={[styles.fullscreenOverlay, overlayStyle]}>
+    //     <TouchableOpacity
+    //       activeOpacity={0.9}
+    //       style={styles.closeButton}
+    //       onPress={requestToClose}>
+    //       <MaterialCommunityIcons
+    //         name="close"
+    //         color={COLORS.white}
+    //         size={moderateScale(20)}
+    //       />
+    //     </TouchableOpacity>
 
-        <GestureDetector gesture={panGesture}>
-          <Animated.View
-            style={[styles.fullscreenImageContainer, animatedStyle]}>
-            <Image
-              source={{uri: imageURL}}
-              style={[styles.fullscreenImage]}
-              resizeMode="contain"
-            />
-          </Animated.View>
-        </GestureDetector>
-      </Animated.View>
-    </View>
+    //     <GestureDetector gesture={panGesture}>
+    //       <Animated.View
+    //         style={[styles.fullscreenImageContainer, animatedStyle]}>
+    //         <Image
+    //           source={{uri: imageURL}}
+    //           style={[styles.fullscreenImage]}
+    //           resizeMode="contain"
+    //         />
+    //       </Animated.View>
+    //     </GestureDetector>
+    //   </Animated.View>
+    // </View>
+
+    <Modal visible={true} transparent>
+      <ZoomSwiper
+        index={selectedItem}
+        saveToLocalByLongPress={false}
+        enableSwipeDown
+        onCancel={() => closeImage(true)}
+        enableImageZoom
+        imageUrls={imageData}
+      />
+    </Modal>
   );
 };
 

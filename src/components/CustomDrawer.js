@@ -1,6 +1,7 @@
 import {
   Image,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,10 +22,8 @@ import {screenNames} from '../constants/ScreenNames';
 import {useAppContext} from '../../App';
 import {getImage} from '../utils/ImagePath';
 import {CommonStatusBar} from './StatusBarComponent';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ImageShimmer, TitleShimmer} from './Shimmer';
-import {CustomPopup} from './BackHandler';
-import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import {ShowQrCode} from './CommonFunctionalities';
 
 const CustomDrawer = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -36,12 +35,13 @@ const CustomDrawer = ({navigation, route}) => {
     photo,
     menuItems,
     menuSpinner,
-    buttonColor,
     headerColor,
     tabIndicatorColor,
+    qrCodeLink,
   } = globalState;
   const {closeDrawer} = navigation;
-  const [showLogout, setShowLogout] = useState(false);
+
+  const [openQrCode, setOpenQrCode] = useState(false);
 
   // # Navigate Sreen
   const navigateTo = (screen, params) => {
@@ -60,35 +60,6 @@ const CustomDrawer = ({navigation, route}) => {
         navigateTo(screenName, {titleName: title, id});
     }
   };
-
-  const logout = async () => {
-    try {
-      setShowLogout(false);
-      await setGlobalState(prev => ({
-        ...prev,
-        current: 'DB1',
-        btTab: 'DB1',
-        profileId: '',
-        activeEventTab: 0,
-        isConnected: true,
-        folkId: '',
-        userName: '',
-        mobileNumber: '',
-        photo: '',
-        menuItems: [],
-        menuSpinner: true,
-        reloadSadhana: 'N',
-        folkLevel: '',
-      }));
-      await AsyncStorage.clear();
-      Platform.OS === 'android' &&
-        (await changeNavigationBarColor(COLORS.header));
-      navigation.replace(screenNames.login);
-    } catch (e) {
-      console.log('logout e', e);
-    }
-  };
-
   return (
     <>
       <CommonStatusBar bgColor={headerColor} />
@@ -101,8 +72,12 @@ const CustomDrawer = ({navigation, route}) => {
             source={getImage.folk}
             resizeMode="contain"
           />
-          <View style={styles.profInfoCont}>
-            {/* // # Profile, Name, FOLK id */}
+          <View
+            style={[
+              styles.profInfoCont,
+              {justifyContent: !!qrCodeLink ? 'space-between' : 'flex-start'},
+            ]}>
+            {/* // # Profile, Name, FOLK id, qrCode */}
             <TouchableOpacity
               onPress={() => {
                 navigateTo(screenNames.profile);
@@ -121,7 +96,12 @@ const CustomDrawer = ({navigation, route}) => {
                 navigateTo(screenNames.profile);
               }}
               activeOpacity={0.8}
-              style={[styles.profileTextCont]}>
+              style={[
+                styles.profileTextCont,
+                {
+                  marginLeft: !!qrCodeLink ? 0 : '4%',
+                },
+              ]}>
               <Text style={styles.profName}>{userName}</Text>
               {!!folkId && (
                 <Text style={[styles.profName, styles.mailTxt]}>
@@ -134,96 +114,98 @@ const CustomDrawer = ({navigation, route}) => {
                 </Text>
               )}
             </TouchableOpacity>
+
+            {!!qrCodeLink && (
+              <TouchableOpacity
+                onPress={() => setOpenQrCode(true)}
+                activeOpacity={0.8}
+                style={styles.qrCircle}>
+                <MaterialCommunityIcons
+                  name="qrcode"
+                  size={20}
+                  color={COLORS.white}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
-        {/* // @ Logout Modal */}
-        <CustomPopup
-          visible={showLogout}
-          onOkay={() => logout()}
-          onCancel={() => setShowLogout(false)}
-          content={{
-            title: 'Log Out?',
-            text: 'Are you sure you want to LogOut?',
-            buttonName: 'Log Out',
-          }}
-        />
-
         {/* // @ Menu Items */}
-        {menuItems?.length > 0 &&
-          menuItems?.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.menuItemBtn,
-                {
-                  marginTop: index === 0 ? '8%' : '4%',
-                  backgroundColor:
-                    current === item?.id
-                      ? tabIndicatorColor || COLORS.button
-                      : COLORS.white,
-                },
-              ]}
-              onPress={() => {
-                navigateScreen(item?.id, item?.screenName, item?.title);
-              }}
-              activeOpacity={0.6}>
-              <View style={styles.iconCont}>
-                <Image
-                  style={styles.menuImg}
-                  source={{
-                    uri:
-                      current === item?.id ? item?.whiteIcon : item?.blackIcon,
+        <View style={{height: verticalScale(470)}}>
+          <ScrollView
+            contentContainerStyle={{
+              paddingBottom: '20%',
+            }}
+            showsVerticalScrollIndicator={false}>
+            {menuSpinner &&
+              Array(3)
+                .fill(3)
+                .map((_, index) => (
+                  <View key={index} style={styles.shimmerCont}>
+                    <ImageShimmer
+                      width={horizontalScale(35)}
+                      borderRadius={moderateScale(20)}
+                      height={horizontalScale(35)}
+                    />
+                    <TitleShimmer
+                      width={horizontalScale(200)}
+                      borderRadius={moderateScale(20)}
+                      height={horizontalScale(25)}
+                      marginTop={0}
+                      marginLeft={'8%'}
+                    />
+                  </View>
+                ))}
+            {menuItems?.length > 0 &&
+              menuItems?.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.menuItemBtn,
+                    {
+                      marginTop: index === 0 ? '8%' : '4%',
+                      backgroundColor:
+                        current === item?.id
+                          ? tabIndicatorColor || COLORS.button
+                          : COLORS.white,
+                    },
+                  ]}
+                  onPress={() => {
+                    navigateScreen(item?.id, item?.screenName, item?.title);
                   }}
-                />
-              </View>
-              <Text
-                style={[
-                  styles.itemTxt,
-                  {
-                    color:
-                      current === item?.id ? COLORS.white : COLORS.gunsmoke,
-                  },
-                ]}>
-                {item?.title}
-              </Text>
-            </TouchableOpacity>
-          ))}
-
-        {menuSpinner &&
-          Array(3)
-            .fill(3)
-            .map((_, index) => (
-              <View key={index} style={styles.shimmerCont}>
-                <ImageShimmer
-                  width={horizontalScale(35)}
-                  borderRadius={moderateScale(20)}
-                  height={horizontalScale(35)}
-                />
-                <TitleShimmer
-                  width={horizontalScale(200)}
-                  borderRadius={moderateScale(20)}
-                  height={horizontalScale(25)}
-                  marginTop={0}
-                  marginLeft={'8%'}
-                />
-              </View>
-            ))}
-
-        {/* // @ Logout Btn */}
-        <View style={styles.logoutCont}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => setShowLogout(true)}
-            style={styles.logoutBtn(buttonColor)}>
-            <MaterialCommunityIcons
-              name="logout"
-              size={moderateScale(25)}
-              color={COLORS.white}
-            />
-            <Text style={styles.logTxt}>Logout</Text>
-          </TouchableOpacity>
+                  activeOpacity={0.6}>
+                  <View style={styles.iconCont}>
+                    <Image
+                      style={styles.menuImg}
+                      source={{
+                        uri:
+                          current === item?.id
+                            ? item?.whiteIcon
+                            : item?.blackIcon,
+                      }}
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.itemTxt,
+                      {
+                        color:
+                          current === item?.id ? COLORS.white : COLORS.gunsmoke,
+                      },
+                    ]}>
+                    {item?.title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+          </ScrollView>
         </View>
+
+        {/* // @ QR Code Modal */}
+        <ShowQrCode
+          visible={openQrCode}
+          closeModal={() => setOpenQrCode(false)}
+          imageUrl={qrCodeLink}
+        />
 
         <Text style={styles.appVersion}>
           App Version : {appVersion.version}
@@ -246,7 +228,12 @@ const styles = StyleSheet.create({
     padding: '5%',
     borderTopRightRadius: Platform.OS === 'android' ? moderateScale(20) : 0,
   }),
-  profInfoCont: {flexDirection: 'row', alignItems: 'center', marginTop: '4%'},
+  profInfoCont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: '4%',
+    justifyContent: 'space-between',
+  },
   profImgCont: {
     width: '25%',
     alignItems: 'center',
@@ -258,7 +245,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderRadius: moderateScale(50),
   },
-  profileTextCont: {marginLeft: '4%', width: '71%'},
+  profileTextCont: {width: '60%'},
   profName: {
     fontSize: SIZES.subTitle,
     fontFamily: FONTS.ysabeauInfantBold,
@@ -339,7 +326,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.urbanistMedium,
     fontSize: SIZES.l,
     color: COLORS.btIcon,
-    bottom: '2.5%',
+    bottom: '2%',
     alignSelf: 'center',
     width: '90%',
     textAlign: 'right',
@@ -351,5 +338,13 @@ const styles = StyleSheet.create({
     padding: '3%',
     paddingHorizontal: '5%',
     marginTop: '4%',
+  },
+  qrCircle: {
+    width: horizontalScale(30),
+    height: horizontalScale(30),
+    borderRadius: moderateScale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.whiteGlassy,
   },
 });

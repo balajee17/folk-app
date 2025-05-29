@@ -397,7 +397,9 @@ const EditProfile = props => {
                 onPress={() => setImagePicker(true)}
                 activeOpacity={0.8}
                 style={styles.changeBtn}>
-                <Text style={styles.submitTxt}>Change</Text>
+                <Text numberOfLines={1} style={styles.submitTxt}>
+                  Change
+                </Text>
               </TouchableOpacity>
             </>
           ) : (

@@ -98,7 +98,10 @@ const ConnectUs = ({apiData, shimmer}) => {
             </View>
           </View>
         ) : (
-          <ImageBackground source={getImage.connectCard} style={styles.cdBgImg}>
+          <ImageBackground
+            resizeMode="contain"
+            source={getImage.connectCard}
+            style={styles.cdBgImg}>
             <View style={{padding: '4%'}}>
               {/* // # FG Image */}
               <View style={styles.imageContainer}>
@@ -135,12 +138,12 @@ const ConnectUs = ({apiData, shimmer}) => {
               </View>
               <View style={styles.mobileCopyCont}>
                 <Text numberOfLines={2} style={[styles.emailTxt]}>
-                  {apiData?.guideDetails?.MAIL}
+                  {apiData?.guideDetails?.EMAIL}
                 </Text>
-                {apiData?.guideDetails?.MAIL && (
+                {apiData?.guideDetails?.EMAIL && (
                   <TouchableOpacity
                     onPress={() => {
-                      if (CopyToClipboard(apiData?.guideDetails?.MAIL)) {
+                      if (CopyToClipboard(apiData?.guideDetails?.EMAIL)) {
                         toastMsg('Email copied.', 'success');
                       } else {
                         toastMsg('Unable to copy the text', 'error');
@@ -292,7 +295,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: horizontalScale(320),
+    // height: horizontalScale(320),
     overflow: 'hidden',
   },
   imageContainer: {
@@ -306,7 +309,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: COLORS.warningPB,
   },
-  cdBgImg: {width: '100%', height: '100%'},
+  cdBgImg: {width: '100%'},
   image: {
     width: '100%',
     height: '100%',

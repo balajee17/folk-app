@@ -8,9 +8,11 @@ import {getImage} from '../utils/ImagePath';
 import {API} from '../services/API';
 import DeviceInformation from '../components/DeviceInfo';
 import {screenNames} from '../constants/ScreenNames';
+import {CommonActions} from '@react-navigation/native';
 
-const Splash = ({navigation}) => {
-  const {setGlobalState} = useAppContext();
+const Splash = props => {
+  const {globalState, setGlobalState} = useAppContext();
+  const {navigation} = props;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -69,17 +71,20 @@ const Splash = ({navigation}) => {
         tabIndicator,
       } = colors || {};
       if (successCode === 1) {
+        const redirectScreenName = globalState?.redirectScreen;
+
         await setGlobalState(prev => ({
           ...prev,
           profileId: userData?.profileId,
           folkId: userData?.folkId,
+          qrCodeLink: userData?.qrCodeLink,
           folkLevel: userData?.folkLevel,
           userName: userData?.name,
           mobileNumber: userData?.mobile,
           photo: userData?.photo,
-          current: 'DB1',
-          btTab: 'DB1',
-          activeEventTab: 0,
+          current: prev?.current ? prev?.current : 'DB1',
+          btTab: prev?.btTab ? prev?.btTab : 'DB1',
+          activeEventTab: prev?.activeEventTab,
           isConnected: true,
           headerColor: header,
           bottomTabColor: bottomTab,
@@ -89,7 +94,29 @@ const Splash = ({navigation}) => {
           announcementCardColor: announcementCard,
           tabIndicatorColor: tabIndicator,
         }));
-        navigation.replace(screenNames.drawerNavigation);
+
+        if (redirectScreenName === screenNames.sadhanaCalendar) {
+          if (!!userData?.folkId) {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 2,
+                routes: [
+                  {name: screenNames.drawerNavigation},
+                  {name: screenNames.habitsSadhana, params: {props}},
+                  {
+                    name: screenNames.sadhanaCalendar,
+                  },
+                ],
+              }),
+            );
+          } else {
+            navigation.replace(screenNames.drawerNavigation);
+          }
+        } else {
+          !!redirectScreenName
+            ? navigation.replace(redirectScreenName)
+            : navigation.replace(screenNames.drawerNavigation);
+        }
       } else {
         navigation.replace(screenNames.login);
       }

@@ -6,9 +6,11 @@ import notifee, {
   EventType,
 } from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {Platform} from 'react-native';
 import {screenNames} from '../constants/ScreenNames';
+import {RootNavigation} from './RootNavigation';
+import {Store} from '../redux/Store';
+import {setRedirectScreen} from '../redux/slices/redirectScreen';
 
 const CHANNEL_ID = 'folk-channel-id';
 const CHANNEL_NAME = 'FOLK';
@@ -20,7 +22,6 @@ export const getFcmId = async () => {
   Platform.OS === 'android' &&
     (await firebase.messaging().registerDeviceForRemoteMessages());
 
-  // asyncStorageFcmId && (await Store.dispatch(setFCMID(asyncStorageFcmId)));
   !asyncStorageFcmId &&
     messaging()
       .getToken()
@@ -34,7 +35,6 @@ export const getFcmId = async () => {
 const storeFcmId = async value => {
   try {
     await AsyncStorage.setItem('@FcmId', value);
-    // Store.dispatch(setFCMID(value));
   } catch (e) {
     console.log('🚀 ~ storeFcmId ~ e:', e);
   }
@@ -60,8 +60,6 @@ export const checkNotificationPermission = async () => {
 };
 
 export const backgroundNotificationHandler = async () => {
-  console.log('Message  background!');
-
   const unsubscribe = firebase
     .messaging()
     .setBackgroundMessageHandler(async remoteMessage => {
@@ -73,22 +71,32 @@ export const backgroundNotificationHandler = async () => {
     const {notification, pressAction} = detail;
 
     // Check if the user pressed the "Mark as read" action
-    // if (type === EventType.ACTION_PRESS) {
-    //   // Remove the notification
-    //   await notifee.cancelNotification(notification.id);
-    // }
+    if (type === EventType.ACTION_PRESS) {
+      // Remove the notification
+      await notifee.cancelNotification(notification.id);
+    }
 
     // Check if the user pressed the "Mark as read" action
     if (type === EventType.PRESS) {
-      const redirectScreen =
-        notification.data?.redirectScreenName?.data?.click_action;
+      const notificationData = notification.data;
+      const redirectScreen = notification.data?.screenName;
+      console.log('PRESSED', redirectScreen);
 
       if (
-        redirectScreen === screenNames.sadhana ||
-        redirectScreen === screenNames.regularize
+        redirectScreen === screenNames.drawerNavigation ||
+        redirectScreen === screenNames.sadhanaCalendar
       ) {
-        // await Store.dispatch(setRedirectToScreen(redirectScreen));
-        // RootNavigation.navigate(redirectScreen);
+        const btTab = notificationData?.btTab;
+        const activeEventTab = notificationData?.activeEventTab;
+
+        await Store.dispatch(
+          setRedirectScreen({
+            redirectScreen: redirectScreen,
+            btTab: btTab ? btTab : 'DB1',
+            activeEvtTab: activeEventTab ? Number(activeEventTab) : 0,
+          }),
+        );
+        RootNavigation(redirectScreen);
       }
       // Remove the notification
       // await notifee.cancelNotification(notification.id);
@@ -97,7 +105,7 @@ export const backgroundNotificationHandler = async () => {
   return unsubscribe;
 };
 
-export const foreGroundNotificationHandler = () => {
+export const foreGroundNotificationHandler = setGlobalState => {
   const unsubscribe = firebase.messaging().onMessage(async remoteMessage => {
     console.log('Message handled in the foreground!', remoteMessage);
 
@@ -105,21 +113,31 @@ export const foreGroundNotificationHandler = () => {
   });
   notifee.onForegroundEvent(async ({type, detail}) => {
     const {notification, pressAction} = detail;
-    console.log('pressAction_FR', pressAction);
     // Check if the user pressed the "Mark as read" action
     if (type === EventType.ACTION_PRESS) {
       // Remove the notification
       await notifee.cancelNotification(notification.id);
     }
     if (type === EventType.PRESS) {
-      const redirectScreen =
-        notification.data?.redirectScreenName?.data?.click_action;
+      const notificationData = notification.data;
+      const redirectScreen = notification.data?.screenName;
+
       if (
         redirectScreen === screenNames.sadhanaCalendar ||
-        redirectScreen === screenNames.sadhanaRegularize
+        redirectScreen === screenNames.drawerNavigation
       ) {
-        // await Store.dispatch(setRedirectToScreen(redirectScreen));
-        // RootNavigation.navigate(redirectScreen);
+        const btTab = notificationData?.btTab;
+        const activeEventTab = notificationData?.activeEventTab;
+
+        await setGlobalState(prev => ({
+          ...prev,
+          btTab: btTab ? btTab : prev?.btTab,
+          currentTab: btTab ? btTab : prev?.currentTab,
+          activeEventTab: activeEventTab
+            ? Number(activeEventTab)
+            : prev?.activeEventTab,
+        }));
+        RootNavigation(redirectScreen);
       }
     }
   });
@@ -140,7 +158,7 @@ const displayNotification = async remoteMessage => {
     await notifee.displayNotification({
       title: remoteMessage?.data?.title,
       body: remoteMessage?.data?.body,
-      data: {redirectScreenName: remoteMessage},
+      data: remoteMessage?.data,
 
       android: {
         channelId,
@@ -154,21 +172,21 @@ const displayNotification = async remoteMessage => {
           vibration: true,
           vibrationPattern: [300, 500],
           // mainComponent: remoteMessage.data.click_action,
-          // launchActivity: 'com.yourapp.MainActivity',
+          launchActivity: 'default',
         },
 
-        style: {
-          type: AndroidStyle.BIGPICTURE,
-          picture: remoteMessage?.data?.image,
-        },
+        // style: {
+        //   type: AndroidStyle.BIGPICTURE,
+        //   picture: remoteMessage?.data?.image,
+        // },
       },
 
       ios: {
-        attachments: [
-          {
-            url: remoteMessage?.data?.image,
-          },
-        ],
+        // attachments: [
+        //   {
+        //     url: remoteMessage?.data?.image,
+        //   },
+        // ],
         // sound: 'hare_krishna.mp3',
       },
 
@@ -180,34 +198,42 @@ const displayNotification = async remoteMessage => {
 };
 
 // Check if the app was launched from a notification
-export const getInitialNotification = async () => {
+export const getInitialNotification = async setGlobalState => {
   try {
     const initialNotification = await notifee.getInitialNotification();
-
-    // Access the correct data path for redirecting
-    const redirectScreen =
-      initialNotification?.notification?.data?.redirectScreenName?.data
-        ?.click_action;
     console.log('initialNotification', initialNotification);
+
+    const notificationData = initialNotification?.data;
+
+    const redirectScreen = initialNotification?.data?.screenName;
 
     if (
       redirectScreen === screenNames.sadhana ||
       redirectScreen === screenNames.regularize
     ) {
       // Dispatch the action to redirect the user
-      // Store.dispatch(setRedirectToScreen(redirectScreen));
+
+      const btTab = notificationData?.btTab;
+      const activeEventTab = notificationData?.activeEventTab;
+
+      await setGlobalState(prev => ({
+        ...prev,
+        btTab: btTab ? btTab : 'DB1',
+        currentTab: btTab ? btTab : 'DB1',
+        activeEventTab: activeEventTab ? Number(activeEventTab) : 0,
+      }));
     }
   } catch (error) {
     console.error('Error getting initial notification:', error);
   }
 };
 
-export const getOnNotification = async () => {
-  try {
-    const onNotification = await notifee.getTriggerNotifications();
+// export const getOnNotification = async () => {
+//   try {
+//     const onNotification = await notifee.getTriggerNotifications();
 
-    console.log('ON NOTIFICATION TAPPED', onNotification);
-  } catch (error) {
-    console.error('Error getting initial notification:', error);
-  }
-};
+//     console.log('ON NOTIFICATION TAPPED', onNotification);
+//   } catch (error) {
+//     console.error('Error getting initial notification:', error);
+//   }
+// };

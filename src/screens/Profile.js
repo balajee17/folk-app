@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -26,7 +27,7 @@ import {useAppContext} from '../../App';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
-import AndroidBackHandler from '../components/BackHandler';
+import AndroidBackHandler, {CustomPopup} from '../components/BackHandler';
 import {
   CaptureImage,
   ChooseImage,
@@ -37,6 +38,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradientBg from '../components/LinearGradientBg';
 import Container from '../components/Container';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
@@ -55,6 +57,7 @@ const Profile = props => {
   const [paymentData, setPaymentData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [imagePicker, setImagePicker] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
 
   const tabItems = [
     {id: 1, tabName: 'Profile', icon: 'person-outline'},
@@ -207,6 +210,35 @@ const Profile = props => {
     }
   };
 
+  const logout = async () => {
+    try {
+      setShowLogout(false);
+      await setGlobalState(prev => ({
+        ...prev,
+        current: 'DB1',
+        btTab: 'DB1',
+        profileId: '',
+        activeEventTab: 0,
+        isConnected: true,
+        folkId: '',
+        userName: '',
+        mobileNumber: '',
+        photo: '',
+        menuItems: [],
+        menuSpinner: true,
+        reloadSadhana: 'N',
+        folkLevel: '',
+        qrCodeLink: '',
+      }));
+      await AsyncStorage.clear();
+      Platform.OS === 'android' &&
+        (await changeNavigationBarColor(COLORS.header));
+      navigation.replace(screenNames.login);
+    } catch (e) {
+      console.log('logout e', e);
+    }
+  };
+
   return (
     <>
       <Container>
@@ -216,10 +248,23 @@ const Profile = props => {
           <CustomHeader
             goBack={() => navigation.goBack()}
             titleName={screenNames.profile}
+            logout={() => setShowLogout(true)}
             rightIcnAction={value => {
               if (value === 1) {
                 navigation.navigate(screenNames.changeTheme);
               }
+            }}
+          />
+
+          {/* // @ Logout Modal */}
+          <CustomPopup
+            visible={showLogout}
+            onOkay={() => logout()}
+            onCancel={() => setShowLogout(false)}
+            content={{
+              title: 'Log Out?',
+              text: 'Are you sure you want to LogOut?',
+              buttonName: 'Log Out',
             }}
           />
 

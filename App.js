@@ -23,16 +23,21 @@ import {
   getOnNotification,
 } from './src/components/FCM';
 import {COLORS} from './src/styles/MyStyles';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import {Store} from './src/redux/Store';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
 
 const App = () => {
+  const storeData = Store.getState();
+
+  console.log('storeData12345', storeData);
   const [globalState, setGlobalState] = useState({
-    current: 'DB1',
-    btTab: 'DB1',
+    current: storeData?.redirectScreen?.btTab || 'DB1',
+    btTab: storeData?.redirectScreen?.btTab || 'DB1',
     profileId: '',
-    activeEventTab: 0,
+    activeEventTab: storeData?.redirectScreen?.activeEvtTab || 0,
     isConnected: true,
     folkId: '',
     folkLevel: '',
@@ -45,6 +50,7 @@ const App = () => {
     menuItems: [],
     menuSpinner: true,
     reloadSadhana: 'N',
+    redirectScreen: storeData?.redirectScreen?.redirectScreen || '',
     // Dynamic color themes
     headerColor: COLORS.header,
     bottomTabColor: COLORS.bottomTab,
@@ -63,13 +69,14 @@ const App = () => {
     });
     // checkAppUpdates();
 
+    changeNavigationBarColor(COLORS.header);
+
     // @ Push Notifications
     getFcmId();
     checkNotificationPermission();
-    backgroundNotificationHandler();
-    foreGroundNotificationHandler();
-    getInitialNotification();
-    getOnNotification();
+    foreGroundNotificationHandler(setGlobalState);
+    getInitialNotification(setGlobalState);
+    // getOnNotification();
 
     return () => unsubscribe();
   }, []);

@@ -33,7 +33,7 @@ const SwitcherScreen = ({navigation, route}) => {
     registered: true,
     connectUs: true,
   });
-  const [eventTabIndex, setEventTabIndex] = useState(activeEventTab);
+  // const [activeEventTab, setEventTabIndex] = useState(activeEventTab);
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
   const [connectDetails, setConnectDetails] = useState({});
   const [exitAppModal, setExitAppModal] = useState(false);
@@ -80,13 +80,14 @@ const SwitcherScreen = ({navigation, route}) => {
     checkLoaderData?.[0]?.forLoader !== 'Y';
 
   useEffect(() => {
+    setGlobalState(prev => ({...prev, redirectScreen: ''}));
     if (btTab === 'DB1') {
       !checkHomeData && getHomeScreenData();
     }
 
     if (
       btTab === 'B2' &&
-      eventTabIndex === 0 &&
+      activeEventTab === 0 &&
       activeEventTab !== 1 &&
       !checkUpComingData
     ) {
@@ -96,7 +97,7 @@ const SwitcherScreen = ({navigation, route}) => {
     if (
       btTab === 'B2' &&
       !checkRegisteredData &&
-      (activeEventTab === 1 || eventTabIndex === 1)
+      (activeEventTab === 1 || activeEventTab === 1)
     ) {
       getRegisteredList();
     }
@@ -104,7 +105,7 @@ const SwitcherScreen = ({navigation, route}) => {
     if (btTab === 'B4' && !checkConnectData) {
       getConnectDetails();
     }
-  }, [btTab, eventTabIndex]);
+  }, [btTab, activeEventTab]);
 
   // # Back Handler
   useFocusEffect(
@@ -150,7 +151,13 @@ const SwitcherScreen = ({navigation, route}) => {
     } catch (e) {}
   };
 
-  const handleOkay = () => {
+  const handleOkay = async () => {
+    handleCancel();
+    await navigation.reset({
+      index: 0,
+      routes: [{name: screenNames.splash}],
+    });
+    await changeNavigationBarColor(COLORS.header);
     BackHandler.exitApp();
   };
 
@@ -300,8 +307,10 @@ const SwitcherScreen = ({navigation, route}) => {
         <Events
           openFilter={opnFltr}
           closeFilter={() => setOpnFltr(false)}
-          index={eventTabIndex}
-          eventTabChange={index => setEventTabIndex(index)}
+          index={activeEventTab}
+          eventTabChange={index =>
+            setGlobalState(prev => ({...prev, activeEventTab: index}))
+          }
           shimmer={shimmer}
           eventList={eventList}
           navigation={navigation}

@@ -68,7 +68,7 @@ const SadhanaCalendar = props => {
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
-
+    setGlobalState(prev => ({...prev, redirectScreen: ''}));
     getSadhanaDetails();
 
     return () => {
@@ -128,8 +128,31 @@ const SadhanaCalendar = props => {
           } else {
           }
         }}
-        style={styles.calendarDayCont}>
-        <Text style={styles.dayTxt}>{date.day}</Text>
+        style={[
+          styles.calendarDayCont,
+          {
+            backgroundColor:
+              moment(date.dateString).format('DD-MMM-YYYY') ===
+              moment(new Date()).format('DD-MMM-YYYY')
+                ? COLORS.header
+                : COLORS.transparent,
+            borderRadius: moderateScale(20),
+            padding: '5%',
+          },
+        ]}>
+        <Text
+          style={[
+            styles.dayTxt,
+            {
+              color:
+                moment(date.dateString).format('DD-MMM-YYYY') ===
+                moment(new Date()).format('DD-MMM-YYYY')
+                  ? COLORS.white
+                  : COLORS.black,
+            },
+          ]}>
+          {date.day}
+        </Text>
         {Number(sadhanaCalendar?.percentage) >= 100 ? (
           <View style={styles.perCircleCont(sadhanaCalendar?.progressColor)}>
             <IonIcons

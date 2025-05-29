@@ -160,13 +160,21 @@ const ChangeTheme = ({navigation}) => {
       <View style={[MyStyles.contentCont, styles.content]}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.headerContainer}>
-            <Text style={styles.headTxt}>Section</Text>
+            <Text numberOfLines={1} style={styles.headTxt}>
+              Section
+            </Text>
 
             <View style={styles.colorCont}>
-              <Text style={[styles.headTxt, {textAlign: 'center'}]}>
+              <Text
+                numberOfLines={1}
+                style={[styles.headTxt, {textAlign: 'center'}]}>
                 Default
               </Text>
-              <Text style={[styles.headTxt, {textAlign: 'center'}]}>Yours</Text>
+              <Text
+                numberOfLines={1}
+                style={[styles.headTxt, {textAlign: 'center'}]}>
+                Yours
+              </Text>
             </View>
           </View>
 
@@ -208,13 +216,17 @@ const ChangeTheme = ({navigation}) => {
                 onPress={() => applyColorSections('Y')}
                 activeOpacity={0.8}
                 style={styles.button(COLORS.shimmerBg)}>
-                <Text style={styles.btnTxt}>Reset</Text>
+                <Text numberOfLines={1} style={styles.btnTxt}>
+                  Reset
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => applyColorSections()}
                 activeOpacity={0.8}
                 style={styles.button(buttonColor)}>
-                <Text style={styles.btnTxt}>Apply</Text>
+                <Text numberOfLines={1} style={styles.btnTxt}>
+                  Apply
+                </Text>
               </TouchableOpacity>
             </View>
           )}

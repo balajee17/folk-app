@@ -357,7 +357,9 @@ const EventDetails = props => {
             ? eventDetails?.details?.map((item, index) => {
                 return (
                   <View style={styles.lablValCont} key={index + 1}>
-                    <Text style={styles.labelTxt}> {item?.label}</Text>
+                    <Text numberOfLines={1} style={styles.labelTxt}>
+                      {item?.label}
+                    </Text>
                     <Text style={[styles.labelTxt, styles.colon]}>:</Text>
                     <Text style={[styles.labelTxt, styles.valTxt]}>
                       {item?.value}
@@ -638,7 +640,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   lablValCont: {
-    width: '50%',
+    width: '70%',
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
@@ -656,7 +658,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   valTxt: {
-    width: '65%',
+    width: '55%',
     paddingLeft: '3%',
     fontFamily: FONTS.urbanistSemiBold,
   },
