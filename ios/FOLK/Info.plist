@@ -44,17 +44,17 @@
 		<true/>
 	</dict>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>FOLK app needs calendar permission</string>
+	<string>FOLK uses your calendar to manage sadhana points.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>FOLK app needs calendar permission</string>
+	<string>FOLK uses your calendar to display sadhana points.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>FOLK app needs camera permission</string>
+	<string>FOLK uses the camera to scan QR codes and to take photos for your profile.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>FOLK need access to save images.</string>
+	<string>FOLK needs access to your photo library to save images you download.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>FOLK need access to photos.</string>
+	<string>FOLK needs access to your photo library so you can upload and select images for your profile.</string>
 	 <key>NSAppleMusicUsageDescription</key>
-  <string>FOLK App needs access to play music from your library.</string>
+  <string>FOLK needs access to your music library to play and manage songs within the app.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
