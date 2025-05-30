@@ -25,6 +25,7 @@ import {
 import {COLORS} from './src/styles/MyStyles';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {Store} from './src/redux/Store';
+import {Provider} from 'react-redux';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
@@ -32,12 +33,11 @@ export const useAppContext = () => useContext(AppContext);
 const App = () => {
   const storeData = Store.getState();
 
-  console.log('storeData12345', storeData);
   const [globalState, setGlobalState] = useState({
-    current: storeData?.redirectScreen?.btTab || 'DB1',
-    btTab: storeData?.redirectScreen?.btTab || 'DB1',
+    current: 'DB1',
+    btTab: 'DB1',
     profileId: '',
-    activeEventTab: storeData?.redirectScreen?.activeEvtTab || 0,
+    activeEventTab: 0,
     isConnected: true,
     folkId: '',
     folkLevel: '',
@@ -50,7 +50,7 @@ const App = () => {
     menuItems: [],
     menuSpinner: true,
     reloadSadhana: 'N',
-    redirectScreen: storeData?.redirectScreen?.redirectScreen || '',
+    redirectScreen: '',
     // Dynamic color themes
     headerColor: COLORS.header,
     bottomTabColor: COLORS.bottomTab,
@@ -128,19 +128,21 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <StatusBarHeightProvider>
-        <ToastProvider
-          placement="bottom"
-          duration={3500}
-          animationType="custom"
-          animationDuration={500}
-          renderToast={toast => <ToastMessage toast={toast} />}
-          swipeEnabled={true}>
-          <AppContext.Provider value={{globalState, setGlobalState}}>
-            <StackNavigation />
-          </AppContext.Provider>
-        </ToastProvider>
-      </StatusBarHeightProvider>
+      <Provider store={Store}>
+        <StatusBarHeightProvider>
+          <ToastProvider
+            placement="bottom"
+            duration={3500}
+            animationType="custom"
+            animationDuration={500}
+            renderToast={toast => <ToastMessage toast={toast} />}
+            swipeEnabled={true}>
+            <AppContext.Provider value={{globalState, setGlobalState}}>
+              <StackNavigation />
+            </AppContext.Provider>
+          </ToastProvider>
+        </StatusBarHeightProvider>
+      </Provider>
     </GestureHandlerRootView>
   );
 };

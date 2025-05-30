@@ -431,7 +431,7 @@ export let MyStyles = {
   imgCont: {
     borderRadius: moderateScale(6),
     overflow: 'hidden',
-    width: '30%',
+    width: '40%',
     height: verticalScale(160),
   },
   image: {

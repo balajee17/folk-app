@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import {screenNames} from '../../constants/ScreenNames';
 
 const initialState = {
-  redirectScreen: '',
+  screenName: '',
   btTab: '',
   activeEvtTab: 0,
 };
@@ -12,9 +12,8 @@ export const RedirectScreenSlice = createSlice({
   initialState,
   reducers: {
     setRedirectScreen: (state, action) => {
-      state.redirectScreen = action.payload.redirectScreen;
+      state.screenName = action.payload.screenName;
       state.btTab = action.payload.btTab;
-      state.currentTab = action.payload.currentTab;
       state.activeEvtTab = action.payload.activeEvtTab;
     },
   },

@@ -80,7 +80,6 @@ const SwitcherScreen = ({navigation, route}) => {
     checkLoaderData?.[0]?.forLoader !== 'Y';
 
   useEffect(() => {
-    setGlobalState(prev => ({...prev, redirectScreen: ''}));
     if (btTab === 'DB1') {
       !checkHomeData && getHomeScreenData();
     }
@@ -111,7 +110,9 @@ const SwitcherScreen = ({navigation, route}) => {
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
-        setExitAppModal(!exitAppModal);
+        titleName === screenNames.home
+          ? setExitAppModal(!exitAppModal)
+          : setGlobalState(prev => ({...prev, btTab: 'DB1', current: 'DB1'}));
         return true;
       };
 
@@ -121,14 +122,18 @@ const SwitcherScreen = ({navigation, route}) => {
       );
 
       return () => backHandler.remove();
-    }, []),
+    }, [titleName, exitAppModal]),
   );
 
   // # OnFocus screen Reload
   useFocusEffect(
     useCallback(() => {
       if (reloadEventList === 'Y') {
-        setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
+        setGlobalState(prev => ({
+          ...prev,
+          reloadEventList: 'N',
+          redirectScreen: '',
+        }));
         setEventList({upcoming: [], registered: []});
 
         if (activeEventTab === 1) {
@@ -153,11 +158,6 @@ const SwitcherScreen = ({navigation, route}) => {
 
   const handleOkay = async () => {
     handleCancel();
-    await navigation.reset({
-      index: 0,
-      routes: [{name: screenNames.splash}],
-    });
-    await changeNavigationBarColor(COLORS.header);
     BackHandler.exitApp();
   };
 

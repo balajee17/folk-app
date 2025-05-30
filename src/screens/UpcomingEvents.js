@@ -64,7 +64,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                   </View>
 
                   {/* // # Right Side - Event Title */}
-                  <View style={{width: '66%'}}>
+                  <View style={{width: '56%'}}>
                     <Text numberOfLines={1} style={MyStyles.titleTxt}>
                       {item?.session_name}
                     </Text>
@@ -109,7 +109,7 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                       numberOfLines={1}
                       style={[
                         MyStyles.avlSlotTxt,
-                        {marginTop: '2%', width: '100%'},
+                        {width: '100%', position: 'absolute', bottom: '25%'},
                       ]}>
                       {item?.availableSlot && item?.availableSlot !== ''
                         ? `Available Seats : ${item?.availableSlot}`
@@ -131,6 +131,8 @@ const UpcomingEvents = ({navigation, upcomingList, shimmer, refresh}) => {
                             item?.availableSlot === 0
                               ? COLORS.border
                               : buttonColor || COLORS.button,
+                          position: 'absolute',
+                          bottom: 0,
                         },
                       ]}>
                       <Text numberOfLines={1} style={MyStyles.registerTxt}>

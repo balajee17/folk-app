@@ -80,11 +80,6 @@ const Login = ({navigation}) => {
 
   const handleOkay = async () => {
     handleCancel();
-    await navigation.reset({
-      index: 0,
-      routes: [{name: screenNames.splash}],
-    });
-    await changeNavigationBarColor(COLORS.header);
     BackHandler.exitApp();
   };
 

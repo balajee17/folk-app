@@ -10,7 +10,7 @@ import {Platform} from 'react-native';
 import {screenNames} from '../constants/ScreenNames';
 import {RootNavigation} from './RootNavigation';
 import {Store} from '../redux/Store';
-import {setRedirectScreen} from '../redux/slices/redirectScreen';
+import {setRedirectScreen} from '../redux/slices/RedirectScreen';
 
 const CHANNEL_ID = 'folk-channel-id';
 const CHANNEL_NAME = 'FOLK';
@@ -89,14 +89,19 @@ export const backgroundNotificationHandler = async () => {
         const btTab = notificationData?.btTab;
         const activeEventTab = notificationData?.activeEventTab;
 
-        await Store.dispatch(
-          setRedirectScreen({
-            redirectScreen: redirectScreen,
+        const storedVal = await AsyncStorage.getItem('userDetails');
+        const parsedData = JSON.parse(storedVal);
+
+        if (parsedData?.profileId) {
+          await setGlobalState({
+            redirectScreen,
             btTab: btTab ? btTab : 'DB1',
             activeEvtTab: activeEventTab ? Number(activeEventTab) : 0,
           }),
-        );
-        RootNavigation(redirectScreen);
+            RootNavigation(redirectScreen);
+        } else {
+          RootNavigation(screenNames.login);
+        }
       }
       // Remove the notification
       // await notifee.cancelNotification(notification.id);
@@ -129,15 +134,22 @@ export const foreGroundNotificationHandler = setGlobalState => {
         const btTab = notificationData?.btTab;
         const activeEventTab = notificationData?.activeEventTab;
 
-        await setGlobalState(prev => ({
-          ...prev,
-          btTab: btTab ? btTab : prev?.btTab,
-          currentTab: btTab ? btTab : prev?.currentTab,
-          activeEventTab: activeEventTab
-            ? Number(activeEventTab)
-            : prev?.activeEventTab,
-        }));
-        RootNavigation(redirectScreen);
+        const storedVal = await AsyncStorage.getItem('userDetails');
+        const parsedData = JSON.parse(storedVal);
+
+        if (parsedData?.profileId) {
+          await setGlobalState(prev => ({
+            ...prev,
+            btTab: btTab ? btTab : prev?.btTab,
+            currentTab: btTab ? btTab : prev?.currentTab,
+            activeEventTab: activeEventTab
+              ? Number(activeEventTab)
+              : prev?.activeEventTab,
+          }));
+          RootNavigation(redirectScreen);
+        } else {
+          RootNavigation(screenNames.login);
+        }
       }
     }
   });
@@ -203,25 +215,25 @@ export const getInitialNotification = async setGlobalState => {
     const initialNotification = await notifee.getInitialNotification();
     console.log('initialNotification', initialNotification);
 
-    const notificationData = initialNotification?.data;
-
-    const redirectScreen = initialNotification?.data?.screenName;
+    const notificationData = initialNotification?.notification?.data;
+    const redirectScreen = notificationData?.screenName;
 
     if (
-      redirectScreen === screenNames.sadhana ||
-      redirectScreen === screenNames.regularize
+      redirectScreen === screenNames.sadhanaCalendar ||
+      redirectScreen === screenNames.drawerNavigation
     ) {
       // Dispatch the action to redirect the user
 
       const btTab = notificationData?.btTab;
       const activeEventTab = notificationData?.activeEventTab;
 
-      await setGlobalState(prev => ({
-        ...prev,
-        btTab: btTab ? btTab : 'DB1',
-        currentTab: btTab ? btTab : 'DB1',
-        activeEventTab: activeEventTab ? Number(activeEventTab) : 0,
-      }));
+      await Store.dispatch(
+        setRedirectScreen({
+          screenName: redirectScreen,
+          btTab: btTab ? btTab : 'DB1',
+          activeEventTab: activeEventTab ? Number(activeEventTab) : 0,
+        }),
+      );
     }
   } catch (error) {
     console.error('Error getting initial notification:', error);

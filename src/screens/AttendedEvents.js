@@ -126,7 +126,7 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                   </View>
 
                   {/* // # Right Side - Event Title */}
-                  <View style={{width: '66%'}}>
+                  <View style={{width: '56%'}}>
                     <Text numberOfLines={1} style={MyStyles.titleTxt}>
                       {item?.session_name}
                     </Text>

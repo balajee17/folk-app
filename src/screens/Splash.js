@@ -9,11 +9,13 @@ import {API} from '../services/API';
 import DeviceInformation from '../components/DeviceInfo';
 import {screenNames} from '../constants/ScreenNames';
 import {CommonActions} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const Splash = props => {
   const {globalState, setGlobalState} = useAppContext();
   const {navigation} = props;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const {screenName} = useSelector(state => state.redirectScreen);
 
   useEffect(() => {
     Promise.all([startFadeAnimation(), checkLoginStatus()])
@@ -21,7 +23,7 @@ const Splash = props => {
         const userData = results[1];
         console.log('userLoggedIn', userData);
         if (userData?.profileId) {
-          updateFcm(userData);
+          updateFcm(userData, screenName);
         } else {
           navigation.replace(screenNames.login);
         }
@@ -38,7 +40,7 @@ const Splash = props => {
     return parsedData;
   };
 
-  const updateFcm = async userData => {
+  const updateFcm = async (userData, redirectScreenName) => {
     try {
       const asyncStorageFcmId = await AsyncStorage.getItem('@FcmId');
       const {
@@ -71,8 +73,8 @@ const Splash = props => {
         tabIndicator,
       } = colors || {};
       if (successCode === 1) {
-        const redirectScreenName = globalState?.redirectScreen;
-
+        // const redirectScreenName = screenName;
+        console.log('redirectScreenName1212', redirectScreenName);
         await setGlobalState(prev => ({
           ...prev,
           profileId: userData?.profileId,
@@ -135,7 +137,6 @@ const Splash = props => {
       }).start(() => resolve());
     });
   };
-
   return (
     <>
       <CommonStatusBar />

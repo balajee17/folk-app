@@ -77,8 +77,6 @@ const Events = ({
     );
   };
 
-  console.log('AET_INDEX', index);
-
   return (
     <View style={[MyStyles.contentCont, {minHeight: screenHeight}]}>
       {/* // @ Filter Modal */}

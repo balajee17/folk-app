@@ -61,14 +61,17 @@ const SadhanaCalendar = props => {
     useCallback(() => {
       if (reloadSadhana === 'Y') {
         getSadhanaDetails();
-        setGlobalState(prev => ({...prev, reloadSadhana: 'N'}));
+        setGlobalState(prev => ({
+          ...prev,
+          reloadSadhana: 'N',
+          redirectScreen: '',
+        }));
       }
     }, [currentDate, reloadSadhana]),
   );
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
-    setGlobalState(prev => ({...prev, redirectScreen: ''}));
     getSadhanaDetails();
 
     return () => {
