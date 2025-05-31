@@ -93,11 +93,12 @@ export const backgroundNotificationHandler = async () => {
         const parsedData = JSON.parse(storedVal);
 
         if (parsedData?.profileId) {
-          await setGlobalState({
+          await setGlobalState(prev => ({
+            ...prev,
             redirectScreen,
             btTab: btTab ? btTab : 'DB1',
             activeEvtTab: activeEventTab ? Number(activeEventTab) : 0,
-          }),
+          })),
             RootNavigation(redirectScreen);
         } else {
           RootNavigation(screenNames.login);
@@ -240,12 +241,57 @@ export const getInitialNotification = async () => {
   }
 };
 
-// export const getOnNotification = async () => {
-//   try {
-//     const onNotification = await notifee.getTriggerNotifications();
+export const getOnNotification = async setGlobalState => {
+  try {
+    await messaging().onNotificationOpenedApp(async remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage,
+      );
+      const notificationData = remoteMessage?.data;
+      const storedVal = await AsyncStorage.getItem('userDetails');
+      const parsedData = JSON.parse(storedVal);
 
-//     console.log('ON NOTIFICATION TAPPED', onNotification);
-//   } catch (error) {
-//     console.error('Error getting initial notification:', error);
-//   }
-// };
+      if (parsedData?.profileId) {
+        await setGlobalState(prev => ({
+          ...prev,
+          btTab: notificationData?.btTab
+            ? notificationData?.btTab
+            : prev?.btTab,
+          activeEvtTab: notificationData?.activeEventTab
+            ? Number(notificationData?.activeEventTab)
+            : prev?.activeEventTab,
+        }));
+        RootNavigation(notificationData?.screenName);
+      }
+    });
+  } catch (error) {
+    console.error('Error getting initial notification:', error);
+  }
+};
+
+export const IOSIntialNotify = async () => {
+  await messaging()
+    .getInitialNotification()
+    .then(async remoteMessage => {
+      console.log(
+        'Notification caused app to open from quit state:',
+        remoteMessage,
+      );
+      const notificationData = remoteMessage?.data;
+      const storedVal = await AsyncStorage.getItem('userDetails');
+      const parsedData = JSON.parse(storedVal);
+
+      if (parsedData?.profileId) {
+        await Store.dispatch(
+          setRedirectScreen({
+            screenName: notificationData?.screenName,
+            btTab: notificationData?.btTab ? notificationData?.btTab : 'DB1',
+            activeEvtTab: notificationData?.activeEventTab
+              ? Number(notificationData?.activeEventTab)
+              : 0,
+          }),
+        );
+      }
+    });
+};

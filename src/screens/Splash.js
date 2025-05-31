@@ -106,7 +106,7 @@ const Splash = props => {
                 index: 2,
                 routes: [
                   {name: screenNames.drawerNavigation},
-                  {name: screenNames.habitsSadhana, params: {props}},
+                  // {name: screenNames.habitsSadhana, params: {props}},
                   {
                     name: screenNames.sadhanaCalendar,
                   },
@@ -134,7 +134,7 @@ const Splash = props => {
     return new Promise(resolve => {
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 3000, // Adjust animation duration as needed
+        duration: 2000, // Adjust animation duration as needed
         useNativeDriver: true,
       }).start(() => resolve());
     });

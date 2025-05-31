@@ -15,6 +15,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import NoDataFound from '../components/NoDataFound';
 import {CustomPopup} from '../components/BackHandler';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import {setResetRedirectScreen} from '../redux/slices/RedirectScreen';
+import {Store} from '../redux/Store';
 
 const SwitcherScreen = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -33,10 +35,10 @@ const SwitcherScreen = ({navigation, route}) => {
     registered: true,
     connectUs: true,
   });
-  // const [activeEventTab, setEventTabIndex] = useState(activeEventTab);
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
   const [connectDetails, setConnectDetails] = useState({});
   const [exitAppModal, setExitAppModal] = useState(false);
+  const {redirectScreen} = Store.getState();
 
   const toastMsg = (msg, type) => {
     toast.show(msg, {
@@ -80,6 +82,8 @@ const SwitcherScreen = ({navigation, route}) => {
     checkLoaderData?.[0]?.forLoader !== 'Y';
 
   useEffect(() => {
+    redirectScreen?.screenName && setResetRedirectScreen({});
+
     if (btTab === 'DB1') {
       !checkHomeData && getHomeScreenData();
     }

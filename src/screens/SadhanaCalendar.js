@@ -31,6 +31,8 @@ import {toastThrottle} from '../components/CommonFunctionalities';
 import {useAppContext} from '../../App';
 import Spinner from '../components/Spinner';
 import {useFocusEffect} from '@react-navigation/native';
+import {Store} from '../redux/Store';
+import {setResetRedirectScreen} from '../redux/slices/RedirectScreen';
 
 const SadhanaCalendar = props => {
   const {navigation, route} = props;
@@ -47,6 +49,7 @@ const SadhanaCalendar = props => {
   const [spinner, setSpinner] = useState(true);
 
   const [sadhanaData, setSadhanaData] = useState({});
+  const {redirectScreen} = Store.getState();
 
   const size = horizontalScale(30);
   const strokeWidth = horizontalScale(4);
@@ -72,6 +75,7 @@ const SadhanaCalendar = props => {
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
+    redirectScreen?.screenName && setResetRedirectScreen({});
     getSadhanaDetails();
 
     return () => {

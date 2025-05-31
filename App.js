@@ -18,6 +18,8 @@ import {
   foreGroundNotificationHandler,
   getFcmId,
   getInitialNotification,
+  getOnNotification,
+  IOSIntialNotify,
 } from './src/components/FCM';
 import {COLORS} from './src/styles/MyStyles';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
@@ -76,6 +78,8 @@ const App = () => {
     await checkNotificationPermission();
     await foreGroundNotificationHandler(setGlobalState);
     await getInitialNotification();
+    Platform.OS === 'ios' && (await getOnNotification(setGlobalState));
+    Platform.OS === 'ios' && (await IOSIntialNotify());
   };
 
   // const inAppUpdates = new SpInAppUpdates(true);

@@ -23,5 +23,6 @@ export const RedirectScreenSlice = createSlice({
   },
 });
 
-export const {setRedirectScreen} = RedirectScreenSlice.actions;
+export const {setRedirectScreen, setResetRedirectScreen} =
+  RedirectScreenSlice.actions;
 export default RedirectScreenSlice.reducer;
