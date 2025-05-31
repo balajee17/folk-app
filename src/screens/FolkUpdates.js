@@ -73,7 +73,7 @@ const FolkUpdates = props => {
       {/* // # Header */}
       <CustomHeader goBack={() => navigation.goBack()} titleName={title} />
       {/* // # Contents */}
-      <View style={MyStyles.contentContainer}>
+      <View style={[MyStyles.contentContainer, {paddingHorizontal: 0}]}>
         {shimmer ? (
           <>
             <View>
@@ -116,7 +116,8 @@ const FolkUpdates = props => {
                   <Text
                     style={[
                       MyStyles.subTitleText,
-                      {marginTop: '5%', marginBottom: '2%'},
+                      MyStyles.paddingHor10,
+                      {marginTop: '4%'},
                     ]}>
                     {item?.day}
                   </Text>
@@ -124,7 +125,75 @@ const FolkUpdates = props => {
                   {item?.updates?.map((updateItem, updateIndex) => {
                     return (
                       <View key={updateIndex}>
-                        {!!updateItem?.link && (
+                        {!!updateItem?.link && !!updateItem?.text ? (
+                          <View
+                            key={updateItem?.id}
+                            style={[styles.imgTxtCont, MyStyles.paddingHor10]}>
+                            <View
+                              style={{
+                                width: windowWidth * 0.9,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                style={MyStyles.quotesImg}
+                                source={{
+                                  uri: updateItem?.link,
+                                }}
+                              />
+                              {/*  // # Download Btn */}
+                              <TouchableOpacity
+                                onPress={async () => {
+                                  const result = await DownloadImage(
+                                    updateItem?.link,
+                                  );
+
+                                  if (!!result?.type) {
+                                    toastMsg(
+                                      result?.msg,
+                                      result?.type === 'S'
+                                        ? 'success'
+                                        : 'error',
+                                    );
+                                  } else {
+                                    toastMsg('Download failed.', 'error');
+                                  }
+                                }}
+                                style={MyStyles.shareBtn}
+                                activeOpacity={0.6}>
+                                <MaterialCommunityIcons
+                                  name="download"
+                                  size={moderateScale(25)}
+                                  color={COLORS.white}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                            <View
+                              key={updateItem?.id}
+                              style={[
+                                MyStyles.updatesTextCont,
+                                {
+                                  marginTop: '2%',
+                                },
+                              ]}>
+                              <Text
+                                style={[
+                                  MyStyles.announceTxt,
+                                  {color: COLORS.black},
+                                ]}>
+                                {updateItem?.title}
+                              </Text>
+
+                              <Text
+                                style={[
+                                  MyStyles.updateTxt,
+                                  {marginTop: '2%', color: COLORS.black},
+                                ]}>
+                                {updateItem?.text}
+                              </Text>
+                            </View>
+                          </View>
+                        ) : !!updateItem?.link ? (
                           <View
                             key={updateItem?.id}
                             style={[styles.quotesImgCont]}>
@@ -159,27 +228,7 @@ const FolkUpdates = props => {
                               />
                             </TouchableOpacity>
                           </View>
-                        )}
-                        {updateItem?.link && updateItem?.text ? (
-                          <View
-                            key={updateItem?.id}
-                            style={[
-                              MyStyles.updatesTextCont,
-                              MyStyles.paddingHor10,
-                              {
-                                marginTop: '2%',
-                              },
-                            ]}>
-                            <Text style={[MyStyles.announceTxt]}>
-                              {updateItem?.title}
-                            </Text>
-
-                            <Text
-                              style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
-                              {updateItem?.text}
-                            </Text>
-                          </View>
-                        ) : updateItem?.text ? (
+                        ) : !!updateItem?.text ? (
                           <Pressable
                             onLongPress={() => {
                               if (
@@ -195,12 +244,9 @@ const FolkUpdates = props => {
                             key={updateItem?.id}
                             style={[
                               MyStyles.updatesTextCont,
+                              MyStyles.paddingHor10,
                               {
-                                marginTop: !!updateItem?.link
-                                  ? '2%'
-                                  : index !== 0
-                                  ? '5%'
-                                  : '1%',
+                                marginTop: '4%',
                               },
                             ]}>
                             <View
@@ -261,6 +307,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: moderateScale(15),
     alignSelf: 'center',
+  },
+  imgTxtCont: {
+    marginTop: '4%',
+    backgroundColor: COLORS.inptBg,
+    width: windowWidth,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: windowWidth * 0.95,
+    padding: '4%',
+    borderRadius: moderateScale(15),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  quotesImgCont: {
+    width: windowWidth,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '4%',
     ...MyStyles.paddingHor10,
   },
 });

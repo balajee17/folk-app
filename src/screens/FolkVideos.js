@@ -27,6 +27,7 @@ import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import NoDataFound from '../components/NoDataFound';
 import AndroidBackHandler from '../components/BackHandler';
+import {useAppContext} from '../../App';
 
 const FolkVideos = props => {
   const [videoControl, setVideoControl] = useState({
@@ -36,6 +37,8 @@ const FolkVideos = props => {
   const [playingVideo, setPlayingVideo] = useState({});
   const [shimmer, setShimmer] = useState({video: true, text: true});
   const [videosData, setVideosData] = useState([]);
+  const {globalState} = useAppContext();
+  const {cardColor} = globalState;
 
   const onStateChange = useCallback(state => {
     if (state === 'ended') {
@@ -182,7 +185,7 @@ const FolkVideos = props => {
 
         <View style={{flex: 0.5}}>
           {/* // # Youtube Videos List */}
-          <View style={styles.historyCont}>
+          <View style={styles.historyCont(cardColor)}>
             {shimmer?.text ? (
               Array(3)
                 .fill(3)
@@ -333,8 +336,8 @@ const styles = StyleSheet.create({
     marginTop: '1%',
     lineHeight: 18,
   },
-  historyCont: {
-    backgroundColor: COLORS.btIcon,
+  historyCont: bgColor => ({
+    backgroundColor: bgColor || COLORS.card,
     width: '100%',
     alignSelf: 'center',
     ...MyStyles.paddingHor10,
@@ -343,7 +346,7 @@ const styles = StyleSheet.create({
     paddingBottom: '2%',
     marginTop: '5%',
     marginBottom: '2%',
-  },
+  }),
   historyVideoCont: {
     marginTop: '2%',
     flexDirection: 'row',

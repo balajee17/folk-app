@@ -13,26 +13,19 @@ import SpInAppUpdates, {
 import {ToastProvider, useToast} from 'react-native-toast-notifications';
 import ToastMessage from './src/components/ToastMessage';
 import NetInfo from '@react-native-community/netinfo';
-import NoNetwork from './src/components/NoNetwork';
 import {
-  backgroundNotificationHandler,
   checkNotificationPermission,
   foreGroundNotificationHandler,
   getFcmId,
   getInitialNotification,
-  getOnNotification,
 } from './src/components/FCM';
 import {COLORS} from './src/styles/MyStyles';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
-import {Store} from './src/redux/Store';
-import {Provider} from 'react-redux';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
 
 const App = () => {
-  const storeData = Store.getState();
-
   const [globalState, setGlobalState] = useState({
     current: 'DB1',
     btTab: 'DB1',
@@ -72,14 +65,18 @@ const App = () => {
     changeNavigationBarColor(COLORS.header);
 
     // @ Push Notifications
-    getFcmId();
-    checkNotificationPermission();
-    foreGroundNotificationHandler(setGlobalState);
-    getInitialNotification(setGlobalState);
+    notificationCheck();
     // getOnNotification();
 
     return () => unsubscribe();
   }, []);
+
+  const notificationCheck = async () => {
+    await getFcmId();
+    await checkNotificationPermission();
+    await foreGroundNotificationHandler(setGlobalState);
+    await getInitialNotification();
+  };
 
   // const inAppUpdates = new SpInAppUpdates(true);
   // const majorUpdate = true;
@@ -128,21 +125,19 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <Provider store={Store}>
-        <StatusBarHeightProvider>
-          <ToastProvider
-            placement="bottom"
-            duration={3500}
-            animationType="custom"
-            animationDuration={500}
-            renderToast={toast => <ToastMessage toast={toast} />}
-            swipeEnabled={true}>
-            <AppContext.Provider value={{globalState, setGlobalState}}>
-              <StackNavigation />
-            </AppContext.Provider>
-          </ToastProvider>
-        </StatusBarHeightProvider>
-      </Provider>
+      <StatusBarHeightProvider>
+        <ToastProvider
+          placement="bottom"
+          duration={3500}
+          animationType="custom"
+          animationDuration={500}
+          renderToast={toast => <ToastMessage toast={toast} />}
+          swipeEnabled={true}>
+          <AppContext.Provider value={{globalState, setGlobalState}}>
+            <StackNavigation />
+          </AppContext.Provider>
+        </ToastProvider>
+      </StatusBarHeightProvider>
     </GestureHandlerRootView>
   );
 };

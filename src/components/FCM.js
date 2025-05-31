@@ -210,7 +210,7 @@ const displayNotification = async remoteMessage => {
 };
 
 // Check if the app was launched from a notification
-export const getInitialNotification = async setGlobalState => {
+export const getInitialNotification = async () => {
   try {
     const initialNotification = await notifee.getInitialNotification();
     console.log('initialNotification', initialNotification);
@@ -231,7 +231,7 @@ export const getInitialNotification = async setGlobalState => {
         setRedirectScreen({
           screenName: redirectScreen,
           btTab: btTab ? btTab : 'DB1',
-          activeEventTab: activeEventTab ? Number(activeEventTab) : 0,
+          activeEvtTab: activeEventTab ? Number(activeEventTab) : 0,
         }),
       );
     }

@@ -9,21 +9,19 @@ import {API} from '../services/API';
 import DeviceInformation from '../components/DeviceInfo';
 import {screenNames} from '../constants/ScreenNames';
 import {CommonActions} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {Store} from '../redux/Store';
 
 const Splash = props => {
-  const {globalState, setGlobalState} = useAppContext();
+  const {setGlobalState} = useAppContext();
   const {navigation} = props;
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const {screenName} = useSelector(state => state.redirectScreen);
 
   useEffect(() => {
     Promise.all([startFadeAnimation(), checkLoginStatus()])
-      .then(results => {
+      .then(async results => {
         const userData = results[1];
-        console.log('userLoggedIn', userData);
         if (userData?.profileId) {
-          updateFcm(userData, screenName);
+          await updateFcm(userData);
         } else {
           navigation.replace(screenNames.login);
         }
@@ -36,11 +34,10 @@ const Splash = props => {
   const checkLoginStatus = async () => {
     const storedVal = await AsyncStorage.getItem('userDetails');
     const parsedData = JSON.parse(storedVal);
-    console.log('storedVal', storedVal);
     return parsedData;
   };
 
-  const updateFcm = async (userData, redirectScreenName) => {
+  const updateFcm = async userData => {
     try {
       const asyncStorageFcmId = await AsyncStorage.getItem('@FcmId');
       const {
@@ -73,8 +70,11 @@ const Splash = props => {
         tabIndicator,
       } = colors || {};
       if (successCode === 1) {
-        // const redirectScreenName = screenName;
-        console.log('redirectScreenName1212', redirectScreenName);
+        const {redirectScreen} = Store.getState();
+        const screenName = redirectScreen?.screenName;
+        const activeEvtTab = redirectScreen?.activeEvtTab;
+        const btTab = redirectScreen?.btTab;
+
         await setGlobalState(prev => ({
           ...prev,
           profileId: userData?.profileId,
@@ -84,9 +84,11 @@ const Splash = props => {
           userName: userData?.name,
           mobileNumber: userData?.mobile,
           photo: userData?.photo,
-          current: prev?.current ? prev?.current : 'DB1',
-          btTab: prev?.btTab ? prev?.btTab : 'DB1',
-          activeEventTab: prev?.activeEventTab,
+          current: btTab ? btTab : prev?.current,
+          btTab: btTab ? btTab : prev?.btTab,
+          activeEventTab: activeEvtTab
+            ? Number(activeEvtTab)
+            : prev?.activeEventTab,
           isConnected: true,
           headerColor: header,
           bottomTabColor: bottomTab,
@@ -97,7 +99,7 @@ const Splash = props => {
           tabIndicatorColor: tabIndicator,
         }));
 
-        if (redirectScreenName === screenNames.sadhanaCalendar) {
+        if (screenName === screenNames.sadhanaCalendar) {
           if (!!userData?.folkId) {
             navigation.dispatch(
               CommonActions.reset({
@@ -115,7 +117,7 @@ const Splash = props => {
             navigation.replace(screenNames.drawerNavigation);
           }
         } else {
-          !!redirectScreenName
+          !!screenName
             ? navigation.replace(redirectScreenName)
             : navigation.replace(screenNames.drawerNavigation);
         }
@@ -137,6 +139,7 @@ const Splash = props => {
       }).start(() => resolve());
     });
   };
+
   return (
     <>
       <CommonStatusBar />

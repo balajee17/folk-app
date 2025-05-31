@@ -333,6 +333,14 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 backgroundColor={COLORS.transparent}
                 animateCardOpacity
                 disableBottomSwipe
+                // onSwiped={cardIndex => {
+                //   cardIndex >= UPDATES?.length - 1
+                //     ? setImageViewer(prev => ({...prev, currentIndex: 0}))
+                //     : setImageViewer(prev => ({
+                //         ...prev,
+                //         currentIndex: cardIndex + 1,
+                //       }));
+                // }}
                 disableTopSwipe
                 verticalSwipe={false}
                 stackSeparation={-20}
@@ -500,7 +508,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       MyStyles.updatesTextCont,
                       MyStyles.paddingHor10,
                       {
-                        marginTop: '5%',
+                        marginTop: '4%',
                       },
                     ]}>
                     <View style={MyStyles.noticeCard(announcementCardColor)}>
@@ -614,7 +622,6 @@ const Home = ({apiData, shimmer, refreshData}) => {
         return null;
     }
   };
-
   return (
     <>
       {
@@ -680,7 +687,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     ...MyStyles.paddingHor10,
-    marginTop: verticalScale(15),
+    marginTop: '4%',
   },
 
   scrollViewCont: {
@@ -748,7 +755,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(30),
   },
   imgTxtCont: {
-    marginTop: verticalScale(15),
+    marginTop: '4%',
     backgroundColor: COLORS.inptBg,
     width: windowWidth,
     justifyContent: 'center',

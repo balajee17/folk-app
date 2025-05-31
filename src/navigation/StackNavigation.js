@@ -27,7 +27,6 @@ import SadhanaRegularize from '../screens/SadhanaRegularize';
 import ChangeTheme from '../screens/ChangeTheme';
 import {navigationRef} from '../components/RootNavigation';
 import HabitsSadhana from '../screens/HabitsSadhana';
-import {useSelector} from 'react-redux';
 
 const Stack = createStackNavigator();
 
@@ -35,38 +34,19 @@ const StackNavigation = () => {
   const {globalState, setGlobalState} = useAppContext();
   const {isConnected} = globalState;
 
-  const {screenName, btTab, activeEvtTab} = useSelector(
-    state => state.redirectScreen,
-  );
-
   // const navigationRef = useRef();
 
   useEffect(() => {
-    storeReduxData();
-
     if (navigationRef.current) {
       if (!isConnected) {
         navigationRef.current.navigate(screenNames.noNetwork);
       }
     }
-  }, [isConnected, screenName]);
-
-  const storeReduxData = async () => {
-    console.log('REDUX****', screenName);
-    screenName &&
-      (await setGlobalState(prev => ({
-        ...prev,
-        redirectScreen: screenName || prev?.redirectScreen,
-        btTab: btTab || 'DB1',
-        current: btTab || 'DB1',
-        activeEventTab: activeEvtTab || 0,
-      })));
-  };
+  }, [isConnected]);
 
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {/* <Stack.Screen name={'WheelColor'} component={WheelColor} /> */}
         {/* // @ Splash */}
         <Stack.Screen name={screenNames.splash} component={Splash} />
         {/* // @ Login */}
