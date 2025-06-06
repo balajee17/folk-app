@@ -34,7 +34,7 @@ import {
   ImageUploadModal,
 } from '../components/CommonFunctionalities';
 import Spinner from '../components/Spinner';
-import {useFocusEffect} from '@react-navigation/native';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradientBg from '../components/LinearGradientBg';
 import Container from '../components/Container';
@@ -233,7 +233,12 @@ const Profile = props => {
       await AsyncStorage.clear();
       Platform.OS === 'android' &&
         (await changeNavigationBarColor(COLORS.header));
-      navigation.replace(screenNames.login);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: screenNames.login}],
+        }),
+      );
     } catch (e) {
       console.log('logout e', e);
     }

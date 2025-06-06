@@ -127,7 +127,7 @@ export const CashFreePayment = (payment_session_id, order_id) => {
       const session = new CFSession(
         payment_session_id,
         order_id,
-        CFEnvironment.SANDBOX,
+        CFEnvironment.PRODUCTION,
       );
 
       const paymentModes = new CFPaymentComponentBuilder()

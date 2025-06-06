@@ -118,7 +118,7 @@ const Splash = props => {
           }
         } else {
           !!screenName
-            ? navigation.replace(redirectScreenName)
+            ? navigation.replace(screenName)
             : navigation.replace(screenNames.drawerNavigation);
         }
       } else {

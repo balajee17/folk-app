@@ -168,41 +168,48 @@ const displayNotification = async remoteMessage => {
       // sound: 'hare_krishna',
     });
 
+    const imageUrl = remoteMessage?.data?.image;
+
+    // Check if image is a valid URL
+    const isValidImage =
+      imageUrl && typeof imageUrl === 'string' && imageUrl.startsWith('http');
+
+    const androidConfig = {
+      channelId,
+      ongoing: true,
+      pressAction: {
+        id: 'default',
+        vibration: true,
+        vibrationPattern: [300, 500],
+        launchActivity: 'default',
+      },
+    };
+
+    if (isValidImage) {
+      androidConfig.style = {
+        type: AndroidStyle.BIGPICTURE,
+        picture: imageUrl,
+      };
+    }
+
+    const iosConfig = {};
+
+    if (isValidImage) {
+      iosConfig.ios = {
+        attachments: [
+          {
+            url: imageUrl,
+          },
+        ],
+      };
+    }
+
     await notifee.displayNotification({
       title: remoteMessage?.data?.title,
       body: remoteMessage?.data?.body,
       data: remoteMessage?.data,
-
-      android: {
-        channelId,
-        ongoing: true,
-        // sound: 'hare_krishna',
-
-        // smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-        //  # pressAction is needed if you want the notification to open the app when pressed
-        pressAction: {
-          id: 'default',
-          vibration: true,
-          vibrationPattern: [300, 500],
-          // mainComponent: remoteMessage.data.click_action,
-          launchActivity: 'default',
-        },
-
-        // style: {
-        //   type: AndroidStyle.BIGPICTURE,
-        //   picture: remoteMessage?.data?.image,
-        // },
-      },
-
-      ios: {
-        // attachments: [
-        //   {
-        //     url: remoteMessage?.data?.image,
-        //   },
-        // ],
-        // sound: 'hare_krishna.mp3',
-      },
-
+      android: androidConfig,
+      ios: iosConfig,
       importance: AndroidImportance.HIGH,
     });
   } catch (error) {

@@ -141,6 +141,7 @@ const Login = ({navigation}) => {
             };
       const response =
         type === 1 ? await API.getOTP(params) : await API.verifyOTP(params);
+      console.log('response', response?.data);
       const {successCode, message} = response?.data;
       if (successCode === 1) {
         if (type === 1) {
@@ -276,7 +277,7 @@ const Login = ({navigation}) => {
             {/* // @ Get OTP Btn */}
             {showOtp && (
               <TouchableOpacity
-                onPress={() => validateMobile(2)}
+                onPress={() => validateMobile(1)}
                 activeOpacity={0.8}
                 style={styles.resendBtn}>
                 <Text style={styles.resendTxt}>Resend</Text>
