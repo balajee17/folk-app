@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   COLORS,
   horizontalScale,
@@ -40,6 +40,7 @@ import {
   ShareLink,
 } from '../components/CommonFunctionalities';
 import {DownloadImage} from '../components/FileDownloader';
+import ImageViewer from '../components/ImageViewer';
 
 const Home = ({apiData, shimmer, refreshData}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -48,6 +49,11 @@ const Home = ({apiData, shimmer, refreshData}) => {
 
   const [playVideo, setPlayVideo] = useState(true);
   const [youtubeAudio] = useState(true);
+  const [imageViewer, setImageViewer] = useState({
+    visible: false,
+    imageData: [],
+    currentIndex: 0,
+  });
 
   const isFocused = useIsFocused();
 
@@ -104,24 +110,24 @@ const Home = ({apiData, shimmer, refreshData}) => {
   };
 
   // # History Icon
-  const RenderHistoryIcon = (title, navigateTo, icnColor) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          navigateScreen(navigateTo, {
-            title: title,
-          });
-        }}
-        style={styles.historyIcon}
-        activeOpacity={0.6}>
-        <MaterialCommunityIcons
-          name="history"
-          size={moderateScale(25)}
-          color={icnColor}
-        />
-      </TouchableOpacity>
-    );
-  };
+  // const RenderHistoryIcon = (title, navigateTo, icnColor) => {
+  //   return (
+  //     <TouchableOpacity
+  //       onPress={() => {
+  //         navigateScreen(navigateTo, {
+  //           title: title,
+  //         });
+  //       }}
+  //       style={styles.historyIcon}
+  //       activeOpacity={0.6}>
+  //       <MaterialCommunityIcons
+  //         name="history"
+  //         size={moderateScale(25)}
+  //         color={icnColor}
+  //       />
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   // @ Daily Darshana - Carousel
   const DailyDarshan = ({data, index}) => {
@@ -261,7 +267,17 @@ const Home = ({apiData, shimmer, refreshData}) => {
                 cardStyle={styles.swiperCard(announcementCardColor)}
                 renderCard={(card, cardIndex) => {
                   return (
-                    <View
+                    <Pressable
+                      onPress={() => {
+                        const newArr = UPDATES?.map(item => ({
+                          url: item?.link,
+                        }));
+                        setImageViewer({
+                          imageData: newArr,
+                          visible: true,
+                          currentIndex: cardIndex,
+                        });
+                      }}
                       key={card?.id}
                       style={{
                         width: windowWidth * 0.95,
@@ -310,13 +326,21 @@ const Home = ({apiData, shimmer, refreshData}) => {
                           />
                         </TouchableOpacity>
                       </View>
-                    </View>
+                    </Pressable>
                   );
                 }}
-                cardIndex={0}
+                cardIndex={imageViewer?.currentIndex || 0}
                 backgroundColor={COLORS.transparent}
                 animateCardOpacity
                 disableBottomSwipe
+                // onSwiped={cardIndex => {
+                //   cardIndex >= UPDATES?.length - 1
+                //     ? setImageViewer(prev => ({...prev, currentIndex: 0}))
+                //     : setImageViewer(prev => ({
+                //         ...prev,
+                //         currentIndex: cardIndex + 1,
+                //       }));
+                // }}
                 disableTopSwipe
                 verticalSwipe={false}
                 stackSeparation={-20}
@@ -375,7 +399,67 @@ const Home = ({apiData, shimmer, refreshData}) => {
           UPDATES?.map((updateItem, updateIndex) => {
             return (
               <View key={updateIndex}>
-                {!!updateItem?.link && (
+                {!!updateItem?.link && !!updateItem?.text ? (
+                  <View key={updateItem?.id} style={styles.imgTxtCont}>
+                    <View
+                      style={{
+                        width: windowWidth * 0.9,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Image
+                        style={MyStyles.quotesImg}
+                        source={{
+                          uri: updateItem?.link,
+                        }}
+                      />
+                      {/*  // # Download Btn */}
+                      <TouchableOpacity
+                        onPress={async () => {
+                          const result = await DownloadImage(updateItem?.link);
+
+                          if (!!result?.type) {
+                            toastMsg(
+                              result?.msg,
+                              result?.type === 'S' ? 'success' : 'error',
+                            );
+                          } else {
+                            toastMsg('Download failed.', 'error');
+                          }
+                        }}
+                        style={MyStyles.shareBtn}
+                        activeOpacity={0.6}>
+                        <MaterialCommunityIcons
+                          name="download"
+                          size={moderateScale(25)}
+                          color={COLORS.white}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      key={updateItem?.id}
+                      style={[
+                        MyStyles.updatesTextCont,
+                        MyStyles.paddingHor10,
+                        {
+                          marginTop: '2%',
+                        },
+                      ]}>
+                      <Text
+                        style={[MyStyles.announceTxt, {color: COLORS.black}]}>
+                        {updateItem?.title}
+                      </Text>
+
+                      <Text
+                        style={[
+                          MyStyles.updateTxt,
+                          {marginTop: '2%', color: COLORS.black},
+                        ]}>
+                        {updateItem?.text}
+                      </Text>
+                    </View>
+                  </View>
+                ) : !!updateItem?.link ? (
                   <View key={updateItem?.id} style={[styles.quotesImgCont]}>
                     <Image
                       style={MyStyles.quotesImg}
@@ -406,26 +490,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       />
                     </TouchableOpacity>
                   </View>
-                )}
-                {updateItem?.link && updateItem?.text ? (
-                  <View
-                    key={updateItem?.id}
-                    style={[
-                      MyStyles.updatesTextCont,
-                      MyStyles.paddingHor10,
-                      {
-                        marginTop: '2%',
-                      },
-                    ]}>
-                    <Text style={[MyStyles.announceTxt]}>
-                      {updateItem?.title}
-                    </Text>
-
-                    <Text style={[MyStyles.updateTxt, {marginTop: '2%'}]}>
-                      {updateItem?.text}
-                    </Text>
-                  </View>
-                ) : updateItem?.text ? (
+                ) : !!updateItem?.text ? (
                   <Pressable
                     onLongPress={() => {
                       if (
@@ -443,11 +508,7 @@ const Home = ({apiData, shimmer, refreshData}) => {
                       MyStyles.updatesTextCont,
                       MyStyles.paddingHor10,
                       {
-                        marginTop: !!updateItem?.link
-                          ? '2%'
-                          : index !== 0
-                          ? '5%'
-                          : '1%',
+                        marginTop: '4%',
                       },
                     ]}>
                     <View style={MyStyles.noticeCard(announcementCardColor)}>
@@ -561,7 +622,6 @@ const Home = ({apiData, shimmer, refreshData}) => {
         return null;
     }
   };
-
   return (
     <>
       {
@@ -590,6 +650,15 @@ const Home = ({apiData, shimmer, refreshData}) => {
           </View>
         </ScrollView>
       }
+      {imageViewer?.visible && (
+        <ImageViewer
+          selectedItem={imageViewer?.currentIndex}
+          imageData={imageViewer?.imageData}
+          closeImage={() => {
+            setImageViewer(prev => ({...prev, visible: false, imageData: []}));
+          }}
+        />
+      )}
     </>
   );
 };
@@ -618,7 +687,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     ...MyStyles.paddingHor10,
-    marginTop: verticalScale(15),
+    marginTop: '4%',
   },
 
   scrollViewCont: {
@@ -633,7 +702,7 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     textAlign: 'left',
     marginLeft: '4%',
-    width: '78%',
+    width: '80%',
     textAlignVertical: 'center',
   },
   horizontalLine: {
@@ -684,5 +753,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(30),
+  },
+  imgTxtCont: {
+    marginTop: '4%',
+    backgroundColor: COLORS.inptBg,
+    width: windowWidth,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: windowWidth * 0.95,
+    padding: '4%',
+    borderRadius: moderateScale(15),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });

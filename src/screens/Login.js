@@ -37,6 +37,7 @@ import {CustomPopup} from '../components/BackHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAppContext} from '../../App';
 import {getFcmId} from '../components/FCM';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Login = ({navigation}) => {
   const statusBarHeight = useStatusBarHeight();
@@ -77,7 +78,8 @@ const Login = ({navigation}) => {
     return () => backHandler.remove();
   }, []);
 
-  const handleOkay = () => {
+  const handleOkay = async () => {
+    handleCancel();
     BackHandler.exitApp();
   };
 
@@ -148,7 +150,7 @@ const Login = ({navigation}) => {
         } else {
           setLoader(false);
 
-          const {id, photo, name, folkId, mobile, folkLevel} =
+          const {id, photo, name, folkId, mobile, folkLevel, qrCodeLink} =
             response?.data?.profile;
           const {
             header,
@@ -166,6 +168,7 @@ const Login = ({navigation}) => {
             folkId,
             mobile,
             folkLevel,
+            qrCodeLink,
           };
           await setGlobalState(prev => ({
             ...prev,
@@ -178,6 +181,7 @@ const Login = ({navigation}) => {
             userName: name,
             mobileNumber: mobile,
             photo,
+            qrCodeLink,
             headerColor: header,
             bottomTabColor: bottomTab,
             buttonColor: button,

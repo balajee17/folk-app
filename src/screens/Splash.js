@@ -8,18 +8,20 @@ import {getImage} from '../utils/ImagePath';
 import {API} from '../services/API';
 import DeviceInformation from '../components/DeviceInfo';
 import {screenNames} from '../constants/ScreenNames';
+import {CommonActions} from '@react-navigation/native';
+import {Store} from '../redux/Store';
 
-const Splash = ({navigation}) => {
+const Splash = props => {
   const {setGlobalState} = useAppContext();
+  const {navigation} = props;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Promise.all([startFadeAnimation(), checkLoginStatus()])
-      .then(results => {
+      .then(async results => {
         const userData = results[1];
-        console.log('userLoggedIn', userData);
         if (userData?.profileId) {
-          updateFcm(userData);
+          await updateFcm(userData);
         } else {
           navigation.replace(screenNames.login);
         }
@@ -32,7 +34,6 @@ const Splash = ({navigation}) => {
   const checkLoginStatus = async () => {
     const storedVal = await AsyncStorage.getItem('userDetails');
     const parsedData = JSON.parse(storedVal);
-    console.log('storedVal', storedVal);
     return parsedData;
   };
 
@@ -69,17 +70,25 @@ const Splash = ({navigation}) => {
         tabIndicator,
       } = colors || {};
       if (successCode === 1) {
+        const {redirectScreen} = Store.getState();
+        const screenName = redirectScreen?.screenName;
+        const activeEvtTab = redirectScreen?.activeEvtTab;
+        const btTab = redirectScreen?.btTab;
+
         await setGlobalState(prev => ({
           ...prev,
           profileId: userData?.profileId,
           folkId: userData?.folkId,
+          qrCodeLink: userData?.qrCodeLink,
           folkLevel: userData?.folkLevel,
           userName: userData?.name,
           mobileNumber: userData?.mobile,
           photo: userData?.photo,
-          current: 'DB1',
-          btTab: 'DB1',
-          activeEventTab: 0,
+          current: btTab ? btTab : prev?.current,
+          btTab: btTab ? btTab : prev?.btTab,
+          activeEventTab: activeEvtTab
+            ? Number(activeEvtTab)
+            : prev?.activeEventTab,
           isConnected: true,
           headerColor: header,
           bottomTabColor: bottomTab,
@@ -89,7 +98,29 @@ const Splash = ({navigation}) => {
           announcementCardColor: announcementCard,
           tabIndicatorColor: tabIndicator,
         }));
-        navigation.replace(screenNames.drawerNavigation);
+
+        if (screenName === screenNames.sadhanaCalendar) {
+          if (!!userData?.folkId) {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 2,
+                routes: [
+                  {name: screenNames.drawerNavigation},
+                  // {name: screenNames.habitsSadhana, params: {props}},
+                  {
+                    name: screenNames.sadhanaCalendar,
+                  },
+                ],
+              }),
+            );
+          } else {
+            navigation.replace(screenNames.drawerNavigation);
+          }
+        } else {
+          !!screenName
+            ? navigation.replace(redirectScreenName)
+            : navigation.replace(screenNames.drawerNavigation);
+        }
       } else {
         navigation.replace(screenNames.login);
       }
@@ -103,7 +134,7 @@ const Splash = ({navigation}) => {
     return new Promise(resolve => {
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 3000, // Adjust animation duration as needed
+        duration: 2000, // Adjust animation duration as needed
         useNativeDriver: true,
       }).start(() => resolve());
     });

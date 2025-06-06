@@ -15,6 +15,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import NoDataFound from '../components/NoDataFound';
 import {CustomPopup} from '../components/BackHandler';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import {setResetRedirectScreen} from '../redux/slices/RedirectScreen';
+import {Store} from '../redux/Store';
 
 const SwitcherScreen = ({navigation, route}) => {
   const {globalState, setGlobalState} = useAppContext();
@@ -33,10 +35,10 @@ const SwitcherScreen = ({navigation, route}) => {
     registered: true,
     connectUs: true,
   });
-  const [eventTabIndex, setEventTabIndex] = useState(activeEventTab);
   const [eventList, setEventList] = useState({upcoming: [], registered: []});
   const [connectDetails, setConnectDetails] = useState({});
   const [exitAppModal, setExitAppModal] = useState(false);
+  const {redirectScreen} = Store.getState();
 
   const toastMsg = (msg, type) => {
     toast.show(msg, {
@@ -80,13 +82,15 @@ const SwitcherScreen = ({navigation, route}) => {
     checkLoaderData?.[0]?.forLoader !== 'Y';
 
   useEffect(() => {
+    redirectScreen?.screenName && setResetRedirectScreen({});
+
     if (btTab === 'DB1') {
       !checkHomeData && getHomeScreenData();
     }
 
     if (
       btTab === 'B2' &&
-      eventTabIndex === 0 &&
+      activeEventTab === 0 &&
       activeEventTab !== 1 &&
       !checkUpComingData
     ) {
@@ -96,7 +100,7 @@ const SwitcherScreen = ({navigation, route}) => {
     if (
       btTab === 'B2' &&
       !checkRegisteredData &&
-      (activeEventTab === 1 || eventTabIndex === 1)
+      (activeEventTab === 1 || activeEventTab === 1)
     ) {
       getRegisteredList();
     }
@@ -104,13 +108,15 @@ const SwitcherScreen = ({navigation, route}) => {
     if (btTab === 'B4' && !checkConnectData) {
       getConnectDetails();
     }
-  }, [btTab, eventTabIndex]);
+  }, [btTab, activeEventTab]);
 
   // # Back Handler
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
-        setExitAppModal(!exitAppModal);
+        titleName === screenNames.home
+          ? setExitAppModal(!exitAppModal)
+          : setGlobalState(prev => ({...prev, btTab: 'DB1', current: 'DB1'}));
         return true;
       };
 
@@ -120,14 +126,18 @@ const SwitcherScreen = ({navigation, route}) => {
       );
 
       return () => backHandler.remove();
-    }, []),
+    }, [titleName, exitAppModal]),
   );
 
   // # OnFocus screen Reload
   useFocusEffect(
     useCallback(() => {
       if (reloadEventList === 'Y') {
-        setGlobalState(prev => ({...prev, reloadEventList: 'N'}));
+        setGlobalState(prev => ({
+          ...prev,
+          reloadEventList: 'N',
+          redirectScreen: '',
+        }));
         setEventList({upcoming: [], registered: []});
 
         if (activeEventTab === 1) {
@@ -150,7 +160,8 @@ const SwitcherScreen = ({navigation, route}) => {
     } catch (e) {}
   };
 
-  const handleOkay = () => {
+  const handleOkay = async () => {
+    handleCancel();
     BackHandler.exitApp();
   };
 
@@ -300,8 +311,10 @@ const SwitcherScreen = ({navigation, route}) => {
         <Events
           openFilter={opnFltr}
           closeFilter={() => setOpnFltr(false)}
-          index={eventTabIndex}
-          eventTabChange={index => setEventTabIndex(index)}
+          index={activeEventTab}
+          eventTabChange={index =>
+            setGlobalState(prev => ({...prev, activeEventTab: index}))
+          }
           shimmer={shimmer}
           eventList={eventList}
           navigation={navigation}

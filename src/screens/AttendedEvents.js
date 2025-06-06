@@ -14,6 +14,7 @@ import {
   COLORS,
   moderateScale,
   MyStyles,
+  SIZES,
   verticalScale,
 } from '../styles/MyStyles';
 import {screenNames} from '../constants/ScreenNames';
@@ -29,6 +30,7 @@ import NoDataFound from '../components/NoDataFound';
 import {RedirectURL, toastThrottle} from '../components/CommonFunctionalities';
 import {useToast} from 'react-native-toast-notifications';
 import {useAppContext} from '../../App';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
   const {globalState} = useAppContext();
@@ -96,7 +98,6 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
               <>
                 {/*  // @ Events Card */}
                 <TouchableOpacity
-                  key={item?.id}
                   onPress={() => {
                     navigateTo(screenNames.eventDetails, {
                       screen: 'Registered',
@@ -109,129 +110,150 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
                     {
                       marginTop: index == 0 ? '2%' : '5%',
                       backgroundColor: eventCardColor || COLORS.eventCard,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                     },
-                  ]}>
-                  {/* // # Card image */}
+                  ]}
+                  key={item?.id}>
+                  {/* // # Left Side Image */}
+                  <View style={[MyStyles.imgCont]}>
+                    <Image
+                      style={MyStyles.image}
+                      source={{
+                        uri: item?.image,
+                      }}
+                    />
+                  </View>
 
-                  <Image
-                    style={MyStyles.cdImage}
-                    source={{
-                      uri: item?.image,
-                    }}
-                    resizeMode="stretch"
-                  />
+                  {/* // # Right Side - Event Title */}
+                  <View style={{width: '56%'}}>
+                    <Text numberOfLines={1} style={MyStyles.titleTxt}>
+                      {item?.session_name}
+                    </Text>
+                    <Text
+                      numberOfLines={3}
+                      style={[
+                        MyStyles.descripTxt,
+                        {marginTop: '1%', lineHeight: 17},
+                      ]}>
+                      {item?.description}
+                    </Text>
+                    {/* // # Date & mode */}
+                    <View style={MyStyles.dateModeCont}>
+                      <Text numberOfLines={1} style={MyStyles.dateTxt}>
+                        {item?.start_date}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={[MyStyles.dateTxt, {marginLeft: '2%'}]}>
+                        {item?.start_month},
+                      </Text>
 
-                  {/* // # Date Mode Container */}
-                  <View style={MyStyles.dateModeCont}>
-                    <View style={MyStyles.dateCont}>
-                      <Text style={MyStyles.dateTxt}>{item?.start_date}</Text>
-                      <Text style={MyStyles.monthTxt}>{item?.start_month}</Text>
+                      <Text
+                        numberOfLines={1}
+                        style={[MyStyles.dateTxt, {marginLeft: '1%'}]}>
+                        {item?.event_type === 'F' ? 'Offline' : 'Online'}
+                      </Text>
                     </View>
 
-                    {(item?.event_type === 'F' || item?.event_type === 'O') && (
-                      <View style={MyStyles.modeCont}>
-                        <Text style={MyStyles.modeTxt}>
-                          {item?.event_type === 'F'
-                            ? 'Offline'
-                            : item?.event_type === 'O'
-                            ? 'Online'
+                    {/*  // # Amount & Available Seats */}
+                    <Text
+                      numberOfLines={1}
+                      style={[MyStyles.amtTxt, {width: '100%'}]}>
+                      {item?.amount}
+                    </Text>
+
+                    {/*  // # Icons & Status */}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        position: 'absolute',
+                        bottom: 0,
+                      }}>
+                      {/* // # Icon & Register Btn Container */}
+                      <View
+                        style={[
+                          MyStyles.iconsContainer,
+                          {
+                            width: '60%',
+                            justifyContent: 'flex-start',
+                          },
+                        ]}>
+                        {!!item?.session_link && item?.event_type === 'O' && (
+                          <TouchableOpacity
+                            onPress={async () => {
+                              const result = await RedirectURL(
+                                item?.session_link,
+                              );
+                              if (!!result?.type) {
+                                toastMsg(result?.message, result?.type);
+                              }
+                            }}
+                            style={MyStyles.iconStyle}
+                            activeOpacity={0.6}>
+                            <Image
+                              source={{
+                                uri: item?.videoIcon,
+                              }}
+                              style={styles.iconImgStyle}
+                            />
+                          </TouchableOpacity>
+                        )}
+                        {item?.show_scan === 'Y' && (
+                          <TouchableOpacity
+                            onPress={() => checkCameraPermission(item?.id)}
+                            style={MyStyles.iconStyle}
+                            activeOpacity={0.6}>
+                            <Image
+                              source={{
+                                uri: item?.scannerIcon,
+                              }}
+                              style={styles.iconImgStyle}
+                            />
+                          </TouchableOpacity>
+                        )}
+                        {item?.show_voucher === 'Y' && (
+                          <TouchableOpacity
+                            onPress={() =>
+                              navigateTo(screenNames.coupons, {
+                                eventId: item?.id,
+                              })
+                            }
+                            style={MyStyles.iconStyle}
+                            activeOpacity={0.6}>
+                            <Image
+                              source={{
+                                uri: item?.prasadamIcon,
+                              }}
+                              style={styles.iconImgStyle}
+                            />
+                          </TouchableOpacity>
+                        )}
+                      </View>
+
+                      {(item?.is_attended === 'Y' ||
+                        item?.is_registered === 'Y') && (
+                        <Text
+                          style={[
+                            MyStyles.registerTxt,
+                            {
+                              color: COLORS.citrine,
+                              fontSize: SIZES.subTitle,
+                              bottom: 0,
+                              position: 'absolute',
+                              right: 0,
+                            },
+                          ]}>
+                          {item?.is_attended === 'Y'
+                            ? '✓✓'
+                            : item?.is_registered === 'Y'
+                            ? '✓'
                             : ''}
                         </Text>
-                      </View>
-                    )}
-                  </View>
-
-                  {/* // # Content Container */}
-                  <View style={MyStyles.boxContentContainer}>
-                    <View style={{width: '72%'}}>
-                      <Text numberOfLines={1} style={MyStyles.titleTxt}>
-                        {item?.session_name}
-                      </Text>
-                      <Text numberOfLines={1} style={MyStyles.descripTxt}>
-                        {item?.description}
-                      </Text>
-                    </View>
-
-                    <View style={{width: '25%'}}>
-                      <Text style={MyStyles.amtTxt}>{item?.amount}</Text>
-                    </View>
-                  </View>
-
-                  {/* // # Icon & Register Btn Container */}
-                  <View
-                    style={[
-                      MyStyles.boxContentContainer,
-                      {marginBottom: '1%'},
-                    ]}>
-                    <View style={[MyStyles.iconsContainer, {width: '40%'}]}>
-                      {!!item?.session_link && item?.event_type === 'O' && (
-                        <TouchableOpacity
-                          onPress={async () => {
-                            const result = await RedirectURL(
-                              item?.session_link,
-                            );
-                            if (!!result?.type) {
-                              toastMsg(result?.message, result?.type);
-                            }
-                          }}
-                          style={MyStyles.iconStyle}
-                          activeOpacity={0.6}>
-                          <Image
-                            source={{
-                              uri: item?.videoIcon,
-                            }}
-                            style={styles.iconImgStyle}
-                          />
-                        </TouchableOpacity>
-                      )}
-
-                      {item?.show_scan === 'Y' && (
-                        <TouchableOpacity
-                          onPress={() => checkCameraPermission(item?.id)}
-                          style={MyStyles.iconStyle}
-                          activeOpacity={0.6}>
-                          <Image
-                            source={{
-                              uri: item?.scannerIcon,
-                            }}
-                            style={styles.iconImgStyle}
-                          />
-                        </TouchableOpacity>
-                      )}
-
-                      {item?.show_voucher === 'Y' && (
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigateTo(screenNames.coupons, {eventId: item?.id})
-                          }
-                          style={MyStyles.iconStyle}
-                          activeOpacity={0.6}>
-                          {/* <MaterialCommunityIcons
-                            name="ticket-percent-outline"
-                            size={moderateScale(22)}
-                            color={COLORS.btIcon}
-                          /> */}
-                          <Image
-                            source={{
-                              uri: item?.prasadamIcon,
-                            }}
-                            style={styles.iconImgStyle}
-                          />
-                        </TouchableOpacity>
                       )}
                     </View>
-
-                    {(item?.is_attended === 'Y' ||
-                      item?.is_registered === 'Y') && (
-                      <Text
-                        style={[MyStyles.registerTxt, {color: COLORS.citrine}]}>
-                        {item?.is_attended === 'Y'
-                          ? 'Attended ✓✓'
-                          : item?.is_registered === 'Y'
-                          ? 'Registered ✓'
-                          : ''}
-                      </Text>
-                    )}
                   </View>
                 </TouchableOpacity>
               </>
@@ -243,14 +265,10 @@ const AttendedEvents = ({navigation, shimmer, registeredList, refresh}) => {
           ListEmptyComponent={<NoDataFound screen={screenNames.events} />}
         />
       ) : (
-        Array(2)
-          .fill(2)
+        Array(3)
+          .fill(3)
           .map((_, i) => {
-            return (
-              <View>
-                <EventShimmer marginTop={i === 0 ? '2%' : '5%'} />
-              </View>
-            );
+            return <EventShimmer marginTop={i === 0 ? '2%' : '5%'} />;
           })
       )}
     </>
@@ -261,7 +279,7 @@ export default AttendedEvents;
 
 const styles = StyleSheet.create({
   iconImgStyle: {
-    width: moderateScale(25),
-    height: moderateScale(25),
+    width: moderateScale(20),
+    height: moderateScale(20),
   },
 });

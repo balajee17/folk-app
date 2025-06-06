@@ -13,16 +13,16 @@ import SpInAppUpdates, {
 import {ToastProvider, useToast} from 'react-native-toast-notifications';
 import ToastMessage from './src/components/ToastMessage';
 import NetInfo from '@react-native-community/netinfo';
-import NoNetwork from './src/components/NoNetwork';
 import {
-  backgroundNotificationHandler,
   checkNotificationPermission,
   foreGroundNotificationHandler,
   getFcmId,
   getInitialNotification,
   getOnNotification,
+  IOSIntialNotify,
 } from './src/components/FCM';
 import {COLORS} from './src/styles/MyStyles';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
@@ -45,6 +45,7 @@ const App = () => {
     menuItems: [],
     menuSpinner: true,
     reloadSadhana: 'N',
+    redirectScreen: '',
     // Dynamic color themes
     headerColor: COLORS.header,
     bottomTabColor: COLORS.bottomTab,
@@ -63,16 +64,23 @@ const App = () => {
     });
     // checkAppUpdates();
 
+    changeNavigationBarColor(COLORS.header);
+
     // @ Push Notifications
-    getFcmId();
-    checkNotificationPermission();
-    backgroundNotificationHandler();
-    foreGroundNotificationHandler();
-    getInitialNotification();
-    getOnNotification();
+    notificationCheck();
+    // getOnNotification();
 
     return () => unsubscribe();
   }, []);
+
+  const notificationCheck = async () => {
+    await getFcmId();
+    await checkNotificationPermission();
+    await foreGroundNotificationHandler(setGlobalState);
+    await getInitialNotification();
+    Platform.OS === 'ios' && (await getOnNotification(setGlobalState));
+    Platform.OS === 'ios' && (await IOSIntialNotify());
+  };
 
   // const inAppUpdates = new SpInAppUpdates(true);
   // const majorUpdate = true;

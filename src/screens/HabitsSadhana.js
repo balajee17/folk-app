@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -29,6 +30,7 @@ import {
 } from '../components/CommonFunctionalities';
 import AndroidBackHandler from '../components/BackHandler';
 import Spinner from '../components/Spinner';
+import {useNavigation} from '@react-navigation/native';
 
 const HabitsSadhana = props => {
   const {globalState, setGlobalState} = useAppContext();
@@ -321,7 +323,6 @@ const styles = StyleSheet.create({
     marginTop: '3%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    overflow: 'hidden',
   },
   cardIcon: {
     width: horizontalScale(80),

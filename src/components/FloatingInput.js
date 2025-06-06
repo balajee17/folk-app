@@ -42,7 +42,7 @@ const FloatingInput = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (value && typeof value !== 'object') {
       animateLabel('UP');
-    } else if (!focused && !!value) {
+    } else if (!focused || !!value) {
       animateLabel('DOWN');
     }
   }, [value, focused]);
@@ -113,6 +113,7 @@ const FloatingInput = React.forwardRef((props, ref) => {
           },
         ]}>
         <Animated.Text
+          numberOfLines={1}
           style={[
             styles.floatingText(focused, value),
             {

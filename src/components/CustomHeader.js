@@ -15,6 +15,7 @@ import {useAppContext} from '../../App';
 import {API} from '../services/API';
 import {useToast} from 'react-native-toast-notifications';
 import {toastThrottle} from './CommonFunctionalities';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const CustomHeader = ({
   toggleDrawer,
@@ -22,6 +23,7 @@ const CustomHeader = ({
   goBack,
   rightIcnAction,
   martop,
+  logout,
   id = undefined,
 }) => {
   const {setGlobalState, globalState} = useAppContext();
@@ -97,12 +99,16 @@ const CustomHeader = ({
       }));
       const params = {mobile: mobileNumber};
       const response = await API.getMenuList(params);
-      const {menu, successCode, message} = response?.data;
+      const {menu, successCode, message, folkId, folkLevel, qrCodeLink} =
+        response?.data;
       if (successCode === 1) {
         await setGlobalState(prev => ({
           ...prev,
           menuItems: menu,
           menuSpinner: false,
+          folkId,
+          folkLevel,
+          qrCodeLink,
         }));
       } else {
         await setGlobalState(prev => ({
@@ -169,7 +175,10 @@ const CustomHeader = ({
       {/* Title */}
       {folkTitle ? (
         <Image
-          style={styles.folkImg}
+          style={[
+            styles.folkImg,
+            {marginLeft: titleName === screenNames.profile ? '12%' : 0},
+          ]}
           source={getImage.folk}
           resizeMode="contain"
         />
@@ -211,6 +220,21 @@ const CustomHeader = ({
         </TouchableOpacity>
       ) : (
         <View style={styles.rightIcn} />
+      )}
+      {/* // # Logout Icon */}
+      {titleName === screenNames.profile && (
+        <TouchableOpacity // second Right Icon
+          onPress={() => {
+            logout();
+          }}
+          activeOpacity={0.6}
+          style={[styles.menuIcon(titleName === screenNames.home)]}>
+          <AntDesign
+            name={'logout'}
+            size={moderateScale(20)}
+            color={COLORS.white}
+          />
+        </TouchableOpacity>
       )}
     </View>
   );

@@ -24,7 +24,7 @@ const Events = ({
   closeFilter,
   navigation,
   eventTabChange,
-  index,
+  index = 0,
   shimmer,
   eventList,
   refreshUpcoming,
@@ -33,32 +33,22 @@ const Events = ({
   const {globalState} = useAppContext();
   const {tabIndicatorColor} = globalState;
 
-  const [filterValues, setFilterValues] = useState({});
-  const [filterDrpDwnLst, setFilterDrpDwnLst] = useState({
-    eventNames: [
-      {label: 'ajkfa', value: 'dkjhklh'},
-      {label: 'ajkfa', value: 'dkjhklh'},
-      {label: 'ajkfa', value: 'dkjhklh'},
-      {label: 'ajkfa', value: 'dkjhklh'},
-    ],
-    eventTypes: [
-      {label: 'ajkfa', value: 'dkjhklh'},
-      {label: 'ajkfa', value: 'dkjhklh'},
-      {label: 'ajkfa', value: 'dkjhklh'},
-      {label: 'ajkfa', value: 'dkjhklh'},
-    ],
-  });
+  // const [filterValues, setFilterValues] = useState({});
+  // const [filterDrpDwnLst, setFilterDrpDwnLst] = useState({
+  //   eventNames: [],
+  //   eventTypes: [],
+  // });
   const [routes] = useState([
     {key: 'upcoming', title: 'Upcoming'},
     {key: 'registered', title: 'Registered'},
   ]);
 
-  const handleChange = (key, value) => {
-    setFilterValues(prevState => ({
-      ...prevState,
-      [key]: value,
-    }));
-  };
+  // const handleChange = (key, value) => {
+  //   setFilterValues(prevState => ({
+  //     ...prevState,
+  //     [key]: value,
+  //   }));
+  // };
 
   // @ Custom Style Tab Bar
   const renderTabBar = props => {
@@ -76,7 +66,9 @@ const Events = ({
                 borderRadius: moderateScale(30),
               },
             ]}>
-            <Text style={[styles.tabText, index === i && styles.activeTabText]}>
+            <Text
+              numberOfLines={1}
+              style={[styles.tabText, index === i && styles.activeTabText]}>
               {route.title}
             </Text>
           </TouchableOpacity>
@@ -88,12 +80,12 @@ const Events = ({
   return (
     <View style={[MyStyles.contentCont, {minHeight: screenHeight}]}>
       {/* // @ Filter Modal */}
-      <Modal animationType="slide" visible={openFilter} transparent>
-        <View style={styles.fltrModal}>
-          {/* // @ Filter Card */}
-          <View style={styles.filterCard}>
-            {/* // # Title, Close Container */}
-            <View style={styles.titleCloseCont}>
+      {/* <Modal animationType="slide" visible={openFilter} transparent> */}
+      {/* <View style={styles.fltrModal}> */}
+      {/* // @ Filter Card */}
+      {/* <View style={styles.filterCard}> */}
+      {/* // # Title, Close Container */}
+      {/* <View style={styles.titleCloseCont}>
               <Text numberOfLines={1} style={styles.titleTxt}>
                 Filter
               </Text>
@@ -107,9 +99,9 @@ const Events = ({
                   color={COLORS.btIcon}
                 />
               </TouchableOpacity>
-            </View>
-            {/* // # Event Name */}
-            <FloatingInput
+            </View> */}
+      {/* // # Event Name */}
+      {/* <FloatingInput
               type="dropdown"
               data={filterDrpDwnLst?.eventNames}
               label={'Event Name'}
@@ -129,9 +121,9 @@ const Events = ({
                   size={25}
                 />
               )}
-            />
-            {/* // # Event Type */}
-            <FloatingInput
+            /> */}
+      {/* // # Event Type */}
+      {/* <FloatingInput
               type="dropdown"
               data={filterDrpDwnLst?.eventTypes}
               label={'Event Type'}
@@ -148,9 +140,9 @@ const Events = ({
                   size={25}
                 />
               )}
-            />
-            {/* // # Date  */}
-            <FloatingInput
+            /> */}
+      {/* // # Date  */}
+      {/* <FloatingInput
               editable={false}
               data={filterDrpDwnLst?.eventTypes}
               label={'Date'}
@@ -167,9 +159,9 @@ const Events = ({
                 />
               }
               rightIconStyle={{marginRight: '4%'}}
-            />
-            {/* // # Clear & Filter Btn */}
-            <View
+            /> */}
+      {/* // # Clear & Filter Btn */}
+      {/* <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -184,10 +176,10 @@ const Events = ({
               <TouchableOpacity activeOpacity={0.6} style={styles.filterBtn}>
                 <Text style={styles.filterBtnTxt}>Filter</Text>
               </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+            </View> */}
+      {/* </View> */}
+      {/* </View> */}
+      {/*  </Modal> */}
 
       {/* // @ Tab View */}
       <TabView

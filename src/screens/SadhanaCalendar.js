@@ -31,6 +31,8 @@ import {toastThrottle} from '../components/CommonFunctionalities';
 import {useAppContext} from '../../App';
 import Spinner from '../components/Spinner';
 import {useFocusEffect} from '@react-navigation/native';
+import {Store} from '../redux/Store';
+import {setResetRedirectScreen} from '../redux/slices/RedirectScreen';
 
 const SadhanaCalendar = props => {
   const {navigation, route} = props;
@@ -47,6 +49,7 @@ const SadhanaCalendar = props => {
   const [spinner, setSpinner] = useState(true);
 
   const [sadhanaData, setSadhanaData] = useState({});
+  const {redirectScreen} = Store.getState();
 
   const size = horizontalScale(30);
   const strokeWidth = horizontalScale(4);
@@ -61,14 +64,18 @@ const SadhanaCalendar = props => {
     useCallback(() => {
       if (reloadSadhana === 'Y') {
         getSadhanaDetails();
-        setGlobalState(prev => ({...prev, reloadSadhana: 'N'}));
+        setGlobalState(prev => ({
+          ...prev,
+          reloadSadhana: 'N',
+          redirectScreen: '',
+        }));
       }
     }, [currentDate, reloadSadhana]),
   );
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
-
+    redirectScreen?.screenName && setResetRedirectScreen({});
     getSadhanaDetails();
 
     return () => {
@@ -128,8 +135,31 @@ const SadhanaCalendar = props => {
           } else {
           }
         }}
-        style={styles.calendarDayCont}>
-        <Text style={styles.dayTxt}>{date.day}</Text>
+        style={[
+          styles.calendarDayCont,
+          {
+            backgroundColor:
+              moment(date.dateString).format('DD-MMM-YYYY') ===
+              moment(new Date()).format('DD-MMM-YYYY')
+                ? COLORS.header
+                : COLORS.transparent,
+            borderRadius: moderateScale(20),
+            padding: '5%',
+          },
+        ]}>
+        <Text
+          style={[
+            styles.dayTxt,
+            {
+              color:
+                moment(date.dateString).format('DD-MMM-YYYY') ===
+                moment(new Date()).format('DD-MMM-YYYY')
+                  ? COLORS.white
+                  : COLORS.black,
+            },
+          ]}>
+          {date.day}
+        </Text>
         {Number(sadhanaCalendar?.percentage) >= 100 ? (
           <View style={styles.perCircleCont(sadhanaCalendar?.progressColor)}>
             <IonIcons

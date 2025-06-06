@@ -29,7 +29,10 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
   const autoScrollInterval = useRef(null);
   const isAutoScrolling = useRef(true);
 
-  const [imageViewer, setImageViewer] = useState({url: '', visible: false});
+  const [imageViewer, setImageViewer] = useState({
+    visible: false,
+    imageData: [],
+  });
 
   useEffect(() => {
     if (autoScroll) {
@@ -226,7 +229,13 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
                 onPress={() => {
                   stopAutoScroll();
                   isAutoScrolling.current = false;
-                  setImageViewer({url: item?.link, visible: true});
+                  const newArr = carouselItems?.map(item => ({
+                    url: item?.link,
+                  }));
+                  setImageViewer({
+                    visible: true,
+                    imageData: newArr,
+                  });
                 }}>
                 <Animated.View style={[translateImgStyle]}>
                   <Image
@@ -254,9 +263,10 @@ const ParallexCarousel = ({carouselItems, autoScroll}) => {
       {/* // # IMAGE VIEWER */}
       {imageViewer?.visible && (
         <ImageViewer
-          imageURL={imageViewer?.url}
+          selectedItem={currentIndex?.current}
+          imageData={imageViewer?.imageData}
           closeImage={() => {
-            setImageViewer({url: '', visible: false});
+            setImageViewer({visible: false, imageData: []});
             isAutoScrolling.current = true;
             startAutoScroll();
           }}

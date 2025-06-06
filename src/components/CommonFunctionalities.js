@@ -18,7 +18,12 @@ import {
   CFThemeBuilder,
 } from 'cashfree-pg-api-contract';
 import {API} from '../services/API';
-import {COLORS, moderateScale, MyStyles} from '../styles/MyStyles';
+import {
+  COLORS,
+  horizontalScale,
+  moderateScale,
+  MyStyles,
+} from '../styles/MyStyles';
 import ImagePicker from 'react-native-image-crop-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -310,3 +315,37 @@ export function getGradientColors(hex, points) {
     '#0000',
   ];
 }
+
+// # Show QR Code
+export const ShowQrCode = ({visible, imageUrl, closeModal}) => {
+  return (
+    <Modal visible={visible} transparent statusBarTranslucent>
+      <Pressable
+        onPress={closeModal}
+        style={[
+          MyStyles.modal,
+          {
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: COLORS.shareBtn,
+          },
+        ]}>
+        <Pressable
+          onPress={() => {}}
+          style={{
+            width: horizontalScale(300),
+            height: horizontalScale(300),
+            borderRadius: moderateScale(10),
+            backgroundColor: COLORS.white,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Image
+            source={{uri: imageUrl}}
+            style={{width: '90%', height: '90%'}}
+          />
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+};
