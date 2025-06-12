@@ -1,5 +1,6 @@
 import {
   Image,
+  ImageBackground,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -603,6 +604,29 @@ const Home = ({apiData, shimmer, refreshData}) => {
     );
   };
 
+  // @ YFH Banner
+  const YFHBanner = ({data}) => {
+    return (
+      <TouchableOpacity
+        onPress={async () => {
+          await setGlobalState(prev => ({...prev, current: 'D2'})),
+            navigateScreen(screenNames.yfhForm, {
+              titleName: data?.screenTitle,
+              id: 'D2',
+            });
+        }}
+        activeOpacity={0.8}
+        style={styles.yfhBannerCont}>
+        <Image
+          source={{
+            uri: data?.image,
+          }}
+          style={styles.yfhBannerImg}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   // # Render Items in Order
   const renderItemsInOrder = (item, index) => {
     switch (item?.section) {
@@ -617,6 +641,9 @@ const Home = ({apiData, shimmer, refreshData}) => {
 
       case 4:
         return <YoutubeVideos data={item} index={index} />;
+
+      case 6:
+        return <YFHBanner data={item} />;
 
       default:
         return null;
@@ -773,5 +800,19 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
+  },
+  yfhBannerCont: {
+    width: '95%',
+    height: verticalScale(150),
+    margin: '4%',
+    alignSelf: 'center',
+    borderRadius: moderateScale(15),
+    marginBottom: '6%',
+  },
+  yfhBannerImg: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'stretch',
+    borderRadius: moderateScale(15),
   },
 });

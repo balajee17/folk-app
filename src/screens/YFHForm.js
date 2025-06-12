@@ -77,6 +77,9 @@ const YFHForm = props => {
         toggleDrawer={() => navigation.openDrawer()}
         titleName={route?.params?.titleName}
         id={route?.params?.id}
+        goBack={() => {
+          return null;
+        }}
       />
       <Spinner spinnerVisible={loader} />
       {/* // # WebView YFH FORM */}
