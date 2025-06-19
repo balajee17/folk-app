@@ -172,7 +172,7 @@ const FlipCardCoupon = ({item, index, setSelCoupon}) => {
                 {item?.requestStatus === 'X'
                   ? 'Rejected'
                   : item?.requestStatus === 'P'
-                  ? 'Pending'
+                  ? 'FG approval pending'
                   : item?.requestStatus === 'A' && item?.isPaid === 'Y'
                   ? 'Pay Now'
                   : 'Reedem'}
