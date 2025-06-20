@@ -272,11 +272,11 @@ const Coupons = props => {
       console.log('SEND_Coupon_response', response?.data);
       const {data, successCode, message} = response?.data;
       if (successCode === 1) {
-        console.log('TYPE', TYPE);
+        setRequestReason('');
         if (TYPE === 'P') {
           const paymentSessionId = data?.sessionId;
           const orderId = data?.orderId;
-
+          setRequestCoupon(prev => ({...prev, open: false}));
           getPaymentGateway(paymentSessionId, orderId);
         } else {
           toastMsg(message, 'success');

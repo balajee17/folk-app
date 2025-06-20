@@ -163,6 +163,7 @@ const FlipCardCoupon = ({item, index, setSelCoupon}) => {
                 {backgroundColor: item?.btnBgColor || COLORS.bottomTab},
               ]}>
               <Text
+                numberOfLines={1}
                 style={[
                   styles.btnTxt,
                   {
@@ -172,7 +173,7 @@ const FlipCardCoupon = ({item, index, setSelCoupon}) => {
                 {item?.requestStatus === 'X'
                   ? 'Rejected'
                   : item?.requestStatus === 'P'
-                  ? 'FG approval pending'
+                  ? 'FOLK Guide approval pending'
                   : item?.requestStatus === 'A' && item?.isPaid === 'Y'
                   ? 'Pay Now'
                   : 'Reedem'}
@@ -377,7 +378,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   payBtn: {
-    width: horizontalScale(70),
+    // width: horizontalScale(70),
+    padding: '2%',
     height: horizontalScale(25),
     borderRadius: moderateScale(4),
     marginBottom: '5%',
