@@ -2,6 +2,8 @@ import {
   BackHandler,
   ImageBackground,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -239,61 +241,65 @@ const Login = ({navigation}) => {
             />
           </View>
 
-          <ScrollView
-            style={MyStyles.flex1}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'handled'}>
-            {/* // @ Login Txt */}
-            <Text style={styles.loginTxt}>{!showOtp ? 'Login' : 'OTP'}</Text>
+          <KeyboardAvoidingView
+            style={{flex: 1}}
+            behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
+            <ScrollView
+              style={MyStyles.flex1}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps={'handled'}>
+              {/* // @ Login Txt */}
+              <Text style={styles.loginTxt}>{!showOtp ? 'Login' : 'OTP'}</Text>
 
-            {/* // @ TextInput */}
-            {!showOtp ? (
-              <FloatingInput
-                ref={txtInpt}
-                screen={screenNames.login}
-                cntnrStyle={styles.txtInptCont}
-                txtInptStyle={styles.txtInpt}
-                label={'Mobile Number'}
-                labelStyle={styles.txtInptLbl}
-                value={mobile}
-                onChangeText={text => {
-                  setMobile(text);
-                  if (text.length === 10) {
-                    Keyboard.dismiss();
-                  }
-                }}
-                maxLength={10}
-                floatingTxtCntnr={{top: '30%'}}
-                keyboardType="number-pad"
-                cursorColor={COLORS.white}
-              />
-            ) : (
-              <OtpInput
-                contnrStyle={{marginTop: '12%'}}
-                otpLength={4}
-                setOtpValue={val => setOtp(val)}
-              />
-            )}
-            {/* // @ Get OTP Btn */}
-            {showOtp && (
+              {/* // @ TextInput */}
+              {!showOtp ? (
+                <FloatingInput
+                  ref={txtInpt}
+                  screen={screenNames.login}
+                  cntnrStyle={styles.txtInptCont}
+                  txtInptStyle={styles.txtInpt}
+                  label={'Mobile Number'}
+                  labelStyle={styles.txtInptLbl}
+                  value={mobile}
+                  onChangeText={text => {
+                    setMobile(text);
+                    if (text.length === 10) {
+                      Keyboard.dismiss();
+                    }
+                  }}
+                  maxLength={10}
+                  floatingTxtCntnr={{top: '30%'}}
+                  keyboardType="number-pad"
+                  cursorColor={COLORS.white}
+                />
+              ) : (
+                <OtpInput
+                  contnrStyle={{marginTop: '12%'}}
+                  otpLength={4}
+                  setOtpValue={val => setOtp(val)}
+                />
+              )}
+              {/* // @ Get OTP Btn */}
+              {showOtp && (
+                <TouchableOpacity
+                  onPress={() => validateMobile(1)}
+                  activeOpacity={0.8}
+                  style={styles.resendBtn}>
+                  <Text style={styles.resendTxt}>Resend</Text>
+                </TouchableOpacity>
+              )}
+
+              {/* // @ Button */}
               <TouchableOpacity
-                onPress={() => validateMobile(1)}
+                onPress={() => validateMobile(showOtp ? 2 : 1)}
                 activeOpacity={0.8}
-                style={styles.resendBtn}>
-                <Text style={styles.resendTxt}>Resend</Text>
+                style={[styles.otpBtn, showOtp && {marginTop: '10%'}]}>
+                <Text style={styles.otpBtnTxt}>
+                  {!showOtp ? 'Get OTP' : 'Submit'}
+                </Text>
               </TouchableOpacity>
-            )}
-
-            {/* // @ Button */}
-            <TouchableOpacity
-              onPress={() => validateMobile(showOtp ? 2 : 1)}
-              activeOpacity={0.8}
-              style={[styles.otpBtn, showOtp && {marginTop: '10%'}]}>
-              <Text style={styles.otpBtnTxt}>
-                {!showOtp ? 'Get OTP' : 'Submit'}
-              </Text>
-            </TouchableOpacity>
-          </ScrollView>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </ImageBackground>
     </>
