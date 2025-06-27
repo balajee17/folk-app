@@ -27,6 +27,7 @@ import SadhanaRegularize from '../screens/SadhanaRegularize';
 import ChangeTheme from '../screens/ChangeTheme';
 import {navigationRef} from '../components/RootNavigation';
 import HabitsSadhana from '../screens/HabitsSadhana';
+import {Linking} from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -43,6 +44,16 @@ const StackNavigation = () => {
       }
     }
   }, [isConnected]);
+
+  // const linking = {
+  //   prefixes: ['folknet://'],
+  //   config: {
+  //     screens: {
+  //       Home: '',
+  //       Profile: 'profile',
+  //     },
+  //   },
+  // };
 
   return (
     <NavigationContainer ref={navigationRef}>

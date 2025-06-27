@@ -2,7 +2,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import StackNavigation from './src/navigation/StackNavigation';
 import {createContext, useContext, useEffect, useState} from 'react';
 import {StatusBarHeightProvider} from './src/components/StatusBarComponent';
-import {Platform, Text, View} from 'react-native';
+import {Linking, Platform, Text, View} from 'react-native';
 import {appVersion} from './AppVersion.json';
 import SpInAppUpdates, {
   NeedsUpdateResponse,
@@ -23,6 +23,9 @@ import {
 } from './src/components/FCM';
 import {COLORS} from './src/styles/MyStyles';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import {Store} from './src/redux/Store';
+import {setRedirectScreen} from './src/redux/slices/RedirectScreen';
+import {screenNames} from './src/constants/ScreenNames';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
@@ -70,7 +73,35 @@ const App = () => {
     notificationCheck();
     // getOnNotification();
 
-    return () => unsubscribe();
+    // Linking.addEventListener('url', handleLink);
+
+    // @ Listen Url when app is opened through link ( Deep linking )
+    Linking.getInitialURL().then(async url => {
+      if (url) {
+        try {
+          console.log('Initial launch URL:', url);
+
+          const parsedUrl = new URL(url);
+          const screen = parsedUrl.hostname || screenNames.drawerNavigation; // retrieve screenName
+          await Store.dispatch(
+            setRedirectScreen({
+              screenName: screen,
+              btTab: globalState?.btTab ? globalState?.btTab : 'DB1',
+              activeEvtTab: globalState?.activeEventTab
+                ? Number(globalState?.activeEventTab)
+                : 0,
+            }),
+          );
+        } catch (error) {
+          console.warn('Invalid URL format:', error);
+        }
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      // Linking.removeEventListener('url', handleLink);
+    };
   }, []);
 
   const notificationCheck = async () => {
@@ -80,6 +111,13 @@ const App = () => {
     await getInitialNotification();
     Platform.OS === 'ios' && (await getOnNotification(setGlobalState));
     Platform.OS === 'ios' && (await IOSIntialNotify());
+  };
+
+  const handleLink = ({url}) => {
+    console.log('Opened with URL:', url);
+    Linking.getInitialURL(url => {
+      console.log('OPENED_URL', url);
+    });
   };
 
   // const inAppUpdates = new SpInAppUpdates(true);
