@@ -53,8 +53,6 @@
 	<string>FOLK needs access to your photo library to save images you download.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>FOLK needs access to your photo library so you can upload and select images for your profile.</string>
-	 <key>NSAppleMusicUsageDescription</key>
-  <string>FOLK needs access to your music library to play and manage songs within the app.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
