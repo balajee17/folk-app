@@ -45,16 +45,6 @@ const StackNavigation = () => {
     }
   }, [isConnected]);
 
-  // const linking = {
-  //   prefixes: ['folknet://'],
-  //   config: {
-  //     screens: {
-  //       Home: '',
-  //       Profile: 'profile',
-  //     },
-  //   },
-  // };
-
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{headerShown: false}}>

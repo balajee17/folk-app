@@ -28,26 +28,27 @@
         android:windowSoftInputMode="adjustResize"
         android:screenOrientation="portrait" 
         android:exported="true">
-        <intent-filter>
+        <intent-filter >
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
             <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
         </intent-filter>
 
-        <intent-filter>
-  <action android:name="android.intent.action.VIEW" />
-  <category android:name="android.intent.category.DEFAULT" />
-  <category android:name="android.intent.category.BROWSABLE" />
-  <data android:scheme="folknet"  />
+       <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+             <data android:scheme="https"
+              android:host="folknet.in"
+               />
+    </intent-filter>
+
+    <intent-filter android:autoVerify="true">
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="https" android:host="www.folknet.in" />
 </intent-filter>
       </activity>
-
-       <!-- <receiver
-          android:name=".DownloadCompleteReceiver"
-          android:exported="false">
-          <intent-filter>
-              <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
-          </intent-filter>
-      </receiver> -->
     </application>
 </manifest>

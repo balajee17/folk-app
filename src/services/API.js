@@ -2,6 +2,9 @@ import axios from 'axios';
 
 const Access_Key = '856!@nHKRKkbngsppnsg@856';
 
+export const DECRYPT_KEY = 'Yt9hQw3mZx8A2LcRf0NjVp6KdEiTuBsW';
+export const IV = '1234567890abcdef';
+
 const deploymentURL = 2; // 1 for Test || 2 for Live
 
 const baseURL =

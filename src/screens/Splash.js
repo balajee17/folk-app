@@ -106,7 +106,6 @@ const Splash = props => {
                 index: 2,
                 routes: [
                   {name: screenNames.drawerNavigation},
-                  // {name: screenNames.habitsSadhana, params: {props}},
                   {
                     name: screenNames.sadhanaCalendar,
                   },

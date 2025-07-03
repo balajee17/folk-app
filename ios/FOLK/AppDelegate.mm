@@ -4,6 +4,7 @@
 #import <React/RCTLinkingManager.h>
 #import <UserNotifications/UserNotifications.h>
 #import <FirebaseMessaging/FirebaseMessaging.h>
+#import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate
 
@@ -43,6 +44,16 @@
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
   [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
   completionHandler(UIBackgroundFetchResultNewData);
+}
+
+
+// Deep Linking
+- (BOOL)application:(UIApplication *)application
+    continueUserActivity:(NSUserActivity *)userActivity
+      restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+  return [RCTLinkingManager application:application
+                   continueUserActivity:userActivity
+                     restorationHandler:restorationHandler];
 }
 
 @end

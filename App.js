@@ -26,6 +26,9 @@ import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {Store} from './src/redux/Store';
 import {setRedirectScreen} from './src/redux/slices/RedirectScreen';
 import {screenNames} from './src/constants/ScreenNames';
+import {DECRYPT_KEY, IV} from './src/services/API';
+import CryptoJS from 'react-native-crypto-js';
+import {Buffer} from 'buffer';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
@@ -59,6 +62,25 @@ const App = () => {
     tabIndicatorColor: COLORS.tabIndicator,
   });
 
+  const decryptFromLaravel = encryptedBase64 => {
+    const key = CryptoJS.enc.Utf8.parse(DECRYPT_KEY);
+    const iv = CryptoJS.enc.Utf8.parse(IV);
+
+    const decrypted = CryptoJS.AES.decrypt(
+      {
+        ciphertext: CryptoJS.enc.Base64.parse(encryptedBase64),
+      },
+      key,
+      {
+        iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      },
+    );
+
+    return decrypted.toString(CryptoJS.enc.Utf8);
+  };
+
   useEffect(() => {
     // # Listen for real-time network changes
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -81,17 +103,50 @@ const App = () => {
         try {
           console.log('Initial launch URL:', url);
 
-          const parsedUrl = new URL(url);
-          const screen = parsedUrl.hostname || screenNames.drawerNavigation; // retrieve screenName
-          await Store.dispatch(
-            setRedirectScreen({
-              screenName: screen,
-              btTab: globalState?.btTab ? globalState?.btTab : 'DB1',
-              activeEvtTab: globalState?.activeEventTab
-                ? Number(globalState?.activeEventTab)
-                : 0,
-            }),
-          );
+          const pathStartIndex = url.indexOf('/', 8);
+          const pathname =
+            pathStartIndex !== -1 ? url.substring(pathStartIndex) : '';
+          const encryptedValue = pathname.split('/')[1];
+
+          const screen = encryptedValue
+            ? decryptFromLaravel(decodeURIComponent(encryptedValue))
+            : screenNames.drawerNavigation;
+
+          const Tab_value =
+            screen === screenNames.connectUs
+              ? 'B4'
+              : screen === screenNames.courses
+              ? 'B3'
+              : screen === screenNames.events
+              ? 'B2'
+              : screen === screenNames.sadhanaCalendar
+              ? 'D2'
+              : globalState?.btTab
+              ? globalState?.btTab
+              : 'DB1';
+
+          const validScreens = [
+            screenNames.drawerNavigation,
+            screenNames.connectUs,
+            screenNames.courses,
+            screenNames.events,
+            screenNames.sadhanaCalendar,
+          ];
+
+          if (validScreens.includes(screen)) {
+            await Store.dispatch(
+              setRedirectScreen({
+                screenName:
+                  screenNames.connectUs ||
+                  screenNames.courses ||
+                  screenNames.events ||
+                  screenNames.drawerNavigation
+                    ? screenNames.drawerNavigation
+                    : screen,
+                btTab: Tab_value,
+              }),
+            );
+          }
         } catch (error) {
           console.warn('Invalid URL format:', error);
         }
@@ -111,13 +166,6 @@ const App = () => {
     await getInitialNotification();
     Platform.OS === 'ios' && (await getOnNotification(setGlobalState));
     Platform.OS === 'ios' && (await IOSIntialNotify());
-  };
-
-  const handleLink = ({url}) => {
-    console.log('Opened with URL:', url);
-    Linking.getInitialURL(url => {
-      console.log('OPENED_URL', url);
-    });
   };
 
   // const inAppUpdates = new SpInAppUpdates(true);
