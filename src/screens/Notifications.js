@@ -11,6 +11,7 @@ import {useToast} from 'react-native-toast-notifications';
 import Spinner from '../components/Spinner';
 
 import NotificationCard from '../components/NotificationCard';
+import NoDataFound from '../components/NoDataFound';
 
 const Notifications = props => {
   const {navigation} = props;
@@ -35,7 +36,7 @@ const Notifications = props => {
 
   const getNotificationList = async () => {
     try {
-      const params = {profileId: profileId};
+      const params = {profileId};
       const response = await API.getNotificationList(params);
 
       console.log('Notification List response', response?.data);
@@ -43,6 +44,7 @@ const Notifications = props => {
       if (successCode === 1) {
         setNotificationList(data?.list);
       } else {
+        setNotificationList([]);
         toastMsg(message, 'warning');
       }
       setLoader(false);
@@ -61,7 +63,7 @@ const Notifications = props => {
   const removeNotification = async item => {
     try {
       setLoader(true);
-      const params = {profileId: profileId, notId: item?.NOT_ID};
+      const params = {profileId, notId: item?.NOT_ID};
       const response = await API.removeNotification(params);
 
       console.log('Notification List response', response?.data);
@@ -78,6 +80,8 @@ const Notifications = props => {
       console.log('ERR Notification List screen', err);
     }
   };
+
+  console.log('notification', notificationList);
 
   return (
     <Container>
@@ -103,6 +107,7 @@ const Notifications = props => {
               />
             );
           }}
+          ListEmptyComponent={!loader && <NoDataFound />}
         />
       </View>
     </Container>

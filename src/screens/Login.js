@@ -50,6 +50,11 @@ const Login = ({navigation}) => {
   const [otp, setOtp] = useState('');
   const [showOtp, setShowOtp] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [skipData, setSkipData] = useState({
+    show: false,
+    userName: '',
+    profileImage: '',
+  });
   const [exitAppModal, setExitAppModal] = useState(false);
   const toast = useToast();
   const toastMsg = (msg, type) => {
@@ -71,6 +76,8 @@ const Login = ({navigation}) => {
       setExitAppModal(!exitAppModal);
       return true;
     };
+
+    checkSkipOption();
 
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -211,6 +218,53 @@ const Login = ({navigation}) => {
     }
   };
 
+  const checkSkipOption = async () => {
+    try {
+      const response = await API.checkSkip();
+      console.log('response', response?.data);
+      const {successCode} = response?.data;
+      if (successCode === 1) {
+        setSkipData({
+          show: true,
+          userName: response?.data?.userName,
+          profileImage: response?.data?.profileImage,
+        });
+      } else {
+        setLoader(false);
+      }
+    } catch (err) {
+      setLoader(false);
+      console.log('ERR-Login', err);
+    }
+  };
+
+  const skipAction = async () => {
+    await setGlobalState(prev => ({
+      ...prev,
+      current: 'DB1',
+      btTab: 'DB1',
+      profileId: '',
+      activeEventTab: 0,
+      isConnected: true,
+      folkId: '',
+      userName: skipData?.userName,
+      mobileNumber: '',
+      photo: skipData?.profileImage,
+      qrCodeLink: '',
+      headerColor: COLORS.header,
+      bottomTabColor: COLORS.bottomTab,
+      buttonColor: COLORS.button,
+      cardColor: COLORS.card,
+      eventCardColor: COLORS.eventCard,
+      announcementCardColor: COLORS.announcementCard,
+      tabIndicatorColor: COLORS.tabIndicator,
+      folkLevel: '',
+    }));
+    navigation.replace(screenNames.drawerNavigation);
+  };
+
+  console.log('skipData', skipData);
+
   return (
     <>
       <CommonStatusBar bgColor={COLORS.white} screen={screenNames.login} />
@@ -301,6 +355,18 @@ const Login = ({navigation}) => {
             </ScrollView>
           </KeyboardAvoidingView>
         </SafeAreaView>
+
+        {/* // @ Skip Button */}
+        {!showOtp && skipData?.show && (
+          <TouchableOpacity
+            onPress={() => skipAction()}
+            activeOpacity={0.8}
+            style={styles.skipBtn}>
+            <Text style={[styles.otpBtnTxt, {color: COLORS.gunsmoke}]}>
+              Skip
+            </Text>
+          </TouchableOpacity>
+        )}
       </ImageBackground>
     </>
   );
@@ -369,5 +435,12 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.poppinsBold,
     color: COLORS.border,
     fontSize: SIZES.l,
+  },
+  skipBtn: {
+    width: '15%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: '2%',
   },
 });

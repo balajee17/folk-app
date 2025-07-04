@@ -18,7 +18,13 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {ImageShimmer, TitleShimmer} from '../components/Shimmer';
 import {screenNames} from '../constants/ScreenNames';
 
-const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
+const ProfileDetails = ({
+  shimmer,
+  profileDetails,
+  navigation,
+  deleteAccount,
+  deleteAction,
+}) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -84,7 +90,6 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
               />
             </>
           ))}
-
       {!shimmer &&
         profileDetails?.map(
           (item, index) =>
@@ -115,6 +120,20 @@ const ProfileDetails = ({shimmer, profileDetails, navigation}) => {
               </>
             ),
         )}
+      {deleteAccount && (
+        <TouchableOpacity
+          onPress={() => deleteAction()}
+          activeOpacity={0.8}
+          style={styles.deleteAccBtn}>
+          <Text
+            style={[
+              styles.editTxt,
+              {color: COLORS.errorPB, width: '100%', textAlign: 'center'},
+            ]}>
+            Delete Account
+          </Text>
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 };
@@ -171,5 +190,16 @@ const styles = StyleSheet.create({
     fontSize: SIZES.l,
     fontFamily: FONTS.urbanistSemiBold,
     color: COLORS.textLabel,
+  },
+  deleteAccBtn: {
+    width: '35%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: moderateScale(6),
+    marginVertical: '15%',
+    padding: '2%',
+    borderWidth: 0.5,
+    borderColor: COLORS.errorPB,
   },
 });

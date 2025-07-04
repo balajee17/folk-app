@@ -27,7 +27,7 @@ const CustomHeader = ({
   id = undefined,
 }) => {
   const {setGlobalState, globalState} = useAppContext();
-  const {mobileNumber, folkId, menuItems, headerColor} = globalState;
+  const {mobileNumber, folkId, menuItems, headerColor, profileId} = globalState;
   const statusBarHeight = useStatusBarHeight();
   const filterIcnScreens =
     titleName === screenNames.quotes ||
@@ -209,7 +209,7 @@ const CustomHeader = ({
                   ? 'filter'
                   : plusIcnscreens
                   ? 'plus'
-                  : titleName === screenNames.profile
+                  : titleName === screenNames.profile && profileId
                   ? 'palette'
                   : null
               }

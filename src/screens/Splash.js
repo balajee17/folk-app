@@ -98,7 +98,6 @@ const Splash = props => {
           announcementCardColor: announcementCard,
           tabIndicatorColor: tabIndicator,
         }));
-
         if (screenName === screenNames.sadhanaCalendar) {
           if (!!userData?.folkId) {
             navigation.dispatch(

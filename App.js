@@ -62,7 +62,7 @@ const App = () => {
     tabIndicatorColor: COLORS.tabIndicator,
   });
 
-  const decryptFromLaravel = encryptedBase64 => {
+  const decrypt = encryptedBase64 => {
     const key = CryptoJS.enc.Utf8.parse(DECRYPT_KEY);
     const iv = CryptoJS.enc.Utf8.parse(IV);
 
@@ -102,15 +102,15 @@ const App = () => {
       if (url) {
         try {
           console.log('Initial launch URL:', url);
+          const encryptedValue = url.split('?')[1] || '';
 
-          const pathStartIndex = url.indexOf('/', 8);
-          const pathname =
-            pathStartIndex !== -1 ? url.substring(pathStartIndex) : '';
-          const encryptedValue = pathname.split('/')[1];
+          console.log('Encrypted_msg', encryptedValue);
 
           const screen = encryptedValue
-            ? decryptFromLaravel(decodeURIComponent(encryptedValue))
+            ? decrypt(decodeURIComponent(encryptedValue))
             : screenNames.drawerNavigation;
+
+          console.log('🚀 SCREEN_VAL', screen);
 
           const Tab_value =
             screen === screenNames.connectUs
@@ -119,10 +119,6 @@ const App = () => {
               ? 'B3'
               : screen === screenNames.events
               ? 'B2'
-              : screen === screenNames.sadhanaCalendar
-              ? 'D2'
-              : globalState?.btTab
-              ? globalState?.btTab
               : 'DB1';
 
           const validScreens = [
@@ -130,19 +126,17 @@ const App = () => {
             screenNames.connectUs,
             screenNames.courses,
             screenNames.events,
-            screenNames.sadhanaCalendar,
           ];
 
-          if (validScreens.includes(screen)) {
+          if (
+            validScreens.includes(screen) ||
+            screen === screenNames.sadhanaCalendar
+          ) {
             await Store.dispatch(
               setRedirectScreen({
-                screenName:
-                  screenNames.connectUs ||
-                  screenNames.courses ||
-                  screenNames.events ||
-                  screenNames.drawerNavigation
-                    ? screenNames.drawerNavigation
-                    : screen,
+                screenName: validScreens.includes(screen)
+                  ? screenNames.drawerNavigation
+                  : screen,
                 btTab: Tab_value,
               }),
             );

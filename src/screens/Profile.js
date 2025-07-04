@@ -43,7 +43,7 @@ import changeNavigationBarColor from 'react-native-navigation-bar-color';
 const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
 
-  const {profileId, reloadProfile, tabIndicatorColor} = globalState;
+  const {profileId, userName, reloadProfile, tabIndicatorColor} = globalState;
   const [activeTab, setActiveTab] = useState(1);
   const {navigation} = props;
   const [shimmer, setShimmer] = useState({
@@ -56,6 +56,7 @@ const Profile = props => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [deleteProfile, setDeleteProfile] = useState(false);
   const [imagePicker, setImagePicker] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
 
@@ -74,7 +75,7 @@ const Profile = props => {
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
-    getUserData(1);
+    !!profileId && getUserData(1);
 
     return AndroidBackHandler.removerHandler();
   }, []);
@@ -139,10 +140,11 @@ const Profile = props => {
         tab: selTab === 1 ? 'Profile' : selTab === 2 ? 'Attendance' : 'Payment',
       };
       const response = await API.getUserDetails(params);
-      // console.log('response_profile', response?.data?.data);
-      const {data, successCode, message} = response?.data;
+      console.log('response_profile', response?.data);
+      const {data, successCode, message, deleteProfile} = response?.data;
       if (successCode === 1) {
         setData(selTab, data);
+        setDeleteProfile(deleteProfile === 'Y' ? true : false);
       } else {
         setData(selTab, selTab === 1 ? {} : []);
         toastMsg(message, 'warning');
@@ -244,6 +246,30 @@ const Profile = props => {
     }
   };
 
+  // # API to Delete Account
+  const deleteUserAccount = async () => {
+    try {
+      setLoader(true);
+
+      const params = {
+        profileId: profileId,
+      };
+      const response = await API.deleteUserAccount(params);
+      console.log('response_Del_Acc', response?.data);
+      const {successCode, message} = response?.data;
+      if (successCode === 1) {
+        toastMsg(message, 'success');
+      } else {
+        toastMsg(message, 'warning');
+      }
+      setLoader(false);
+    } catch (err) {
+      setLoader(false);
+      toastMsg('', 'error');
+      console.log('ERR-User Details', err);
+    }
+  };
+
   return (
     <>
       <Container>
@@ -304,7 +330,7 @@ const Profile = props => {
             />
           ) : (
             <Text style={styles.usrName}>
-              {profileData?.primaryDetails?.Name}
+              {profileData?.primaryDetails?.Name || userName}
             </Text>
           )}
           {/* // # User FOLK ID */}
@@ -322,84 +348,93 @@ const Profile = props => {
           )}
 
           {/* // # Tab Bar */}
-          <View style={styles.tabBarCont}>
-            {tabItems.map((item, index) =>
-              shimmer?.primary ? (
-                <ImageShimmer
-                  width={horizontalScale(110)}
-                  borderRadius={moderateScale(20)}
-                  padding={'2.5%'}
-                  height={verticalScale(45)}
-                />
-              ) : (
-                <TouchableOpacity
-                  key={item?.id}
-                  onPress={() => {
-                    setActiveTab(item?.id);
-
-                    const checkCurrentSectionLoading =
-                      shimmer[item?.id] === true;
-
-                    const conditions = {
-                      1: checkProfileExist,
-                      2: checkAttendanceExist,
-                      3: checkPaymentExist,
-                    };
-                    if (!checkCurrentSectionLoading && !conditions[item?.id]) {
-                      getUserData(item?.id);
-                    }
-                  }}
-                  activeOpacity={0.6}
-                  style={[
-                    styles.tabButton,
-                    {
-                      width: item?.id === 2 ? '33%' : '30%',
-
-                      backgroundColor:
-                        item?.id === activeTab
-                          ? tabIndicatorColor || COLORS.button
-                          : COLORS.white,
-                      borderRadius: moderateScale(20),
-                    },
-                  ]}>
-                  <Ionicons
-                    name={item?.icon}
-                    size={moderateScale(20)}
-                    color={
-                      item?.id === activeTab ? COLORS.white : COLORS.textLabel
-                    }
+          {!!profileId && (
+            <View style={styles.tabBarCont}>
+              {tabItems.map((item, index) =>
+                shimmer?.primary ? (
+                  <ImageShimmer
+                    width={horizontalScale(110)}
+                    borderRadius={moderateScale(20)}
+                    padding={'2.5%'}
+                    height={verticalScale(45)}
                   />
-                  <Text
-                    numberOfLines={1}
+                ) : (
+                  <TouchableOpacity
+                    key={item?.id}
+                    onPress={() => {
+                      setActiveTab(item?.id);
+
+                      const checkCurrentSectionLoading =
+                        shimmer[item?.id] === true;
+
+                      const conditions = {
+                        1: checkProfileExist,
+                        2: checkAttendanceExist,
+                        3: checkPaymentExist,
+                      };
+                      if (
+                        !checkCurrentSectionLoading &&
+                        !conditions[item?.id]
+                      ) {
+                        getUserData(item?.id);
+                      }
+                    }}
+                    activeOpacity={0.6}
                     style={[
-                      styles.tabBtnTxt,
+                      styles.tabButton,
                       {
-                        color:
+                        width: item?.id === 2 ? '33%' : '30%',
+
+                        backgroundColor:
                           item?.id === activeTab
-                            ? COLORS.white
-                            : COLORS.textLabel,
+                            ? tabIndicatorColor || COLORS.button
+                            : COLORS.white,
+                        borderRadius: moderateScale(20),
                       },
                     ]}>
-                    {item?.tabName}
-                  </Text>
-                </TouchableOpacity>
-              ),
-            )}
-          </View>
+                    <Ionicons
+                      name={item?.icon}
+                      size={moderateScale(20)}
+                      color={
+                        item?.id === activeTab ? COLORS.white : COLORS.textLabel
+                      }
+                    />
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        styles.tabBtnTxt,
+                        {
+                          color:
+                            item?.id === activeTab
+                              ? COLORS.white
+                              : COLORS.textLabel,
+                        },
+                      ]}>
+                      {item?.tabName}
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              )}
+            </View>
+          )}
 
           {/* // @ Content */}
-          {activeTab === 1 ? (
+          {!!profileId && activeTab === 1 ? (
             <ProfileDetails
               shimmer={shimmer?.profile}
               profileDetails={profileData?.profileDetails}
               navigation={navigation}
+              deleteAccount={deleteProfile}
+              deleteAction={() => {
+                deleteUserAccount();
+              }}
             />
-          ) : activeTab === 2 ? (
+          ) : !!profileId && activeTab === 2 ? (
             <AttendanceHistory
               shimmer={shimmer?.attendance}
               attendanceHistory={attendanceData}
             />
-          ) : activeTab === 3 ? (
+          ) : !!profileId && activeTab === 3 ? (
             <PaymentHistory
               shimmer={shimmer?.payment}
               paymentHistory={paymentData}

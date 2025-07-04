@@ -3,7 +3,7 @@ import axios from 'axios';
 const Access_Key = '856!@nHKRKkbngsppnsg@856';
 
 export const DECRYPT_KEY = 'Yt9hQw3mZx8A2LcRf0NjVp6KdEiTuBsW';
-export const IV = '1234567890abcdef';
+export const IV = 'fbd0e29136afc748';
 
 const deploymentURL = 2; // 1 for Test || 2 for Live
 
@@ -18,6 +18,20 @@ export const API = {
     const requestData = {accessKey: Access_Key, ...data};
     console.log('CHECK FCM ID ', getFCM_URL, ' data ', requestData);
     return axios.post(getFCM_URL, requestData);
+  },
+  // # check skip
+  checkSkip() {
+    const getSkip_URL = baseURL + '/check-skip';
+    const requestData = {accessKey: Access_Key};
+    console.log('CHECK SKIP ', getSkip_URL, ' data ', requestData);
+    return axios.post(getSkip_URL, requestData);
+  },
+  // # delete user account
+  deleteUserAccount(data) {
+    const delete_Account_URL = baseURL + '/profile-delete';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log('Delete Account', delete_Account_URL, ' data ', requestData);
+    return axios.post(delete_Account_URL, requestData);
   },
   // # Get OTP
   getOTP(data) {
@@ -157,12 +171,7 @@ export const API = {
   getUserDetails(data) {
     const getUserDetailsURL = baseURL + '/view-profile';
     const requestData = {accessKey: Access_Key, ...data};
-    console.log(
-      'URL Coupon List Data ',
-      getUserDetailsURL,
-      ' data ',
-      requestData,
-    );
+    console.log('URL User Data ', getUserDetailsURL, ' data ', requestData);
     return axios.post(getUserDetailsURL, requestData);
   },
   // # COUPONS
