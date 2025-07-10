@@ -41,7 +41,9 @@ const CustomHeader = ({
     toast.show(msg, {type});
   }, 3400);
 
-  const plusIcnscreens = titleName === screenNames.coupons;
+  const plusIcnscreens =
+    titleName === screenNames.coupons ||
+    titleName === screenNames.accommodation;
 
   const drawerScreens =
     titleName === screenNames.home ||

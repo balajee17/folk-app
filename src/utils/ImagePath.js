@@ -19,4 +19,6 @@ export const getImage = {
   folkCircle: require('../assets/images/FOLK_Circle.png'),
   noNetwork: require('../assets/images/noNetwork.gif'),
   folkSplash: require('../assets/images/folk_splash.png'),
+  bedIcn: require('../assets/images/bedIcn.png'),
+  hostelIcn: require('../assets/images/hostelIcn.png'),
 };

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {screenNames} from '../constants/ScreenNames';
 import {NavigationContainer} from '@react-navigation/native';
@@ -27,15 +27,13 @@ import SadhanaRegularize from '../screens/SadhanaRegularize';
 import ChangeTheme from '../screens/ChangeTheme';
 import {navigationRef} from '../components/RootNavigation';
 import HabitsSadhana from '../screens/HabitsSadhana';
-import {Linking} from 'react-native';
+import Accommodation from '../screens/Accommodation';
 
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
-  const {globalState, setGlobalState} = useAppContext();
+  const {globalState} = useAppContext();
   const {isConnected} = globalState;
-
-  // const navigationRef = useRef();
 
   useEffect(() => {
     if (navigationRef.current) {
@@ -47,7 +45,9 @@ const StackNavigation = () => {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        initialRouteName={screenNames.accommodation}
+        screenOptions={{headerShown: false}}>
         {/* // @ Splash */}
         <Stack.Screen name={screenNames.splash} component={Splash} />
         {/* // @ Login */}
@@ -146,6 +146,12 @@ const StackNavigation = () => {
         <Stack.Screen
           name={screenNames.sadhanaCalendar}
           component={SadhanaCalendar}
+        />
+
+        {/* // @ Accommodation */}
+        <Stack.Screen
+          name={screenNames.accommodation}
+          component={Accommodation}
         />
 
         {/* // @ Sadhana Regularize */}
