@@ -54,7 +54,7 @@ const CustomHeader = ({
     id === 'D2' ||
     id === 'D7' ||
     id === 'D8' ||
-    (titleName === screenNames.titleName) === screenNames.accommodation ||
+    id === 'D3' ||
     titleName === screenNames.folkMerchant ||
     titleName === screenNames.contribution ||
     titleName === screenNames.habitsSadhana;

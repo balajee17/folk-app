@@ -328,4 +328,27 @@ export const API = {
     );
     return axios.post(updateColorURL, requestData);
   },
+
+  accommodationRequestList(data){
+      const accommodationURL = baseURL + '';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'Accommodation request URL Data ',
+      accommodationURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(accommodationURL, requestData);
+  },
+  accommodationHostelList(){
+ const accommodationURL = baseURL + '';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'Accommodation Hostel URL Data ',
+      accommodationURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(accommodationURL, requestData);
+  },
 };

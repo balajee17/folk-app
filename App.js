@@ -24,11 +24,11 @@ import {
 import {COLORS} from './src/styles/MyStyles';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {Store} from './src/redux/Store';
-import {setRedirectScreen} from './src/redux/slices/RedirectScreen';
 import {screenNames} from './src/constants/ScreenNames';
 import {DECRYPT_KEY, IV} from './src/services/API';
 import CryptoJS from 'react-native-crypto-js';
 import {Buffer} from 'buffer';
+import {setRedirectScreen} from './src/redux/slices/RedirectScreen';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);

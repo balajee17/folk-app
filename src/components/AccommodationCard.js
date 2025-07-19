@@ -11,48 +11,89 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {getImage} from '../utils/ImagePath';
 
-const AccommodationCard = ({data, index}) => {
+const AccommodationCard = ({data, index, historyScreen, openQrCode}) => {
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        {
+          borderWidth: horizontalScale(1),
+          borderColor: COLORS.border,
+        },
+      ]}>
       {/* // # Date and status */}
       <View style={styles.flexRowCont}>
-        <Text style={styles.dateTxt}>Date</Text>
-
-        <Text style={styles.pendingTxt}>Rejected</Text>
+        <Text style={styles.dateTxt}>{data?.date}</Text>
+        <Text
+          style={[
+            styles.pendingTxt,
+            {
+              backgroundColor:
+                data?.status === 'B'
+                  ? COLORS.successBg
+                  : data?.status === 'P'
+                  ? COLORS.warningBg
+                  : data?.status === 'X'
+                  ? COLORS.errorBg
+                  : COLORS.border,
+              color:
+                data?.status === 'B'
+                  ? COLORS.successPB
+                  : data?.status === 'P'
+                  ? COLORS.warningPB
+                  : data?.status === 'X'
+                  ? COLORS.errorPB
+                  : COLORS.black,
+            },
+          ]}>
+          {data?.status === 'B'
+            ? 'Approved'
+            : data?.status === 'X'
+            ? 'Rejected'
+            : 'Pending'}
+        </Text>
       </View>
       {/* // # request reason */}
-      <Text style={[styles.dateTxt, styles.reasonTxt]}>
-        Request reason Text
-      </Text>
+      <Text style={[styles.dateTxt, styles.reasonTxt]}>{data?.reason}</Text>
       {/* // # Rejected Reason */}
-      <Text style={styles.rejReasTxt}>Reason for rejection</Text>
-      <Text style={[styles.dateTxt, styles.reasonTxt]}>
-        REjected reason Text
-      </Text>
+      {data?.status === 'X' && (
+        <>
+          <Text style={styles.rejReasTxt}>Reason for rejection</Text>
+          <Text style={[styles.dateTxt, styles.reasonTxt]}>
+            {data?.rejectedReason}
+          </Text>
+        </>
+      )}
 
       {/* // # hostel, Bed no and Qr code */}
-      <View style={[styles.flexRowCont, {marginTop: '3%'}]}>
-        <View style={[styles.flexRowCont, {width: '40%'}]}>
-          <Image style={styles.icnStyle} source={getImage.hostelIcn} />
-          <Text numberOfLines={1} style={styles.hostelName}>
-            HOSTEL naME
-          </Text>
-        </View>
+      {data?.status === 'B' && (
+        <View style={[styles.flexRowCont, {marginTop: '3%'}]}>
+          <View style={[styles.flexRowCont, {width: '40%'}]}>
+            <Image style={styles.icnStyle} source={getImage.hostelIcn} />
+            <Text numberOfLines={1} style={styles.hostelName}>
+              {data?.hostelName}
+            </Text>
+          </View>
 
-        <View style={[styles.flexRowCont, {width: '35%'}]}>
-          <Image style={styles.icnStyle} source={getImage.bedIcn} />
-          <Text numberOfLines={1} style={[styles.hostelName]}>
-            L122 (3rd floor)
-          </Text>
-        </View>
+          <View style={[styles.flexRowCont, {width: '35%'}]}>
+            <Image style={styles.icnStyle} source={getImage.bedIcn} />
+            <Text numberOfLines={1} style={[styles.hostelName]}>
+              {data?.bedNo}
+            </Text>
+          </View>
 
-        <MaterialIcons
-          onPress={() => {}}
-          name="qr-code"
-          size={moderateScale(23)}
-          color={COLORS.black}
-        />
-      </View>
+          {data?.qrLink && (
+            <MaterialIcons
+              onPress={() => {
+                openQrCode(data?.qrLink);
+              }}
+              name="qr-code"
+              size={moderateScale(23)}
+              color={COLORS.black}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -66,12 +107,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     padding: '2%',
     borderRadius: moderateScale(10),
-    borderWidth: horizontalScale(1),
-    borderTopColor: COLORS.border,
-    borderRightColor: COLORS.border,
-    borderBottomColor: COLORS.border,
-    borderLeftWidth: 5,
-    borderLeftColor: 'red',
+
     ...MyStyles,
   },
   flexRowCont: {
@@ -91,7 +127,6 @@ const styles = StyleSheet.create({
     padding: '2.2%',
     paddingVertical: '1.2%',
     borderRadius: moderateScale(15),
-    backgroundColor: 'red',
   },
   reasonTxt: {
     fontFamily: FONTS.urbanistMedium,

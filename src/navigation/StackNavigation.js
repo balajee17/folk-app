@@ -46,7 +46,7 @@ const StackNavigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName={screenNames.accommodation}
+        initialRouteName={screenNames.splash}
         screenOptions={{headerShown: false}}>
         {/* // @ Splash */}
         <Stack.Screen name={screenNames.splash} component={Splash} />
