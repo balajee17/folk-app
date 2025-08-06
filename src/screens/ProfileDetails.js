@@ -30,111 +30,154 @@ import {
 
 // New JSON structure from backend
 const profileDataStructure = {
-  "primaryDetails": {
-    "Profile_image": "http://localhost/FOLKDashboard/public/profileImages/1.png?t=1754391553",
-    "Name": "Roshan",
-    "Folk_id": null
-  },
-  "profileDetails": {
-    "emailDetails": [
+  "successCode": 1,
+  "message": "Successful",
+  "data": {
+    "primaryDetails": {
+      "Profile_image": "http://localhost/FOLKDashboard/public/profileImages/1.png?t=1754457517",
+      "Name": "Roshan",
+      "Folk_id": null
+    },
+    "profileDetails": [
       {
-        "label": "Email",
-        "value": "new-email@example.com",
+        "Label": "Mobile",
+        "Value": "7602012478",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Whatsapp",
+        "Value": "9876543210",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Email",
+        "Value": "new-email@example.com",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Gender",
+        "Value": "Female",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Centre",
+        "Value": "Centre A",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Date Of Birth",
+        "Value": "15-Aug-1995",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Address",
+        "Value": "sample",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "FOLK Level",
+        "Value": null,
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "City",
+        "Value": "madurai",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "State",
+        "Value": "Karnataka",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Country",
+        "Value": "India",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Occupation",
+        "Value": "Student",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Higher Qualification",
+        "Value": "MBA",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Designation",
+        "Value": ":laravel developer",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Spouse Id",
+        "Value": "",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Living Status",
+        "Value": "With Parents",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Course",
+        "Value": "B.E",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Institute Name",
+        "Value": "PBCE",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Organization",
+        "Value": "ISKCON",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Blood Group",
+        "Value": "A+",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Father Name",
+        "Value": "kumar",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Father Mobile",
+        "Value": "1234567891",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Mother Name",
+        "Value": "kumari",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "Mother Mobile",
+        "Value": "1234567891",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "E Name",
+        "Value": "sample",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Label": "E Mobile",
+        "Value": "1234567890",
+        "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
+      },
+      {
+        "Id": 12,
+        "Label": "Official Photo",
+        "Value": "http://localhost/FOLKDashboard/public/offical-photo/1.png?t=1754457517",
         "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
       }
-    ],
-    "personalDetails": [
-      {
-        "label1": "YFH ID",
-        "value1": "",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Mobile",
-        "value2": "7602012478",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      },
-      {
-        "label1": "Gender",
-        "value1": "Female",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Level",
-        "value2": "",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      },
-      {
-        "label1": "Spouse ID",
-        "value1": "",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Occupation",
-        "value2": "Student",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      },
-      {
-        "label1": "Designation",
-        "value1": ":laravel developer",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Higher Qualification",
-        "value2": "MBA",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      },
-      {
-        "label1": "Center",
-        "value1": "Centre A",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "City",
-        "value2": "madurai",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      },
-      {
-        "label1": "State",
-        "value1": "Karnataka",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Country",
-        "value2": "India",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      }
-    ],
-    "familyDetails": [
-      {
-        "label1": "Father's Name",
-        "value1": "kumar",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Father's Mobile No.",
-        "value2": "1234567891",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      },
-      {
-        "label1": "Mother's Name",
-        "value1": "kumari",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Mother's Mobile No.",
-        "value2": "1234567891",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      },
-      {
-        "label1": "Blood Group",
-        "value1": "A+",
-        "icon1": "http://localhost/FOLKDashboard/public/assets/icons/notification.png",
-        "label2": "Emergency Contact",
-        "value2": "1234567890",
-        "icon2": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-      }
-    ],
-    "locationDetail": {
-      "label": "Location",
-      "value": "sample",
-      "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-    },
-    "permanentAddressDetail": {
-      "label": "Permanent Address",
-      "value": "sample",
-      "icon": "http://localhost/FOLKDashboard/public/assets/icons/notification.png"
-    },
-    "passportPhotoDetail": {
-      "Id": 12,
-      "Label": "Official Photo",
-      "Value": "http://localhost/FOLKDashboard/public/offical-photo/1.png?t=1754391553"
-    }
-  }
+    ]
+  },
+  "deleteProfile": "N"
 };
 
 const ProfileDetails = ({
@@ -147,8 +190,8 @@ const ProfileDetails = ({
   profileData = profileDataStructure, // New prop for backend data structure
 }) => {
   // Use the new data structure directly
-  const profileInfo = profileData?.profileDetails || {};
-  const primaryInfo = profileData?.primaryDetails || {};
+  const profileInfo = profileData?.data?.profileDetails || [];
+  const primaryInfo = profileData?.data?.primaryDetails || {};
   
   // Debug logging
   console.log('ProfileDetails - primaryInfo:', primaryInfo);
@@ -160,6 +203,79 @@ const ProfileDetails = ({
     // Replace localhost with your computer's IP address for emulator
     // Replace '192.168.1.100' with your actual IP address
     return imageUrl.replace('http://localhost', 'http://192.168.1.100');
+  };
+
+  // Helper functions to organize data into original layout categories
+  const getEmailDetails = () => {
+    return profileInfo.filter(item => item.Label === 'Email');
+  };
+
+  const getPersonalDetailsPairs = () => {
+    const personalLabels = [
+      'Mobile', 'Whatsapp',
+      'Gender', 'Centre', 
+      'Date Of Birth', 'FOLK Level',
+      'City', 'State',
+      'Country', 'Occupation',
+      'Higher Qualification', 'Designation',
+      'Spouse Id', 'Living Status',
+      'Course', 'Institute Name',
+      'Organization'
+    ];
+    const pairs = [];
+    
+    for (let i = 0; i < personalLabels.length; i += 2) {
+      const item1 = profileInfo.find(item => item.Label === personalLabels[i]);
+      const item2 = profileInfo.find(item => item.Label === personalLabels[i + 1]);
+      
+      if (item1 || item2) {
+        pairs.push({
+          label1: item1?.Label || '',
+          value1: item1?.Value || '',
+          icon1: item1?.icon || '',
+          label2: item2?.Label || '',
+          value2: item2?.Value || '',
+          icon2: item2?.icon || ''
+        });
+      }
+    }
+    return pairs;
+  };
+
+  const getFamilyDetailsPairs = () => {
+    const familyLabels = [
+      'Father Name', 'Father Mobile', 
+      'Mother Name', 'Mother Mobile', 
+      'Blood Group', 'E Name',
+      'E Mobile'
+    ];
+    const pairs = [];
+    
+    for (let i = 0; i < familyLabels.length; i += 2) {
+      const item1 = profileInfo.find(item => item.Label === familyLabels[i]);
+      const item2 = profileInfo.find(item => item.Label === familyLabels[i + 1]);
+      
+      if (item1 || item2) {
+        pairs.push({
+          label1: item1?.Label || '',
+          value1: item1?.Value || '',
+          icon1: item1?.icon || '',
+          label2: item2?.Label || '',
+          value2: item2?.Value || '',
+          icon2: item2?.icon || ''
+        });
+      }
+    }
+    return pairs;
+  };
+
+  const getLocationDetail = () => {
+    return profileInfo.find(item => item.Label === 'Address');
+  };
+
+  const getPermanentAddressDetail = () => {
+    // You can map this to any other address field if needed
+    return profileInfo.find(item => item.Label === 'Address');
   };
 
   return (
@@ -210,101 +326,121 @@ const ProfileDetails = ({
       <View style={styles.newDesignContainer}>
         <View style={{flex: 1}}>
           {/* Email Details */}
-          {profileInfo.emailDetails?.map((emailDetail, idx) => (
+          {getEmailDetails()?.map((emailDetail, idx) => (
             <View key={idx} style={styles.verticalFieldsContainer}>
               <View style={styles.fieldItem}>
                 <View style={styles.iconContainer}>
                   <Image source={{uri: emailDetail.icon}} style={styles.gmailIcon} />
                 </View>
                 <View style={styles.fieldContent}>
-                  <Text style={styles.fieldLabel}>{emailDetail.label}</Text>
-                  <Text style={styles.fieldValue}>{emailDetail.value}</Text>
+                  <Text style={styles.fieldLabel}>{emailDetail.Label}</Text>
+                  <Text style={styles.fieldValue}>{emailDetail.Value}</Text>
                 </View>
               </View>
             </View>
           ))}
 
           {/* Personal Details */}
-          {profileInfo.personalDetails?.map((personalDetail, idx) => (
+          {getPersonalDetailsPairs()?.map((personalDetail, idx) => {
+            // Only show container if at least one field has data
+            const hasData = (personalDetail.label1 && personalDetail.value1) || (personalDetail.label2 && personalDetail.value2);
+            if (!hasData) return null;
+            
+            return (
             <View key={idx} style={styles.horizontalFieldsContainer}>
               {/* First Field */}
-              <View style={styles.horizontalFieldItem}>
-                <View style={styles.iconContainer}>
-                  <Image source={{uri: personalDetail.icon1}} style={styles.gmailIcon} />
+              {personalDetail.label1 && personalDetail.value1 && (
+                <View style={styles.horizontalFieldItem}>
+                  <View style={styles.iconContainer}>
+                    <Image source={{uri: personalDetail.icon1}} style={styles.gmailIcon} />
+                  </View>
+                  <View style={styles.fieldContent}>
+                    <Text style={styles.fieldLabel}>{personalDetail.label1}</Text>
+                    <Text style={styles.fieldValue}>{personalDetail.value1}</Text>
+                  </View>
                 </View>
-                <View style={styles.fieldContent}>
-                  <Text style={styles.fieldLabel}>{personalDetail.label1}</Text>
-                  <Text style={styles.fieldValue}>{personalDetail.value1}</Text>
-                </View>
-              </View>
+              )}
               
               {/* Second Field */}
-              <View style={styles.horizontalFieldItem}>
-                <View style={styles.iconContainer}>
-                  <Image source={{uri: personalDetail.icon2}} style={styles.gmailIcon} />
+              {personalDetail.label2 && personalDetail.value2 && (
+                <View style={styles.horizontalFieldItem}>
+                  <View style={styles.iconContainer}>
+                    <Image source={{uri: personalDetail.icon2}} style={styles.gmailIcon} />
+                  </View>
+                  <View style={styles.fieldContent}>
+                    <Text style={styles.fieldLabel}>{personalDetail.label2}</Text>
+                    <Text style={styles.fieldValue}>{personalDetail.value2}</Text>
+                  </View>
                 </View>
-                <View style={styles.fieldContent}>
-                  <Text style={styles.fieldLabel}>{personalDetail.label2}</Text>
-                  <Text style={styles.fieldValue}>{personalDetail.value2}</Text>
-                </View>
-              </View>
+              )}
             </View>
-          ))}
+            );
+          })}
 
           {/* Family Details */}
           <View style={styles.additionalInfoContainer}>
-            {profileInfo.familyDetails?.map((familyDetail, idx) => (
+            {getFamilyDetailsPairs()?.map((familyDetail, idx) => {
+              // Only show container if at least one field has data
+              const hasData = (familyDetail.label1 && familyDetail.value1) || (familyDetail.label2 && familyDetail.value2);
+              if (!hasData) return null;
+              
+              return (
               <View key={idx} style={styles.horizontalFieldsContainer}>
                 {/* First Field */}
-                <View style={styles.horizontalFieldItem}>
-                  <View style={styles.iconContainer}>
-                    <Image source={{uri: familyDetail.icon1}} style={styles.gmailIcon} />
+                {familyDetail.label1 && familyDetail.value1 && (
+                  <View style={styles.horizontalFieldItem}>
+                    <View style={styles.iconContainer}>
+                      <Image source={{uri: familyDetail.icon1}} style={styles.gmailIcon} />
+                    </View>
+                    <View style={styles.fieldContent}>
+                      <Text style={styles.fieldLabel}>{familyDetail.label1}</Text>
+                      <Text style={styles.fieldValue}>{familyDetail.value1}</Text>
+                    </View>
                   </View>
-                  <View style={styles.fieldContent}>
-                    <Text style={styles.fieldLabel}>{familyDetail.label1}</Text>
-                    <Text style={styles.fieldValue}>{familyDetail.value1}</Text>
-                  </View>
-                </View>
+                )}
                 
                 {/* Second Field */}
-                <View style={styles.horizontalFieldItem}>
-                  <View style={styles.iconContainer}>
-                    <Image source={{uri: familyDetail.icon2}} style={styles.gmailIcon} />
+                {familyDetail.label2 && familyDetail.value2 && (
+                  <View style={styles.horizontalFieldItem}>
+                    <View style={styles.iconContainer}>
+                      <Image source={{uri: familyDetail.icon2}} style={styles.gmailIcon} />
+                    </View>
+                    <View style={styles.fieldContent}>
+                      <Text style={styles.fieldLabel}>{familyDetail.label2}</Text>
+                      <Text style={styles.fieldValue}>{familyDetail.value2}</Text>
+                    </View>
                   </View>
-                  <View style={styles.fieldContent}>
-                    <Text style={styles.fieldLabel}>{familyDetail.label2}</Text>
-                    <Text style={styles.fieldValue}>{familyDetail.value2}</Text>
-                  </View>
-                </View>
+                )}
               </View>
-            ))}
+              );
+            })}
           </View>
 
           {/* Location Detail */}
-          {profileInfo.locationDetail && (
+          {getLocationDetail() && (
             <View style={styles.verticalFieldsContainer}>
               <View style={styles.fieldItem}>
                 <View style={styles.iconContainer}>
-                  <Image source={{uri: profileInfo.locationDetail.icon}} style={styles.gmailIcon} />
+                  <Image source={{uri: getLocationDetail().icon}} style={styles.gmailIcon} />
                 </View>
                 <View style={styles.fieldContent}>
-                  <Text style={styles.fieldLabel}>{profileInfo.locationDetail.label}</Text>
-                  <Text style={styles.fieldValue}>{profileInfo.locationDetail.value}</Text>
+                  <Text style={styles.fieldLabel}>{getLocationDetail().Label}</Text>
+                  <Text style={styles.fieldValue}>{getLocationDetail().Value}</Text>
                 </View>
               </View>
             </View>
           )}
 
           {/* Permanent Address Detail */}
-          {profileInfo.permanentAddressDetail && (
+          {getPermanentAddressDetail() && getLocationDetail()?.Label !== getPermanentAddressDetail()?.Label && (
             <View style={styles.verticalFieldsContainer}>
               <View style={styles.fieldItem}>
                 <View style={styles.iconContainer}>
-                  <Image source={{uri: profileInfo.permanentAddressDetail.icon}} style={styles.gmailIcon} />
+                  <Image source={{uri: getPermanentAddressDetail().icon}} style={styles.gmailIcon} />
                 </View>
                 <View style={styles.fieldContent}>
-                  <Text style={styles.fieldLabel}>{profileInfo.permanentAddressDetail.label}</Text>
-                  <Text style={styles.fieldValue}>{profileInfo.permanentAddressDetail.value}</Text>
+                  <Text style={styles.fieldLabel}>{getPermanentAddressDetail().Label}</Text>
+                  <Text style={styles.fieldValue}>{getPermanentAddressDetail().Value}</Text>
                 </View>
               </View>
             </View>
