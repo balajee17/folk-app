@@ -27,8 +27,7 @@ import {Store} from './src/redux/Store';
 import {screenNames} from './src/constants/ScreenNames';
 import {DECRYPT_KEY, IV} from './src/services/API';
 import CryptoJS from 'react-native-crypto-js';
-import {Buffer} from 'buffer';
-import {setRedirectScreen} from './src/redux/slices/RedirectScreen';
+import {setRedirectScreen} from './src/redux/slices/redirectScreen';
 
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
@@ -42,6 +41,7 @@ const App = () => {
     isConnected: true,
     folkId: '',
     folkLevel: '',
+    folkGuide: '',
     userName: '',
     mobileNumber: '',
     photo: '',

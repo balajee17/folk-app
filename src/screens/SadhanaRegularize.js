@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -152,10 +153,24 @@ const SadhanaRegularize = props => {
   };
 
   const handleChange = (key, value) => {
-    setRegularizeData(prev => ({
-      ...prev,
-      [key]: value,
-    }));
+    // For Round Chanted and Reading fields, only allow numerical input
+    if (key === 'Round Chanted' || key === 'Reading') {
+      // Remove any non-numeric characters except decimal point
+      const numericValue = value.replace(/[^0-9.]/g, '');
+      // Ensure only one decimal point
+      const parts = numericValue.split('.');
+      const cleanValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : numericValue;
+      
+      setRegularizeData(prev => ({
+        ...prev,
+        [key]: cleanValue,
+      }));
+    } else {
+      setRegularizeData(prev => ({
+        ...prev,
+        [key]: value,
+      }));
+    }
   };
 
   const changeDate = (value, index) => {
@@ -350,9 +365,13 @@ const SadhanaRegularize = props => {
                 <View
                   pointerEvents={item?.inputType === 'C' ? 'box-only' : 'auto'}>
                   <FloatingInput
-                    label={item?.placeHolder}
+                    placeHolder={item?.placeHolder}
                     editable={item?.inputType !== 'C'}
-                    keyboardType="default"
+                    keyboardType={
+                      item?.sadhana === 'Round Chanted' || item?.sadhana === 'Reading'
+                        ? 'numeric'
+                        : 'default'
+                    }
                     drpdwnContStyle={styles.dropdownCntStyle}
                     value={
                       regularizeData.hasOwnProperty(item?.sadhana)
@@ -445,6 +464,18 @@ const SadhanaRegularize = props => {
 export default SadhanaRegularize;
 
 const styles = StyleSheet.create({
+  descripTxt: {
+    fontFamily: FONTS.urbanistSemiBold,
+    fontSize: SIZES.l,
+    color: COLORS.gunsmoke,
+    marginTop: '2%',
+    width: '100%',
+  },
+  discountTxtInpt: {
+    marginTop: 0,
+    width: '60%',
+    color: COLORS.black,
+  },
   dateSelectCont: {
     width: '100%',
     alignSelf: 'center',

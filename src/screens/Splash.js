@@ -81,6 +81,7 @@ const Splash = props => {
           folkId: userData?.folkId,
           qrCodeLink: userData?.qrCodeLink,
           folkLevel: userData?.folkLevel,
+          folkGuide: userData?.folkGuide,
           userName: userData?.name,
           mobileNumber: userData?.mobile,
           photo: userData?.photo,

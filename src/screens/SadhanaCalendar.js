@@ -32,7 +32,7 @@ import {useAppContext} from '../../App';
 import Spinner from '../components/Spinner';
 import {useFocusEffect} from '@react-navigation/native';
 import {Store} from '../redux/Store';
-import {setResetRedirectScreen} from '../redux/slices/RedirectScreen';
+import {setResetRedirectScreen} from '../redux/slices/redirectScreen';
 
 const SadhanaCalendar = props => {
   const {navigation, route} = props;

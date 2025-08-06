@@ -15,7 +15,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import NoDataFound from '../components/NoDataFound';
 import {CustomPopup} from '../components/BackHandler';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
-import {setResetRedirectScreen} from '../redux/slices/RedirectScreen';
+import {setResetRedirectScreen} from '../redux/slices//redirectScreen';
 import {Store} from '../redux/Store';
 
 const SwitcherScreen = ({navigation, route}) => {

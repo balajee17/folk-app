@@ -101,8 +101,15 @@ const CustomHeader = ({
       }));
       const params = {mobile: mobileNumber};
       const response = await API.getMenuList(params);
-      const {menu, successCode, message, folkId, folkLevel, qrCodeLink} =
-        response?.data;
+      const {
+        menu,
+        successCode,
+        message,
+        folkId,
+        folkLevel,
+        folkGuide,
+        qrCodeLink,
+      } = response?.data;
       if (successCode === 1) {
         await setGlobalState(prev => ({
           ...prev,
@@ -110,6 +117,7 @@ const CustomHeader = ({
           menuSpinner: false,
           folkId,
           folkLevel,
+          folkGuide,
           qrCodeLink,
         }));
       } else {

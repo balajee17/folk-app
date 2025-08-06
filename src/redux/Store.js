@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import redirectScreenReducer from './slices/RedirectScreen';
+import redirectScreenReducer from './slices/redirectScreen';
 
 export const Store = configureStore({
   reducer: {

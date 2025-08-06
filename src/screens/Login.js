@@ -160,8 +160,16 @@ const Login = ({navigation}) => {
         } else {
           setLoader(false);
 
-          const {id, photo, name, folkId, mobile, folkLevel, qrCodeLink} =
-            response?.data?.profile;
+          const {
+            id,
+            photo,
+            name,
+            folkId,
+            mobile,
+            folkLevel,
+            folkGuide,
+            qrCodeLink,
+          } = response?.data?.profile;
           const {
             header,
             bottomTab,
@@ -178,6 +186,7 @@ const Login = ({navigation}) => {
             folkId,
             mobile,
             folkLevel,
+            folkGuide,
             qrCodeLink,
           };
           await setGlobalState(prev => ({
@@ -200,6 +209,7 @@ const Login = ({navigation}) => {
             announcementCardColor: announcementCard,
             tabIndicatorColor: tabIndicator,
             folkLevel,
+            folkGuide,
           }));
           await AsyncStorage.setItem(
             'userDetails',
@@ -259,6 +269,7 @@ const Login = ({navigation}) => {
       announcementCardColor: COLORS.announcementCard,
       tabIndicatorColor: COLORS.tabIndicator,
       folkLevel: '',
+      folkGuide: '',
     }));
     navigation.replace(screenNames.drawerNavigation);
   };

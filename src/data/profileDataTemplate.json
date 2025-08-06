@@ -1,0 +1,180 @@
+{
+  "userInfo": {
+    "email": "example@gmail.com",
+    "yfh": "8457648664",
+    "phone": "9874563214",
+    "gender": "Male",
+    "level": "Medium",
+    "spouse": "Null",
+    "occupation": "Designer",
+    "designation": "UIUX Designer",
+    "qualification": "UIUX Designer",
+    "center": "HK Hill",
+    "city": "Bangalore",
+    "state": "Karnataka",
+    "country": "India",
+    "location": "Hare Krishna Hill, Chord Rd, Rajajinagar,\nBengaluru, Karnataka 560010",
+    "permanentAddress": "Hare Krishna Hill, Chord Rd, Rajajinagar,\nBengaluru, Karnataka 560010",
+    "fatherName": "N/A",
+    "fatherContact": "N/A",
+    "motherName": "N/A",
+    "motherContact": "N/A",
+    "bloodGroup": "N/A",
+    "emergencyContact": "N/A"
+  },
+  "fieldGroups": [
+    {
+      "type": "vertical",
+      "fields": [
+        {
+          "label": "Email ID",
+          "key": "email",
+          "icon": "gmail"
+        }
+      ]
+    },
+    {
+      "type": "horizontal",
+      "style": "yfhPhoneContainer",
+      "fields": [
+        {
+          "label": "YFH",
+          "key": "yfh",
+          "icon": "yfh",
+          "style": "yfhPhoneItem"
+        },
+        {
+          "label": "Phone Number",
+          "key": "phone",
+          "icon": "phone",
+          "style": "yfhPhoneItem"
+        }
+      ]
+    },
+    {
+      "type": "horizontal",
+      "fields": [
+        {
+          "label": "Gender",
+          "key": "gender",
+          "icon": "gender"
+        },
+        {
+          "label": "Level",
+          "key": "level",
+          "icon": "level"
+        }
+      ]
+    },
+    {
+      "type": "horizontal",
+      "fields": [
+        {
+          "label": "Spouse ID",
+          "key": "spouse",
+          "icon": "spouse"
+        },
+        {
+          "label": "Occupation",
+          "key": "occupation",
+          "icon": "occupation"
+        }
+      ]
+    },
+    {
+      "type": "horizontal",
+      "fields": [
+        {
+          "label": "Designation",
+          "key": "designation",
+          "icon": "designation"
+        },
+        {
+          "label": "Highest Qualification",
+          "key": "qualification",
+          "icon": "qualification"
+        }
+      ]
+    },
+    {
+      "type": "horizontal",
+      "fields": [
+        {
+          "label": "Center",
+          "key": "center",
+          "icon": "center"
+        },
+        {
+          "label": "City",
+          "key": "city",
+          "icon": "city"
+        }
+      ]
+    },
+    {
+      "type": "horizontal",
+      "fields": [
+        {
+          "label": "State",
+          "key": "state",
+          "icon": "state"
+        },
+        {
+          "label": "Country",
+          "key": "country",
+          "icon": "country"
+        }
+      ]
+    }
+  ],
+  "additionalInfoGroups": [
+    [
+      {
+        "label": "Father's Name",
+        "key": "fatherName",
+        "icon": "father"
+      },
+      {
+        "label": "Father's Contact",
+        "key": "fatherContact",
+        "icon": "fatherContact"
+      }
+    ],
+    [
+      {
+        "label": "Mother's Name",
+        "key": "motherName",
+        "icon": "mother"
+      },
+      {
+        "label": "Mother's Contact",
+        "key": "motherContact",
+        "icon": "motherContact"
+      }
+    ],
+    [
+      {
+        "label": "Blood Group",
+        "key": "bloodGroup",
+        "icon": "bloodGroup"
+      },
+      {
+        "label": "Emergency Contact",
+        "key": "emergencyContact",
+        "icon": "emergencyContact"
+      }
+    ]
+  ],
+  "locationFields": [
+    {
+      "label": "Permanent Address",
+      "key": "permanentAddress",
+      "icon": "location"
+    },
+    {
+      "label": "Location",
+      "key": "location",
+      "icon": "location"
+    }
+  ]
+} 

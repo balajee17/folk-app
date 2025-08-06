@@ -34,6 +34,7 @@ const FloatingInput = React.forwardRef((props, ref) => {
     type = 'txtInput',
     drpDwnStyle,
     screen,
+    placeHolder,
   } = props;
   const [focused, setFocused] = useState(false);
 
@@ -129,6 +130,8 @@ const FloatingInput = React.forwardRef((props, ref) => {
       {type === 'txtInput' ? (
         <TextInput
           ref={ref}
+          placeholder={placeHolder}
+          placeholderTextColor={'gray'}
           cursorColor={COLORS.button}
           onFocus={onFocus}
           onBlur={onBlur}

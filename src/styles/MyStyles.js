@@ -129,6 +129,8 @@ export let FONTS = {
   ysabeauInfantRegular: 'YsabeauInfant-Regular',
   LufgaBold: 'LufgaBold',
   poppinsBold: 'Poppins-Bold',
+  dmSansBold: 'DMSans-Bold',
+  dmSansRegular: 'DMSans-Regular',
 };
 
 // @ MyStyles

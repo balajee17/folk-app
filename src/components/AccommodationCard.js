@@ -29,7 +29,9 @@ const AccommodationCard = ({data, index, historyScreen, openQrCode}) => {
             styles.pendingTxt,
             {
               backgroundColor:
-                data?.status === 'B'
+                data?.status === 'B' ||
+                data?.status === 'C' ||
+                data?.status === 'O'
                   ? COLORS.successBg
                   : data?.status === 'P'
                   ? COLORS.warningBg
@@ -37,7 +39,9 @@ const AccommodationCard = ({data, index, historyScreen, openQrCode}) => {
                   ? COLORS.errorBg
                   : COLORS.border,
               color:
-                data?.status === 'B'
+                data?.status === 'B' ||
+                data?.status === 'C' ||
+                data?.status === 'O'
                   ? COLORS.successPB
                   : data?.status === 'P'
                   ? COLORS.warningPB
@@ -46,11 +50,13 @@ const AccommodationCard = ({data, index, historyScreen, openQrCode}) => {
                   : COLORS.black,
             },
           ]}>
-          {data?.status === 'B'
+          {data?.status === 'B' || data?.status === 'C' || data?.status === 'O'
             ? 'Approved'
             : data?.status === 'X'
             ? 'Rejected'
-            : 'Pending'}
+            : data?.status === 'P'
+            ? 'Pending'
+            : ''}
         </Text>
       </View>
       {/* // # request reason */}
@@ -66,34 +72,36 @@ const AccommodationCard = ({data, index, historyScreen, openQrCode}) => {
       )}
 
       {/* // # hostel, Bed no and Qr code */}
-      {data?.status === 'B' && (
-        <View style={[styles.flexRowCont, {marginTop: '3%'}]}>
-          <View style={[styles.flexRowCont, {width: '40%'}]}>
-            <Image style={styles.icnStyle} source={getImage.hostelIcn} />
-            <Text numberOfLines={1} style={styles.hostelName}>
-              {data?.hostelName}
-            </Text>
-          </View>
 
-          <View style={[styles.flexRowCont, {width: '35%'}]}>
-            <Image style={styles.icnStyle} source={getImage.bedIcn} />
-            <Text numberOfLines={1} style={[styles.hostelName]}>
-              {data?.bedNo}
-            </Text>
-          </View>
+      <View style={[styles.flexRowCont, {marginTop: '3%'}]}>
+        {(data?.status === 'C' || data?.status === 'O') && (
+          <>
+            <View style={[styles.flexRowCont, {width: '40%'}]}>
+              <Image style={styles.icnStyle} source={getImage.hostelIcn} />
+              <Text numberOfLines={1} style={styles.hostelName}>
+                {data?.hostelName}
+              </Text>
+            </View>
 
-          {data?.qrLink && (
-            <MaterialIcons
-              onPress={() => {
-                openQrCode(data?.qrLink);
-              }}
-              name="qr-code"
-              size={moderateScale(23)}
-              color={COLORS.black}
-            />
-          )}
-        </View>
-      )}
+            <View style={[styles.flexRowCont, {width: '35%'}]}>
+              <Image style={styles.icnStyle} source={getImage.bedIcn} />
+              <Text numberOfLines={1} style={[styles.hostelName]}>
+                {data?.bedNo}
+              </Text>
+            </View>
+          </>
+        )}
+        {data?.qrLink && (
+          <MaterialIcons
+            onPress={() => {
+              openQrCode(data?.qrLink);
+            }}
+            name="qr-code"
+            size={moderateScale(23)}
+            color={COLORS.black}
+          />
+        )}
+      </View>
     </View>
   );
 };

@@ -10,7 +10,7 @@ import {Platform} from 'react-native';
 import {screenNames} from '../constants/ScreenNames';
 import {RootNavigation} from './RootNavigation';
 import {Store} from '../redux/Store';
-import {setRedirectScreen} from '../redux/slices/RedirectScreen';
+import {setRedirectScreen} from '../redux/slices/redirectScreen';
 
 const CHANNEL_ID = 'folk-channel-id';
 const CHANNEL_NAME = 'FOLK';

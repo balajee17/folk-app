@@ -39,6 +39,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradientBg from '../components/LinearGradientBg';
 import Container from '../components/Container';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import AnimatedCircularBorder from '../components/AnimatedCircularBorder';
 
 const Profile = props => {
   const {globalState, setGlobalState} = useAppContext();
@@ -230,6 +231,7 @@ const Profile = props => {
         menuSpinner: true,
         reloadSadhana: 'N',
         folkLevel: '',
+        folkGuide: '',
         qrCodeLink: '',
       }));
       await AsyncStorage.clear();
@@ -301,25 +303,44 @@ const Profile = props => {
 
           <Spinner spinnerVisible={loader} />
           {/* // # User Image */}
-          <Pressable
-            disabled={shimmer?.primary}
-            onPress={() => setImagePicker(true)}
-            style={styles.usrImgCont}>
-            {shimmer?.primary ? (
-              <ImageShimmer
-                width={horizontalScale(104)}
-                borderRadius={moderateScale(70)}
-                height={horizontalScale(104)}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri: globalState?.photo,
-                }}
-                style={styles.usrImg}
-              />
-            )}
-          </Pressable>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 30,
+            }}>
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <AnimatedCircularBorder size={120} color="#007AFF" />
+            </View>
+            <Pressable
+              disabled={shimmer?.primary}
+              onPress={() => setImagePicker(true)}
+              style={styles.usrImgCont}>
+              {shimmer?.primary ? (
+                <ImageShimmer
+                  width={horizontalScale(104)}
+                  borderRadius={moderateScale(70)}
+                  height={horizontalScale(104)}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: globalState?.photo,
+                  }}
+                  style={styles.usrImg}
+                />
+              )}
+            </Pressable>
+          </View>
           {/* // # User Name */}
           {shimmer?.primary ? (
             <TitleShimmer

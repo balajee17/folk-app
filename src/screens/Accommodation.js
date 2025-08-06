@@ -111,7 +111,7 @@ const Accommodation = props => {
     }
   };
 
-  // # API to get
+  // # API to get history list
   const getHistoryLists = async () => {
     try {
       const params = {profileId, page: historyScreen?.page};
@@ -165,7 +165,7 @@ const Accommodation = props => {
         bookingDate: requestModal?.date,
         reason: requestModal?.reason,
       };
-      const response = await API.requestAccommodation(params);
+      const response = await API.accommodationRequest(params);
 
       console.log('REQ_Acc_response', response?.data);
       const {successCode, message} = response?.data;
@@ -288,7 +288,7 @@ const Accommodation = props => {
               handleLoadMore();
             }
           }}
-          // ListFooterComponent={renderFooter}
+          ListFooterComponent={renderFooter}
         />
       </View>
 

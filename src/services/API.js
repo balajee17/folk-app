@@ -329,8 +329,8 @@ export const API = {
     return axios.post(updateColorURL, requestData);
   },
 
-  accommodationRequestList(data){
-      const accommodationURL = baseURL + '';
+  accommodationRequestList(data) {
+    const accommodationURL = baseURL + '/accommodation/list';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'Accommodation request URL Data ',
@@ -340,8 +340,19 @@ export const API = {
     );
     return axios.post(accommodationURL, requestData);
   },
-  accommodationHostelList(){
- const accommodationURL = baseURL + '';
+  accommodationRequest(data) {
+    const accommodationURL = baseURL + '/accommodation/request';
+    const requestData = {accessKey: Access_Key, ...data};
+    console.log(
+      'Accommodation Hostel URL Data ',
+      accommodationURL,
+      ' data ',
+      requestData,
+    );
+    return axios.post(accommodationURL, requestData);
+  },
+  accommodationHistoryList(data) {
+    const accommodationURL = baseURL + '/accommodation/history';
     const requestData = {accessKey: Access_Key, ...data};
     console.log(
       'Accommodation Hostel URL Data ',

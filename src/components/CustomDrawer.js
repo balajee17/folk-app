@@ -38,6 +38,7 @@ const CustomDrawer = ({navigation, route}) => {
     headerColor,
     tabIndicatorColor,
     qrCodeLink,
+    folkGuide,
   } = globalState;
   const {closeDrawer} = navigation;
 
@@ -111,6 +112,11 @@ const CustomDrawer = ({navigation, route}) => {
               {!!folkLevel && (
                 <Text style={[styles.profName, styles.mailTxt]}>
                   FOLK LEVEL : {folkLevel}
+                </Text>
+              )}
+              {!!folkGuide && (
+                <Text style={[styles.profName, styles.mailTxt]}>
+                  FOLK GUIDE : {folkGuide}
                 </Text>
               )}
             </TouchableOpacity>
