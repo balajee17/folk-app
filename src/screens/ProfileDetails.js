@@ -149,6 +149,18 @@ const ProfileDetails = ({
   // Use the new data structure directly
   const profileInfo = profileData?.profileDetails || {};
   const primaryInfo = profileData?.primaryDetails || {};
+  
+  // Debug logging
+  console.log('ProfileDetails - primaryInfo:', primaryInfo);
+  console.log('ProfileDetails - Profile_image:', primaryInfo.Profile_image);
+  
+  // Helper function to fix localhost URLs for emulator
+  const getImageUri = (imageUrl) => {
+    if (!imageUrl) return null;
+    // Replace localhost with your computer's IP address for emulator
+    // Replace '192.168.1.100' with your actual IP address
+    return imageUrl.replace('http://localhost', 'http://192.168.1.100');
+  };
 
   return (
     <ScrollView
@@ -301,9 +313,23 @@ const ProfileDetails = ({
           {/* Profile Image */}
           <View style={styles.personImageContainer}>
             {primaryInfo.Profile_image ? (
-              <Image source={{uri: primaryInfo.Profile_image}} style={styles.personImage} />
+              <Image 
+                source={{uri: getImageUri(primaryInfo.Profile_image)}} 
+                style={styles.personImage}
+                onError={(error) => {
+                  console.log('Image loading error:', error.nativeEvent.error);
+                  console.log('Original URI:', primaryInfo.Profile_image);
+                  console.log('Modified URI:', getImageUri(primaryInfo.Profile_image));
+                }}
+                onLoad={() => console.log('Image loaded successfully')}
+              />
             ) : (
-              <Image source={getImage.person} style={styles.personImage} />
+              <Image 
+                source={getImage.person} 
+                style={styles.personImage}
+                onError={(error) => console.log('Fallback image error:', error.nativeEvent.error)}
+                onLoad={() => console.log('Fallback image loaded successfully')}
+              />
             )}
           </View>
         </View>
