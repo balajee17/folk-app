@@ -203,6 +203,42 @@ const CustomDrawer = ({navigation, route}) => {
                   </Text>
                 </TouchableOpacity>
               ))}
+            
+            {/* // @ Hostel Menu Item - Always Available */}
+            <TouchableOpacity
+              style={[
+                styles.menuItemBtn,
+                {
+                  marginTop: menuItems?.length > 0 ? '4%' : '8%',
+                  backgroundColor:
+                    current === 'hostel'
+                      ? tabIndicatorColor || COLORS.button
+                      : COLORS.white,
+                },
+              ]}
+              onPress={() => {
+                closeDrawer();
+                setGlobalState(prev => ({...prev, current: 'hostel'}));
+                navigateTo(screenNames.hostel, {titleName: 'Hostels', id: 'hostel'});
+              }}
+              activeOpacity={0.6}>
+              <View style={styles.iconCont}>
+                <Image
+                  style={styles.menuImg}
+                  source={getImage.hostelIcn}
+                />
+              </View>
+              <Text
+                style={[
+                  styles.itemTxt,
+                  {
+                    color:
+                      current === 'hostel' ? COLORS.white : COLORS.gunsmoke,
+                  },
+                ]}>
+                Hostels
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 

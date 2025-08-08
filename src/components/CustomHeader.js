@@ -57,7 +57,8 @@ const CustomHeader = ({
     id === 'D3' ||
     titleName === screenNames.folkMerchant ||
     titleName === screenNames.contribution ||
-    titleName === screenNames.habitsSadhana;
+    titleName === screenNames.habitsSadhana ||
+    titleName === screenNames.hostel;
 
   const bgColor =
     titleName === screenNames.eventDetails ||

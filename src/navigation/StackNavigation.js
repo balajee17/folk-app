@@ -28,6 +28,7 @@ import ChangeTheme from '../screens/ChangeTheme';
 import {navigationRef} from '../components/RootNavigation';
 import HabitsSadhana from '../screens/HabitsSadhana';
 import Accommodation from '../screens/Accommodation';
+import Hostel from '../screens/Hostel';
 
 const Stack = createStackNavigator();
 
@@ -152,6 +153,12 @@ const StackNavigation = () => {
         <Stack.Screen
           name={screenNames.accommodation}
           component={Accommodation}
+        />
+
+        {/* // @ Hostel */}
+        <Stack.Screen
+          name={screenNames.hostel}
+          component={Hostel}
         />
 
         {/* // @ Sadhana Regularize */}

@@ -10,6 +10,7 @@ import Accommodation from '../screens/Accommodation';
 import Contribution from '../screens/Contribution';
 import FolkMerchant from '../screens/FolkMerchant';
 import HabitsSadhana from '../screens/HabitsSadhana';
+import Hostel from '../screens/Hostel';
 
 const Drawer = createDrawerNavigator();
 
@@ -42,6 +43,10 @@ const DrawerNavigation = () => {
       <Drawer.Screen
         name={screenNames.habitsSadhana}
         component={HabitsSadhana}
+      />
+      <Drawer.Screen
+        name={screenNames.hostel}
+        component={Hostel}
       />
     </Drawer.Navigator>
   );

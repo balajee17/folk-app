@@ -34,4 +34,5 @@ export let screenNames = {
   sadhanaCalendar: 'Sadhana',
   sadhanaRegularize: 'Sadhana Regularize',
   changeTheme: 'Change Theme',
+  hostel: 'Hostel',
 };
