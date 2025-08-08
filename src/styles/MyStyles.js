@@ -40,6 +40,10 @@ const {width, height} = Dimensions.get('window');
 const guidelineBaseWidth = 375;
 const guidelineBaseHeight = 812;
 
+export const WIDTH = Dimensions.get('screen').width;
+export const Card = Dimensions.get('screen').width / 1.08;
+export const HEIGHT = Dimensions.get('screen').height;
+
 const horizontalScale = size => (width / guidelineBaseWidth) * size;
 const verticalScale = size => (height / guidelineBaseHeight) * size;
 const moderateScale = (size, factor = 0.5) =>

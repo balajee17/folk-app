@@ -23,15 +23,26 @@ import AndroidBackHandler from '../components/BackHandler';
 import CustomBottomTab from '../components/CustomBottomTab';
 import {useAppContext} from '../../App';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {HostelShimmer} from '../components/Shimmer';
 
 const Hostel = props => {
   const {globalState, setGlobalState} = useAppContext();
   const {navigation, route} = props;
   const [selectedTab, setSelectedTab] = useState('My Hostel');
+  const [shimmer, setShimmer] = useState(true);
 
   useEffect(() => {
     AndroidBackHandler.setHandler(props);
     return AndroidBackHandler.removerHandler();
+  }, []);
+
+  useEffect(() => {
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setShimmer(false);
+    }, 2000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   
@@ -63,34 +74,55 @@ const Hostel = props => {
     },
   ];
 
-  const renderHostelCard = ({item, index}) => (
+  const renderHostelCard = ({item, index}) => {
+    console.log('Current selectedTab:', selectedTab);
+    return (
     <View style={styles.hostelCard}>
       <View style={styles.imageContainer}>
         <Image source={item.image} style={styles.hostelImage} />
         <View style={styles.tagContainer}>
-          {item.isAvailable && (
-            <View style={styles.availableTag}>
+          {item.isAvailable ? (
+            <View style={styles.combinedTag}>
               <Text style={styles.availableText}>Available</Text>
+              <View style={styles.countBadge}>
+                <Text style={styles.countText}>{item.available}</Text>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.countBadge}>
+              <Text style={styles.countText}>{item.available}</Text>
             </View>
           )}
-          <View style={styles.countTag}>
-            <Text style={styles.countText}>{item.available}</Text>
+        </View>
+      </View>
+      <View style={[
+        styles.hostelInfo,
+        selectedTab === 'My Hostel' && styles.hostelInfoMyHostel
+      ]}>
+        <View style={styles.hostelDetails}>
+          <Text style={styles.hostelName}>{item.name}</Text>
+          <View style={styles.addressContainer}>
+            <Image
+              source={require('../assets/images/location1.png')}
+              style={styles.locationIcon}
+              resizeMode="contain"
+            />
+            <Text style={styles.addressText}>{item.address}</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.hostelInfo}>
-        <Text style={styles.hostelName}>{item.name}</Text>
-        <View style={styles.addressContainer}>
-          <Image
-            source={require('../assets/images/location1.png')}
-            style={styles.locationIcon}
-            resizeMode="contain"
-          />
-          <Text style={styles.addressText}>{item.address}</Text>
-        </View>
+        {selectedTab === 'FOLK Hostels' && (
+          <TouchableOpacity 
+            style={[styles.subscribeButton, {backgroundColor: 'red', borderWidth: 2, borderColor: 'black'}]} 
+            activeOpacity={0.7}
+            onPress={() => console.log('Subscribe button pressed')}
+          >
+            <Text style={[styles.subscribeText, {color: 'white'}]}>Subscribe</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
-  );
+    );
+  };
 
   return (
     <Container>
@@ -153,9 +185,9 @@ const Hostel = props => {
       <View style={[MyStyles.contentCont, styles.mainContainer]}>
         {/* Hostel List */}
         <FlatList
-          data={hostelData}
-          renderItem={renderHostelCard}
-          keyExtractor={item => item.id.toString()}
+          data={shimmer ? [1, 2, 3] : hostelData}
+          renderItem={shimmer ? () => <HostelShimmer /> : renderHostelCard}
+          keyExtractor={item => shimmer ? item.toString() : item.id.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContainer}
         />
@@ -242,21 +274,21 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: moderateScale(12),
     marginBottom: verticalScale(16),
-    shadowColor: COLORS.shadow,
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 0,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: moderateScale(9.6),
+    elevation: 8,
   },
   imageContainer: {
     position: 'relative',
   },
   hostelImage: {
-    width: '100%',
-    height: verticalScale(200),
+    width: horizontalScale(375),
+    height: verticalScale(180),
     borderTopLeftRadius: moderateScale(12),
     borderTopRightRadius: moderateScale(12),
     resizeMode: 'cover',
@@ -268,55 +300,94 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  availableTag: {
-    backgroundColor: COLORS.gunsmoke,
-    paddingHorizontal: horizontalScale(8),
-    paddingVertical: verticalScale(4),
-    borderRadius: moderateScale(12),
-    marginRight: horizontalScale(8),
+  combinedTag: {
+    backgroundColor: '#4A4A4A',
+    paddingHorizontal: horizontalScale(12),
+    paddingVertical: verticalScale(6),
+    borderRadius: moderateScale(20),
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   availableText: {
     color: COLORS.white,
     fontSize: SIZES.s,
     fontFamily: FONTS.urbanistMedium,
+    fontWeight: '500',
+    marginRight: horizontalScale(8),
   },
-  countTag: {
-    backgroundColor: COLORS.header,
-    width: horizontalScale(32),
-    height: horizontalScale(32),
-    borderRadius: horizontalScale(16),
+  countBadge: {
+    backgroundColor: COLORS.white,
+    width: horizontalScale(24),
+    height: horizontalScale(24),
+    borderRadius: horizontalScale(12),
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.header,
   },
   countText: {
-    color: COLORS.white,
-    fontSize: SIZES.m,
+    color: COLORS.header,
+    fontSize: SIZES.s,
     fontFamily: FONTS.urbanistSemiBold,
+    fontWeight: '600',
   },
   hostelInfo: {
     padding: horizontalScale(16),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  hostelInfoMyHostel: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  hostelDetails: {
+    flex: 1,
+    marginRight: horizontalScale(12),
   },
   hostelName: {
-    fontSize: SIZES.xxl,
+    fontSize: moderateScale(20),
     fontFamily: FONTS.urbanistBold,
     color: COLORS.black,
     marginBottom: verticalScale(8),
+    textAlign: 'center',
+    lineHeight: verticalScale(20),
+    letterSpacing: 0,
+    fontWeight: '700',
   },
   addressContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
   addressText: {
-    fontSize: SIZES.m,
-    fontFamily: FONTS.urbanistMedium,
+    fontSize: moderateScale(12),
+    fontFamily: FONTS.urbanistSemiBold,
     color: COLORS.gunsmoke,
     flex: 1,
     marginLeft: horizontalScale(4),
-    lineHeight: verticalScale(20),
+    lineHeight: verticalScale(18),
+    fontWeight: '600',
+    letterSpacing: 0,
   },
   locationIcon: {
-    width: horizontalScale(16),
-    height: horizontalScale(16),
+    width: horizontalScale(24),
+    height: horizontalScale(24),
     marginTop: verticalScale(2),
+  },
+  subscribeButton: {
+    backgroundColor: COLORS.button,
+    paddingVertical: verticalScale(10),
+    paddingHorizontal: horizontalScale(16),
+    borderRadius: moderateScale(8),
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: horizontalScale(100),
+  },
+  subscribeText: {
+    color: COLORS.white,
+    fontSize: SIZES.l,
+    fontFamily: FONTS.urbanistSemiBold,
   },
 }); 

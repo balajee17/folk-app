@@ -21,6 +21,8 @@ export const getImage = {
   folkSplash: require('../assets/images/folk_splash.png'),
   bedIcn: require('../assets/images/bedIcn.png'),
   hostelIcn: require('../assets/images/hostelIcn.png'),
+  hostelBg: require('../assets/images/hostel9.png'),
+
   gmail: require('../assets/images/gmail.png'),
   yfh: require('../assets/images/yfh.png'),
   phone: require('../assets/images/phone.png'),

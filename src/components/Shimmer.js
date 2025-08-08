@@ -7,7 +7,7 @@ import {
   verticalScale,
   windowWidth,
 } from '../styles/MyStyles';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 const OFF_SET = moderateScale(25);
 const ITEM_WIDTH = windowWidth - OFF_SET * 2 + horizontalScale(2);
@@ -379,3 +379,99 @@ export const EventShimmer = props => {
     </View>
   );
 };
+
+export const HostelShimmer = () => {
+  return (
+    <View style={styles.hostelShimmerCard}>
+      {/* Image Shimmer */}
+      <SkeletonPlaceholder
+        highlightColor={COLORS.highLightColor}
+        backgroundColor={COLORS.shimmerBg}>
+        <SkeletonPlaceholder.Item
+          width={'100%'}
+          height={verticalScale(375)}
+          borderTopLeftRadius={moderateScale(12)}
+          borderTopRightRadius={moderateScale(12)}
+        />
+      </SkeletonPlaceholder>
+      
+      {/* Tag Shimmer */}
+      <View style={styles.tagShimmerContainer}>
+        <SkeletonPlaceholder
+          highlightColor={COLORS.highLightColor}
+          backgroundColor={COLORS.shimmerBg}>
+          <SkeletonPlaceholder.Item
+            width={horizontalScale(120)}
+            height={verticalScale(32)}
+            borderRadius={moderateScale(20)}
+          />
+        </SkeletonPlaceholder>
+      </View>
+      
+      {/* Content Shimmer */}
+      <View style={styles.contentShimmer}>
+        <SkeletonPlaceholder
+          highlightColor={COLORS.highLightColor}
+          backgroundColor={COLORS.shimmerBg}>
+          <SkeletonPlaceholder.Item
+            width={'80%'}
+            height={verticalScale(20)}
+            borderRadius={moderateScale(10)}
+            marginBottom={verticalScale(8)}
+          />
+        </SkeletonPlaceholder>
+        
+        <View style={styles.addressShimmerContainer}>
+          <SkeletonPlaceholder
+            highlightColor={COLORS.highLightColor}
+            backgroundColor={COLORS.shimmerBg}>
+            <SkeletonPlaceholder.Item
+              width={horizontalScale(16)}
+              height={horizontalScale(16)}
+              borderRadius={moderateScale(8)}
+            />
+          </SkeletonPlaceholder>
+          
+          <SkeletonPlaceholder
+            highlightColor={COLORS.highLightColor}
+            backgroundColor={COLORS.shimmerBg}>
+            <SkeletonPlaceholder.Item
+              width={'85%'}
+              height={verticalScale(16)}
+              borderRadius={moderateScale(8)}
+              marginLeft={horizontalScale(8)}
+            />
+          </SkeletonPlaceholder>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  hostelShimmerCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: moderateScale(12),
+    marginBottom: verticalScale(16),
+    shadowColor: COLORS.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  tagShimmerContainer: {
+    position: 'absolute',
+    top: verticalScale(12),
+    right: horizontalScale(12),
+  },
+  contentShimmer: {
+    padding: horizontalScale(16),
+  },
+  addressShimmerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});

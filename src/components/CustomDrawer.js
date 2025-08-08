@@ -205,40 +205,57 @@ const CustomDrawer = ({navigation, route}) => {
               ))}
             
             {/* // @ Hostel Menu Item - Always Available */}
-            <TouchableOpacity
-              style={[
-                styles.menuItemBtn,
-                {
-                  marginTop: menuItems?.length > 0 ? '4%' : '8%',
-                  backgroundColor:
-                    current === 'hostel'
-                      ? tabIndicatorColor || COLORS.button
-                      : COLORS.white,
-                },
-              ]}
-              onPress={() => {
-                closeDrawer();
-                setGlobalState(prev => ({...prev, current: 'hostel'}));
-                navigateTo(screenNames.hostel, {titleName: 'Hostels', id: 'hostel'});
-              }}
-              activeOpacity={0.6}>
-              <View style={styles.iconCont}>
-                <Image
-                  style={styles.menuImg}
-                  source={getImage.hostelIcn}
+            {menuSpinner ? (
+              <View style={[styles.shimmerCont, {marginTop: menuItems?.length > 0 ? '4%' : '8%'}]}>
+                <ImageShimmer
+                  width={horizontalScale(35)}
+                  borderRadius={moderateScale(20)}
+                  height={horizontalScale(35)}
+                />
+                <TitleShimmer
+                  width={horizontalScale(200)}
+                  borderRadius={moderateScale(20)}
+                  height={horizontalScale(25)}
+                  marginTop={0}
+                  marginLeft={'8%'}
                 />
               </View>
-              <Text
+            ) : (
+              <TouchableOpacity
                 style={[
-                  styles.itemTxt,
+                  styles.menuItemBtn,
                   {
-                    color:
-                      current === 'hostel' ? COLORS.white : COLORS.gunsmoke,
+                    marginTop: menuItems?.length > 0 ? '4%' : '8%',
+                    backgroundColor:
+                      current === 'hostel'
+                        ? tabIndicatorColor || COLORS.button
+                        : COLORS.white,
                   },
-                ]}>
-                Hostels
-              </Text>
-            </TouchableOpacity>
+                ]}
+                onPress={() => {
+                  closeDrawer();
+                  setGlobalState(prev => ({...prev, current: 'hostel'}));
+                  navigateTo(screenNames.hostel, {titleName: 'Hostels', id: 'hostel'});
+                }}
+                activeOpacity={0.6}>
+                <View style={styles.iconCont}>
+                  <Image
+                    style={styles.menuImg}
+                    source={getImage.hostelBg}
+                  />
+                </View>
+                <Text
+                  style={[
+                    styles.itemTxt,
+                    {
+                      color:
+                        current === 'hostel' ? COLORS.white : COLORS.gunsmoke,
+                    },
+                  ]}>
+                  Folk Hostel
+                </Text>
+              </TouchableOpacity>
+            )}
           </ScrollView>
         </View>
 
